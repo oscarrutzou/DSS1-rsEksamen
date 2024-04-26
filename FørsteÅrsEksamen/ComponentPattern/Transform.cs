@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace FørsteÅrsEksamen.CompositPattern
+namespace FørsteÅrsEksamen.ComponentPattern
 {
     // Oscar
     public class Transform

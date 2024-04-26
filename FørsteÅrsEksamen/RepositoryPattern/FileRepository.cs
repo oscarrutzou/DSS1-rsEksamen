@@ -1,11 +1,11 @@
 ﻿namespace FørsteÅrsEksamen.RepositoryPattern
 {
-    public class MemoryRepository : IRepository
+    public class FileRepository : IRepository
     {
-        private static MemoryRepository instance;
+        private static FileRepository instance;
 
-        public static MemoryRepository Instance
-        { get { return instance ??= instance = new MemoryRepository(); } }
+        public static FileRepository Instance
+        { get { return instance ??= instance = new FileRepository(); } }
 
         public void Initialize()
         {

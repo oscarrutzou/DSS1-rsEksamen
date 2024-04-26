@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FørsteÅrsEksamen.CompositPattern.Grid
+namespace FørsteÅrsEksamen.ComponentPattern.Grid
 {
     // Oscar
     public class Astar : Component
@@ -22,7 +22,7 @@ namespace FørsteÅrsEksamen.CompositPattern.Grid
         {
             this.grid = grid;
             this.cells = grid.Cells; // Assign existing grid
-            gridDem = Cell.demension * (int)Cell.scaleSize.X;
+            gridDem = Cell.Demension * (int)Cell.ScaleSize.X;
         }
 
         public List<GameObject> FindPath(Point start, Point goal)
@@ -73,7 +73,7 @@ namespace FørsteÅrsEksamen.CompositPattern.Grid
                     if (closed.Contains(neighborGo)) continue; // Dont check objects that have been checked.
 
                     // Finds the G cost from the start node to the current node
-                    throw new Exception("Check the GetDistance to make sure it gets the start pos is used");
+                    //throw new Exception("Check the GetDistance to make sure it gets the start pos is used");
                     int newMovementCostToNeighbor = newCurCell.G + newCurCell.cost + GetDistance(newCurCell.GameObject.Transform.GridPosition, newCurCell.GameObject.Transform.GridPosition);
 
                     Cell neighbor = neighborGo.GetComponent<Cell>();
@@ -184,7 +184,7 @@ namespace FørsteÅrsEksamen.CompositPattern.Grid
                 if (!(nx >= 0 && nx < gridDem && ny >= 0 && ny < gridDem) || !cells.ContainsKey(newPoint)) continue;
 
                 Cell newPointCell = cells[newPoint].GetComponent<Cell>();
-                if (!newPointCell.isValid) continue;
+                if (newPointCell.CellWalkableType == CellWalkableType.NotValid) continue;
 
                 //Check if the cell is diagonally adjacent
                 if (Math.Abs(point.X - nx) == 1 && Math.Abs(point.Y - ny) == 1)
@@ -192,12 +192,14 @@ namespace FørsteÅrsEksamen.CompositPattern.Grid
                     // Check the cells directly to each side
                     Point sidePoint1 = new Point(point.X, ny);
                     Point sidePoint2 = new Point(nx, point.Y);
+
                     // Does grid position exits in the grid
                     if (!cells.ContainsKey(sidePoint1) || !cells.ContainsKey(sidePoint2)) continue;
+
                     // To make sure the astar cant jump corner
                     Cell side1Cell = cells[sidePoint1].GetComponent<Cell>();
                     Cell side2Cell = cells[sidePoint2].GetComponent<Cell>();
-                    if (!side1Cell.isValid || !side2Cell.isValid) continue;
+                    if (side1Cell.CellWalkableType == CellWalkableType.NotValid || side2Cell.CellWalkableType == CellWalkableType.NotValid) continue;
                 }
 
                 temp.Add(cells[newPoint]);

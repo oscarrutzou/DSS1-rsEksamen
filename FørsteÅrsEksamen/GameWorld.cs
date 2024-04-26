@@ -1,5 +1,5 @@
 ﻿using FørsteÅrsEksamen.CommandPattern;
-using FørsteÅrsEksamen.CompositPattern;
+using FørsteÅrsEksamen.ComponentPattern;
 using FørsteÅrsEksamen.GameManagement.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

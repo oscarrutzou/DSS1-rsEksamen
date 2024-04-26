@@ -1,4 +1,4 @@
-﻿using FørsteÅrsEksamen.CompositPattern;
+﻿using FørsteÅrsEksamen.ComponentPattern;
 using System;
 using System.Collections.Generic;
 

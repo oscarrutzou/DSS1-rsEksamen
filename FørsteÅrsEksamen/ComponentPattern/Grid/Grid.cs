@@ -1,28 +1,33 @@
-﻿using FørsteÅrsEksamen.GameManagement;
+﻿using FørsteÅrsEksamen.Factory;
+using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
-namespace FørsteÅrsEksamen.CompositPattern.Grid
+namespace FørsteÅrsEksamen.ComponentPattern.Grid
 {
     // Oscar
     public class Grid : Component
     {
         #region Properties
+        
+        public string Description;
 
         public Vector2 StartPostion { get; set; }
 
         public Dictionary<Point, GameObject> Cells { get; private set; } = new Dictionary<Point, GameObject>();
         public List<Point> TargetPoints { get; private set; } = new List<Point>(); //Target cell points
+
         private int width, height;
 
-        public int mapW, mapH; // To use when we have a larger map than collision
-
-        private bool isCentered = true;
-
-        private int demension => Cell.demension;
+        private readonly bool isCentered = true;
 
         public Grid(GameObject gameObject) : base(gameObject)
         {
+        }
+
+        public Grid(GameObject gameObject, string description) : base(gameObject)
+        {
+            this.Description = description;
         }
 
         #endregion Properties
@@ -43,8 +48,8 @@ namespace FørsteÅrsEksamen.CompositPattern.Grid
             if (isCentered)
             {
                 startPos = new Vector2(
-                    startPos.X - (width * demension * Cell.scaleSize.X / 2),
-                    startPos.Y - (height * demension * Cell.scaleSize.Y / 2)
+                    startPos.X - (width * Cell.Demension * Cell.ScaleSize.X / 2),
+                    startPos.Y - (height * Cell.Demension * Cell.ScaleSize.Y / 2)
                 );
             }
 
@@ -56,16 +61,8 @@ namespace FørsteÅrsEksamen.CompositPattern.Grid
             {
                 for (int x = 0; x < width; x++)
                 {
-                    Point point = new Point(x, y);
-                    GameObject cellGo = new GameObject();
-                    cellGo.AddComponent<Cell>(this, point);
-                    cellGo.Type = GameObjectTypes.Cell;
-                    SpriteRenderer sr = cellGo.AddComponent<SpriteRenderer>();
-                    sr.SetLayerDepth(LAYERDEPTH.WorldBackground);
-                    sr.SetSprite(TextureNames.Cell);
-
-                    if ((x + y) % 2 == 0) sr.Color = new Color(30, 150, 20); // Set color so every second one is colored
-
+                    Point point = new(x, y);
+                    GameObject cellGo = CellFactory.Create(this, point);
                     Cells.Add(point, cellGo);
                     GameWorld.Instance.Instantiate(cellGo);
                 }
@@ -80,8 +77,8 @@ namespace FørsteÅrsEksamen.CompositPattern.Grid
             }
 
             // Calculates the position of each point. Maybe remove the zoom
-            int gridX = (int)((pos.X - StartPostion.X) / (Cell.demension * Cell.scaleSize.X * GameWorld.Instance.WorldCam.zoom));
-            int gridY = (int)((pos.Y - StartPostion.Y) / (Cell.demension * Cell.scaleSize.Y * GameWorld.Instance.WorldCam.zoom));
+            int gridX = (int)((pos.X - StartPostion.X) / (Cell.Demension * Cell.ScaleSize.X * GameWorld.Instance.WorldCam.zoom));
+            int gridY = (int)((pos.Y - StartPostion.Y) / (Cell.Demension * Cell.ScaleSize.Y * GameWorld.Instance.WorldCam.zoom));
 
             // Checks if its inside the grid.
             if (0 <= gridX && gridX < width && 0 <= gridY && gridY < height)

@@ -1,4 +1,4 @@
-﻿using FørsteÅrsEksamen.CompositPattern;
+﻿using FørsteÅrsEksamen.ComponentPattern;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.IO;

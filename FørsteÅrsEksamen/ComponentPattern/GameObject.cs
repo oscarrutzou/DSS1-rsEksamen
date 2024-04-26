@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FørsteÅrsEksamen.CompositPattern
+namespace FørsteÅrsEksamen.ComponentPattern
 {
     /// <summary>
     /// <para>Uses the type to make different lists in the SceneData.</para>

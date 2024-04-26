@@ -1,4 +1,4 @@
-﻿using FørsteÅrsEksamen.CompositPattern.Characters;
+﻿using FørsteÅrsEksamen.ComponentPattern.Characters;
 using Microsoft.Xna.Framework;
 
 namespace FørsteÅrsEksamen.CommandPattern.Commands

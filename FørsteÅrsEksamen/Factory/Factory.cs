@@ -1,4 +1,4 @@
-﻿using FørsteÅrsEksamen.CompositPattern;
+﻿using FørsteÅrsEksamen.ComponentPattern;
 
 namespace FørsteÅrsEksamen.Factory
 {

@@ -2,7 +2,7 @@
 using FørsteÅrsEksamen.ObserverPattern;
 using Microsoft.Xna.Framework;
 
-namespace FørsteÅrsEksamen.CompositPattern.Characters
+namespace FørsteÅrsEksamen.ComponentPattern.Characters
 {
     // Oscar
     public class Player : Component, ISubject
@@ -53,7 +53,7 @@ namespace FørsteÅrsEksamen.CompositPattern.Characters
 
             this.velocity = Vector2.Lerp(this.velocity, targetVelocity, turnSpeed * GameWorld.DeltaTime);
             GameObject.Transform.Translate(this.velocity * speed * GameWorld.DeltaTime);
-            //GameWorld.Instance.worldCam.Move(this.velocity * speed * GameWorld.DeltaTime);
+            GameWorld.Instance.WorldCam.Move(this.velocity * speed * GameWorld.DeltaTime);
             Notify();
         }
 

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace FørsteÅrsEksamen.CompositPattern.Data
+namespace FørsteÅrsEksamen.ComponentPattern.Data
 {
     // Oscar
     public class RectangleData

@@ -1,5 +1,5 @@
-﻿using FørsteÅrsEksamen.CompositPattern;
-using FørsteÅrsEksamen.CompositPattern.Characters;
+﻿using FørsteÅrsEksamen.ComponentPattern;
+using FørsteÅrsEksamen.ComponentPattern.Characters;
 using Microsoft.Xna.Framework;
 
 namespace FørsteÅrsEksamen.Factory

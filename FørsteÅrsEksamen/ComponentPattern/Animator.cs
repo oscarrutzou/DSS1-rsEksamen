@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 
-namespace FørsteÅrsEksamen.CompositPattern
+namespace FørsteÅrsEksamen.ComponentPattern
 {
     // Oscar
     public class Animator : Component

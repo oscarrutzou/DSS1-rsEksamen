@@ -1,20 +1,27 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace FørsteÅrsEksamen.CompositPattern.Grid
+namespace FørsteÅrsEksamen.ComponentPattern.Grid
 {
+    public enum CellWalkableType
+    {
+        NotValid,
+        FullValid,
+    }
+
     // Oscar
     public class Cell : Component
     {
-        public static int demension = 16;
-        public static Vector2 scaleSize = new(4, 4);
-        public bool isValid = true;
+        public static int Demension = 16;
+        public readonly static Vector2 ScaleSize = new(4, 4);
 
         // For the Astar algortihm
+        public CellWalkableType CellWalkableType = CellWalkableType.NotValid;
         public int cost = 1;
 
         public int G;
         public int H;
         public int F => G + H;
+
 
         /// <summary>
         /// Parent is for the Astar, not the GameObject that is attached as "GameObject".
@@ -24,11 +31,11 @@ namespace FørsteÅrsEksamen.CompositPattern.Grid
         public Cell(GameObject gameObject, Grid grid, Point point) : base(gameObject)
         {
             GameObject.Transform.GridPosition = point;
-            GameObject.Transform.Scale = scaleSize;
+            GameObject.Transform.Scale = ScaleSize;
 
             GameObject.Transform.Position = grid.StartPostion
-                + new Vector2(point.X * demension * scaleSize.X + demension * scaleSize.X / 2,
-                              point.Y * demension * scaleSize.Y + demension * scaleSize.Y / 2);
+                + new Vector2(point.X * Demension * ScaleSize.X + Demension * ScaleSize.X / 2,
+                              point.Y * Demension * ScaleSize.Y + Demension * ScaleSize.Y / 2);
         }
 
         /// <summary>

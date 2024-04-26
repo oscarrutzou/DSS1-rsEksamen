@@ -1,8 +1,8 @@
 ﻿using FørsteÅrsEksamen.CommandPattern;
 using FørsteÅrsEksamen.CommandPattern.Commands;
-using FørsteÅrsEksamen.CompositPattern;
-using FørsteÅrsEksamen.CompositPattern.Characters;
-using FørsteÅrsEksamen.CompositPattern.Grid;
+using FørsteÅrsEksamen.ComponentPattern;
+using FørsteÅrsEksamen.ComponentPattern.Characters;
+using FørsteÅrsEksamen.ComponentPattern.Grid;
 using FørsteÅrsEksamen.Factory;
 using FørsteÅrsEksamen.ObserverPattern;
 using Microsoft.Xna.Framework;
