@@ -5,9 +5,9 @@ namespace FørsteÅrsEksamen.GameManagement
     // Oscar
     public class Camera
     {
-        public Vector2 position;          // The camera's position in the game world.
+        public Vector2 position;           // The camera's position in the game world.
         public Vector2 origin;
-        public float zoom;                // The zoom level of the camera.
+        public float zoom;                 // The zoom level of the camera.
         private Matrix transformMatrix;    // A transformation matrix used for rendering.
         public bool moveable;
 
@@ -17,7 +17,7 @@ namespace FørsteÅrsEksamen.GameManagement
         {
             position = Vector2.Zero;   // Initialize the camera's position at the origin.
             zoom = 1f;                 // Initialize the camera's zoom level to 1f
-            maxZoom = 2f;            // Any higher will remove sprites since it would be inside the camera
+            maxZoom = 2f;              // Any higher will remove sprites since it would be inside the camera
             SetOriginCenter();
             this.moveable = moveable;
         }

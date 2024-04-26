@@ -23,7 +23,7 @@ namespace FørsteÅrsEksamen.GameManagement
         public GameWorld()
         {
             GfxManager = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
+            Content.RootDirectory = "A-Content";
             IsMouseVisible = true;
             Window.Title = "Første års eksamen";
         }

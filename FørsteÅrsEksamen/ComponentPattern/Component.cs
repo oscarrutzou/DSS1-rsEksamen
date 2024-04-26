@@ -37,7 +37,7 @@ namespace FørsteÅrsEksamen.CompositPattern
 
         public virtual object Clone()
         {
-            //Cloner componentet og sætter deres GameObject
+            // Clones componentet and sets the new GameObject
             Component component = (Component)MemberwiseClone();
             component.GameObject = GameObject;
             return component;

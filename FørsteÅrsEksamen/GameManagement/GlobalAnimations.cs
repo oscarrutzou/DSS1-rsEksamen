@@ -84,7 +84,7 @@ namespace FørsteÅrsEksamen.GameManagement
             path = System.Text.RegularExpressions.Regex.Replace(path, @" \(\d+\)", "");
 
             // Gets the aboslutePath to check what kind of animation it is.
-            string contentRoot = Path.Combine(Directory.GetCurrentDirectory(), "Content");
+            string contentRoot = Path.Combine(Directory.GetCurrentDirectory(), GameWorld.Instance.Content.RootDirectory);
 
             // You can use the absolutePath for loading, but we have chosen not to do that since it would be very messy when calling the Load methods
             // We make a path with the max frames, to ensure there are the correct amount of frames and the path is correct.

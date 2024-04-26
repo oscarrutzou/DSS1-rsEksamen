@@ -7,8 +7,8 @@ using System.Linq;
 namespace FørsteÅrsEksamen.CompositPattern
 {
     /// <summary>
-    /// Uses the type to make different lists in the SceneData.
-    /// Only make a new type, if its a object type that there is a lot of, and we need to get references to them e.g collsion.
+    /// <para>Uses the type to make different lists in the SceneData.</para>
+    /// <para>Only make a new type, if its a object type that there is a lot of, and we need to get references to them e.g for collsion.</para>
     /// </summary>
     public enum GameObjectTypes
     {
@@ -155,6 +155,7 @@ namespace FørsteÅrsEksamen.CompositPattern
         {
             GameObject go = new GameObject();
             go.Transform = Transform; // Sets the transform to be the same
+            go.Type = Type;
             foreach (Component component in components.Values)
             {
                 Component newComponent = go.AddComponentWithExistingValues(component.Clone() as Component);

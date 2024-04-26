@@ -2,6 +2,7 @@
 using FørsteÅrsEksamen.CommandPattern.Commands;
 using FørsteÅrsEksamen.CompositPattern;
 using FørsteÅrsEksamen.CompositPattern.Characters;
+using FørsteÅrsEksamen.CompositPattern.Grid;
 using FørsteÅrsEksamen.Factory;
 using FørsteÅrsEksamen.ObserverPattern;
 using Microsoft.Xna.Framework;
@@ -20,8 +21,16 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         public override void Initialize()
         {
             MakePlayer();
-
+            InitializeGrid();
             SetCommands();
+        }
+
+        private void InitializeGrid()
+        {
+            GameObject go = new();
+            Grid grid = go.AddComponent<Grid>();
+            grid.GenerateGrid(Vector2.Zero, 5, 5);
+            GameWorld.Instance.Instantiate(go);
         }
 
         private void MakePlayer()
