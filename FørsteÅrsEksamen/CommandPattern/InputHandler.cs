@@ -40,7 +40,7 @@ namespace FørsteÅrsEksamen.CommandPattern
 
         private InputHandler()
         {
-            AddKeyUpdateCommand(Keys.Escape, new QuitCommand());
+            AddKeyButtonDownCommand(Keys.Escape, new QuitCommand());
 
             AddScrollWheelCommand(ScrollWheelState.Up, new ZoomCommand(-0.1f));
             AddScrollWheelCommand(ScrollWheelState.Down, new ZoomCommand(0.1f));

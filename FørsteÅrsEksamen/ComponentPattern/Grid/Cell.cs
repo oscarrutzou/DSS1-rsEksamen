@@ -38,6 +38,17 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
                               point.Y * Demension * ScaleSize.Y + Demension * ScaleSize.Y / 2);
         }
 
+        public Cell(GameObject gameObject, Grid grid, Point point, CellWalkableType type) : base(gameObject)
+        {
+            GameObject.Transform.GridPosition = point;
+            GameObject.Transform.Scale = ScaleSize;
+            this.CellWalkableType = type;
+
+            GameObject.Transform.Position = grid.StartPostion
+                + new Vector2(point.X * Demension * ScaleSize.X + Demension * ScaleSize.X / 2,
+                              point.Y * Demension * ScaleSize.Y + Demension * ScaleSize.Y / 2);
+        }
+
         /// <summary>
         /// Resets the cell, to make it ready for another path.
         /// </summary>

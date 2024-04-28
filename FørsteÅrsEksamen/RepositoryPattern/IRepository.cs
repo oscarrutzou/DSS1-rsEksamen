@@ -1,13 +1,16 @@
-﻿namespace FørsteÅrsEksamen.RepositoryPattern
+﻿using FørsteÅrsEksamen.ComponentPattern;
+using FørsteÅrsEksamen.ComponentPattern.Grid;
+
+namespace FørsteÅrsEksamen.RepositoryPattern
 {
     public interface IRepository
     {
         void Initialize();
 
-        void SaveGrids();
+        void SaveGrid(Grid grid, string savedDescription);
 
-        void DeleteGrids();
-
-        void LoadGrids();
+        GameObject GetGrid(string description);
+        bool DoesGridExist(string description);
+        void DeleteGrid(string description);
     }
 }

@@ -17,7 +17,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
         public Dictionary<Point, GameObject> Cells { get; private set; } = new Dictionary<Point, GameObject>();
         public List<Point> TargetPoints { get; private set; } = new List<Point>(); //Target cell points
 
-        private int width, height;
+        public int Width, Height;
 
         private readonly bool isCentered = true;
 
@@ -25,9 +25,12 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
         {
         }
 
-        public Grid(GameObject gameObject, string description) : base(gameObject)
+        public Grid(GameObject gameObject, string description, Vector2 startPos, int width, int height) : base(gameObject)
         {
             this.Description = description;
+            this.StartPostion = startPos;
+            this.Width = width;
+            this.Height = height;
         }
 
         #endregion Properties
@@ -38,28 +41,20 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
         /// <param name="startPos"></param>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public void GenerateGrid(Vector2 startPos, int width, int height)
+        public void GenerateGrid()
         {
-            #region Set Params
-
-            this.width = width;
-            this.height = height;
-
+            Cells.Clear();
             if (isCentered)
             {
-                startPos = new Vector2(
-                    startPos.X - (width * Cell.Demension * Cell.ScaleSize.X / 2),
-                    startPos.Y - (height * Cell.Demension * Cell.ScaleSize.Y / 2)
+                StartPostion = new Vector2(
+                    StartPostion.X - (Width * Cell.Demension * Cell.ScaleSize.X / 2),
+                    StartPostion.Y - (Height * Cell.Demension * Cell.ScaleSize.Y / 2)
                 );
             }
 
-            this.StartPostion = startPos;
-
-            #endregion Set Params
-
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < Height; y++)
             {
-                for (int x = 0; x < width; x++)
+                for (int x = 0; x < Width; x++)
                 {
                     Point point = new(x, y);
                     GameObject cellGo = CellFactory.Create(this, point);
@@ -81,7 +76,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
             int gridY = (int)((pos.Y - StartPostion.Y) / (Cell.Demension * Cell.ScaleSize.Y * GameWorld.Instance.WorldCam.zoom));
 
             // Checks if its inside the grid.
-            if (0 <= gridX && gridX < width && 0 <= gridY && gridY < height)
+            if (0 <= gridX && gridX < Width && 0 <= gridY && gridY < Height)
             {
                 return Cells[new Point(gridX, gridY)];
             }

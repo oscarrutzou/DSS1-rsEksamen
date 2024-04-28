@@ -8,6 +8,7 @@ using FørsteÅrsEksamen.ObserverPattern;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace FørsteÅrsEksamen.GameManagement.Scenes
 {
@@ -21,17 +22,10 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         public override void Initialize()
         {
             MakePlayer();
-            InitializeGrid();
+            GridManager.Instance.InitalizeGrids();
             SetCommands();
         }
 
-        private void InitializeGrid()
-        {
-            GameObject go = new();
-            Grid grid = go.AddComponent<Grid>();
-            grid.GenerateGrid(Vector2.Zero, 5, 5);
-            GameWorld.Instance.Instantiate(go);
-        }
 
         private void MakePlayer()
         {
@@ -63,10 +57,14 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
             base.DrawInWorld(spriteBatch);
         }
+        private List<GameObject> list;
 
         public override void DrawOnScreen(SpriteBatch spriteBatch)
         {
             spriteBatch.DrawString(GlobalTextures.DefaultFont, $"PlayerPos {playerPos}", GameWorld.Instance.UiCam.TopLeft, Color.Black);
+            
+            SceneData.GameObjectLists.TryGetValue(GameObjectTypes.Cell, out list);
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"SceneObjects in scene {list.Count}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 60), Color.Black);
 
             base.DrawOnScreen(spriteBatch);
         }
