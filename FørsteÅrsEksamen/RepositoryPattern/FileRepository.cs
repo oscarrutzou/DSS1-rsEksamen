@@ -18,20 +18,17 @@ namespace FørsteÅrsEksamen.RepositoryPattern
         public static FileRepository Instance
         { get { return instance ??= instance = new FileRepository(); } }
 
-        private readonly string folderName = "FirstYearExam2024";
-        private readonly string appdataPath;
         private readonly string folderPath;
 
         public FileRepository()
         {
-            appdataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            folderPath = Path.Combine(appdataPath, folderName);
+            string exeDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            folderPath = Path.Combine(exeDirectory, "data");
             Directory.CreateDirectory(folderPath);
         }
 
         public void Initialize()
         {
-
         }
 
         public void SaveGrid(Grid grid, string savedDescription)
@@ -53,7 +50,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
                     for (int x = 0; x < grid.Width; x++)
                     {
                         GameObject cellGo = grid.Cells[new Point(x, y)];
-                        Point gridpos =cellGo.Transform.GridPosition;
+                        Point gridpos = cellGo.Transform.GridPosition;
                         Cell cell = cellGo.GetComponent<Cell>();
                         writer.WriteLine($"{gridpos.X}, {gridpos.Y}, {cell.CellWalkableType}");
                     }
@@ -66,7 +63,6 @@ namespace FørsteÅrsEksamen.RepositoryPattern
                 stream.Close();
             }
         }
-
 
         public GameObject GetGrid(string description)
         {
@@ -92,11 +88,10 @@ namespace FørsteÅrsEksamen.RepositoryPattern
             {
                 throw new Exception($"Haven't found '{description}' in appdata.");
             }
-            
+
             string path = Path.Combine(folderPath, fullPathName); //Know the path is there
             FileStream stream = File.OpenRead(path);
 
-            
             Grid grid;
 
             try
@@ -109,7 +104,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
                 string[] gridSizeParts = reader.ReadLine().Split(':')[1].Split(',');
                 int width = int.Parse(gridSizeParts[0]);
                 int height = int.Parse(gridSizeParts[1]);
-                
+
                 grid = gridGo.AddComponent<Grid>(gridName, startPos, width, height);
 
                 reader.ReadLine(); //There is the line "Grid Cells (Position.X, Postion.Y, Cell Type):" here, so we skip it
@@ -136,7 +131,6 @@ namespace FørsteÅrsEksamen.RepositoryPattern
             return gridGo;
         }
 
-
         private void DeleteExistingGrids()
         {
             // Get all files that start with "grid"
@@ -149,29 +143,23 @@ namespace FørsteÅrsEksamen.RepositoryPattern
             }
         }
 
-
         public void DeleteGrid(string description)
         {
-            string[] files = Directory.GetFiles(folderPath, "grid*.txt");
-            // Search though each file, to find the correct
-            foreach (string file in files)
+            string file = FindGridFile(description);
+            if (file != null)
             {
-                string fileName = Path.GetFileNameWithoutExtension(file);
-                string[] parts = fileName.Split('_');
-
-                if (parts.Length == 3 && parts[2] == description)
-                {
-                    File.Delete(file);
-                    break; //Has deleted the file
-                }
+                File.Delete(file);
             }
         }
-
 
         public bool DoesGridExist(string description)
         {
+            return FindGridFile(description) != null;
+        }
+
+        private string FindGridFile(string description)
+        {
             string[] files = Directory.GetFiles(folderPath, "grid*.txt");
-            // Search though each file, to find the correct
             foreach (string file in files)
             {
                 string fileName = Path.GetFileNameWithoutExtension(file);
@@ -179,11 +167,10 @@ namespace FørsteÅrsEksamen.RepositoryPattern
 
                 if (parts.Length == 3 && parts[2] == description)
                 {
-                    return true;
+                    return file;
                 }
             }
-            return false;
+            return null;
         }
-
     }
 }
