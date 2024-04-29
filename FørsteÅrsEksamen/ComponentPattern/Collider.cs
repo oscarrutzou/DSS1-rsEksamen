@@ -18,7 +18,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
         {
             get
             {
-                int width = 0, height = 0;
+                int width, height;
 
                 if (animator != null)
                 {

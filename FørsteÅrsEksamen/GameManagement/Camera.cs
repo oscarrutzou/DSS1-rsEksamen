@@ -86,7 +86,8 @@ namespace FørsteÅrsEksamen.GameManagement
         #endregion Parameters
 
         /// <summary>
-        /// Change zoom amount, but is limited by some paramaters like maxzoom.
+        /// Dosent work
+        /// <para>Change zoom amount, but is limited by some paramaters like maxzoom.</para>
         /// </summary>
         /// <param name="amount"></param>
         public void ChangeZoom(float amount)

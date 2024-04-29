@@ -5,6 +5,7 @@ using System;
 
 namespace FørsteÅrsEksamen.ComponentPattern
 {
+    // Remember with GUI text it dosen't use these layerdepth to draw the text and just uses 1.
     public enum LAYERDEPTH
     {
         Default,
@@ -24,6 +25,8 @@ namespace FørsteÅrsEksamen.ComponentPattern
         #region Properties
 
         public Texture2D Sprite { get; set; }
+        public bool ShouldDraw { get; set; } = true;
+
         public Color Color { get; set; } = Color.White;
         public Vector2 Origin { get; set; }
         public bool IsCentered = true;
@@ -57,7 +60,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (Sprite == null) return;
+            if (Sprite == null || !ShouldDraw) return;
 
             Origin = IsCentered ? new Vector2(Sprite.Width / 2, Sprite.Height / 2) : Vector2.Zero;
 
@@ -65,7 +68,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
 
             if (animator != null && animator.CurrentAnimation.UseSpriteSheet)
             {
-                drawPos += new Vector2(animator.MaxFrames * animator.CurrentAnimation.FrameDimensions * GameObject.Transform.Scale.X / 2 - (float)(animator.CurrentAnimation.FrameDimensions * 2), 0);
+                drawPos += new Vector2(animator.MaxFrames * animator.CurrentAnimation.FrameDimensions * GameObject.Transform.Scale.X / 2 - animator.CurrentAnimation.FrameDimensions * 2, 0);
             }
             //Draws the sprite, and if there is a sourcerectangle set, then it uses that.
             spriteBatch.Draw(Sprite, drawPos, SourceRectangle == Rectangle.Empty ? null : SourceRectangle, Color, GameObject.Transform.Rotation, Origin, GameObject.Transform.Scale, SpriteEffects, LayerDepth);

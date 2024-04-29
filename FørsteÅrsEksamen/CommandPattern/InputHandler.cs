@@ -27,23 +27,19 @@ namespace FørsteÅrsEksamen.CommandPattern
         private Dictionary<Keys, ICommand> keybindsButtonDown = new Dictionary<Keys, ICommand>();
 
         // Mouse Commands
-        private Dictionary<ButtonState, ICommand> mouseButtonUpdateCommands = new Dictionary<ButtonState, ICommand>();
+        private Dictionary<ButtonState, ICommand> mouseButtonUpdateCommands = new();
 
-        private Dictionary<ButtonState, ICommand> mouseButtonDownCommands = new Dictionary<ButtonState, ICommand>();
-        private Dictionary<ScrollWheelState, ICommand> scrollWheelCommands = new Dictionary<ScrollWheelState, ICommand>();
+        private Dictionary<ButtonState, ICommand> mouseButtonDownCommands = new();
+        private Dictionary<ScrollWheelState, ICommand> scrollWheelCommands = new();
 
         public Vector2 mouseInWorld, mouseOnUI;
         public bool mouseOutOfBounds;
-        public float zoom = 1f;
 
         #endregion Properties
 
         private InputHandler()
         {
             AddKeyButtonDownCommand(Keys.Escape, new QuitCommand());
-
-            AddScrollWheelCommand(ScrollWheelState.Up, new ZoomCommand(-0.1f));
-            AddScrollWheelCommand(ScrollWheelState.Down, new ZoomCommand(0.1f));
         }
 
         #region Command

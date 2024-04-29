@@ -1,4 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using FørsteÅrsEksamen.ComponentPattern.GUI;
+using FørsteÅrsEksamen.GameManagement;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace FørsteÅrsEksamen.ComponentPattern.Grid
 {
@@ -33,6 +36,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
             GameObject.Transform.GridPosition = point;
             GameObject.Transform.Scale = ScaleSize;
 
+            // Centers the position of the cell.
             GameObject.Transform.Position = grid.StartPostion
                 + new Vector2(point.X * Demension * ScaleSize.X + Demension * ScaleSize.X / 2,
                               point.Y * Demension * ScaleSize.Y + Demension * ScaleSize.Y / 2);
@@ -57,6 +61,11 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
             Parent = null;
             G = 0;
             H = 0;
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, GameWorld.Instance.WorldCam.zoom, GameObject.Transform.Position, "X", Color.Black);
         }
     }
 }

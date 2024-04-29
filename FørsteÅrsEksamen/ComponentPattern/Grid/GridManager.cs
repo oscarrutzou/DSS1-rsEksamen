@@ -31,11 +31,11 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
                 }
             }
         }
-
+        
+        private IRepository repository;
 
         #endregion
 
-        IRepository repository;
         public void InitalizeGrids()
         {
             repository = FileRepository.Instance;
@@ -45,13 +45,13 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
             if (repository.DoesGridExist(gridName))
             {
                 DeleteGrids();
-                GameObject go = repository.GetGrid("Bottom");
+                GameObject go = repository.GetGrid(gridName);
                 Grids.Add(go.GetComponent<Grid>());
             }
             else
             {
                 GameObject gridGo = new();
-                Grid grid = gridGo.AddComponent<Grid>("Bottom", new Vector2(-500, 0), 4, 4);
+                Grid grid = gridGo.AddComponent<Grid>(gridName, new Vector2(-500, 0), 4, 4);
                 grid.GenerateGrid();
                 Grids.Add(grid);
 

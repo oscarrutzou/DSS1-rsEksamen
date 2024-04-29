@@ -84,6 +84,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
                     break;
                 }
             }
+
             if (gridName == null)
             {
                 throw new Exception($"Haven't found '{description}' in appdata.");

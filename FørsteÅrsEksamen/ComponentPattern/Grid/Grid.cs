@@ -84,6 +84,9 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
             return null; // Position is out of bounds
         }
 
+        //public List<GameObject>
+
+
         public Vector2 PosFromGridPos(Point point) => Cells[point].Transform.Position;
 
         public GameObject GetCellGameObjectFromPoint(Point point) => GetCellGameObject(PosFromGridPos(point));
