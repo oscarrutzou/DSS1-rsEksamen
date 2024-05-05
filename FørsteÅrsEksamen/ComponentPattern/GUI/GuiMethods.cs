@@ -7,7 +7,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
     // Oscar
     public static class GuiMethods
     {
-
+        
         // Maybe only update it if the text should move, should be handled by the component that uses the method.
         /// <summary>
         /// <para>Can take and divide the text and center each part of the text.</para>

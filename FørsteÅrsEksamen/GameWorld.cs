@@ -25,7 +25,7 @@ namespace FørsteÅrsEksamen.GameManagement
             GfxManager = new GraphicsDeviceManager(this);
             Content.RootDirectory = "A-Content";
             IsMouseVisible = true;
-            Window.Title = "Første års eksamen";
+            Window.Title = "Doctors Dungeon";
         }
 
         protected override void Initialize()
