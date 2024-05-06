@@ -1,8 +1,6 @@
-﻿using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.GameManagement;
+﻿using FørsteÅrsEksamen.GameManagement;
 using FørsteÅrsEksamen.RepositoryPattern;
 using Microsoft.Xna.Framework;
-using SharpDX.Direct3D9;
 using System.Collections.Generic;
 
 namespace FørsteÅrsEksamen.ComponentPattern.Grid
@@ -10,6 +8,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
     public class GridManager
     {
         #region Parameters
+
         private static GridManager instance;
 
         public static GridManager Instance
@@ -17,10 +16,11 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
 
         public List<Grid> Grids = new();
         public Grid SelectedGrid { get; private set; }
-        
+
         private int gridIndex;
-        public int GridIndex 
-        { 
+
+        public int GridIndex
+        {
             get { return gridIndex; }
             set
             {
@@ -31,18 +31,18 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
                 }
             }
         }
-        
+
         private IRepository repository;
 
-        #endregion
+        #endregion Parameters
 
-        // Måske skal der ikke være en gridmanager siden der nok max vil være 1 grid på 
+        // Måske skal der ikke være en gridmanager siden der nok max vil være 1 grid på
         public void InitalizeGrids()
         {
             repository = FileRepository.Instance; //Måske lav rep til en static som er den måde den save på, som bliver bestemt i starten.
-            // Lav det til at alt er saved på pc og hvis timestamp er anderledet på postgre end file, skal den først uploade alt hvis den har adgang, før den starter?
-            // Brug file system hvis der ikke er adgang til postgre
- 
+                                                  // Lav det til at alt er saved på pc og hvis timestamp er anderledet på postgre end file, skal den først uploade alt hvis den har adgang, før den starter?
+                                                  // Brug file system hvis der ikke er adgang til postgre
+
             string gridName = "Bottom";
 
             if (repository.DoesGridExist(gridName))
@@ -84,7 +84,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
 
         private void OnGridIndexChanged()
         {
-
         }
     }
 }

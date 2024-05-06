@@ -1,5 +1,4 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.Characters;
 using FørsteÅrsEksamen.ComponentPattern.Grid;
 using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;

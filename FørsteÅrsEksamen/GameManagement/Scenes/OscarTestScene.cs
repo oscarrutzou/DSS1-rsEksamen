@@ -26,7 +26,6 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             SetCommands();
         }
 
-
         private void MakePlayer()
         {
             playerFactory = new PlayerFactory();
@@ -57,12 +56,13 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
             base.DrawInWorld(spriteBatch);
         }
+
         private List<GameObject> list;
 
         public override void DrawOnScreen(SpriteBatch spriteBatch)
         {
             spriteBatch.DrawString(GlobalTextures.DefaultFont, $"PlayerPos {playerPos}", GameWorld.Instance.UiCam.TopLeft, Color.Black);
-            
+
             SceneData.GameObjectLists.TryGetValue(GameObjectTypes.Cell, out list);
             spriteBatch.DrawString(GlobalTextures.DefaultFont, $"SceneObjects in scene {list.Count}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 60), Color.Black);
 

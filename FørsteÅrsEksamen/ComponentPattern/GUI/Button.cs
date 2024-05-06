@@ -2,10 +2,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FørsteÅrsEksamen.ComponentPattern.GUI
 {
@@ -36,7 +32,5 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
             if (string.IsNullOrEmpty(Text) || GameObject.GetComponent<SpriteRenderer>().ShouldDraw) return;
             GuiMethods.DrawTextCentered(spriteBatch, Font, GameWorld.Instance.UiCam.zoom, GameObject.Transform.Position, Text, TextColor);
         }
-
-
     }
 }

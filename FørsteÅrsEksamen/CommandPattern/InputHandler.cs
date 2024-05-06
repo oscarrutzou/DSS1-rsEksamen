@@ -18,6 +18,7 @@ namespace FørsteÅrsEksamen.CommandPattern
         #region Properties
 
         private static InputHandler instance;
+
         public static InputHandler Instance
         { get { return instance ??= instance = new InputHandler(); } }
 

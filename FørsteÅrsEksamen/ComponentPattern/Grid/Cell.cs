@@ -15,16 +15,16 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
     public class Cell : Component
     {
         public static int Demension = 16;
-        public readonly static Vector2 ScaleSize = new(4, 4);
+        public static readonly Vector2 ScaleSize = new(4, 4);
 
         // For the Astar algortihm
         public CellWalkableType CellWalkableType = CellWalkableType.NotValid;
+
         public int cost = 1;
 
         public int G;
         public int H;
         public int F => G + H;
-
 
         /// <summary>
         /// Parent is for the Astar, not the GameObject that is attached as "GameObject".

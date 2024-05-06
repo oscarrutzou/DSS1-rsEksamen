@@ -1,13 +1,10 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern;
 using FørsteÅrsEksamen.ComponentPattern.Grid;
-using System.Collections.Generic;
-using System;
-using System.IO;
-using Microsoft.Xna.Framework;
-using System.Reflection;
-using SharpDX.Direct3D9;
 using FørsteÅrsEksamen.Factory;
 using FørsteÅrsEksamen.GameManagement;
+using Microsoft.Xna.Framework;
+using System;
+using System.IO;
 
 namespace FørsteÅrsEksamen.RepositoryPattern
 {

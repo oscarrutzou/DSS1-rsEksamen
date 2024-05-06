@@ -9,7 +9,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
     public class Grid : Component
     {
         #region Properties
-        
+
         public string Description;
 
         public Vector2 StartPostion { get; set; }
@@ -85,7 +85,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
         }
 
         //public List<GameObject>
-
 
         public Vector2 PosFromGridPos(Point point) => Cells[point].Transform.Position;
 
