@@ -36,9 +36,12 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
 
         #endregion
 
+        // Måske skal der ikke være en gridmanager siden der nok max vil være 1 grid på 
         public void InitalizeGrids()
         {
-            repository = FileRepository.Instance;
+            repository = FileRepository.Instance; //Måske lav rep til en static som er den måde den save på, som bliver bestemt i starten.
+            // Lav det til at alt er saved på pc og hvis timestamp er anderledet på postgre end file, skal den først uploade alt hvis den har adgang, før den starter?
+            // Brug file system hvis der ikke er adgang til postgre
  
             string gridName = "Bottom";
 
