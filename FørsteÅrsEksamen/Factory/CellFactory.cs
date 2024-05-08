@@ -31,14 +31,14 @@ namespace FørsteÅrsEksamen.Factory
             return cellGo;
         }
 
-        public static GameObject Create(Grid grid, Point gridPos, CellWalkableType cellType)
+        public static GameObject Create(Grid grid, Point gridPos, CellWalkableType cellType, int roomNr)
         {
             GameObject cellGo = new()
             {
                 Type = GameObjectTypes.Cell
             };
 
-            cellGo.AddComponent<Cell>(grid, gridPos, cellType);
+            cellGo.AddComponent<Cell>(grid, gridPos, cellType, roomNr);
 
             SpriteRenderer sr = cellGo.AddComponent<SpriteRenderer>();
             sr.SetLayerDepth(LAYERDEPTH.WorldBackground);

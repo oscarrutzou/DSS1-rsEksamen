@@ -14,7 +14,7 @@ namespace FørsteÅrsEksamen.CommandPattern.Commands
             {
                 GridManager.Instance.DeleteGrids();
             }else { 
-                GridManager.Instance.LoadGrids();
+                GridManager.Instance.LoadGrid("Test1");
             }
             //GameWorld.Instance.Exit();
         }

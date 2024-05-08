@@ -7,10 +7,11 @@ namespace FørsteÅrsEksamen.RepositoryPattern
     {
         void Initialize();
 
-        void SaveGrid(Grid grid, string savedDescription);
+        void SaveGrid(Grid grid);
 
         GameObject GetGrid(string description);
         bool DoesGridExist(string description);
         void DeleteGrid(string description);
+        void DeleteDatabase();
     }
 }

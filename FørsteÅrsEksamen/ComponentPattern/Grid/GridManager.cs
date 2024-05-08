@@ -37,37 +37,36 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
         #endregion Parameters
 
         // Måske skal der ikke være en gridmanager siden der nok max vil være 1 grid på
-        public void InitalizeGrids()
+        public GridManager()
         {
             repository = FileRepository.Instance; //Måske lav rep til en static som er den måde den save på, som bliver bestemt i starten.
                                                   // Lav det til at alt er saved på pc og hvis timestamp er anderledet på postgre end file, skal den først uploade alt hvis den har adgang, før den starter?
                                                   // Brug file system hvis der ikke er adgang til postgre
+        }
 
-            string gridName = "Bottom";
-
-            if (repository.DoesGridExist(gridName))
+        public void SaveGrid(Grid grid)
+        {
+            if (repository.DoesGridExist(grid.Name))
             {
-                DeleteGrids();
-                GameObject go = repository.GetGrid(gridName);
+                GameObject go = repository.GetGrid(grid.Name);
                 Grids.Add(go.GetComponent<Grid>());
+                Grids.Add(grid);
             }
             else
             {
-                GameObject gridGo = new();
-                Grid grid = gridGo.AddComponent<Grid>(gridName, new Vector2(-500, 0), 4, 4);
                 grid.GenerateGrid();
-                Grids.Add(grid);
-
-                repository.SaveGrid(grid, "grid_1_" + grid.Description);
+                repository.SaveGrid(grid);
             }
         }
 
-        public void LoadGrids()
+        public void LoadGrid(string gridName)
         {
+            // Delete current drawn grid? Otherwise tru and 
             DeleteGrids();
-            GameObject go = repository.GetGrid("Bottom");
+            GameObject go = repository.GetGrid(gridName);
             Grids.Add(go.GetComponent<Grid>());
         }
+
 
         public void DeleteGrids()
         {
@@ -81,6 +80,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
             }
             Grids.Clear();
         }
+
+
 
         private void OnGridIndexChanged()
         {

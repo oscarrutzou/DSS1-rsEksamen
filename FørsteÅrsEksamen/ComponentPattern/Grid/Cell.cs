@@ -17,6 +17,11 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
         public static int Demension = 16;
         public static readonly Vector2 ScaleSize = new(4, 4);
 
+        /// <summary>
+        /// Used when selecting which room is active on each grid. Base is -1, so they dont count as a room
+        /// </summary>
+        public int RoomNr = -1;
+
         // For the Astar algortihm
         public CellWalkableType CellWalkableType = CellWalkableType.NotValid;
 
@@ -53,6 +58,18 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
                               point.Y * Demension * ScaleSize.Y + Demension * ScaleSize.Y / 2);
         }
 
+        public Cell(GameObject gameObject, Grid grid, Point point, CellWalkableType type, int roomNr) : base(gameObject)
+        {
+            GameObject.Transform.GridPosition = point;
+            GameObject.Transform.Scale = ScaleSize;
+            this.CellWalkableType = type;
+            this.RoomNr = roomNr;
+
+            GameObject.Transform.Position = grid.StartPostion
+                + new Vector2(point.X * Demension * ScaleSize.X + Demension * ScaleSize.X / 2,
+                              point.Y * Demension * ScaleSize.Y + Demension * ScaleSize.Y / 2);
+        }
+
         /// <summary>
         /// Resets the cell, to make it ready for another path.
         /// </summary>
@@ -65,7 +82,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, GameWorld.Instance.WorldCam.zoom, GameObject.Transform.Position, "X", Color.Black);
+            GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, GameWorld.Instance.WorldCam.zoom, GameObject.Transform.Position, RoomNr.ToString(), Color.Black);
         }
     }
 }

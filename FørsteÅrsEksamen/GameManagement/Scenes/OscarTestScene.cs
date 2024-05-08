@@ -22,7 +22,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         public override void Initialize()
         {
             MakePlayer();
-            GridManager.Instance.InitalizeGrids();
+            StartGrid();
             SetCommands();
         }
 
@@ -43,6 +43,13 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             InputHandler.Instance.AddKeyUpdateCommand(Keys.A, new MoveCommand(player, new Vector2(-1, 0)));
             InputHandler.Instance.AddKeyUpdateCommand(Keys.W, new MoveCommand(player, new Vector2(0, -1)));
             InputHandler.Instance.AddKeyUpdateCommand(Keys.S, new MoveCommand(player, new Vector2(0, 1)));
+        }
+
+        private void StartGrid()
+        {
+            GameObject gridGo = new();
+            Grid grid = gridGo.AddComponent<Grid>("Test1", new Vector2(0, 0), 4, 4);
+            GridManager.Instance.SaveGrid(grid);
         }
 
         public override void Update(GameTime gameTime)

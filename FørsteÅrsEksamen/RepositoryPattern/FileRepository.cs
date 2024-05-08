@@ -15,33 +15,35 @@ namespace FørsteÅrsEksamen.RepositoryPattern
         public static FileRepository Instance
         { get { return instance ??= instance = new FileRepository(); } }
 
-        private readonly string folderPath;
+        private readonly string baseFolderPath;
 
         public FileRepository()
         {
             string exeDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            folderPath = Path.Combine(exeDirectory, "data");
-            Directory.CreateDirectory(folderPath);
+            baseFolderPath = Path.Combine(exeDirectory, "data");
+            Directory.CreateDirectory(baseFolderPath);
+
+
         }
 
         public void Initialize()
         {
         }
 
-        public void SaveGrid(Grid grid, string savedDescription)
+        public void SaveGrid(Grid grid)
         {
-            DeleteExistingGrids();
+            //DeleteExistingGrids();
 
-            string path = Path.Combine(folderPath, $"{savedDescription}.txt");
+            string path = Path.Combine(baseFolderPath, $"grid_{grid.Name}.txt");
             FileStream stream = File.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite);
             try
             {
                 stream.SetLength(0);
-                StreamWriter writer = new StreamWriter(stream);
+                StreamWriter writer = new(stream);
                 writer.WriteLine($"Start Postition (World coordinates): {grid.StartPostion.X}, {grid.StartPostion.Y}");
                 writer.WriteLine($"Grids Size (Width, Height): {grid.Width}, {grid.Height}");
 
-                writer.WriteLine("Grid Cells (Position.X, Postion.Y, Cell Type):");
+                writer.WriteLine("Grid Cells (Position.X, Postion.Y, Cell Type, RoomNr):");
                 for (int y = 0; y < grid.Height; y++)
                 {
                     for (int x = 0; x < grid.Width; x++)
@@ -49,7 +51,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
                         GameObject cellGo = grid.Cells[new Point(x, y)];
                         Point gridpos = cellGo.Transform.GridPosition;
                         Cell cell = cellGo.GetComponent<Cell>();
-                        writer.WriteLine($"{gridpos.X}, {gridpos.Y}, {cell.CellWalkableType}");
+                        writer.WriteLine($"{gridpos.X}, {gridpos.Y}, {cell.CellWalkableType}, {cell.RoomNr}");
                     }
                 }
 
@@ -64,30 +66,14 @@ namespace FørsteÅrsEksamen.RepositoryPattern
         public GameObject GetGrid(string description)
         {
             GameObject gridGo = new();
-            string gridName = null;
-            string fullPathName = null;
+            string gridName = "grid_" + description;
 
-            string[] files = Directory.GetFiles(folderPath, "grid*.txt");
-            // Search though each file, to find the correct
-            foreach (string file in files)
-            {
-                string fileName = Path.GetFileNameWithoutExtension(file);
-                string[] parts = fileName.Split('_');
-
-                if (parts.Length == 3 && parts[2] == description)
-                {
-                    fullPathName = file;
-                    gridName = parts[2];
-                    break;
-                }
-            }
-
-            if (gridName == null)
+            if (!DoesGridExist(description))
             {
                 throw new Exception($"Haven't found '{description}' in appdata.");
             }
 
-            string path = Path.Combine(folderPath, fullPathName); //Know the path is there
+            string path = Path.Combine(baseFolderPath, gridName + ".txt"); //Know the path is there
             FileStream stream = File.OpenRead(path);
 
             Grid grid;
@@ -105,7 +91,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
 
                 grid = gridGo.AddComponent<Grid>(gridName, startPos, width, height);
 
-                reader.ReadLine(); //There is the line "Grid Cells (Position.X, Postion.Y, Cell Type):" here, so we skip it
+                reader.ReadLine(); //There is the line "Grid Cells (Position.X, Postion.Y, Cell Type, RoomNr):" here, so we skip it
 
                 string line;
                 while ((line = reader.ReadLine()) != null)
@@ -116,7 +102,9 @@ namespace FørsteÅrsEksamen.RepositoryPattern
 
                     CellWalkableType type = (CellWalkableType)Enum.Parse(typeof(CellWalkableType), parts[2]);
 
-                    GameObject cellGo = CellFactory.Create(grid, gridPos, type);
+                    int roomNr = int.Parse(parts[3]);
+
+                    GameObject cellGo = CellFactory.Create(grid, gridPos, type, roomNr);
                     grid.Cells.Add(gridPos, cellGo);
                     GameWorld.Instance.Instantiate(cellGo);
                 }
@@ -132,7 +120,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
         private void DeleteExistingGrids()
         {
             // Get all files that start with "grid"
-            string[] files = Directory.GetFiles(folderPath, "grid*.txt");
+            string[] files = Directory.GetFiles(baseFolderPath, "grid*.txt");
 
             // Delete each file
             foreach (string file in files)
@@ -157,18 +145,27 @@ namespace FørsteÅrsEksamen.RepositoryPattern
 
         private string FindGridFile(string description)
         {
-            string[] files = Directory.GetFiles(folderPath, "grid*.txt");
+            string[] files = Directory.GetFiles(baseFolderPath, "grid*.txt");
             foreach (string file in files)
             {
                 string fileName = Path.GetFileNameWithoutExtension(file);
                 string[] parts = fileName.Split('_');
 
-                if (parts.Length == 3 && parts[2] == description)
+                if (parts.Length == 2 && parts[1] == description)
                 {
                     return file;
                 }
             }
             return null;
+        }
+
+        public void DeleteDatabase()
+        {
+            string[] files = Directory.GetFiles(baseFolderPath);
+            foreach (string file in files)
+            {
+                File.Delete(file);
+            }
         }
     }
 }

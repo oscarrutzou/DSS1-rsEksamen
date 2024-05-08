@@ -10,7 +10,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
     {
         #region Properties
 
-        public string Description;
+        public string Name { get; set; }
 
         public Vector2 StartPostion { get; set; }
 
@@ -27,7 +27,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
 
         public Grid(GameObject gameObject, string description, Vector2 startPos, int width, int height) : base(gameObject)
         {
-            this.Description = description;
+            this.Name = description;
             this.StartPostion = startPos;
             this.Width = width;
             this.Height = height;
