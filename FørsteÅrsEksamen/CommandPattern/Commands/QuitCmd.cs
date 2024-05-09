@@ -3,7 +3,7 @@ using FørsteÅrsEksamen.GameManagement;
 
 namespace FørsteÅrsEksamen.CommandPattern.Commands
 {
-    internal class QuitCommand : ICommand
+    internal class QuitCmd : ICommand
     {
         private bool test;
         public void Execute()

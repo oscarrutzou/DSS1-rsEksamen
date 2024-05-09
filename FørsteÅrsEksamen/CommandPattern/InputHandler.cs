@@ -8,8 +8,12 @@ namespace FørsteÅrsEksamen.CommandPattern
 {
     public enum ScrollWheelState
     {
-        Up,
-        Down
+        Up, Down
+    }
+
+    public enum MouseCmdState
+    {
+        Left, Right   
     }
 
     // Oscar
@@ -23,14 +27,14 @@ namespace FørsteÅrsEksamen.CommandPattern
         { get { return instance ??= instance = new InputHandler(); } }
 
         // Keyboard commands
-        private Dictionary<Keys, ICommand> keybindsUpdate = new Dictionary<Keys, ICommand>();
+        private Dictionary<Keys, ICommand> keybindsUpdate = new();
 
-        private Dictionary<Keys, ICommand> keybindsButtonDown = new Dictionary<Keys, ICommand>();
+        private Dictionary<Keys, ICommand> keybindsButtonDown = new();
 
         // Mouse Commands
-        private Dictionary<ButtonState, ICommand> mouseButtonUpdateCommands = new();
+        private Dictionary<MouseCmdState, ICommand> mouseButtonUpdateCommands = new();
 
-        private Dictionary<ButtonState, ICommand> mouseButtonDownCommands = new();
+        private Dictionary<MouseCmdState, ICommand> mouseButtonDownCommands = new();
         private Dictionary<ScrollWheelState, ICommand> scrollWheelCommands = new();
 
         public Vector2 mouseInWorld, mouseOnUI;
@@ -40,8 +44,9 @@ namespace FørsteÅrsEksamen.CommandPattern
 
         private InputHandler()
         {
-            AddKeyButtonDownCommand(Keys.Escape, new QuitCommand());
-            AddMouseUpdateCommand(ButtonState.Pressed, new DrawTilesCommand());
+            AddKeyButtonDownCommand(Keys.Escape, new QuitCmd());
+            AddMouseUpdateCommand(MouseCmdState.Left, new DrawTilesCmd());
+            AddMouseUpdateCommand(MouseCmdState.Right, new ChangeSeletecDrawActionCmd());
 
         }
 
@@ -51,9 +56,9 @@ namespace FørsteÅrsEksamen.CommandPattern
 
         public void AddKeyButtonDownCommand(Keys inputKey, ICommand command) => keybindsButtonDown.Add(inputKey, command);
 
-        public void AddMouseUpdateCommand(ButtonState inputButton, ICommand command) => mouseButtonUpdateCommands.Add(inputButton, command);
+        public void AddMouseUpdateCommand(MouseCmdState inputButton, ICommand command) => mouseButtonUpdateCommands.Add(inputButton, command);
 
-        public void AddMouseButtonDownCommand(ButtonState inputButton, ICommand command) => mouseButtonDownCommands.Add(inputButton, command);
+        public void AddMouseButtonDownCommand(MouseCmdState inputButton, ICommand command) => mouseButtonDownCommands.Add(inputButton, command);
 
         public void AddScrollWheelCommand(ScrollWheelState scrollWheelState, ICommand command) => scrollWheelCommands.Add(scrollWheelState, command);
 
@@ -97,7 +102,7 @@ namespace FørsteÅrsEksamen.CommandPattern
         {
             // Left mouse button update commands
             if (mouseState.LeftButton == ButtonState.Pressed
-                && mouseButtonUpdateCommands.TryGetValue(ButtonState.Pressed, out ICommand cmdLeft))
+                && mouseButtonUpdateCommands.TryGetValue(MouseCmdState.Left, out ICommand cmdLeft))
             {
                 cmdLeft.Execute();
             }
@@ -105,14 +110,14 @@ namespace FørsteÅrsEksamen.CommandPattern
             // Left mouse button down commands
             if (previousMouseState.LeftButton == ButtonState.Released
                 && mouseState.LeftButton == ButtonState.Pressed
-                && mouseButtonDownCommands.TryGetValue(ButtonState.Pressed, out ICommand cmdBdLeft))
+                && mouseButtonDownCommands.TryGetValue(MouseCmdState.Left, out ICommand cmdBdLeft))
             {
                 cmdBdLeft.Execute();
             }
 
             // Right mouse button update commands
             if (mouseState.RightButton == ButtonState.Pressed
-                && mouseButtonUpdateCommands.TryGetValue(ButtonState.Pressed, out ICommand cmdRight))
+                && mouseButtonUpdateCommands.TryGetValue(MouseCmdState.Right, out ICommand cmdRight))
             {
                 cmdRight.Execute();
             }
@@ -120,7 +125,7 @@ namespace FørsteÅrsEksamen.CommandPattern
             // Right mouse button down commands
             if (previousMouseState.RightButton == ButtonState.Released
                 && mouseState.RightButton == ButtonState.Pressed
-                && mouseButtonDownCommands.TryGetValue(ButtonState.Pressed, out ICommand cmdBdRight))
+                && mouseButtonDownCommands.TryGetValue(MouseCmdState.Right, out ICommand cmdBdRight))
             {
                 cmdBdRight.Execute();
             }

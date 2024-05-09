@@ -39,10 +39,10 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         {
             player = playerGo.GetComponent<Player>();
             player.Attach(this);
-            InputHandler.Instance.AddKeyUpdateCommand(Keys.D, new MoveCommand(player, new Vector2(1, 0)));
-            InputHandler.Instance.AddKeyUpdateCommand(Keys.A, new MoveCommand(player, new Vector2(-1, 0)));
-            InputHandler.Instance.AddKeyUpdateCommand(Keys.W, new MoveCommand(player, new Vector2(0, -1)));
-            InputHandler.Instance.AddKeyUpdateCommand(Keys.S, new MoveCommand(player, new Vector2(0, 1)));
+            InputHandler.Instance.AddKeyUpdateCommand(Keys.D, new MoveCmd(player, new Vector2(1, 0)));
+            InputHandler.Instance.AddKeyUpdateCommand(Keys.A, new MoveCmd(player, new Vector2(-1, 0)));
+            InputHandler.Instance.AddKeyUpdateCommand(Keys.W, new MoveCmd(player, new Vector2(0, -1)));
+            InputHandler.Instance.AddKeyUpdateCommand(Keys.S, new MoveCmd(player, new Vector2(0, 1)));
         }
 
         private void StartGrid()
@@ -66,7 +66,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             base.DrawInWorld(spriteBatch);
         }
 
-        private List<GameObject> list;
+        private List<GameObject> list; //For test
 
         public override void DrawOnScreen(SpriteBatch spriteBatch)
         {
@@ -87,12 +87,11 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         }
 
         private void DrawCellPos(SpriteBatch spriteBatch)
-        {
-            if (GridManager.Instance.CurrentGrid == null) return;
-            
+        {            
             GameObject cellGo = GridManager.Instance.GetCellAtPos(InputHandler.Instance.mouseInWorld);
+
             if (cellGo == null) return;
-            Vector2 cellPos = cellGo.Transform.Position;
+
             Point cellGridPos = cellGo.Transform.GridPosition;
             spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Cell Point from MousePos: {cellGridPos}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 30), Color.Black);
         }

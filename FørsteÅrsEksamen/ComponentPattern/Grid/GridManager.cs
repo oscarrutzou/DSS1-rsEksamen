@@ -1,4 +1,5 @@
-﻿using FørsteÅrsEksamen.GameManagement;
+﻿using FørsteÅrsEksamen.CommandPattern;
+using FørsteÅrsEksamen.GameManagement;
 using FørsteÅrsEksamen.RepositoryPattern;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
@@ -50,7 +51,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
 
             if (!repository.DoesGridExist(grid.Name))
             {
-                OverrideSaveGrid(grid);
+                OverrideSaveGrid();
             }
             else
             {
@@ -58,20 +59,45 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
             }
         }
 
-        public void OverrideSaveGrid(Grid grid)
+        public void OverrideSaveGrid()
         {
-            CurrentGrid = grid;
             repository.SaveGrid(CurrentGrid);
         }
 
         public void LoadGrid(string gridName)
         {
-            // Delete current drawn grid? Otherwise tru and 
+            // A little dumb that it first gets made and then deleted? Fix, if u have time
             DeleteDrawnGrid();
             GameObject go = repository.GetGrid(gridName);
             CurrentGrid = go.GetComponent<Grid>();
         }
 
+
+        public void DrawOnCells()
+        {
+            GameObject cellGo = GetCellAtPos(InputHandler.Instance.mouseInWorld);
+            if (cellGo == null) return;
+
+            Cell cell = cellGo.GetComponent<Cell>();
+            //Set this based on a number and what is selected
+            cell.ChangeCellWalkalbeType(CellWalkableType.FullValid);
+            cell.RoomNr = 2;
+
+            OverrideSaveGrid(); //Works since we already just are changing the CurrentGrid in the GridManager
+        }
+
+        public void SetDefaultOnCell()
+        {
+            GameObject cellGo = GetCellAtPos(InputHandler.Instance.mouseInWorld);
+            if (cellGo == null) return;
+
+            Cell cell = cellGo.GetComponent<Cell>();
+            //Set this based on a number and what is selected
+            cell.RoomNr = -1;
+            cell.ChangeCellWalkalbeType(CellWalkableType.NotValid);
+
+            OverrideSaveGrid(); //Works since we already just are changing the CurrentGrid in the GridManager
+        }
 
         public void DeleteDrawnGrid()
         {
@@ -85,9 +111,39 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
             CurrentGrid = null;
         }
 
+        /*
+         *         {
+            Vector2 mouseInWorld = InputHandler.Instance.mouseInWorld;
+
+            //Find grid if there is a tile under the mouse. with inputhandler mousepos in world
+            // Check within grid.startpos.x + cell.dem * cell.scale and on the other side
+
+            Grid grid = GridManager.Instance.CurrentGrid;
+
+            if (grid == null) return;
+
+            int scale = Cell.Demension * Cell.Scale;
+            Rectangle gridSize = new((int)grid.StartPostion.X, (int)grid.StartPostion.Y, grid.Width * scale, grid.Height * scale);
+            
+            if (gridSize.Contains(mouseInWorld))
+            {
+                // Mouse inside grid
+                GameObject cellGo = grid.GetCellGameObject(mouseInWorld);
+                if (cellGo == null) return;
+
+                Point cellGridPos = cellGo.Transform.GridPosition;
+                grid.Cells[cellGridPos].GetComponent<SpriteRenderer>().Color = Color.Red;
+                Cell cell = cellGo.GetComponent<Cell>();
+                cell.CellWalkableType = CellWalkableType.FullValid;
+                cell.RoomNr = 2;
+                GridManager.Instance.OverrideSaveGrid(grid);
+            }
+         */
 
         public GameObject GetCellAtPos(Vector2 pos)
         {
+            if (CurrentGrid == null) return null;
+
             GameObject go = CurrentGrid.GetCellGameObject(pos);
             if (go != null)
             {
@@ -97,6 +153,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
             return null;
         }
 
+      
 
         private void OnGridIndexChanged()
         {

@@ -114,18 +114,6 @@ namespace FørsteÅrsEksamen.RepositoryPattern
             return gridGo;
         }
 
-        private void DeleteExistingGrids()
-        {
-            // Get all files that start with "grid"
-            string[] files = Directory.GetFiles(baseFolderPath, "grid*.txt");
-
-            // Delete each file
-            foreach (string file in files)
-            {
-                File.Delete(file);
-            }
-        }
-
         public void DeleteGrid(string description)
         {
             string file = FindGridFile(description);

@@ -26,7 +26,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
         public int RoomNr = -1;
 
         // For the Astar algortihm
-        public CellWalkableType CellWalkableType = CellWalkableType.NotValid;
+        public CellWalkableType CellWalkableType;
 
         public int cost = 1;
 
@@ -44,6 +44,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
             GameObject.Transform.GridPosition = point;
             GameObject.Transform.Scale = new(Scale, Scale);
 
+            CellWalkableType = CellWalkableType.NotValid;
+
             // Centers the position of the cell.
             GameObject.Transform.Position = grid.StartPostion
                 + new Vector2(point.X * Demension * Scale + Demension * Scale / 2,
@@ -55,7 +57,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
             GameObject.Transform.GridPosition = point;
             GameObject.Transform.Scale = new(Scale, Scale);
 
-            this.CellWalkableType = type;
+            CellWalkableType = type;
 
             // Centers the position of the cell.
             GameObject.Transform.Position = grid.StartPostion
@@ -67,7 +69,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
         {
             GameObject.Transform.GridPosition = point;
             GameObject.Transform.Scale = new(Scale, Scale);
-            this.CellWalkableType = type;
+
+            CellWalkableType = type;
             this.RoomNr = roomNr;
 
             // Centers the position of the cell.
@@ -80,6 +83,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
         {
             spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
             if (spriteRenderer == null) throw new System.Exception("Cell need a spriteRenderer");
+
+            ChangeCellWalkalbeType(CellWalkableType); //Just the same here, so it turns the correct color.
         }
 
         /// <summary>
@@ -97,10 +102,9 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
             GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, GameWorld.Instance.WorldCam.zoom, GameObject.Transform.Position, RoomNr.ToString(), Color.Black);
         }
 
-        private CellWalkableType previosType;
-        public override void Update(GameTime gameTime)
+        public void ChangeCellWalkalbeType(CellWalkableType cellWalkableType)
         {
-            if (CellWalkableType == previosType) return;
+            CellWalkableType = cellWalkableType;
 
             switch (CellWalkableType)
             {
@@ -111,8 +115,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
                     spriteRenderer.Color = Color.Red;
                     break;
             }
-
-            previosType = CellWalkableType;
         }
 
 
