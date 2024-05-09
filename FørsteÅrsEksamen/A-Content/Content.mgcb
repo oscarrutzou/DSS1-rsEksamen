@@ -140,7 +140,7 @@
 /processorParam:TextureFormat=Color
 /build:World/16x16White.png
 
-#begin World/Enemy/Orc Crew/Orc - Rogue/Death/Death-Sheet.png
+#begin World/Classes/Knight-Death.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -150,14 +150,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/Enemy/Orc Crew/Orc - Rogue/Death/Death-Sheet.png
+/build:World/Classes/Knight-Death.png
 
-#begin World/Enemy/Orc Crew/Orc - Rogue/Death/Death.aseprite
-/importer:
-/processor:
-/build:World/Enemy/Orc Crew/Orc - Rogue/Death/Death.aseprite
-
-#begin World/Enemy/Orc Crew/Orc - Rogue/Idle/Idle-Sheet.png
+#begin World/Classes/Knight-Idle.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -167,14 +162,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/Enemy/Orc Crew/Orc - Rogue/Idle/Idle-Sheet.png
+/build:World/Classes/Knight-Idle.png
 
-#begin World/Enemy/Orc Crew/Orc - Rogue/Idle/Idle.aseprite
-/importer:
-/processor:
-/build:World/Enemy/Orc Crew/Orc - Rogue/Idle/Idle.aseprite
-
-#begin World/Enemy/Orc Crew/Orc - Rogue/Run/Run-Sheet.png
+#begin World/Classes/Knight-Run.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -184,14 +174,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/Enemy/Orc Crew/Orc - Rogue/Run/Run-Sheet.png
+/build:World/Classes/Knight-Run.png
 
-#begin World/Enemy/Orc Crew/Orc - Rogue/Run/Run.aseprite
-/importer:
-/processor:
-/build:World/Enemy/Orc Crew/Orc - Rogue/Run/Run.aseprite
-
-#begin World/Enemy/Orc Crew/Orc - Shaman/Death/Death-Sheet.png
+#begin World/Enemies/Orc-Death.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -201,14 +186,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/Enemy/Orc Crew/Orc - Shaman/Death/Death-Sheet.png
+/build:World/Enemies/Orc-Death.png
 
-#begin World/Enemy/Orc Crew/Orc - Shaman/Death/Death.aseprite
-/importer:
-/processor:
-/build:World/Enemy/Orc Crew/Orc - Shaman/Death/Death.aseprite
-
-#begin World/Enemy/Orc Crew/Orc - Shaman/Idle/Idle-Sheet.png
+#begin World/Enemies/Orc-Idle.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -218,14 +198,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/Enemy/Orc Crew/Orc - Shaman/Idle/Idle-Sheet.png
+/build:World/Enemies/Orc-Idle.png
 
-#begin World/Enemy/Orc Crew/Orc - Shaman/Idle/Idle.aseprite
-/importer:
-/processor:
-/build:World/Enemy/Orc Crew/Orc - Shaman/Idle/Idle.aseprite
-
-#begin World/Enemy/Orc Crew/Orc - Shaman/Run/Run-Sheet.png
+#begin World/Enemies/Orc-Run.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -235,471 +210,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/Enemy/Orc Crew/Orc - Shaman/Run/Run-Sheet.png
-
-#begin World/Enemy/Orc Crew/Orc - Shaman/Run/Run.aseprite
-/importer:
-/processor:
-/build:World/Enemy/Orc Crew/Orc - Shaman/Run/Run.aseprite
-
-#begin World/Enemy/Orc Crew/Orc - Warrior/Death/Death-Sheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:World/Enemy/Orc Crew/Orc - Warrior/Death/Death-Sheet.png
-
-#begin World/Enemy/Orc Crew/Orc - Warrior/Death/Death.aseprite
-/importer:
-/processor:
-/build:World/Enemy/Orc Crew/Orc - Warrior/Death/Death.aseprite
-
-#begin World/Enemy/Orc Crew/Orc - Warrior/Idle/Idle-Sheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:World/Enemy/Orc Crew/Orc - Warrior/Idle/Idle-Sheet.png
-
-#begin World/Enemy/Orc Crew/Orc - Warrior/Idle/Idle.aseprite
-/importer:
-/processor:
-/build:World/Enemy/Orc Crew/Orc - Warrior/Idle/Idle.aseprite
-
-#begin World/Enemy/Orc Crew/Orc - Warrior/Run/Run-Sheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:World/Enemy/Orc Crew/Orc - Warrior/Run/Run-Sheet.png
-
-#begin World/Enemy/Orc Crew/Orc - Warrior/Run/Run.aseprite
-/importer:
-/processor:
-/build:World/Enemy/Orc Crew/Orc - Warrior/Run/Run.aseprite
-
-#begin World/Enemy/Orc Crew/Orc/Death/Death-Sheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:World/Enemy/Orc Crew/Orc/Death/Death-Sheet.png
-
-#begin World/Enemy/Orc Crew/Orc/Death/Death.aseprite
-/importer:
-/processor:
-/build:World/Enemy/Orc Crew/Orc/Death/Death.aseprite
-
-#begin World/Enemy/Orc Crew/Orc/Idle/Idle-Sheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:World/Enemy/Orc Crew/Orc/Idle/Idle-Sheet.png
-
-#begin World/Enemy/Orc Crew/Orc/Idle/Idle.aseprite
-/importer:
-/processor:
-/build:World/Enemy/Orc Crew/Orc/Idle/Idle.aseprite
-
-#begin World/Enemy/Orc Crew/Orc/Run/Run-Sheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:World/Enemy/Orc Crew/Orc/Run/Run-Sheet.png
-
-#begin World/Enemy/Orc Crew/Orc/Run/Run.aseprite
-/importer:
-/processor:
-/build:World/Enemy/Orc Crew/Orc/Run/Run.aseprite
-
-#begin World/Enemy/Skeleton Crew/Skeleton - Base/Death/Death-Sheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:World/Enemy/Skeleton Crew/Skeleton - Base/Death/Death-Sheet.png
-
-#begin World/Enemy/Skeleton Crew/Skeleton - Base/Death/Death.aseprite
-/importer:
-/processor:
-/build:World/Enemy/Skeleton Crew/Skeleton - Base/Death/Death.aseprite
-
-#begin World/Enemy/Skeleton Crew/Skeleton - Base/Idle/Idle-Sheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:World/Enemy/Skeleton Crew/Skeleton - Base/Idle/Idle-Sheet.png
-
-#begin World/Enemy/Skeleton Crew/Skeleton - Base/Idle/Idle.aseprite
-/importer:
-/processor:
-/build:World/Enemy/Skeleton Crew/Skeleton - Base/Idle/Idle.aseprite
-
-#begin World/Enemy/Skeleton Crew/Skeleton - Base/Run/Run-Sheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:World/Enemy/Skeleton Crew/Skeleton - Base/Run/Run-Sheet.png
-
-#begin World/Enemy/Skeleton Crew/Skeleton - Base/Run/Run.aseprite
-/importer:
-/processor:
-/build:World/Enemy/Skeleton Crew/Skeleton - Base/Run/Run.aseprite
-
-#begin World/Enemy/Skeleton Crew/Skeleton - Mage/Death/Death-Sheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:World/Enemy/Skeleton Crew/Skeleton - Mage/Death/Death-Sheet.png
-
-#begin World/Enemy/Skeleton Crew/Skeleton - Mage/Death/Death.aseprite
-/importer:
-/processor:
-/build:World/Enemy/Skeleton Crew/Skeleton - Mage/Death/Death.aseprite
-
-#begin World/Enemy/Skeleton Crew/Skeleton - Mage/Idle/Idle-Sheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:World/Enemy/Skeleton Crew/Skeleton - Mage/Idle/Idle-Sheet.png
-
-#begin World/Enemy/Skeleton Crew/Skeleton - Mage/Idle/Idle.aseprite
-/importer:
-/processor:
-/build:World/Enemy/Skeleton Crew/Skeleton - Mage/Idle/Idle.aseprite
-
-#begin World/Enemy/Skeleton Crew/Skeleton - Mage/Run/Run-Sheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:World/Enemy/Skeleton Crew/Skeleton - Mage/Run/Run-Sheet.png
-
-#begin World/Enemy/Skeleton Crew/Skeleton - Mage/Run/Run.aseprite
-/importer:
-/processor:
-/build:World/Enemy/Skeleton Crew/Skeleton - Mage/Run/Run.aseprite
-
-#begin World/Enemy/Skeleton Crew/Skeleton - Rogue/Death/Death-Sheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:World/Enemy/Skeleton Crew/Skeleton - Rogue/Death/Death-Sheet.png
-
-#begin World/Enemy/Skeleton Crew/Skeleton - Rogue/Death/Death.aseprite
-/importer:
-/processor:
-/build:World/Enemy/Skeleton Crew/Skeleton - Rogue/Death/Death.aseprite
-
-#begin World/Enemy/Skeleton Crew/Skeleton - Rogue/Idle/Idle-Sheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:World/Enemy/Skeleton Crew/Skeleton - Rogue/Idle/Idle-Sheet.png
-
-#begin World/Enemy/Skeleton Crew/Skeleton - Rogue/Idle/Idle.aseprite
-/importer:
-/processor:
-/build:World/Enemy/Skeleton Crew/Skeleton - Rogue/Idle/Idle.aseprite
-
-#begin World/Enemy/Skeleton Crew/Skeleton - Rogue/Run/Run-Sheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:World/Enemy/Skeleton Crew/Skeleton - Rogue/Run/Run-Sheet.png
-
-#begin World/Enemy/Skeleton Crew/Skeleton - Rogue/Run/Run.aseprite
-/importer:
-/processor:
-/build:World/Enemy/Skeleton Crew/Skeleton - Rogue/Run/Run.aseprite
-
-#begin World/Enemy/Skeleton Crew/Skeleton - Warrior/Death/Death-Sheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:World/Enemy/Skeleton Crew/Skeleton - Warrior/Death/Death-Sheet.png
-
-#begin World/Enemy/Skeleton Crew/Skeleton - Warrior/Death/Death.aseprite
-/importer:
-/processor:
-/build:World/Enemy/Skeleton Crew/Skeleton - Warrior/Death/Death.aseprite
-
-#begin World/Enemy/Skeleton Crew/Skeleton - Warrior/Idle/Idle-Sheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:World/Enemy/Skeleton Crew/Skeleton - Warrior/Idle/Idle-Sheet.png
-
-#begin World/Enemy/Skeleton Crew/Skeleton - Warrior/Idle/Idle.aseprite
-/importer:
-/processor:
-/build:World/Enemy/Skeleton Crew/Skeleton - Warrior/Idle/Idle.aseprite
-
-#begin World/Enemy/Skeleton Crew/Skeleton - Warrior/Run/Run-Sheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:World/Enemy/Skeleton Crew/Skeleton - Warrior/Run/Run-Sheet.png
-
-#begin World/Enemy/Skeleton Crew/Skeleton - Warrior/Run/Run.aseprite
-/importer:
-/processor:
-/build:World/Enemy/Skeleton Crew/Skeleton - Warrior/Run/Run.aseprite
-
-#begin World/Heroes/Knight/Death/Death-Sheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:World/Heroes/Knight/Death/Death-Sheet.png
-
-#begin World/Heroes/Knight/Death/Death.aseprite
-/importer:
-/processor:
-/build:World/Heroes/Knight/Death/Death.aseprite
-
-#begin World/Heroes/Knight/Idle/Idle-Sheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:World/Heroes/Knight/Idle/Idle-Sheet.png
-
-#begin World/Heroes/Knight/Idle/Idle.aseprite
-/importer:
-/processor:
-/build:World/Heroes/Knight/Idle/Idle.aseprite
-
-#begin World/Heroes/Knight/Run/Run-Sheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:World/Heroes/Knight/Run/Run-Sheet.png
-
-#begin World/Heroes/Knight/Run/Run.aseprite
-/importer:
-/processor:
-/build:World/Heroes/Knight/Run/Run.aseprite
-
-#begin World/Heroes/Rogue/Death/Death-Sheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:World/Heroes/Rogue/Death/Death-Sheet.png
-
-#begin World/Heroes/Rogue/Death/Death.aseprite
-/importer:
-/processor:
-/build:World/Heroes/Rogue/Death/Death.aseprite
-
-#begin World/Heroes/Rogue/Idle/Idle-Sheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:World/Heroes/Rogue/Idle/Idle-Sheet.png
-
-#begin World/Heroes/Rogue/Idle/Idle.aseprite
-/importer:
-/processor:
-/build:World/Heroes/Rogue/Idle/Idle.aseprite
-
-#begin World/Heroes/Rogue/Run/Run-Sheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:World/Heroes/Rogue/Run/Run-Sheet.png
-
-#begin World/Heroes/Rogue/Run/Run.aseprite
-/importer:
-/processor:
-/build:World/Heroes/Rogue/Run/Run.aseprite
-
-#begin World/Heroes/Wizzard/Death/Death-Sheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:World/Heroes/Wizzard/Death/Death-Sheet.png
-
-#begin World/Heroes/Wizzard/Death/Death.aseprite
-/importer:
-/processor:
-/build:World/Heroes/Wizzard/Death/Death.aseprite
-
-#begin World/Heroes/Wizzard/Idle/Idle-Sheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:World/Heroes/Wizzard/Idle/Idle-Sheet.png
-
-#begin World/Heroes/Wizzard/Idle/Idle.aseprite
-/importer:
-/processor:
-/build:World/Heroes/Wizzard/Idle/Idle.aseprite
-
-#begin World/Heroes/Wizzard/Run/Run-Sheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:World/Heroes/Wizzard/Run/Run-Sheet.png
-
-#begin World/Heroes/Wizzard/Run/Run.aseprite
-/importer:
-/processor:
-/build:World/Heroes/Wizzard/Run/Run.aseprite
+/build:World/Enemies/Orc-Run.png
 
 #begin World/Pixel.png
 /importer:TextureImporter
