@@ -13,6 +13,12 @@ namespace FørsteÅrsEksamen.GameManagement
 
     // Oscar
 
+
+    // Brug en enum til enemy typer, tag ToString() og det er hvad animationernes base animation (pakke) skal være. 
+    // En enemy animations pakke er der for at holde de forskellige animationer som bliver brugt til hver.
+    // Kan være en dict
+
+
     /// <summary>
     /// Contains all the Animation used in the project.
     /// </summary>
