@@ -3,6 +3,7 @@ using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
 
 namespace FørsteÅrsEksamen.CommandPattern
@@ -45,6 +46,11 @@ namespace FørsteÅrsEksamen.CommandPattern
 
         private InputHandler()
         {
+            SetBaseKeys();
+        }
+
+        public void SetBaseKeys()
+        {
             AddKeyButtonDownCommand(Keys.Escape, new QuitCmd());
             AddMouseUpdateCommand(MouseCmdState.Left, new CustomCmd(() => { GridManager.Instance.DrawOnCells(); }));
             AddMouseUpdateCommand(MouseCmdState.Right, new CustomCmd(() => { GridManager.Instance.SetDefaultOnCell(); }));
@@ -52,6 +58,7 @@ namespace FørsteÅrsEksamen.CommandPattern
             AddKeyButtonDownCommand(Keys.Q, new CustomCmd(() => { GridManager.Instance.ChangeRoomNrIndex(-1); }));
             AddKeyButtonDownCommand(Keys.E, new CustomCmd(() => { GridManager.Instance.ChangeRoomNrIndex(1); }));
         }
+
         //Make a mark in the right corner that just is a bool that check if there have been made any changes to the data (for debug) so we can save it.
         //Maybe make a ctrl z + x command. 
         // Multiple command inputs?
@@ -61,6 +68,7 @@ namespace FørsteÅrsEksamen.CommandPattern
         // Make commen commands to the contains and stuff.
         #region Command
 
+        #region Add/Remove
         public void AddKeyUpdateCommand(Keys inputKey, ICommand command) => keybindsUpdate.Add(inputKey, command);
 
         public void AddKeyButtonDownCommand(Keys inputKey, ICommand command) => keybindsButtonDown.Add(inputKey, command);
@@ -70,6 +78,33 @@ namespace FørsteÅrsEksamen.CommandPattern
         public void AddMouseButtonDownCommand(MouseCmdState inputButton, ICommand command) => mouseButtonDownCommands.Add(inputButton, command);
 
         public void AddScrollWheelCommand(ScrollWheelState scrollWheelState, ICommand command) => scrollWheelCommands.Add(scrollWheelState, command);
+
+
+        public void RemoveKeyUpdateCommand(Keys inputKey) => keybindsUpdate.Remove(inputKey);
+
+        public void RemoveKeyButtonDownCommand(Keys inputKey) => keybindsButtonDown.Remove(inputKey);
+
+        public void RemoveMouseUpdateCommand(MouseCmdState inputButton) => mouseButtonUpdateCommands.Remove(inputButton);
+
+        public void RemoveMouseButtonDownCommand(MouseCmdState inputButton) => mouseButtonDownCommands.Remove(inputButton);
+
+        public void RemoveScrollWheelCommand(ScrollWheelState scrollWheelState) => scrollWheelCommands.Remove(scrollWheelState);
+
+        /// <summary>
+        /// Base Commands are the ones in the InputHandler, in the SetBaseKeys() method.
+        /// </summary>
+        public void RemoveAllExeptBaseCommands()
+        {
+            keybindsUpdate.Clear();
+            keybindsButtonDown.Clear();
+            mouseButtonUpdateCommands.Clear();
+            mouseButtonDownCommands.Clear();
+            scrollWheelCommands.Clear();
+
+            SetBaseKeys();
+        }
+
+        #endregion
 
         private KeyboardState previousKeyState;
         private MouseState previousMouseState;
@@ -151,7 +186,9 @@ namespace FørsteÅrsEksamen.CommandPattern
             previousMouseState = mouseState;
         }
 
+
         #endregion Command
+
 
         private Vector2 GetMousePositionInWorld(MouseState mouseState)
         {

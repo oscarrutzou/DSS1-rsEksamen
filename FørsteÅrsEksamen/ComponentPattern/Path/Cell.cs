@@ -109,12 +109,15 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             switch (CellWalkableType)
             {
                 case CellWalkableType.NotValid:
-                    spriteRenderer.Color = Color.Black;
+                    spriteRenderer.Color = Color.Gray;
                     break;
                 case CellWalkableType.FullValid:
                     spriteRenderer.Color = Color.DarkOliveGreen;
                     break;
             }
+            
+            if (RoomNr == -1) spriteRenderer.ShouldDraw = false; 
+            else spriteRenderer.ShouldDraw = true;
         }
 
 

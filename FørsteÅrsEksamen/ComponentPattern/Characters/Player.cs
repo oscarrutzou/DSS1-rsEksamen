@@ -10,11 +10,11 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
         private float speed;
         private Vector2 velocity = Vector2.Zero;
         public Vector2 targetVelocity = Vector2.Zero;
-        private float turnSpeed = 25f; // Adjust as needed
+        private float turnSpeed = 40f; // Adjust as needed
 
         public Player(GameObject gameObject) : base(gameObject)
         {
-            speed = 200;
+            speed = 300;
         }
 
         public override void Start()

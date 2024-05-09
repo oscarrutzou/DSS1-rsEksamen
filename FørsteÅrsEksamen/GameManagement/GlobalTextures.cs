@@ -7,7 +7,8 @@ namespace FørsteÅrsEksamen.GameManagement
     public enum TextureNames
     {
         Cell,
-        Pixel
+        Pixel,
+        TestLevel,
     }
 
     // Oscar
@@ -29,6 +30,7 @@ namespace FørsteÅrsEksamen.GameManagement
             {
                 {TextureNames.Cell, content.Load<Texture2D>("World\\16x16White") },
                 {TextureNames.Pixel, content.Load<Texture2D>("World\\Pixel") },
+                {TextureNames.TestLevel, content.Load<Texture2D>("World\\Levels\\TestLevel") }
             };
 
             // Load all fonts

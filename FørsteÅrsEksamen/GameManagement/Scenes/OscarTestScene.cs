@@ -17,22 +17,39 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
     {
         private PlayerFactory playerFactory;
         private ButtonFactory buttonFactory;
-        private GameObject playerGo, drawRoomBtn, drawAstarPathBtn;
-
+        private GameObject level, playerGo, drawRoomBtn, drawAstarPathBtn;
+        
         private Vector2 playerPos;
 
         public override void Initialize()
         {
-            MakePlayer();
+            SetLevelBG();
             StartGrid();
+
+            MakePlayer();
             MakeButtons();
             SetCommands();
+        }
+
+        private void SetLevelBG()
+        {
+            GameObject go = new();
+            go.Type = GameObjectTypes.Background;
+            go.Transform.Scale = new(4, 4);
+
+            SpriteRenderer spriteRenderer = go.AddComponent<SpriteRenderer>();
+            spriteRenderer.SetSprite(TextureNames.TestLevel);
+            spriteRenderer.IsCentered = false;
+
+            GameWorld.Instance.Instantiate(go);
         }
 
         private void MakePlayer()
         {
             playerFactory = new PlayerFactory();
             playerGo = playerFactory.Create();
+            playerGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[new Point(3,3)].Transform.Position;
+            GameWorld.Instance.WorldCam.position = playerGo.Transform.Position;
             GameWorld.Instance.Instantiate(playerGo);
         }
 
@@ -51,7 +68,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         private void StartGrid()
         {
             GameObject gridGo = new();
-            Grid grid = gridGo.AddComponent<Grid>("Test1", new Vector2(0, 0), 4, 4);
+            Grid grid = gridGo.AddComponent<Grid>("Test1", new Vector2(0, 0), 24, 18);
             grid.GenerateGrid();
             GridManager.Instance.SaveGrid(grid);
 
@@ -67,7 +84,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
             GameWorld.Instance.Instantiate(drawRoomBtn);
 
-            drawAstarPathBtn = buttonFactory.Create("Draw Astar", () => { });
+            drawAstarPathBtn = buttonFactory.Create("Draw Valid Path", () => { });
             drawAstarPathBtn.Transform.Translate(uiCam.TopRight + new Vector2(-100, 120));
             GameWorld.Instance.Instantiate(drawAstarPathBtn);
         }
@@ -107,7 +124,8 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         }
 
         private void DrawCellPos(SpriteBatch spriteBatch)
-        {            
+        {
+            //if (GridManager.Instance.CurrentGrid == null) throw new System.Exception("Error spørg da Oscar");
             GameObject cellGo = GridManager.Instance.GetCellAtPos(InputHandler.Instance.mouseInWorld);
 
             if (cellGo == null) return;

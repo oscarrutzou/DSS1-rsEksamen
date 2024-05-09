@@ -12,7 +12,7 @@ namespace FørsteÅrsEksamen.Factory
             playerGo.Transform.Scale = new Vector2(4, 4);
             playerGo.AddComponent<SpriteRenderer>();
             playerGo.AddComponent<Animator>();
-            playerGo.AddComponent<Collider>();
+            playerGo.AddComponent<Collider>().SetCollisionBox(10, 20, new(0, 20));
             playerGo.AddComponent<Player>();
 
             return playerGo;

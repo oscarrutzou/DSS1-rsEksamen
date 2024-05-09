@@ -19,7 +19,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
 
         public int Width, Height;
 
-        private readonly bool isCentered = true;
+        private readonly bool isCentered = false;
 
         public Grid(GameObject gameObject) : base(gameObject)
         {

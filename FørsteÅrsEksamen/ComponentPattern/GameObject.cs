@@ -12,10 +12,11 @@ namespace FørsteÅrsEksamen.ComponentPattern
     /// </summary>
     public enum GameObjectTypes
     {
+        Background,
         Cell,
         Player,
 
-        //Enemy,
+        Enemy,
         Gui,
 
         Default, //Not set

@@ -212,6 +212,18 @@
 /processorParam:TextureFormat=Color
 /build:World/Enemies/Orc-Run.png
 
+#begin World/Levels/TestLevel.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/Levels/TestLevel.png
+
 #begin World/Pixel.png
 /importer:TextureImporter
 /processor:TextureProcessor
