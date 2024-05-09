@@ -14,7 +14,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
         public static GridManager Instance
         { get { return instance ??= instance = new GridManager(); } }
 
-        public List<Grid> Grids = new();
+        public Grid CurrentGrid;
         public Grid SelectedGrid { get; private set; }
 
         private int gridIndex;
@@ -46,51 +46,36 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
 
         public void SaveGrid(Grid grid)
         {
-            if (repository.DoesGridExist(grid.Name))
-            {
-                GameObject go = repository.GetGrid(grid.Name);
-                Grids.Add(go.GetComponent<Grid>());
-            }
-            else
-            {
-                grid.GenerateGrid();
-                Grids.Add(grid);
-                repository.SaveGrid(grid);
-            }
+            CurrentGrid = grid;
+            repository.SaveGrid(CurrentGrid);
         }
 
         public void LoadGrid(string gridName)
         {
             // Delete current drawn grid? Otherwise tru and 
-            DeleteGrids();
+            DeleteDrawnGrid();
             GameObject go = repository.GetGrid(gridName);
-            Grids.Add(go.GetComponent<Grid>());
+            CurrentGrid = go.GetComponent<Grid>();
         }
 
 
-        public void DeleteGrids()
+        public void DeleteDrawnGrid()
         {
-            foreach (Grid grid in Grids)
+            foreach (GameObject cellGo in CurrentGrid.Cells.Values)
             {
-                foreach (GameObject cellGo in grid.Cells.Values)
-                {
-                    GameWorld.Instance.Destroy(cellGo);
-                }
-                GameWorld.Instance.Destroy(grid.GameObject);
+                GameWorld.Instance.Destroy(cellGo);
             }
-            Grids.Clear();
+            GameWorld.Instance.Destroy(CurrentGrid.GameObject);
+            CurrentGrid = null;
         }
 
 
         public GameObject GetCellAtPos(Vector2 pos)
         {
-            foreach (Grid grid in Grids)
+            GameObject go = CurrentGrid.GetCellGameObject(pos);
+            if (go != null)
             {
-                GameObject go = grid.GetCellGameObject(pos);
-                if (go != null)
-                {
-                    return go;
-                }
+                return go;
             }
 
             return null;

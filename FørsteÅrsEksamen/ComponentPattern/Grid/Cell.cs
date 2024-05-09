@@ -18,6 +18,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
         //public static readonly Vector2 ScaleSize = new(4, 4);
         public static int Scale = 4;
 
+        private SpriteRenderer spriteRenderer;
+
         /// <summary>
         /// Used when selecting which room is active on each grid. Base is -1, so they dont count as a room
         /// </summary>
@@ -74,6 +76,12 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
                               point.Y * Demension * Scale + Demension * Scale / 2);
         }
 
+        public override void Start()
+        {
+            spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
+            if (spriteRenderer == null) throw new System.Exception("Cell need a spriteRenderer");
+        }
+
         /// <summary>
         /// Resets the cell, to make it ready for another path.
         /// </summary>
@@ -88,5 +96,25 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
         {
             GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, GameWorld.Instance.WorldCam.zoom, GameObject.Transform.Position, RoomNr.ToString(), Color.Black);
         }
+
+        private CellWalkableType previosType;
+        public override void Update(GameTime gameTime)
+        {
+            if (CellWalkableType == previosType) return;
+
+            switch (CellWalkableType)
+            {
+                case CellWalkableType.NotValid:
+                    spriteRenderer.Color = Color.Black;
+                    break;
+                case CellWalkableType.FullValid:
+                    spriteRenderer.Color = Color.Red;
+                    break;
+            }
+
+            previosType = CellWalkableType;
+        }
+
+
     }
 }

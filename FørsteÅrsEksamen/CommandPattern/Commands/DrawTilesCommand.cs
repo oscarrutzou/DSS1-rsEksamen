@@ -13,19 +13,23 @@ namespace FørsteÅrsEksamen.CommandPattern.Commands
 
             //Find grid if there is a tile under the mouse. with inputhandler mousepos in world
             // Check within grid.startpos.x + cell.dem * cell.scale and on the other side
-            foreach (Grid grid in GridManager.Instance.Grids)
-            {
-                int scale = Cell.Demension * Cell.Scale;
-                Rectangle gridSize = new((int)grid.StartPostion.X, (int)grid.StartPostion.Y, grid.Width * scale, grid.Height * scale);
-                if (gridSize.Contains(mouseInWorld))
-                {
-                    // Mouse inside grid
-                    GameObject cellGo = grid.GetCellGameObject(mouseInWorld);
-                    if (cellGo == null) continue;
 
-                    Point cellGridPos = cellGo.Transform.GridPosition;
-                    grid.Cells[cellGridPos].GetComponent<SpriteRenderer>().Color = Color.Red;
-                }
+            Grid grid = GridManager.Instance.CurrentGrid;
+
+            int scale = Cell.Demension * Cell.Scale;
+            Rectangle gridSize = new((int)grid.StartPostion.X, (int)grid.StartPostion.Y, grid.Width * scale, grid.Height * scale);
+            
+            if (gridSize.Contains(mouseInWorld))
+            {
+                // Mouse inside grid
+                GameObject cellGo = grid.GetCellGameObject(mouseInWorld);
+                if (cellGo == null) return;
+
+                Point cellGridPos = cellGo.Transform.GridPosition;
+                grid.Cells[cellGridPos].GetComponent<SpriteRenderer>().Color = Color.Red;
+                Cell cell = cellGo.GetComponent<Cell>();
+                cell.CellWalkableType = CellWalkableType.FullValid;
+                GridManager.Instance.SaveGrid(grid);
             }
         }
 

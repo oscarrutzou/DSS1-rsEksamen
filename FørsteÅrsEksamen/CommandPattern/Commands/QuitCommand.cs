@@ -12,7 +12,7 @@ namespace FørsteÅrsEksamen.CommandPattern.Commands
 
             if (test)
             {
-                GridManager.Instance.DeleteGrids();
+                GridManager.Instance.DeleteDrawnGrid();
             }else { 
                 GridManager.Instance.LoadGrid("Test1");
             }

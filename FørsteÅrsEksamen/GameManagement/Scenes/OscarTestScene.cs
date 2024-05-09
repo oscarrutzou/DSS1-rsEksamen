@@ -49,6 +49,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         {
             GameObject gridGo = new();
             Grid grid = gridGo.AddComponent<Grid>("Test1", new Vector2(0, 0), 4, 4);
+            grid.GenerateGrid();
             GridManager.Instance.SaveGrid(grid);
 
         }
