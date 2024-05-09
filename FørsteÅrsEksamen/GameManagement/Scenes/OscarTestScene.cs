@@ -73,13 +73,8 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             Vector2 mousePos = InputHandler.Instance.mouseInWorld;
             spriteBatch.DrawString(GlobalTextures.DefaultFont, $"MousePos {mousePos}", GameWorld.Instance.UiCam.TopLeft, Color.Black);
 
-            GameObject cellGo = GridManager.Instance.GetCellAtPos(mousePos);
-            if (cellGo != null)
-            {
-                Vector2 cellPos = cellGo.Transform.Position;
-                Point cellGridPos = cellGo.Transform.GridPosition;
-                spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Cell Point from MousePos: {cellPos}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 30), Color.Black); 
-            }
+
+            DrawCellPos(spriteBatch);
 
             spriteBatch.DrawString(GlobalTextures.DefaultFont, $"PlayerPos {playerPos}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 60), Color.Black);
 
@@ -89,6 +84,17 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
 
             base.DrawOnScreen(spriteBatch);
+        }
+
+        private void DrawCellPos(SpriteBatch spriteBatch)
+        {
+            if (GridManager.Instance.CurrentGrid == null) return;
+            
+            GameObject cellGo = GridManager.Instance.GetCellAtPos(InputHandler.Instance.mouseInWorld);
+            if (cellGo == null) return;
+            Vector2 cellPos = cellGo.Transform.Position;
+            Point cellGridPos = cellGo.Transform.GridPosition;
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Cell Point from MousePos: {cellGridPos}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 30), Color.Black);
         }
 
         public void UpdateObserver()

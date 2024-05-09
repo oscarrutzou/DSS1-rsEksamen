@@ -16,6 +16,8 @@ namespace FørsteÅrsEksamen.CommandPattern.Commands
 
             Grid grid = GridManager.Instance.CurrentGrid;
 
+            if (grid == null) return;
+
             int scale = Cell.Demension * Cell.Scale;
             Rectangle gridSize = new((int)grid.StartPostion.X, (int)grid.StartPostion.Y, grid.Width * scale, grid.Height * scale);
             
@@ -29,7 +31,8 @@ namespace FørsteÅrsEksamen.CommandPattern.Commands
                 grid.Cells[cellGridPos].GetComponent<SpriteRenderer>().Color = Color.Red;
                 Cell cell = cellGo.GetComponent<Cell>();
                 cell.CellWalkableType = CellWalkableType.FullValid;
-                GridManager.Instance.SaveGrid(grid);
+                cell.RoomNr = 2;
+                GridManager.Instance.OverrideSaveGrid(grid);
             }
         }
 

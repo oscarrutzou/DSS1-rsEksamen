@@ -47,6 +47,20 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
         public void SaveGrid(Grid grid)
         {
             CurrentGrid = grid;
+
+            if (!repository.DoesGridExist(grid.Name))
+            {
+                OverrideSaveGrid(grid);
+            }
+            else
+            {
+                LoadGrid(grid.Name);
+            }
+        }
+
+        public void OverrideSaveGrid(Grid grid)
+        {
+            CurrentGrid = grid;
             repository.SaveGrid(CurrentGrid);
         }
 
@@ -61,6 +75,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
 
         public void DeleteDrawnGrid()
         {
+            if (CurrentGrid == null) return;
+
             foreach (GameObject cellGo in CurrentGrid.Cells.Values)
             {
                 GameWorld.Instance.Destroy(cellGo);

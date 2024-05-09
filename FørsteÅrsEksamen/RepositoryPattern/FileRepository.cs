@@ -32,8 +32,6 @@ namespace FørsteÅrsEksamen.RepositoryPattern
 
         public void SaveGrid(Grid grid)
         {
-            //DeleteExistingGrids();
-
             string path = Path.Combine(baseFolderPath, $"grid_{grid.Name}.txt");
             FileStream stream = File.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite);
             try
