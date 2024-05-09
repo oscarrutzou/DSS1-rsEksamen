@@ -3,6 +3,7 @@ using FørsteÅrsEksamen.CommandPattern.Commands;
 using FørsteÅrsEksamen.ComponentPattern;
 using FørsteÅrsEksamen.ComponentPattern.Characters;
 using FørsteÅrsEksamen.ComponentPattern.Grid;
+using FørsteÅrsEksamen.ComponentPattern.GUI;
 using FørsteÅrsEksamen.Factory;
 using FørsteÅrsEksamen.ObserverPattern;
 using Microsoft.Xna.Framework;
@@ -15,7 +16,8 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
     public class OscarTestScene : Scene, IObserver
     {
         private PlayerFactory playerFactory;
-        private GameObject playerGo;
+        private ButtonFactory buttonFactory;
+        private GameObject playerGo, drawRoomBtn, drawAstarPathBtn;
 
         private Vector2 playerPos;
 
@@ -23,6 +25,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         {
             MakePlayer();
             StartGrid();
+            MakeButtons();
             SetCommands();
         }
 
@@ -54,6 +57,22 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
         }
 
+        private void MakeButtons()
+        {
+            Camera uiCam = GameWorld.Instance.UiCam;
+
+            buttonFactory = new();
+            drawRoomBtn = buttonFactory.Create("Draw Room", () => { });
+            drawRoomBtn.Transform.Translate(uiCam.TopRight + new Vector2(-100, 50));
+
+            GameWorld.Instance.Instantiate(drawRoomBtn);
+
+            drawAstarPathBtn = buttonFactory.Create("Draw Astar", () => { });
+            drawAstarPathBtn.Transform.Translate(uiCam.TopRight + new Vector2(-100, 120));
+            GameWorld.Instance.Instantiate(drawAstarPathBtn);
+        }
+
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -79,9 +98,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             spriteBatch.DrawString(GlobalTextures.DefaultFont, $"PlayerPos {playerPos}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 60), Color.Black);
 
             SceneData.GameObjectLists.TryGetValue(GameObjectTypes.Cell, out list);
-            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"SceneObjects in scene {list.Count}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 90), Color.Black);
-
-
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Cell GameObjects in scene {list.Count}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 90), Color.Black);
 
             base.DrawOnScreen(spriteBatch);
         }

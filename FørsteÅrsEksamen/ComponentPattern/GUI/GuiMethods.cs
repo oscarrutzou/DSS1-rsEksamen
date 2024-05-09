@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using FørsteÅrsEksamen.CommandPattern;
+using FørsteÅrsEksamen.GameManagement;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Linq;
 
@@ -51,6 +53,26 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
                                        SpriteEffects.None,
                                        1);
             }
+        }
+
+        public static bool IsMouseOverUI()
+        {
+            Vector2 mousePosUI = InputHandler.Instance.mouseOnUI;
+
+            foreach (GameObject gui in SceneData.GameObjectLists[GameObjectTypes.Gui])
+            {
+                Collider collider = gui.GetComponent<Collider>();
+
+                if (collider == null) continue;
+                
+                if (collider.CollisionBox.Contains(mousePosUI))
+                {
+                    return true;
+                }
+
+            }
+
+            return false;
         }
     }
 }

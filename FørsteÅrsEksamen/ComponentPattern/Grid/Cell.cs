@@ -99,7 +99,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, GameWorld.Instance.WorldCam.zoom, GameObject.Transform.Position, RoomNr.ToString(), Color.Black);
+            GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, GameWorld.Instance.WorldCam.zoom, GameObject.Transform.Position, RoomNr.ToString(), Color.HotPink);
         }
 
         public void ChangeCellWalkalbeType(CellWalkableType cellWalkableType)

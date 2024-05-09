@@ -1,4 +1,5 @@
 ﻿using FørsteÅrsEksamen.CommandPattern;
+using FørsteÅrsEksamen.ComponentPattern.GUI;
 using FørsteÅrsEksamen.GameManagement;
 using FørsteÅrsEksamen.RepositoryPattern;
 using Microsoft.Xna.Framework;
@@ -75,28 +76,31 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
 
         public void DrawOnCells()
         {
+            if (GuiMethods.IsMouseOverUI()) return;
+
             GameObject cellGo = GetCellAtPos(InputHandler.Instance.mouseInWorld);
             if (cellGo == null) return;
 
             Cell cell = cellGo.GetComponent<Cell>();
-            //Set this based on a number and what is selected
-            cell.ChangeCellWalkalbeType(CellWalkableType.FullValid);
-            cell.RoomNr = 2;
-
-            OverrideSaveGrid(); //Works since we already just are changing the CurrentGrid in the GridManager
+            SetCellProperties(cell, CellWalkableType.FullValid, 2);
         }
 
         public void SetDefaultOnCell()
         {
+            if (GuiMethods.IsMouseOverUI()) return;
+
             GameObject cellGo = GetCellAtPos(InputHandler.Instance.mouseInWorld);
             if (cellGo == null) return;
 
             Cell cell = cellGo.GetComponent<Cell>();
-            //Set this based on a number and what is selected
-            cell.RoomNr = -1;
-            cell.ChangeCellWalkalbeType(CellWalkableType.NotValid);
+            SetCellProperties(cell, CellWalkableType.NotValid, -1);
+        }
 
-            OverrideSaveGrid(); //Works since we already just are changing the CurrentGrid in the GridManager
+        private void SetCellProperties(Cell cell, CellWalkableType walkableType, int roomNr)
+        {
+            cell.ChangeCellWalkalbeType(walkableType);
+            cell.RoomNr = roomNr;
+            OverrideSaveGrid(); // Works since we're just changing the CurrentGrid in the GridManager
         }
 
         public void DeleteDrawnGrid()

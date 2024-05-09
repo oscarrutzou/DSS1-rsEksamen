@@ -10,7 +10,7 @@ namespace FørsteÅrsEksamen.Factory
         {
             GameObject playerGo = new GameObject();
             playerGo.Transform.Scale = new Vector2(4, 4);
-            playerGo.AddComponent<SpriteRenderer>().SetSprite(GameManagement.TextureNames.Cell);
+            playerGo.AddComponent<SpriteRenderer>();
             playerGo.AddComponent<Animator>();
             playerGo.AddComponent<Collider>();
             playerGo.AddComponent<Player>();
