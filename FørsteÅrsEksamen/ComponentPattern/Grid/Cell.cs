@@ -14,7 +14,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
     // Oscar
     public class Cell : Component
     {
-        public static int Demension = 16;
+        public static int dimension = 16;
         //public static readonly Vector2 ScaleSize = new(4, 4);
         public static int Scale = 4;
 
@@ -46,8 +46,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
 
             // Centers the position of the cell.
             GameObject.Transform.Position = grid.StartPostion
-                + new Vector2(point.X * Demension * Scale + Demension * Scale / 2,
-                              point.Y * Demension * Scale + Demension * Scale / 2);
+                + new Vector2(point.X * dimension * Scale + dimension * Scale / 2,
+                              point.Y * dimension * Scale + dimension * Scale / 2);
         }
 
         public Cell(GameObject gameObject, Grid grid, Point point, CellWalkableType type) : base(gameObject)
@@ -59,8 +59,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
 
             // Centers the position of the cell.
             GameObject.Transform.Position = grid.StartPostion
-                + new Vector2(point.X * Demension * Scale + Demension * Scale / 2,
-                              point.Y * Demension * Scale + Demension * Scale / 2);
+                + new Vector2(point.X * dimension * Scale + dimension * Scale / 2,
+                              point.Y * dimension * Scale + dimension * Scale / 2);
         }
 
         public Cell(GameObject gameObject, Grid grid, Point point, CellWalkableType type, int roomNr) : base(gameObject)
@@ -72,8 +72,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
 
             // Centers the position of the cell.
             GameObject.Transform.Position = grid.StartPostion
-                + new Vector2(point.X * Demension * Scale + Demension * Scale / 2,
-                              point.Y * Demension * Scale + Demension * Scale / 2);
+                + new Vector2(point.X * dimension * Scale + dimension * Scale / 2,
+                              point.Y * dimension * Scale + dimension * Scale / 2);
         }
 
         public override void Start()

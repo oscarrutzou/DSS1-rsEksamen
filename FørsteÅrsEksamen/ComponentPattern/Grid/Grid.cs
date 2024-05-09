@@ -47,8 +47,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
             if (isCentered)
             {
                 StartPostion = new Vector2(
-                    StartPostion.X - (Width * Cell.Demension * Cell.Scale / 2),
-                    StartPostion.Y - (Height * Cell.Demension * Cell.Scale / 2)
+                    StartPostion.X - (Width * Cell.dimension * Cell.Scale / 2),
+                    StartPostion.Y - (Height * Cell.dimension * Cell.Scale / 2)
                 );
             }
 
@@ -72,8 +72,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
             }
 
             // Calculates the position of each point. Maybe remove the zoom
-            int gridX = (int)((pos.X - StartPostion.X) / (Cell.Demension * Cell.Scale * GameWorld.Instance.WorldCam.zoom));
-            int gridY = (int)((pos.Y - StartPostion.Y) / (Cell.Demension * Cell.Scale * GameWorld.Instance.WorldCam.zoom));
+            int gridX = (int)((pos.X - StartPostion.X) / (Cell.dimension * Cell.Scale * GameWorld.Instance.WorldCam.zoom));
+            int gridY = (int)((pos.Y - StartPostion.Y) / (Cell.dimension * Cell.Scale * GameWorld.Instance.WorldCam.zoom));
 
             // Checks if its inside the grid.
             if (0 <= gridX && gridX < Width && 0 <= gridY && gridY < Height)

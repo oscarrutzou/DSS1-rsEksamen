@@ -16,7 +16,7 @@ namespace FørsteÅrsEksamen.CommandPattern.Commands
 
             Grid grid = GridManager.Instance.CurrentGrid;
 
-            int scale = Cell.Demension * Cell.Scale;
+            int scale = Cell.dimension * Cell.Scale;
             Rectangle gridSize = new((int)grid.StartPostion.X, (int)grid.StartPostion.Y, grid.Width * scale, grid.Height * scale);
             
             if (gridSize.Contains(mouseInWorld))
