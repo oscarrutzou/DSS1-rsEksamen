@@ -19,17 +19,21 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
         public Grid CurrentGrid;
         public Grid SelectedGrid { get; private set; }
 
-        private int gridIndex;
+        private int roomNrIndex = 1;
 
-        public int GridIndex
+        /// <summary>
+        /// For the room index on the cells, right now there is a limit of 10 rooms.
+        /// </summary>
+        public int RoomNrIndex
         {
-            get { return gridIndex; }
+            get { return roomNrIndex; }
             set
             {
-                if (gridIndex != value)
+                if (value == 0 || value > 10) return;
+
+                if (roomNrIndex != value)
                 {
-                    gridIndex = value;
-                    OnGridIndexChanged();
+                    roomNrIndex = value;
                 }
             }
         }
@@ -82,7 +86,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             if (cellGo == null) return;
 
             Cell cell = cellGo.GetComponent<Cell>();
-            SetCellProperties(cell, CellWalkableType.FullValid, 2);
+            SetCellProperties(cell, CellWalkableType.FullValid, RoomNrIndex); // Move the WalkableType out of this room
         }
 
         public void SetDefaultOnCell()
@@ -157,10 +161,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             return null;
         }
 
-      
-
-        private void OnGridIndexChanged()
-        {
-        }
+        public void ChangeRoomNrIndex(int addToCurrentRoomNr) => RoomNrIndex += addToCurrentRoomNr;
     }
 }

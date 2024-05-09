@@ -1,4 +1,5 @@
 ﻿using FørsteÅrsEksamen.CommandPattern.Commands;
+using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -45,11 +46,19 @@ namespace FørsteÅrsEksamen.CommandPattern
         private InputHandler()
         {
             AddKeyButtonDownCommand(Keys.Escape, new QuitCmd());
-            AddMouseUpdateCommand(MouseCmdState.Left, new DrawTilesCmd());
-            AddMouseUpdateCommand(MouseCmdState.Right, new ChangeSeletecDrawActionCmd());
+            AddMouseUpdateCommand(MouseCmdState.Left, new CustomCmd(() => { GridManager.Instance.DrawOnCells(); }));
+            AddMouseUpdateCommand(MouseCmdState.Right, new CustomCmd(() => { GridManager.Instance.SetDefaultOnCell(); }));
 
+            AddKeyButtonDownCommand(Keys.Q, new CustomCmd(() => { GridManager.Instance.ChangeRoomNrIndex(-1); }));
+            AddKeyButtonDownCommand(Keys.E, new CustomCmd(() => { GridManager.Instance.ChangeRoomNrIndex(1); }));
         }
-
+        //Make a mark in the right corner that just is a bool that check if there have been made any changes to the data (for debug) so we can save it.
+        //Maybe make a ctrl z + x command. 
+        // Multiple command inputs?
+        // Make it save the new grid. 
+        // Change it so the grid manager only shows 1 grid, since thats what our design is made.
+        // Change all foreach to just check the grid != null. 
+        // Make commen commands to the contains and stuff.
         #region Command
 
         public void AddKeyUpdateCommand(Keys inputKey, ICommand command) => keybindsUpdate.Add(inputKey, command);

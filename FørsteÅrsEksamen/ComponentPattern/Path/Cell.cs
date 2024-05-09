@@ -112,7 +112,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
                     spriteRenderer.Color = Color.Black;
                     break;
                 case CellWalkableType.FullValid:
-                    spriteRenderer.Color = Color.Red;
+                    spriteRenderer.Color = Color.DarkOliveGreen;
                     break;
             }
         }

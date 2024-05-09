@@ -25,8 +25,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
             Animator animator = GameObject.GetComponent<Animator>();
             //animator.AddAnimation(GlobalAnimations.Animations[AnimNames.TestWizardRightIndividualFrames]); //Set all the animations
             //animator.PlayAnimation(AnimNames.TestWizardRightIndividualFrames);
-            animator.AddAnimation(GlobalAnimations.Animations[AnimNames.TestWizardRightSheet]); //Set all the animations
-            animator.PlayAnimation(AnimNames.TestWizardRightSheet);
+            animator.AddAnimation(GlobalAnimations.Animations[AnimNames.KnightIdle]); //Set all the animations
+            animator.PlayAnimation(AnimNames.KnightIdle);
         }
 
         private Vector2 totalInput = Vector2.Zero;
