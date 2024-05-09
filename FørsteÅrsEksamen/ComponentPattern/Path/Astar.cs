@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FørsteÅrsEksamen.ComponentPattern.Grid
+namespace FørsteÅrsEksamen.ComponentPattern.Path
 {
     // Oscar
     public class Astar : Component

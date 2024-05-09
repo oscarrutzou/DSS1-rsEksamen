@@ -1,4 +1,4 @@
-﻿using FørsteÅrsEksamen.ComponentPattern.Grid;
+﻿using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.GameManagement;
 
 namespace FørsteÅrsEksamen.CommandPattern.Commands

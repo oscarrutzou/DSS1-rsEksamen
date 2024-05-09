@@ -5,7 +5,7 @@ using FørsteÅrsEksamen.RepositoryPattern;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
-namespace FørsteÅrsEksamen.ComponentPattern.Grid
+namespace FørsteÅrsEksamen.ComponentPattern.Path
 {
     public class GridManager
     {

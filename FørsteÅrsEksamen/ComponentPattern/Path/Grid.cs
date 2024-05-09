@@ -3,7 +3,7 @@ using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
-namespace FørsteÅrsEksamen.ComponentPattern.Grid
+namespace FørsteÅrsEksamen.ComponentPattern.Path
 {
     // Oscar
     public class Grid : Component

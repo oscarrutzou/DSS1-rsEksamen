@@ -2,7 +2,7 @@
 using FørsteÅrsEksamen.CommandPattern.Commands;
 using FørsteÅrsEksamen.ComponentPattern;
 using FørsteÅrsEksamen.ComponentPattern.Characters;
-using FørsteÅrsEksamen.ComponentPattern.Grid;
+using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.ComponentPattern.GUI;
 using FørsteÅrsEksamen.Factory;
 using FørsteÅrsEksamen.ObserverPattern;

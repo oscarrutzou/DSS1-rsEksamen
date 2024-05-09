@@ -1,5 +1,5 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.Grid;
+using FørsteÅrsEksamen.ComponentPattern.Path;
 using Microsoft.Xna.Framework;
 
 namespace FørsteÅrsEksamen.CommandPattern.Commands

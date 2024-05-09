@@ -1,4 +1,4 @@
-﻿using FørsteÅrsEksamen.ComponentPattern.Grid;
+﻿using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -30,14 +30,14 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
     {
         private Vector2 direction, nextTarget;
         public Point targetCharacter;
-        public List<GameObject> path { get; set; }
+        public List<GameObject> Path { get; set; }
         public int speed;
-        private float threshold = 5f;
+        private readonly float threshold = 5f;
 
         public Action onGoalReached;
         public EnemyState enemyState = EnemyState.Inactive;
         public DirectionState directionState = DirectionState.Right;
-        private Grid.Grid grid;
+        private Grid grid;
         private Astar astar;
 
         private SpriteRenderer spriteRenderer;
@@ -48,7 +48,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 
         }
 
-        public void SetStartPosition(Grid.Grid grid, Point gridPos)
+        public void SetStartPosition(Grid grid, Point gridPos)
         {
             this.grid = grid;
             GameObject.Transform.GridPosition = gridPos;
@@ -64,9 +64,9 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
         private void SetPath()
         {
             MakePath();
-            if (path.Count > 0)
+            if (Path.Count > 0)
             {
-                SetNextTargetPos(path[0]);
+                SetNextTargetPos(Path[0]);
             }
         }
 
@@ -74,32 +74,32 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
         {
             for (int i = 0; i < 3; i++)
             {
-                if (path != null && path.Count > 0) break;
+                if (Path != null && Path.Count > 0) break;
 
-                path = astar.FindPath(GameObject.Transform.GridPosition, targetCharacter);
+                Path = astar.FindPath(GameObject.Transform.GridPosition, targetCharacter);
             }
-            if (path == null) throw new Exception("No path available");
+            if (Path == null) throw new Exception("No path available");
         }
 
         private void UpdatePathing(GameTime gameTime)
         {
-            if (path == null)
+            if (Path == null)
                 return;
             Vector2 position = GameObject.Transform.Position;
 
             if (Vector2.Distance(position, nextTarget) < threshold)
             {
-                if (path.Count > 1)
+                if (Path.Count > 1)
                 {
-                    GameObject.Transform.GridPosition = path[0].Transform.GridPosition;
-                    path.RemoveAt(0);
-                    SetNextTargetPos(path[0]);
+                    GameObject.Transform.GridPosition = Path[0].Transform.GridPosition;
+                    Path.RemoveAt(0);
+                    SetNextTargetPos(Path[0]);
                 }
-                else if (path.Count == 1)
+                else if (Path.Count == 1)
                 {
-                    GameObject.Transform.GridPosition = path[0].Transform.GridPosition;
-                    SetNextTargetPos(path[0]);
-                    path.RemoveAt(0);
+                    GameObject.Transform.GridPosition = Path[0].Transform.GridPosition;
+                    SetNextTargetPos(Path[0]);
+                    Path.RemoveAt(0);
                 }
             }
 
@@ -107,14 +107,14 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 
             GameObject.Transform.Translate(direction * speed * (float)gameTime.ElapsedGameTime.TotalSeconds);
 
-            if (path.Count == 0 && Vector2.Distance(position, nextTarget) < threshold)
+            if (Path.Count == 0 && Vector2.Distance(position, nextTarget) < threshold)
             {
                 if (onGoalReached != null)
                 {
                     onGoalReached.Invoke();
                     onGoalReached = null;
                 }
-                path = null;
+                Path = null;
             }
             UpdateDirection();
         }
