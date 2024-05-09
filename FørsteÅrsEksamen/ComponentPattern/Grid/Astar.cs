@@ -22,7 +22,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
         {
             this.grid = grid;
             this.cells = grid.Cells; // Assign existing grid
-            gridDem = Cell.Demension * (int)Cell.ScaleSize.X;
+            gridDem = Cell.Demension * Cell.Scale;
         }
 
         public List<GameObject> FindPath(Point start, Point goal)

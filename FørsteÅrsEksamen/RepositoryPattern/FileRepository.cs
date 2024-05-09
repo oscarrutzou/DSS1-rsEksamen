@@ -66,14 +66,13 @@ namespace FørsteÅrsEksamen.RepositoryPattern
         public GameObject GetGrid(string description)
         {
             GameObject gridGo = new();
-            string gridName = "grid_" + description;
 
             if (!DoesGridExist(description))
             {
                 throw new Exception($"Haven't found '{description}' in appdata.");
             }
 
-            string path = Path.Combine(baseFolderPath, gridName + ".txt"); //Know the path is there
+            string path = Path.Combine(baseFolderPath, $"grid_{description}.txt"); //Know the path is there
             FileStream stream = File.OpenRead(path);
 
             Grid grid;
@@ -89,7 +88,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
                 int width = int.Parse(gridSizeParts[0]);
                 int height = int.Parse(gridSizeParts[1]);
 
-                grid = gridGo.AddComponent<Grid>(gridName, startPos, width, height);
+                grid = gridGo.AddComponent<Grid>(description, startPos, width, height);
 
                 reader.ReadLine(); //There is the line "Grid Cells (Position.X, Postion.Y, Cell Type, RoomNr):" here, so we skip it
 

@@ -15,7 +15,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
     public class Cell : Component
     {
         public static int Demension = 16;
-        public static readonly Vector2 ScaleSize = new(4, 4);
+        //public static readonly Vector2 ScaleSize = new(4, 4);
+        public static int Scale = 4;
 
         /// <summary>
         /// Used when selecting which room is active on each grid. Base is -1, so they dont count as a room
@@ -39,35 +40,38 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
         public Cell(GameObject gameObject, Grid grid, Point point) : base(gameObject)
         {
             GameObject.Transform.GridPosition = point;
-            GameObject.Transform.Scale = ScaleSize;
+            GameObject.Transform.Scale = new(Scale, Scale);
 
             // Centers the position of the cell.
             GameObject.Transform.Position = grid.StartPostion
-                + new Vector2(point.X * Demension * ScaleSize.X + Demension * ScaleSize.X / 2,
-                              point.Y * Demension * ScaleSize.Y + Demension * ScaleSize.Y / 2);
+                + new Vector2(point.X * Demension * Scale + Demension * Scale / 2,
+                              point.Y * Demension * Scale + Demension * Scale / 2);
         }
 
         public Cell(GameObject gameObject, Grid grid, Point point, CellWalkableType type) : base(gameObject)
         {
             GameObject.Transform.GridPosition = point;
-            GameObject.Transform.Scale = ScaleSize;
+            GameObject.Transform.Scale = new(Scale, Scale);
+
             this.CellWalkableType = type;
 
+            // Centers the position of the cell.
             GameObject.Transform.Position = grid.StartPostion
-                + new Vector2(point.X * Demension * ScaleSize.X + Demension * ScaleSize.X / 2,
-                              point.Y * Demension * ScaleSize.Y + Demension * ScaleSize.Y / 2);
+                + new Vector2(point.X * Demension * Scale + Demension * Scale / 2,
+                              point.Y * Demension * Scale + Demension * Scale / 2);
         }
 
         public Cell(GameObject gameObject, Grid grid, Point point, CellWalkableType type, int roomNr) : base(gameObject)
         {
             GameObject.Transform.GridPosition = point;
-            GameObject.Transform.Scale = ScaleSize;
+            GameObject.Transform.Scale = new(Scale, Scale);
             this.CellWalkableType = type;
             this.RoomNr = roomNr;
 
+            // Centers the position of the cell.
             GameObject.Transform.Position = grid.StartPostion
-                + new Vector2(point.X * Demension * ScaleSize.X + Demension * ScaleSize.X / 2,
-                              point.Y * Demension * ScaleSize.Y + Demension * ScaleSize.Y / 2);
+                + new Vector2(point.X * Demension * Scale + Demension * Scale / 2,
+                              point.Y * Demension * Scale + Demension * Scale / 2);
         }
 
         /// <summary>

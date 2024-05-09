@@ -50,11 +50,11 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
             {
                 GameObject go = repository.GetGrid(grid.Name);
                 Grids.Add(go.GetComponent<Grid>());
-                Grids.Add(grid);
             }
             else
             {
                 grid.GenerateGrid();
+                Grids.Add(grid);
                 repository.SaveGrid(grid);
             }
         }
@@ -81,6 +81,20 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
             Grids.Clear();
         }
 
+
+        public GameObject GetCellAtPos(Vector2 pos)
+        {
+            foreach (Grid grid in Grids)
+            {
+                GameObject go = grid.GetCellGameObject(pos);
+                if (go != null)
+                {
+                    return go;
+                }
+            }
+
+            return null;
+        }
 
 
         private void OnGridIndexChanged()

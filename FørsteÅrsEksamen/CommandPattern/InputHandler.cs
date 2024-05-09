@@ -41,6 +41,8 @@ namespace FørsteÅrsEksamen.CommandPattern
         private InputHandler()
         {
             AddKeyButtonDownCommand(Keys.Escape, new QuitCommand());
+            AddMouseUpdateCommand(ButtonState.Pressed, new DrawTilesCommand());
+
         }
 
         #region Command

@@ -50,6 +50,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             GameObject gridGo = new();
             Grid grid = gridGo.AddComponent<Grid>("Test1", new Vector2(0, 0), 4, 4);
             GridManager.Instance.SaveGrid(grid);
+
         }
 
         public override void Update(GameTime gameTime)
@@ -68,10 +69,23 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
         public override void DrawOnScreen(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"PlayerPos {playerPos}", GameWorld.Instance.UiCam.TopLeft, Color.Black);
+            Vector2 mousePos = InputHandler.Instance.mouseInWorld;
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"MousePos {mousePos}", GameWorld.Instance.UiCam.TopLeft, Color.Black);
+
+            GameObject cellGo = GridManager.Instance.GetCellAtPos(mousePos);
+            if (cellGo != null)
+            {
+                Vector2 cellPos = cellGo.Transform.Position;
+                Point cellGridPos = cellGo.Transform.GridPosition;
+                spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Cell Point from MousePos: {cellPos}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 30), Color.Black); 
+            }
+
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"PlayerPos {playerPos}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 60), Color.Black);
 
             SceneData.GameObjectLists.TryGetValue(GameObjectTypes.Cell, out list);
-            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"SceneObjects in scene {list.Count}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 60), Color.Black);
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"SceneObjects in scene {list.Count}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 90), Color.Black);
+
+
 
             base.DrawOnScreen(spriteBatch);
         }
