@@ -23,9 +23,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
             sr.SetLayerDepth(LAYERDEPTH.Player);
 
             Animator animator = GameObject.GetComponent<Animator>();
-            //animator.AddAnimation(GlobalAnimations.Animations[AnimNames.TestWizardRightIndividualFrames]); //Set all the animations
-            //animator.PlayAnimation(AnimNames.TestWizardRightIndividualFrames);
-            animator.AddAnimation(GlobalAnimations.Animations[AnimNames.KnightIdle]); //Set all the animations
+            animator.AddAnimation(AnimNames.KnightIdle); //Set all the animations
             animator.PlayAnimation(AnimNames.KnightIdle);
         }
 
@@ -54,6 +52,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
             this.velocity = Vector2.Lerp(this.velocity, targetVelocity, turnSpeed * GameWorld.DeltaTime);
             GameObject.Transform.Translate(this.velocity * speed * GameWorld.DeltaTime);
             GameWorld.Instance.WorldCam.Move(this.velocity * speed * GameWorld.DeltaTime);
+
             Notify();
         }
 

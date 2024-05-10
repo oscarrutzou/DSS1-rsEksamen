@@ -17,7 +17,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
     {
         private PlayerFactory playerFactory;
         private ButtonFactory buttonFactory;
-        private GameObject level, playerGo, drawRoomBtn, drawAstarPathBtn;
+        private GameObject playerGo, drawRoomBtn, drawAstarPathBtn;
         
         private Vector2 playerPos;
 
@@ -51,6 +51,13 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             playerGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[new Point(3,3)].Transform.Position;
             GameWorld.Instance.WorldCam.position = playerGo.Transform.Position;
             GameWorld.Instance.Instantiate(playerGo);
+        }
+
+        private void MakeEnemy()
+        {
+            EnemyFactory enemyFactory = new();
+            GameObject enemGo = enemyFactory.Create();
+            GameWorld.Instance.Instantiate(enemGo);
         }
 
         private Player player;
@@ -93,6 +100,8 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            GridManager.Instance.Update();
         }
 
         public override void DrawInWorld(SpriteBatch spriteBatch)

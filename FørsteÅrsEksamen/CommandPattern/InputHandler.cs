@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace FørsteÅrsEksamen.CommandPattern
 {
@@ -117,7 +118,11 @@ namespace FørsteÅrsEksamen.CommandPattern
             mouseInWorld = GetMousePositionInWorld(mouseState);
             mouseOnUI = GetMousePositionOnUI(mouseState);
 
-            if (float.IsNaN(mouseInWorld.X) || float.IsNaN(mouseOnUI.X)) throw new Exception("Something crashed or it has made a new inputhandler or smth?");
+            Camera worldCam = GameWorld.Instance.WorldCam;
+            if (float.IsNaN(mouseInWorld.X) || float.IsNaN(mouseOnUI.X))
+            {
+                Debug.WriteLine("ERROR WORLD CAM IS NAN");
+            }
 
             UpdateKeyCommands(keyState);
             UpdateMouseCommands(mouseState);

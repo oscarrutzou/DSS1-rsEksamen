@@ -14,7 +14,7 @@ namespace FørsteÅrsEksamen.GameManagement
 
         public Dictionary<ScenesNames, Scene> Scenes { get; private set; }
         public Scene currentScene;
-        public Camera WorldCam { get; set; }
+        public Camera WorldCam { get; private set; }
         public Camera UiCam { get; private set; } //Static on the ui
         public static float DeltaTime { get; private set; }
         public GraphicsDeviceManager GfxManager { get; private set; }

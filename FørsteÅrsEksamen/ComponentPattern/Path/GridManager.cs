@@ -50,6 +50,19 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
                                                   // Brug file system hvis der ikke er adgang til postgre
         }
 
+        private float overrrideTime = 1;
+        private float overrideUpdateTimer;
+        public void Update()
+        {
+            overrideUpdateTimer -= GameWorld.DeltaTime;
+
+            if (overrideUpdateTimer < 0)
+            {
+                overrideUpdateTimer = overrrideTime;
+                OverrideSaveGrid(); // Works since we're just changing the CurrentGrid in the GridManager
+            }
+        }
+
         public void SaveGrid(Grid grid)
         {
             CurrentGrid = grid;
@@ -66,6 +79,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
 
         public void OverrideSaveGrid()
         {
+            if (CurrentGrid == null) return;
+
             repository.SaveGrid(CurrentGrid);
         }
 
@@ -102,9 +117,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
 
         private void SetCellProperties(Cell cell, CellWalkableType walkableType, int roomNr)
         {
-            cell.ChangeCellWalkalbeType(walkableType);
             cell.RoomNr = roomNr;
-            OverrideSaveGrid(); // Works since we're just changing the CurrentGrid in the GridManager
+            cell.ChangeCellWalkalbeType(walkableType);
         }
 
         public void DeleteDrawnGrid()

@@ -23,7 +23,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
         /// <summary>
         /// Used when selecting which room is active on each grid. Base is -1, so they dont count as a room
         /// </summary>
-        public int RoomNr = -1;
+        public int RoomNr { get; set; } = -1;
 
         // For the Astar algortihm
         public CellWalkableType CellWalkableType;
@@ -104,20 +104,17 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
 
         public void ChangeCellWalkalbeType(CellWalkableType cellWalkableType)
         {
+            if (RoomNr == -1) spriteRenderer.ShouldDraw = false;
+            else spriteRenderer.ShouldDraw = true;
+
             CellWalkableType = cellWalkableType;
 
             switch (CellWalkableType)
-            {
-                case CellWalkableType.NotValid:
-                    spriteRenderer.Color = Color.Gray;
-                    break;
+            { 
                 case CellWalkableType.FullValid:
                     spriteRenderer.Color = Color.DarkOliveGreen;
                     break;
             }
-            
-            if (RoomNr == -1) spriteRenderer.ShouldDraw = false; 
-            else spriteRenderer.ShouldDraw = true;
         }
 
 
