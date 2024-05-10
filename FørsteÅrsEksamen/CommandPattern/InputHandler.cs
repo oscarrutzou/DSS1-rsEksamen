@@ -117,6 +117,8 @@ namespace FørsteÅrsEksamen.CommandPattern
             mouseInWorld = GetMousePositionInWorld(mouseState);
             mouseOnUI = GetMousePositionOnUI(mouseState);
 
+            if (float.IsNaN(mouseInWorld.X) || float.IsNaN(mouseOnUI.X)) throw new Exception("Something crashed or it has made a new inputhandler or smth?");
+
             UpdateKeyCommands(keyState);
             UpdateMouseCommands(mouseState);
 
