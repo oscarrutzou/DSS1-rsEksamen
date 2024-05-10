@@ -17,15 +17,15 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
     {
         private PlayerFactory playerFactory;
         private ButtonFactory buttonFactory;
-        private GameObject playerGo, drawRoomBtn, drawAstarPathBtn;
-        
+        private GameObject level, playerGo, drawRoomBtn, drawAstarPathBtn;
+
         private Vector2 playerPos;
 
         public override void Initialize()
         {
             SetLevelBG();
             StartGrid();
-
+            MakeEnemy();
             MakePlayer();
             MakeButtons();
             SetCommands();
@@ -44,11 +44,18 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             GameWorld.Instance.Instantiate(go);
         }
 
+        private void MakeEnemy()
+        {
+            EnemyFactory enemyFactory = new EnemyFactory();
+            GameObject enemGo = enemyFactory.Create();
+            GameWorld.Instance.Instantiate(enemGo);
+        }
+
         private void MakePlayer()
         {
             playerFactory = new PlayerFactory();
             playerGo = playerFactory.Create();
-            playerGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[new Point(3,3)].Transform.Position;
+            playerGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[new Point(3, 3)].Transform.Position;
             GameWorld.Instance.WorldCam.position = playerGo.Transform.Position;
             GameWorld.Instance.Instantiate(playerGo);
         }

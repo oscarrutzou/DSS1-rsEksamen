@@ -40,9 +40,11 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
         private Grid grid;
         private Astar astar;
 
-        private SpriteRenderer spriteRenderer;
+        internal SpriteRenderer spriteRenderer;
+        internal Animator animator;
         private float attackTimer;
         private readonly float attackCooldown = 2f;
+
         public Enemy(GameObject gameObject) : base(gameObject)
         {
 
@@ -54,6 +56,46 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             GameObject.Transform.GridPosition = gridPos;
         }
 
+        public override void Awake()
+        {
+            base.Awake();
+        }
+
+        public override void Start()
+        {
+            spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
+            astar = GameObject.GetComponent<Astar>();
+
+            Animator animator = GameObject.GetComponent<Animator>();
+            animator.AddAnimation(GlobalAnimations.Animations[AnimNames.OrcIdle]);
+            animator.PlayAnimation(AnimNames.OrcIdle);
+
+            GameObject.Transform.Position = grid.GetCellGameObjectFromPoint(GameObject.Transform.GridPosition).Transform.Position;
+
+            targetCharacter = grid.TargetPoints[grid.TargetPoints.Count];
+            onGoalReached += OnGoalReached;
+
+            SetPath();
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            switch (enemyState)
+            {
+                case EnemyState.Inactive:
+                    break;
+                case EnemyState.Moving:
+                    UpdatePathing(gameTime);
+                    break;
+                case EnemyState.Attacking:
+                    Attack();
+                    break;
+                case EnemyState.Dead:
+                    break;
+                default:
+                    break;
+            }
+        }
         private void OnGoalReached()
         {
             enemyState = EnemyState.Attacking;
@@ -124,7 +166,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             nextTarget = cellGo.Transform.Position + new Vector2(0, -Cell.dimension / 2);
         }
         #endregion
-
+        
         private void Attack()
         {
             attackTimer -= GameWorld.DeltaTime;

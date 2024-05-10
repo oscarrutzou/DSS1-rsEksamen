@@ -1,5 +1,6 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern;
 using FørsteÅrsEksamen.ComponentPattern.Enemies;
+using FørsteÅrsEksamen.ComponentPattern.Enemies.Skeleton;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace FørsteÅrsEksamen.Factory
 {
+    //Asser
     internal class EnemyFactory : Factory
     {
         public override GameObject Create()
@@ -18,7 +20,7 @@ namespace FørsteÅrsEksamen.Factory
             enemyGo.AddComponent<SpriteRenderer>();
             enemyGo.AddComponent<Animator>();
             enemyGo.AddComponent<Collider>();
-            enemyGo.AddComponent<Enemy>();
+            enemyGo.AddComponent<SkeletonWarrior>();
             return enemyGo;
         }
     }
