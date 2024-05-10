@@ -29,12 +29,12 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
     public abstract class Enemy : Component, IEnemyAction
     {
 
-        private Vector2 direction, nextTarget;
+        private Vector2 direction, nextTarget, distanceToTarget;
         private GameObject playerGo;
         public Point targetPoint;
         public List<GameObject> Path { get; set; }
         public int speed;
-        private readonly float threshold = 5f;
+        private readonly float threshold = 20f;
 
         public Action onGoalReached;
         public EnemyState enemyState = EnemyState.Inactive;
@@ -46,6 +46,9 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
         internal Animator animator;
         private float attackTimer;
         private readonly float attackCooldown = 2f;
+
+        private bool inRange = false;
+        private int distance;
 
         public Enemy(GameObject gameObject) : base(gameObject)
         {
@@ -79,6 +82,20 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             onGoalReached += OnGoalReached;
         }
 
+        private void ViewRange()
+        {
+            if (inRange == false)
+            {
+                if (distance > 20)
+                {
+                    playerGo.Transform.Position = distanceToTarget;
+                    inRange = true;
+                }
+            }
+            SetPath();
+           
+            
+        }
         public override void Update(GameTime gameTime)
         {
             // Kun en gang når man finder
@@ -90,7 +107,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             if (playerGo.Transform.GridPosition != targetPoint)
             {
                 targetPoint = playerGo.Transform.GridPosition;
-                //SetPath();
+                SetPath();
             }
 
             switch (enemyState)
@@ -98,7 +115,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
                 case EnemyState.Inactive:
                     break;
                 case EnemyState.Moving:
-                    //UpdatePathing(gameTime);
+                    UpdatePathing(gameTime);
                     break;
                 case EnemyState.Attacking:
                     Attack();
