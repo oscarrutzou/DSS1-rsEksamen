@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FørsteÅrsEksamen.ComponentPattern.Grid
+namespace FørsteÅrsEksamen.ComponentPattern.Path
 {
     // Oscar
     public class Astar : Component
@@ -16,13 +16,9 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
 
         public Astar(GameObject gameObject) : base(gameObject)
         {
-        }
-
-        public Astar(GameObject gameObject, Grid grid) : base(gameObject)
-        {
-            this.grid = grid;
+            this.grid = GridManager.Instance.CurrentGrid;
             this.cells = grid.Cells; // Assign existing grid
-            gridDem = Cell.Demension * Cell.Scale;
+            gridDem = Cell.dimension * Cell.Scale;
         }
 
         public List<GameObject> FindPath(Point start, Point goal)

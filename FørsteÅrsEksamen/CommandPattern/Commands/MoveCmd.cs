@@ -3,12 +3,12 @@ using Microsoft.Xna.Framework;
 
 namespace FørsteÅrsEksamen.CommandPattern.Commands
 {
-    internal class MoveCommand : ICommand
+    internal class MoveCmd : ICommand
     {
         private Player player;
         private Vector2 velocity;
 
-        public MoveCommand(Player player, Vector2 velocity)
+        public MoveCmd(Player player, Vector2 velocity)
         {
             this.player = player;
             this.velocity = velocity;

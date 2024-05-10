@@ -34,7 +34,13 @@ namespace FørsteÅrsEksamen.GameManagement
         /// Update the camera's position by adding a vector.
         /// </summary>
         /// <param name="delta"></param>
-        public void Move(Vector2 delta) => position += delta;
+        public void Move(Vector2 delta)
+        {
+            if (!float.IsNaN(delta.X))
+            {
+                position += delta;
+            }
+        }
 
         #region Parameters
 

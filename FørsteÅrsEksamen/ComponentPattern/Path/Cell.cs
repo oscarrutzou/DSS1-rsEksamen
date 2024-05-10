@@ -3,7 +3,7 @@ using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FørsteÅrsEksamen.ComponentPattern.Grid
+namespace FørsteÅrsEksamen.ComponentPattern.Path
 {
     public enum CellWalkableType
     {
@@ -14,7 +14,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
     // Oscar
     public class Cell : Component
     {
-        public static int Demension = 16;
+        public static int dimension = 16;
         //public static readonly Vector2 ScaleSize = new(4, 4);
         public static int Scale = 4;
 
@@ -23,10 +23,10 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
         /// <summary>
         /// Used when selecting which room is active on each grid. Base is -1, so they dont count as a room
         /// </summary>
-        public int RoomNr = -1;
+        public int RoomNr { get; set; } = -1;
 
         // For the Astar algortihm
-        public CellWalkableType CellWalkableType = CellWalkableType.NotValid;
+        public CellWalkableType CellWalkableType;
 
         public int cost = 1;
 
@@ -44,10 +44,12 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
             GameObject.Transform.GridPosition = point;
             GameObject.Transform.Scale = new(Scale, Scale);
 
+            CellWalkableType = CellWalkableType.NotValid;
+
             // Centers the position of the cell.
             GameObject.Transform.Position = grid.StartPostion
-                + new Vector2(point.X * Demension * Scale + Demension * Scale / 2,
-                              point.Y * Demension * Scale + Demension * Scale / 2);
+                + new Vector2(point.X * dimension * Scale + dimension * Scale / 2,
+                              point.Y * dimension * Scale + dimension * Scale / 2);
         }
 
         public Cell(GameObject gameObject, Grid grid, Point point, CellWalkableType type) : base(gameObject)
@@ -55,31 +57,34 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
             GameObject.Transform.GridPosition = point;
             GameObject.Transform.Scale = new(Scale, Scale);
 
-            this.CellWalkableType = type;
+            CellWalkableType = type;
 
             // Centers the position of the cell.
             GameObject.Transform.Position = grid.StartPostion
-                + new Vector2(point.X * Demension * Scale + Demension * Scale / 2,
-                              point.Y * Demension * Scale + Demension * Scale / 2);
+                + new Vector2(point.X * dimension * Scale + dimension * Scale / 2,
+                              point.Y * dimension * Scale + dimension * Scale / 2);
         }
 
         public Cell(GameObject gameObject, Grid grid, Point point, CellWalkableType type, int roomNr) : base(gameObject)
         {
             GameObject.Transform.GridPosition = point;
             GameObject.Transform.Scale = new(Scale, Scale);
-            this.CellWalkableType = type;
+
+            CellWalkableType = type;
             this.RoomNr = roomNr;
 
             // Centers the position of the cell.
             GameObject.Transform.Position = grid.StartPostion
-                + new Vector2(point.X * Demension * Scale + Demension * Scale / 2,
-                              point.Y * Demension * Scale + Demension * Scale / 2);
+                + new Vector2(point.X * dimension * Scale + dimension * Scale / 2,
+                              point.Y * dimension * Scale + dimension * Scale / 2);
         }
 
         public override void Start()
         {
             spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
             if (spriteRenderer == null) throw new System.Exception("Cell need a spriteRenderer");
+
+            ChangeCellWalkalbeType(CellWalkableType); //Just the same here, so it turns the correct color.
         }
 
         /// <summary>
@@ -94,25 +99,22 @@ namespace FørsteÅrsEksamen.ComponentPattern.Grid
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, GameWorld.Instance.WorldCam.zoom, GameObject.Transform.Position, RoomNr.ToString(), Color.Black);
+            GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, GameWorld.Instance.WorldCam.zoom, GameObject.Transform.Position, RoomNr.ToString(), Color.HotPink);
         }
 
-        private CellWalkableType previosType;
-        public override void Update(GameTime gameTime)
+        public void ChangeCellWalkalbeType(CellWalkableType cellWalkableType)
         {
-            if (CellWalkableType == previosType) return;
+            if (RoomNr == -1) spriteRenderer.ShouldDraw = false;
+            else spriteRenderer.ShouldDraw = true;
+
+            CellWalkableType = cellWalkableType;
 
             switch (CellWalkableType)
-            {
-                case CellWalkableType.NotValid:
-                    spriteRenderer.Color = Color.Black;
-                    break;
+            { 
                 case CellWalkableType.FullValid:
-                    spriteRenderer.Color = Color.Red;
+                    spriteRenderer.Color = Color.DarkOliveGreen;
                     break;
             }
-
-            previosType = CellWalkableType;
         }
 
 

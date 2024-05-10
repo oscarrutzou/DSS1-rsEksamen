@@ -1,5 +1,5 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.Grid;
+using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.Factory;
 using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
@@ -32,8 +32,6 @@ namespace FørsteÅrsEksamen.RepositoryPattern
 
         public void SaveGrid(Grid grid)
         {
-            //DeleteExistingGrids();
-
             string path = Path.Combine(baseFolderPath, $"grid_{grid.Name}.txt");
             FileStream stream = File.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite);
             try
@@ -114,18 +112,6 @@ namespace FørsteÅrsEksamen.RepositoryPattern
             }
 
             return gridGo;
-        }
-
-        private void DeleteExistingGrids()
-        {
-            // Get all files that start with "grid"
-            string[] files = Directory.GetFiles(baseFolderPath, "grid*.txt");
-
-            // Delete each file
-            foreach (string file in files)
-            {
-                File.Delete(file);
-            }
         }
 
         public void DeleteGrid(string description)

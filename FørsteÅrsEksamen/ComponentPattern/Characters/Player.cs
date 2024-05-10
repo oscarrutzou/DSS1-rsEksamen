@@ -1,4 +1,5 @@
-﻿using FørsteÅrsEksamen.GameManagement;
+﻿using FørsteÅrsEksamen.ComponentPattern.Path;
+using FørsteÅrsEksamen.GameManagement;
 using FørsteÅrsEksamen.ObserverPattern;
 using Microsoft.Xna.Framework;
 
@@ -10,11 +11,11 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
         private float speed;
         private Vector2 velocity = Vector2.Zero;
         public Vector2 targetVelocity = Vector2.Zero;
-        private float turnSpeed = 25f; // Adjust as needed
+        private float turnSpeed = 40f; // Adjust as needed
 
         public Player(GameObject gameObject) : base(gameObject)
         {
-            speed = 200;
+            speed = 300;
         }
 
         public override void Start()
@@ -23,10 +24,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
             sr.SetLayerDepth(LAYERDEPTH.Player);
 
             Animator animator = GameObject.GetComponent<Animator>();
-            //animator.AddAnimation(GlobalAnimations.Animations[AnimNames.TestWizardRightIndividualFrames]); //Set all the animations
-            //animator.PlayAnimation(AnimNames.TestWizardRightIndividualFrames);
-            animator.AddAnimation(GlobalAnimations.Animations[AnimNames.TestWizardRightSheet]); //Set all the animations
-            animator.PlayAnimation(AnimNames.TestWizardRightSheet);
+            animator.AddAnimation(AnimNames.KnightIdle); //Set all the animations
+            animator.PlayAnimation(AnimNames.KnightIdle);
         }
 
         private Vector2 totalInput = Vector2.Zero;
@@ -53,7 +52,11 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
 
             this.velocity = Vector2.Lerp(this.velocity, targetVelocity, turnSpeed * GameWorld.DeltaTime);
             GameObject.Transform.Translate(this.velocity * speed * GameWorld.DeltaTime);
+
+            GameObject.Transform.GridPosition = GridManager.Instance.GetPointAtPos(GameObject.Transform.Position);
+
             GameWorld.Instance.WorldCam.Move(this.velocity * speed * GameWorld.DeltaTime);
+
             Notify();
         }
 

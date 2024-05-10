@@ -43,6 +43,7 @@ namespace FørsteÅrsEksamen.GameManagement
             LoadSpriteSheet(AnimNames.TestWizardRightSheet, "Test\\AnimationSheet\\wizardRight", 5, 32);
 
             LoadSpriteSheet(AnimNames.KnightIdle, "World\\Classes\\Knight-Idle", 4, 32);
+            LoadSpriteSheet(AnimNames.OrcIdle, "World\\Enemies\\Orc-Idle", 4, 32);
 
             #region How to Upload Individual Frame Animation
 

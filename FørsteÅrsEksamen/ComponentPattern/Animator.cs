@@ -94,7 +94,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
             spriteRenderer.SourceRectangle.X = CurrentIndex * CurrentAnimation.FrameDimensions; // Only works with animation thats horizontal
         }
 
-        public void AddAnimation(Animation animation) => animations.Add(animation.Name, animation);
+        public void AddAnimation(AnimNames name) => animations.Add(name, GlobalAnimations.Animations[name]);
 
         /// <summary>
         /// <para>Updates params based on chosen Animation. Also resets the IsLopping to true</para>
@@ -107,7 +107,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
             {
                 CurrentAnimation = animations[animationName];
                 spriteRenderer.UsingAnimation = true; // This gets set to false if you have played a Animation, then want to use a normal sprite again
-                frameDuration = 1f / CurrentAnimation.FPS; //Sets how long each frame should be
+                frameDuration = 1f / CurrentAnimation.AmountOfFrames; //Sets how long each frame should be
                 IsLooping = true; // Resets loop
                 if (CurrentAnimation.UseSpriteSheet)
                 {

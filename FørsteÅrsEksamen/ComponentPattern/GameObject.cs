@@ -12,10 +12,11 @@ namespace FørsteÅrsEksamen.ComponentPattern
     /// </summary>
     public enum GameObjectTypes
     {
+        Background,
         Cell,
         Player,
 
-        //Enemy,
+        Enemy,
         Gui,
 
         Default, //Not set
@@ -100,6 +101,8 @@ namespace FørsteÅrsEksamen.ComponentPattern
 
             return null;
         }
+
+        // Lav om component nedarver for classe typen. (Find om man kan finde metoderne for en abstract klasse her)
 
         public void Awake()
         {

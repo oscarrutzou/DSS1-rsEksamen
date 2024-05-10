@@ -2,34 +2,90 @@
 using FørsteÅrsEksamen.CommandPattern.Commands;
 using FørsteÅrsEksamen.ComponentPattern;
 using FørsteÅrsEksamen.ComponentPattern.Characters;
-using FørsteÅrsEksamen.ComponentPattern.Grid;
+using FørsteÅrsEksamen.ComponentPattern.Path;
+using FørsteÅrsEksamen.ComponentPattern.GUI;
 using FørsteÅrsEksamen.Factory;
 using FørsteÅrsEksamen.ObserverPattern;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using FørsteÅrsEksamen.ComponentPattern.Enemies;
+using FørsteÅrsEksamen.ComponentPattern.Enemies.Skeleton;
 
 namespace FørsteÅrsEksamen.GameManagement.Scenes
 {
     public class OscarTestScene : Scene, IObserver
     {
         private PlayerFactory playerFactory;
-        private GameObject playerGo;
+        private ButtonFactory buttonFactory;
+        private GameObject level, playerGo, drawRoomBtn, drawAstarPathBtn;
 
         private Vector2 playerPos;
 
         public override void Initialize()
         {
-            MakePlayer();
+            SetLevelBG();
+            //First grid
             StartGrid();
+
+            //Then player
+            MakePlayer();
+
+            // then enemies
+            MakeEnemy();
+            
+            MakeButtons();
             SetCommands();
+        }
+
+        private void SetLevelBG()
+        {
+            GameObject go = new();
+            go.Type = GameObjectTypes.Background;
+            go.Transform.Scale = new(4, 4);
+
+            SpriteRenderer spriteRenderer = go.AddComponent<SpriteRenderer>();
+            spriteRenderer.SetSprite(TextureNames.TestLevel);
+            spriteRenderer.IsCentered = false;
+
+            GameWorld.Instance.Instantiate(go);
+        }
+
+
+        enum EnemyTypes
+        {
+            SkeletonWarrior,
+        }
+
+        Dictionary<EnemyTypes, List<GameObject>> enemies = new();
+
+        private void AddNewEnemy(EnemyTypes type, GameObject enemyGo)
+        {
+
+        }
+
+        //private 
+
+        private void MakeEnemy()
+        {
+            EnemyFactory enemyFactory = new EnemyFactory();
+            GameObject enemGo = enemyFactory.Create();
+            GameWorld.Instance.Instantiate(enemGo);
+
+            if (GridManager.Instance.CurrentGrid != null)
+            {
+                SkeletonWarrior enemy = enemGo.GetComponent<SkeletonWarrior>();
+                enemy.SetStartPosition(playerGo, GridManager.Instance.CurrentGrid, new Point(5, 5));
+            }
         }
 
         private void MakePlayer()
         {
             playerFactory = new PlayerFactory();
             playerGo = playerFactory.Create();
+            playerGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[new Point(3, 3)].Transform.Position;
+            GameWorld.Instance.WorldCam.position = playerGo.Transform.Position;
             GameWorld.Instance.Instantiate(playerGo);
         }
 
@@ -39,24 +95,42 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         {
             player = playerGo.GetComponent<Player>();
             player.Attach(this);
-            InputHandler.Instance.AddKeyUpdateCommand(Keys.D, new MoveCommand(player, new Vector2(1, 0)));
-            InputHandler.Instance.AddKeyUpdateCommand(Keys.A, new MoveCommand(player, new Vector2(-1, 0)));
-            InputHandler.Instance.AddKeyUpdateCommand(Keys.W, new MoveCommand(player, new Vector2(0, -1)));
-            InputHandler.Instance.AddKeyUpdateCommand(Keys.S, new MoveCommand(player, new Vector2(0, 1)));
+            InputHandler.Instance.AddKeyUpdateCommand(Keys.D, new MoveCmd(player, new Vector2(1, 0)));
+            InputHandler.Instance.AddKeyUpdateCommand(Keys.A, new MoveCmd(player, new Vector2(-1, 0)));
+            InputHandler.Instance.AddKeyUpdateCommand(Keys.W, new MoveCmd(player, new Vector2(0, -1)));
+            InputHandler.Instance.AddKeyUpdateCommand(Keys.S, new MoveCmd(player, new Vector2(0, 1)));
         }
 
         private void StartGrid()
         {
             GameObject gridGo = new();
-            Grid grid = gridGo.AddComponent<Grid>("Test1", new Vector2(0, 0), 4, 4);
+            Grid grid = gridGo.AddComponent<Grid>("Test1", new Vector2(0, 0), 24, 18);
             grid.GenerateGrid();
             GridManager.Instance.SaveGrid(grid);
 
         }
 
+        private void MakeButtons()
+        {
+            Camera uiCam = GameWorld.Instance.UiCam;
+
+            buttonFactory = new();
+            drawRoomBtn = buttonFactory.Create("Draw Room", () => { });
+            drawRoomBtn.Transform.Translate(uiCam.TopRight + new Vector2(-100, 50));
+
+            GameWorld.Instance.Instantiate(drawRoomBtn);
+
+            drawAstarPathBtn = buttonFactory.Create("Draw Valid Path", () => { });
+            drawAstarPathBtn.Transform.Translate(uiCam.TopRight + new Vector2(-100, 120));
+            GameWorld.Instance.Instantiate(drawAstarPathBtn);
+        }
+
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            GridManager.Instance.Update();
         }
 
         public override void DrawInWorld(SpriteBatch spriteBatch)
@@ -66,29 +140,36 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             base.DrawInWorld(spriteBatch);
         }
 
-        private List<GameObject> list;
+        private List<GameObject> list; //For test
 
         public override void DrawOnScreen(SpriteBatch spriteBatch)
         {
             Vector2 mousePos = InputHandler.Instance.mouseInWorld;
             spriteBatch.DrawString(GlobalTextures.DefaultFont, $"MousePos {mousePos}", GameWorld.Instance.UiCam.TopLeft, Color.Black);
 
-            GameObject cellGo = GridManager.Instance.GetCellAtPos(mousePos);
-            if (cellGo != null)
-            {
-                Vector2 cellPos = cellGo.Transform.Position;
-                Point cellGridPos = cellGo.Transform.GridPosition;
-                spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Cell Point from MousePos: {cellPos}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 30), Color.Black); 
-            }
+
+            DrawCellPos(spriteBatch);
 
             spriteBatch.DrawString(GlobalTextures.DefaultFont, $"PlayerPos {playerPos}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 60), Color.Black);
 
             SceneData.GameObjectLists.TryGetValue(GameObjectTypes.Cell, out list);
-            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"SceneObjects in scene {list.Count}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 90), Color.Black);
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Cell GameObjects in scene {list.Count}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 90), Color.Black);
 
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"RoomNr {GridManager.Instance.RoomNrIndex}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 120), Color.Black);
 
 
             base.DrawOnScreen(spriteBatch);
+        }
+
+        private void DrawCellPos(SpriteBatch spriteBatch)
+        {
+            //if (GridManager.Instance.CurrentGrid == null) throw new System.Exception("Error spørg da Oscar");
+            GameObject cellGo = GridManager.Instance.GetCellAtPos(InputHandler.Instance.mouseInWorld);
+
+            if (cellGo == null) return;
+
+            Point cellGridPos = cellGo.Transform.GridPosition;
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Cell Point from MousePos: {cellGridPos}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 30), Color.Black);
         }
 
         public void UpdateObserver()

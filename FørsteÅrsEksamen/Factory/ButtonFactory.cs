@@ -1,0 +1,34 @@
+﻿using FørsteÅrsEksamen.ComponentPattern;
+using FørsteÅrsEksamen.ComponentPattern.GUI;
+using System;
+
+namespace FørsteÅrsEksamen.Factory
+{
+    public class ButtonFactory : Factory
+    {
+        public override GameObject Create()
+        {
+            GameObject roomBtn = new();
+            roomBtn.Transform.Scale = new(8, 4);
+            roomBtn.Type = GameObjectTypes.Gui;
+            roomBtn.AddComponent<SpriteRenderer>().SetSprite(GameManagement.TextureNames.Cell);
+            roomBtn.AddComponent<Collider>();
+            roomBtn.AddComponent<Button>();
+
+            return roomBtn;
+
+        }
+
+        public GameObject Create(string text, Action onClick)
+        {
+            GameObject roomBtn = new();
+            roomBtn.Transform.Scale = new(8, 4);
+            roomBtn.Type = GameObjectTypes.Gui;
+            roomBtn.AddComponent<SpriteRenderer>().SetSprite(GameManagement.TextureNames.Cell);
+            roomBtn.AddComponent<Collider>();
+            roomBtn.AddComponent<Button>(text, onClick);
+
+            return roomBtn;
+        }
+    }
+}

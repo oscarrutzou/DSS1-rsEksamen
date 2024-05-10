@@ -1,15 +1,22 @@
 ﻿using FørsteÅrsEksamen.CommandPattern.Commands;
+using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace FørsteÅrsEksamen.CommandPattern
 {
     public enum ScrollWheelState
     {
-        Up,
-        Down
+        Up, Down
+    }
+
+    public enum MouseCmdState
+    {
+        Left, Right   
     }
 
     // Oscar
@@ -23,14 +30,14 @@ namespace FørsteÅrsEksamen.CommandPattern
         { get { return instance ??= instance = new InputHandler(); } }
 
         // Keyboard commands
-        private Dictionary<Keys, ICommand> keybindsUpdate = new Dictionary<Keys, ICommand>();
+        private Dictionary<Keys, ICommand> keybindsUpdate = new();
 
-        private Dictionary<Keys, ICommand> keybindsButtonDown = new Dictionary<Keys, ICommand>();
+        private Dictionary<Keys, ICommand> keybindsButtonDown = new();
 
         // Mouse Commands
-        private Dictionary<ButtonState, ICommand> mouseButtonUpdateCommands = new();
+        private Dictionary<MouseCmdState, ICommand> mouseButtonUpdateCommands = new();
 
-        private Dictionary<ButtonState, ICommand> mouseButtonDownCommands = new();
+        private Dictionary<MouseCmdState, ICommand> mouseButtonDownCommands = new();
         private Dictionary<ScrollWheelState, ICommand> scrollWheelCommands = new();
 
         public Vector2 mouseInWorld, mouseOnUI;
@@ -40,22 +47,65 @@ namespace FørsteÅrsEksamen.CommandPattern
 
         private InputHandler()
         {
-            AddKeyButtonDownCommand(Keys.Escape, new QuitCommand());
-            AddMouseUpdateCommand(ButtonState.Pressed, new DrawTilesCommand());
-
+            SetBaseKeys();
         }
 
+        public void SetBaseKeys()
+        {
+            AddKeyButtonDownCommand(Keys.Escape, new QuitCmd());
+            AddMouseUpdateCommand(MouseCmdState.Left, new CustomCmd(() => { GridManager.Instance.DrawOnCells(); }));
+            AddMouseUpdateCommand(MouseCmdState.Right, new CustomCmd(() => { GridManager.Instance.SetDefaultOnCell(); }));
+
+            AddKeyButtonDownCommand(Keys.Q, new CustomCmd(() => { GridManager.Instance.ChangeRoomNrIndex(-1); }));
+            AddKeyButtonDownCommand(Keys.E, new CustomCmd(() => { GridManager.Instance.ChangeRoomNrIndex(1); }));
+        }
+
+        //Make a mark in the right corner that just is a bool that check if there have been made any changes to the data (for debug) so we can save it.
+        //Maybe make a ctrl z + x command. 
+        // Multiple command inputs?
+        // Make it save the new grid. 
+        // Change it so the grid manager only shows 1 grid, since thats what our design is made.
+        // Change all foreach to just check the grid != null. 
+        // Make commen commands to the contains and stuff.
         #region Command
 
+        #region Add/Remove
         public void AddKeyUpdateCommand(Keys inputKey, ICommand command) => keybindsUpdate.Add(inputKey, command);
 
         public void AddKeyButtonDownCommand(Keys inputKey, ICommand command) => keybindsButtonDown.Add(inputKey, command);
 
-        public void AddMouseUpdateCommand(ButtonState inputButton, ICommand command) => mouseButtonUpdateCommands.Add(inputButton, command);
+        public void AddMouseUpdateCommand(MouseCmdState inputButton, ICommand command) => mouseButtonUpdateCommands.Add(inputButton, command);
 
-        public void AddMouseButtonDownCommand(ButtonState inputButton, ICommand command) => mouseButtonDownCommands.Add(inputButton, command);
+        public void AddMouseButtonDownCommand(MouseCmdState inputButton, ICommand command) => mouseButtonDownCommands.Add(inputButton, command);
 
         public void AddScrollWheelCommand(ScrollWheelState scrollWheelState, ICommand command) => scrollWheelCommands.Add(scrollWheelState, command);
+
+
+        public void RemoveKeyUpdateCommand(Keys inputKey) => keybindsUpdate.Remove(inputKey);
+
+        public void RemoveKeyButtonDownCommand(Keys inputKey) => keybindsButtonDown.Remove(inputKey);
+
+        public void RemoveMouseUpdateCommand(MouseCmdState inputButton) => mouseButtonUpdateCommands.Remove(inputButton);
+
+        public void RemoveMouseButtonDownCommand(MouseCmdState inputButton) => mouseButtonDownCommands.Remove(inputButton);
+
+        public void RemoveScrollWheelCommand(ScrollWheelState scrollWheelState) => scrollWheelCommands.Remove(scrollWheelState);
+
+        /// <summary>
+        /// Base Commands are the ones in the InputHandler, in the SetBaseKeys() method.
+        /// </summary>
+        public void RemoveAllExeptBaseCommands()
+        {
+            keybindsUpdate.Clear();
+            keybindsButtonDown.Clear();
+            mouseButtonUpdateCommands.Clear();
+            mouseButtonDownCommands.Clear();
+            scrollWheelCommands.Clear();
+
+            SetBaseKeys();
+        }
+
+        #endregion
 
         private KeyboardState previousKeyState;
         private MouseState previousMouseState;
@@ -67,6 +117,12 @@ namespace FørsteÅrsEksamen.CommandPattern
 
             mouseInWorld = GetMousePositionInWorld(mouseState);
             mouseOnUI = GetMousePositionOnUI(mouseState);
+
+            Camera worldCam = GameWorld.Instance.WorldCam;
+            if (float.IsNaN(mouseInWorld.X) || float.IsNaN(mouseOnUI.X))
+            {
+                Debug.WriteLine("ERROR WORLD CAM IS NAN");
+            }
 
             UpdateKeyCommands(keyState);
             UpdateMouseCommands(mouseState);
@@ -97,7 +153,7 @@ namespace FørsteÅrsEksamen.CommandPattern
         {
             // Left mouse button update commands
             if (mouseState.LeftButton == ButtonState.Pressed
-                && mouseButtonUpdateCommands.TryGetValue(ButtonState.Pressed, out ICommand cmdLeft))
+                && mouseButtonUpdateCommands.TryGetValue(MouseCmdState.Left, out ICommand cmdLeft))
             {
                 cmdLeft.Execute();
             }
@@ -105,14 +161,14 @@ namespace FørsteÅrsEksamen.CommandPattern
             // Left mouse button down commands
             if (previousMouseState.LeftButton == ButtonState.Released
                 && mouseState.LeftButton == ButtonState.Pressed
-                && mouseButtonDownCommands.TryGetValue(ButtonState.Pressed, out ICommand cmdBdLeft))
+                && mouseButtonDownCommands.TryGetValue(MouseCmdState.Left, out ICommand cmdBdLeft))
             {
                 cmdBdLeft.Execute();
             }
 
             // Right mouse button update commands
             if (mouseState.RightButton == ButtonState.Pressed
-                && mouseButtonUpdateCommands.TryGetValue(ButtonState.Pressed, out ICommand cmdRight))
+                && mouseButtonUpdateCommands.TryGetValue(MouseCmdState.Right, out ICommand cmdRight))
             {
                 cmdRight.Execute();
             }
@@ -120,7 +176,7 @@ namespace FørsteÅrsEksamen.CommandPattern
             // Right mouse button down commands
             if (previousMouseState.RightButton == ButtonState.Released
                 && mouseState.RightButton == ButtonState.Pressed
-                && mouseButtonDownCommands.TryGetValue(ButtonState.Pressed, out ICommand cmdBdRight))
+                && mouseButtonDownCommands.TryGetValue(MouseCmdState.Right, out ICommand cmdBdRight))
             {
                 cmdBdRight.Execute();
             }
@@ -137,7 +193,9 @@ namespace FørsteÅrsEksamen.CommandPattern
             previousMouseState = mouseState;
         }
 
+
         #endregion Command
+
 
         private Vector2 GetMousePositionInWorld(MouseState mouseState)
         {
