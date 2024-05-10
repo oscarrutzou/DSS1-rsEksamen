@@ -49,6 +49,11 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
 
         }
 
+        public void Attack()
+        {
+            GameObject.Transform.Rotation += 30f;
+        }
+
 
 
 

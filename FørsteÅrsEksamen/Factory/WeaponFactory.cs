@@ -1,4 +1,6 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern;
+using FørsteÅrsEksamen.ComponentPattern.Weapons;
+using FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons;
 using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
 using System;
@@ -19,6 +21,7 @@ namespace FørsteÅrsEksamen.Factory
             sr.SetSprite(TextureNames.Cell);
             sr.SetLayerDepth(LAYERDEPTH.Player);
             sword.AddComponent<Collider>();
+            sword.AddComponent<MagicStaff>();
 
             return sword;
         }
