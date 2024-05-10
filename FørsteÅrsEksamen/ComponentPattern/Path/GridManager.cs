@@ -119,6 +119,9 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
         {
             cell.RoomNr = roomNr;
             cell.ChangeCellWalkalbeType(walkableType);
+
+            // Add or remove fomr targetCells in current grid.
+            // When loading new grid, add all the cells that have CellWalkableType = FullValid
         }
 
         public void DeleteDrawnGrid()
@@ -174,6 +177,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
 
             return null;
         }
+
+        public Point GetPointAtPos(Vector2 pos) => GetCellAtPos(pos).Transform.GridPosition;
 
         public void ChangeRoomNrIndex(int addToCurrentRoomNr) => RoomNrIndex += addToCurrentRoomNr;
     }

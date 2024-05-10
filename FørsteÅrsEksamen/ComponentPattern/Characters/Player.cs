@@ -1,4 +1,5 @@
-﻿using FørsteÅrsEksamen.GameManagement;
+﻿using FørsteÅrsEksamen.ComponentPattern.Path;
+using FørsteÅrsEksamen.GameManagement;
 using FørsteÅrsEksamen.ObserverPattern;
 using Microsoft.Xna.Framework;
 
@@ -51,6 +52,9 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
 
             this.velocity = Vector2.Lerp(this.velocity, targetVelocity, turnSpeed * GameWorld.DeltaTime);
             GameObject.Transform.Translate(this.velocity * speed * GameWorld.DeltaTime);
+
+            GameObject.Transform.GridPosition = GridManager.Instance.GetPointAtPos(GameObject.Transform.Position);
+
             GameWorld.Instance.WorldCam.Move(this.velocity * speed * GameWorld.DeltaTime);
 
             Notify();

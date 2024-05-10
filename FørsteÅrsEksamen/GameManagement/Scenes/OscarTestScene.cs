@@ -10,6 +10,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using FørsteÅrsEksamen.ComponentPattern.Enemies;
+using FørsteÅrsEksamen.ComponentPattern.Enemies.Skeleton;
 
 namespace FørsteÅrsEksamen.GameManagement.Scenes
 {
@@ -24,9 +26,15 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         public override void Initialize()
         {
             SetLevelBG();
+            //First grid
             StartGrid();
-            MakeEnemy();
+
+            //Then player
             MakePlayer();
+
+            // then enemies
+            MakeEnemy();
+            
             MakeButtons();
             SetCommands();
         }
@@ -44,11 +52,32 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             GameWorld.Instance.Instantiate(go);
         }
 
+
+        enum EnemyTypes
+        {
+            SkeletonWarrior,
+        }
+
+        Dictionary<EnemyTypes, List<GameObject>> enemies = new();
+
+        private void AddNewEnemy(EnemyTypes type, GameObject enemyGo)
+        {
+
+        }
+
+        //private 
+
         private void MakeEnemy()
         {
             EnemyFactory enemyFactory = new EnemyFactory();
             GameObject enemGo = enemyFactory.Create();
             GameWorld.Instance.Instantiate(enemGo);
+
+            if (GridManager.Instance.CurrentGrid != null)
+            {
+                SkeletonWarrior enemy = enemGo.GetComponent<SkeletonWarrior>();
+                enemy.SetStartPosition(playerGo, GridManager.Instance.CurrentGrid, new Point(5, 5));
+            }
         }
 
         private void MakePlayer()
@@ -58,13 +87,6 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             playerGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[new Point(3, 3)].Transform.Position;
             GameWorld.Instance.WorldCam.position = playerGo.Transform.Position;
             GameWorld.Instance.Instantiate(playerGo);
-        }
-
-        private void MakeEnemy()
-        {
-            EnemyFactory enemyFactory = new();
-            GameObject enemGo = enemyFactory.Create();
-            GameWorld.Instance.Instantiate(enemGo);
         }
 
         private Player player;

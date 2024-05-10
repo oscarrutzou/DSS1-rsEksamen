@@ -102,6 +102,8 @@ namespace FørsteÅrsEksamen.ComponentPattern
             return null;
         }
 
+        // Lav om component nedarver for classe typen. (Find om man kan finde metoderne for en abstract klasse her)
+
         public void Awake()
         {
             foreach (var component in components.Values)

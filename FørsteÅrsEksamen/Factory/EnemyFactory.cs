@@ -1,6 +1,7 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern;
 using FørsteÅrsEksamen.ComponentPattern.Enemies;
 using FørsteÅrsEksamen.ComponentPattern.Enemies.Skeleton;
+using FørsteÅrsEksamen.ComponentPattern.Path;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -17,9 +18,10 @@ namespace FørsteÅrsEksamen.Factory
         {
             GameObject enemyGo = new GameObject();
             enemyGo.Transform.Scale = new Vector2(4, 4);
-            enemyGo.AddComponent<SpriteRenderer>();
+            enemyGo.AddComponent<SpriteRenderer>().SetLayerDepth(LAYERDEPTH.Enemies);
             enemyGo.AddComponent<Animator>();
             enemyGo.AddComponent<Collider>();
+            enemyGo.AddComponent<Astar>();
             enemyGo.AddComponent<SkeletonWarrior>();
             return enemyGo;
         }

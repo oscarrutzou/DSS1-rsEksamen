@@ -16,11 +16,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
 
         public Astar(GameObject gameObject) : base(gameObject)
         {
-        }
-
-        public Astar(GameObject gameObject, Grid grid) : base(gameObject)
-        {
-            this.grid = grid;
+            this.grid = GridManager.Instance.CurrentGrid;
             this.cells = grid.Cells; // Assign existing grid
             gridDem = Cell.dimension * Cell.Scale;
         }

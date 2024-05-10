@@ -28,8 +28,10 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 
     public abstract class Enemy : Component, IEnemyAction
     {
+
         private Vector2 direction, nextTarget;
-        public Point targetCharacter;
+        private GameObject playerGo;
+        public Point targetPoint;
         public List<GameObject> Path { get; set; }
         public int speed;
         private readonly float threshold = 5f;
@@ -50,8 +52,10 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 
         }
 
-        public void SetStartPosition(Grid grid, Point gridPos)
+        public void SetStartPosition(GameObject player, Grid grid, Point gridPos)
         {
+            playerGo = player;
+            targetPoint = playerGo.Transform.GridPosition;
             this.grid = grid;
             GameObject.Transform.GridPosition = gridPos;
         }
@@ -67,25 +71,34 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             astar = GameObject.GetComponent<Astar>();
 
             Animator animator = GameObject.GetComponent<Animator>();
-            animator.AddAnimation(GlobalAnimations.Animations[AnimNames.OrcIdle]);
+            animator.AddAnimation(AnimNames.OrcIdle);
             animator.PlayAnimation(AnimNames.OrcIdle);
 
             GameObject.Transform.Position = grid.GetCellGameObjectFromPoint(GameObject.Transform.GridPosition).Transform.Position;
 
-            targetCharacter = grid.TargetPoints[grid.TargetPoints.Count];
             onGoalReached += OnGoalReached;
-
-            SetPath();
         }
 
         public override void Update(GameTime gameTime)
         {
+            // Kun en gang når man finder
+            // Distance check mellem playerGo.Transform.Position og enemy pos. (Vector2) 
+            // Indenfor rækkevide, set path, sætter state til moving og den følger pathen.
+
+
+            // Check om playerGo.Transform.GridPostion er det samme, ellers lav en ny path mod nuværende player gridposition
+            if (playerGo.Transform.GridPosition != targetPoint)
+            {
+                targetPoint = playerGo.Transform.GridPosition;
+                //SetPath();
+            }
+
             switch (enemyState)
             {
                 case EnemyState.Inactive:
                     break;
                 case EnemyState.Moving:
-                    UpdatePathing(gameTime);
+                    //UpdatePathing(gameTime);
                     break;
                 case EnemyState.Attacking:
                     Attack();
@@ -96,6 +109,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
                     break;
             }
         }
+
         private void OnGoalReached()
         {
             enemyState = EnemyState.Attacking;
@@ -118,7 +132,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             {
                 if (Path != null && Path.Count > 0) break;
 
-                Path = astar.FindPath(GameObject.Transform.GridPosition, targetCharacter);
+                Path = astar.FindPath(GameObject.Transform.GridPosition, targetPoint);
             }
             if (Path == null) throw new Exception("No path available");
         }
