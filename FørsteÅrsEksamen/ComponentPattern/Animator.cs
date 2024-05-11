@@ -108,10 +108,11 @@ namespace FørsteÅrsEksamen.ComponentPattern
                 AddAnimation(animationName);
             }
 
-            if (CurrentAnimation != null)
+            if (CurrentAnimation != null) // Reset previous animation
             {
                 CurrentIndex = 0;
                 CurrentAnimation.OnAnimationDone = null; //Resets its commands
+                spriteRenderer.OffSet = Vector2.Zero;
             }
 
             CurrentAnimation = animations[animationName];

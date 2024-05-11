@@ -149,6 +149,17 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             return null;
         }
 
+        public Vector2 GetCornerPositionOfCell(Point gridCell)
+        {
+            Vector2 temp = Vector2.Zero;
+            if (CurrentGrid == null) return temp;
+
+            temp = CurrentGrid.PosFromGridPos(gridCell);
+            temp -= new Vector2(Cell.dimension * Cell.Scale / 2, Cell.dimension * Cell.Scale / 2);
+
+            return temp;
+        }
+
         //public Point GetPointAtPos(Vector2 pos) => GetCellAtPos(pos).Transform.GridPosition;
 
         public void ChangeRoomNrIndex(int addToCurrentRoomNr) => RoomNrIndex += addToCurrentRoomNr;

@@ -40,8 +40,8 @@ namespace FørsteÅrsEksamen.GameManagement
             // The Name of the Animation, the path, the FPS (how many times we change the frame per second, and the dimension of each sprite
             LoadSpriteSheet(AnimNames.KnightIdle, "World\\Classes\\Knight-Idle", 5, 32);
             LoadSpriteSheet(AnimNames.OrcIdle, "World\\Enemies\\Orc-Idle", 4, 32);
-            LoadSpriteSheet(AnimNames.OrcRun, "World\\Enemies\\Orc-Run", 10, 32);
-            LoadSpriteSheet(AnimNames.OrcDeath, "World\\Enemies\\Orc-Death", 6, 32);
+            LoadSpriteSheet(AnimNames.OrcRun, "World\\Enemies\\Orc-Run", 10, 64);
+            LoadSpriteSheet(AnimNames.OrcDeath, "World\\Enemies\\Orc-Death", 6, 64);
 
             #region How to Upload Individual Frame Animation
 

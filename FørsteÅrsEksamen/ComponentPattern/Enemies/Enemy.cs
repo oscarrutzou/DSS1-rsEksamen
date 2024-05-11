@@ -1,9 +1,8 @@
-﻿using FørsteÅrsEksamen.ComponentPattern.Path;
-using FørsteÅrsEksamen.GameManagement;
+﻿using FørsteÅrsEksamen.GameManagement;
 using FørsteÅrsEksamen.ObserverPattern;
+using FørsteÅrsEksamen.ComponentPattern.Path;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SharpDX.Direct2D1;
 using System;
 using System.Collections.Generic;
 
@@ -49,6 +48,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
         internal Collider collider;
 
         internal Dictionary<EnemyState, AnimNames> enemyStateAnimations = new();
+        private Vector2 idlespriteOffset = new(0, -32); // Move the animation up a bit so it looks like it walks correctly.
+        private Vector2 largeSpriteOffSet = new(0, -96); // Move the animation up more since its a 64x64 insted of 32x32 canvans, for the Run and Death.
 
         private float attackTimer;
         private readonly float attackCooldown = 2f;
@@ -71,7 +72,14 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 
         public override void Awake()
         {
-            base.Awake();
+            spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
+            astar = GameObject.GetComponent<Astar>();
+
+            // Gets the animationer and adds the animations         Should be in each of the enemy start methods.
+            animator = GameObject.GetComponent<Animator>();
+
+            collider = GameObject.GetComponent<Collider>();
+            collider.SetCollisionBox(15, 27, new Vector2(0, -15));
         }
 
         // Kun en gang når man finder
@@ -80,24 +88,16 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 
         public override void Start()
         {
-            spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
-            astar = GameObject.GetComponent<Astar>();
+            SetState(EnemyState.Idle);
 
-            // Gets the animationer and adds the animations         Should be in each of the enemy start methods.
-            animator = GameObject.GetComponent<Animator>();
-
-            collider = GameObject.GetComponent<Collider>();
-            collider.SetCollisionBox(10, 20);
-
-            SetState(EnemyState.Idle); // Kommer til at slå fejl når vi flytter animationerne, da den prøver at sætte animation
-
-            // Sets start position.
+            // Sets start position
             GameObject.Transform.Position = grid.GetCellGameObjectFromPoint(GameObject.Transform.GridPosition).Transform.Position;
 
             SetPath(); // We know that the player the targetPoint has been set
 
             onGoalReached += OnGoalReached;
         }
+
 
         // Kig hvad jeg har i starten af update, husk at have de checks med og sætte targetPoint til playerGo GridPosition.
         private void ViewRange()
@@ -136,9 +136,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
                     break;
 
                 case EnemyState.Dead:
-                    break;
-
-                default:
                     break;
             }
         }
@@ -251,6 +248,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             }
         }
 
+
         /// <summary>
         /// Changes the animation that plays and other variables
         /// </summary>
@@ -264,19 +262,31 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             switch (enemyState)
             {
                 case EnemyState.Idle:
-                    animator.PlayAnimation(AnimNames.OrcIdle); // Hands are stuck a little over the normal sprite
+                    //animator.PlayAnimation(AnimNames.OrcIdle); // Hands are stuck a little over the normal sprite
+                    animator.PlayAnimation(enemyStateAnimations[enemyState]);
+
+                    spriteRenderer.OffSet = idlespriteOffset;
                     break;
 
                 case EnemyState.Moving:
-                    animator.PlayAnimation(AnimNames.OrcRun); // Hands are stuck a little over the normal sprite
+                    //animator.PlayAnimation(AnimNames.OrcRun); // Hands are stuck a little over the normal sprite
+                    animator.PlayAnimation(enemyStateAnimations[enemyState]);
+
+                    spriteRenderer.OffSet = largeSpriteOffSet;
                     break;
 
                 case EnemyState.Attacking: 
-                    animator.PlayAnimation(AnimNames.OrcIdle); // Is going to animate hands too.
+                    //animator.PlayAnimation(AnimNames.OrcIdle); // Is going to animate hands too.
+                    animator.PlayAnimation(enemyStateAnimations[EnemyState.Idle]); // Just uses the Idle since we have no attacking animation
+
+                    spriteRenderer.OffSet = idlespriteOffset;
                     break;
 
                 case EnemyState.Dead:
-                    animator.PlayAnimation(AnimNames.OrcDeath);
+                    //animator.PlayAnimation(AnimNames.OrcDeath);
+                    animator.PlayAnimation(enemyStateAnimations[enemyState]);
+
+                    spriteRenderer.OffSet = largeSpriteOffSet;
                     animator.StopCurrentAnimationAtLastSprite();
                     break;
             }
@@ -299,6 +309,12 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
         public void UpdateObserver()
         {
             // Når gridmanager ændre grid
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            Vector2 center = GameObject.Transform.Position - new Vector2(5, 5);
+            spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], center, null, Color.DarkRed, 0f, Vector2.Zero, 10, SpriteEffects.None, 1);
         }
     }
 }

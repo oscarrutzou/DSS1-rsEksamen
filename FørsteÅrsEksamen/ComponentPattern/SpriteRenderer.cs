@@ -81,6 +81,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
         public void SetSprite(TextureNames spriteName)
         {
             UsingAnimation = false;
+            OffSet = Vector2.Zero;
             Sprite = GlobalTextures.Textures[spriteName];
         }
     }

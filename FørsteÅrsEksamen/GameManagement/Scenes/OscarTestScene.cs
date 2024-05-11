@@ -132,7 +132,11 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
         public override void DrawInWorld(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], Vector2.Zero, Color.Black);
+            if (GridManager.Instance.CurrentGrid != null)
+            {
+                spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], GridManager.Instance.GetCornerPositionOfCell(new Point(3, 1)), null, Color.DarkRed, 0f, Vector2.Zero, 10, SpriteEffects.None, 1);
+
+            }
 
             base.DrawInWorld(spriteBatch);
         }
