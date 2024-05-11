@@ -73,7 +73,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             if (GridManager.Instance.CurrentGrid != null)
             {
                 SkeletonWarrior enemy = enemGo.GetComponent<SkeletonWarrior>();
-                enemy.SetStartPosition(playerGo, new Point(5, 5));
+                enemy.SetStartPosition(playerGo, new Point(7, 13));
             }
         }
 

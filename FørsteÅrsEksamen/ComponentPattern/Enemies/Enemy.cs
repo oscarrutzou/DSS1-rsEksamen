@@ -260,6 +260,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             if (enemyState == newState) return; // Dont change the state to the same and reset the animation
             enemyState = newState;
 
+            // Something happens with the idle, it disappears for like a frame
             switch (enemyState)
             {
                 case EnemyState.Idle:
@@ -270,7 +271,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
                     animator.PlayAnimation(AnimNames.OrcRun); // Hands are stuck a little over the normal sprite
                     break;
 
-                case EnemyState.Attacking:
+                case EnemyState.Attacking: 
                     animator.PlayAnimation(AnimNames.OrcIdle); // Is going to animate hands too.
                     break;
 

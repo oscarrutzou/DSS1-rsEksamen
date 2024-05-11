@@ -38,9 +38,9 @@ namespace FørsteÅrsEksamen.GameManagement
 
             //Can upload sprite sheets
             // The Name of the Animation, the path, the FPS (how many times we change the frame per second, and the dimension of each sprite
-            LoadSpriteSheet(AnimNames.KnightIdle, "World\\Classes\\Knight-Idle", 4, 32);
+            LoadSpriteSheet(AnimNames.KnightIdle, "World\\Classes\\Knight-Idle", 5, 32);
             LoadSpriteSheet(AnimNames.OrcIdle, "World\\Enemies\\Orc-Idle", 4, 32);
-            LoadSpriteSheet(AnimNames.OrcRun, "World\\Enemies\\Orc-Run", 6, 32);
+            LoadSpriteSheet(AnimNames.OrcRun, "World\\Enemies\\Orc-Run", 10, 32);
             LoadSpriteSheet(AnimNames.OrcDeath, "World\\Enemies\\Orc-Death", 6, 32);
 
             #region How to Upload Individual Frame Animation

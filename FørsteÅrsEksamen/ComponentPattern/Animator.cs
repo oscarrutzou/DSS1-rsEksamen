@@ -108,6 +108,12 @@ namespace FørsteÅrsEksamen.ComponentPattern
                 AddAnimation(animationName);
             }
 
+            if (CurrentAnimation != null)
+            {
+                CurrentIndex = 0;
+                CurrentAnimation.OnAnimationDone = null; //Resets its commands
+            }
+
             CurrentAnimation = animations[animationName];
             spriteRenderer.UsingAnimation = true; // This gets set to false if you have played a Animation, then want to use a normal sprite again
             frameDuration = 1f / CurrentAnimation.FPS; //Sets how long each frame should be
@@ -126,7 +132,8 @@ namespace FørsteÅrsEksamen.ComponentPattern
             if (CurrentAnimation == null) throw new Exception("Set animation before you can call this method");
 
             isLooping = false; // Stop animation from looping
-            CurrentAnimation.OnAnimationDone += () => { CurrentIndex = MaxFrames - 1; }; // The action that gets called when the animation is done
+            CurrentAnimation.OnAnimationDone += () => { CurrentIndex = MaxFrames - 1; }; ; // The action that gets called when the animation is done
         }
+
     }
 }
