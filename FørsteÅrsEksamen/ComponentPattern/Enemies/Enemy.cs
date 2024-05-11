@@ -30,7 +30,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
     public abstract class Enemy : Component, IObserver
     {
         #region Properties
-        private Vector2 direction, nextTarget;
+        private Vector2 direction, nextTarget, distanceToTarget;
         private GameObject playerGo;
         private Point targetPoint;
 
@@ -99,20 +99,20 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             onGoalReached += OnGoalReached;
         }
 
+        // Kig hvad jeg har i starten af update, husk at have de checks med og sætte targetPoint til playerGo GridPosition.
         private void ViewRange()
         {
             if (inRange == false)
             {
                 if (distance > 20)
                 {
-                    playerGo.Transform.Position = distanceToTarget;
+                    playerGo.Transform.Position = distanceToTarget; //¨Du ska ikke sætte positionen af spilleren.
                     inRange = true;
                 }
             }
             SetPath();
-           
-            
         }
+
         public override void Update(GameTime gameTime)
         {
             // Check om playerGo.Transform.GridPostion er det samme, ellers lav en ny path mod nuværende player gridposition
