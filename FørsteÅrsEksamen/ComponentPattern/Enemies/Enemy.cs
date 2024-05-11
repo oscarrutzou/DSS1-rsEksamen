@@ -36,7 +36,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 
         private List<GameObject> Path { get; set; }
         internal int speed = 100; // A base speed, that will be changed on each type
-        private readonly float threshold = 5f;
+        private readonly float threshold = 20f;
 
         public Action onGoalReached;
         internal EnemyState enemyState; // We set this in the start, so it plays the correct animation
@@ -53,6 +53,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
         private float attackTimer;
         private readonly float attackCooldown = 2f;
 
+        private bool inRange = false;
+        private int distance;
         #endregion Properties
 
         public Enemy(GameObject gameObject) : base(gameObject)
@@ -97,6 +99,20 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             onGoalReached += OnGoalReached;
         }
 
+        private void ViewRange()
+        {
+            if (inRange == false)
+            {
+                if (distance > 20)
+                {
+                    playerGo.Transform.Position = distanceToTarget;
+                    inRange = true;
+                }
+            }
+            SetPath();
+           
+            
+        }
         public override void Update(GameTime gameTime)
         {
             // Check om playerGo.Transform.GridPostion er det samme, ellers lav en ny path mod nuværende player gridposition
