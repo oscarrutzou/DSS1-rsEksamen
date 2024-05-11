@@ -1,14 +1,15 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.GameManagement;
+using FørsteÅrsEksamen.ObserverPattern;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SharpDX.Direct2D1;
 using System;
 using System.Collections.Generic;
 
-
 namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 {
-    //Asser
+    //Asser, Oscar
 
     public enum DirectionState
     {
@@ -20,43 +21,49 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 
     public enum EnemyState
     {
-        Inactive,
+        Idle,
         Moving,
         Attacking,
-        Dead
+        Dead // Where we play a dead animation, and keep the enemy on the screen
     }
 
-    public abstract class Enemy : Component, IEnemyAction
+    public abstract class Enemy : Component, IObserver
     {
-
+        #region Properties
         private Vector2 direction, nextTarget;
         private GameObject playerGo;
-        public Point targetPoint;
-        public List<GameObject> Path { get; set; }
-        public int speed;
+        private Point targetPoint;
+
+        private List<GameObject> Path { get; set; }
+        internal int speed = 100; // A base speed, that will be changed on each type
         private readonly float threshold = 5f;
 
         public Action onGoalReached;
-        public EnemyState enemyState = EnemyState.Inactive;
-        public DirectionState directionState = DirectionState.Right;
+        internal EnemyState enemyState; // We set this in the start, so it plays the correct animation
+        internal DirectionState directionState = DirectionState.Right;
         private Grid grid;
-        private Astar astar;
 
+        private Astar astar;
         internal SpriteRenderer spriteRenderer;
         internal Animator animator;
+        internal Collider collider;
+
+        internal Dictionary<EnemyState, AnimNames> enemyStateAnimations = new();
+
         private float attackTimer;
         private readonly float attackCooldown = 2f;
 
+        #endregion Properties
+
         public Enemy(GameObject gameObject) : base(gameObject)
         {
-
         }
 
-        public void SetStartPosition(GameObject player, Grid grid, Point gridPos)
+        public void SetStartPosition(GameObject player, Point gridPos)
         {
             playerGo = player;
             targetPoint = playerGo.Transform.GridPosition;
-            this.grid = grid;
+            this.grid = GridManager.Instance.CurrentGrid;
             GameObject.Transform.GridPosition = gridPos;
         }
 
@@ -65,46 +72,56 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             base.Awake();
         }
 
+        // Kun en gang når man finder
+        // Distance check mellem playerGo.Transform.Position og enemy pos. (Vector2)
+        // Indenfor rækkevide, set path, sætter state til moving og den følger pathen.
+
         public override void Start()
         {
             spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
             astar = GameObject.GetComponent<Astar>();
 
-            Animator animator = GameObject.GetComponent<Animator>();
-            animator.AddAnimation(AnimNames.OrcIdle);
-            animator.PlayAnimation(AnimNames.OrcIdle);
+            // Gets the animationer and adds the animations         Should be in each of the enemy start methods.
+            animator = GameObject.GetComponent<Animator>();
 
+            collider = GameObject.GetComponent<Collider>();
+            collider.SetCollisionBox(10, 20);
+
+            SetState(EnemyState.Idle); // Kommer til at slå fejl når vi flytter animationerne, da den prøver at sætte animation
+
+            // Sets start position.
             GameObject.Transform.Position = grid.GetCellGameObjectFromPoint(GameObject.Transform.GridPosition).Transform.Position;
+
+            SetPath(); // We know that the player the targetPoint has been set
 
             onGoalReached += OnGoalReached;
         }
 
         public override void Update(GameTime gameTime)
         {
-            // Kun en gang når man finder
-            // Distance check mellem playerGo.Transform.Position og enemy pos. (Vector2) 
-            // Indenfor rækkevide, set path, sætter state til moving og den følger pathen.
-
-
             // Check om playerGo.Transform.GridPostion er det samme, ellers lav en ny path mod nuværende player gridposition
-            if (playerGo.Transform.GridPosition != targetPoint)
+            if (playerGo.Transform.GridPosition != targetPoint && enemyState != EnemyState.Dead)
             {
                 targetPoint = playerGo.Transform.GridPosition;
-                //SetPath();
+                SetPath(); //To make a new path towards the player, if they have moved.
             }
 
             switch (enemyState)
             {
-                case EnemyState.Inactive:
+                case EnemyState.Idle:
                     break;
+
                 case EnemyState.Moving:
-                    //UpdatePathing(gameTime);
+                    UpdatePathing(gameTime);
                     break;
+
                 case EnemyState.Attacking:
                     Attack();
                     break;
+
                 case EnemyState.Dead:
                     break;
+
                 default:
                     break;
             }
@@ -112,29 +129,60 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 
         private void OnGoalReached()
         {
-            enemyState = EnemyState.Attacking;
+            // Burde ikke være attacking siden vores enemies skal også kunne gå rundt
+            // Lav et tjek om vi leder efter en player eller bare går idle rundt.
+            // Hvis vi skal gå idle rundt har vi brug for en liste som
+            SetState(EnemyState.Attacking);
+
             spriteRenderer.SpriteEffects = SpriteEffects.None;
         }
 
         #region PathFinding
+
         private void SetPath()
         {
-            MakePath();
-            if (Path.Count > 0)
+            ResetPathColor();
+
+            Path = null; // We cant use the previous path
+
+            Path = astar.FindPath(GameObject.Transform.GridPosition, targetPoint);
+
+            if (Path != null && Path.Count > 0)
             {
-                SetNextTargetPos(Path[0]);
+                SetState(EnemyState.Moving);
+
+                // If a new path is being set, set the next target to the enemy's current position
+                if (GameObject.Transform.Position != Path[0].Transform.Position)
+                {
+                    nextTarget = GameObject.Transform.Position;
+                }
+                else
+                {
+                    SetNextTargetPos(Path[0]);
+                }
             }
         }
 
-        private void MakePath()
+        private void ResetPathColor()
         {
-            for (int i = 0; i < 3; i++)
+            if (Path != null)
             {
-                if (Path != null && Path.Count > 0) break;
-
-                Path = astar.FindPath(GameObject.Transform.GridPosition, targetPoint);
+                foreach (GameObject cellGo in Path)
+                {
+                    ResetCellColor(cellGo);
+                }
             }
-            if (Path == null) throw new Exception("No path available");
+        }
+
+        private void ResetCellColor(GameObject cellGo)
+        {
+            Cell cell = cellGo.GetComponent<Cell>();
+            cell.ChangeCellWalkalbeType(cell.CellWalkableType); // Dont change the type, but makes it draw the color of the debug, to the correct color.
+        }
+
+        private void SetNextTargetPos(GameObject cellGo)
+        {
+            nextTarget = cellGo.Transform.Position + new Vector2(0, -Cell.dimension * Cell.Scale / 2);
         }
 
         private void UpdatePathing(GameTime gameTime)
@@ -148,6 +196,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
                 if (Path.Count > 1)
                 {
                     GameObject.Transform.GridPosition = Path[0].Transform.GridPosition;
+                    ResetCellColor(Path[0]);
                     Path.RemoveAt(0);
                     SetNextTargetPos(Path[0]);
                 }
@@ -155,6 +204,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
                 {
                     GameObject.Transform.GridPosition = Path[0].Transform.GridPosition;
                     SetNextTargetPos(Path[0]);
+                    ResetCellColor(Path[0]);
                     Path.RemoveAt(0);
                 }
             }
@@ -165,22 +215,16 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 
             if (Path.Count == 0 && Vector2.Distance(position, nextTarget) < threshold)
             {
-                if (onGoalReached != null)
-                {
-                    onGoalReached.Invoke();
-                    onGoalReached = null;
-                }
+                onGoalReached?.Invoke();
+
                 Path = null;
             }
+
             UpdateDirection();
         }
 
-        private void SetNextTargetPos(GameObject cellGo)
-        {
-            nextTarget = cellGo.Transform.Position + new Vector2(0, -Cell.dimension / 2);
-        }
-        #endregion
-        
+        #endregion PathFinding
+
         private void Attack()
         {
             attackTimer -= GameWorld.DeltaTime;
@@ -188,11 +232,40 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             if (attackTimer < 0)
             {
                 attackTimer = attackCooldown;
-
             }
         }
 
-        public void UpdateDirection()
+        /// <summary>
+        /// Changes the animation that plays and other variables
+        /// </summary>
+        /// <param name="newState"></param>
+        internal void SetState(EnemyState newState)
+        {
+            if (enemyState == newState) return; // Dont change the state to the same and reset the animation
+            enemyState = newState;
+
+            switch (enemyState)
+            {
+                case EnemyState.Idle:
+                    animator.PlayAnimation(AnimNames.OrcIdle); // Hands are stuck a little over the normal sprite
+                    break;
+
+                case EnemyState.Moving:
+                    animator.PlayAnimation(AnimNames.OrcRun); // Hands are stuck a little over the normal sprite
+                    break;
+
+                case EnemyState.Attacking:
+                    animator.PlayAnimation(AnimNames.OrcIdle); // Is going to animate hands too.
+                    break;
+
+                case EnemyState.Dead:
+                    animator.PlayAnimation(AnimNames.OrcDeath);
+                    animator.StopCurrentAnimationAtLastSprite();
+                    break;
+            }
+        }
+
+        private void UpdateDirection()
         {
             if (direction.X >= 0)
             {
@@ -204,14 +277,11 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
                 directionState = DirectionState.Left;
                 spriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
             }
-            else if (direction.Y > 0)
-            {
-                directionState = DirectionState.Down;
-            }
-            else if (direction.Y < 0)
-            {
-                directionState = DirectionState.Up;
-            }
+        }
+
+        public void UpdateObserver()
+        {
+            // Når gridmanager ændre grid
         }
     }
 }

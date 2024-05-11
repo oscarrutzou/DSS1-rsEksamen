@@ -120,10 +120,10 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             path.Add(startPoint);
             path.Reverse();
 
-            //foreach (GameObject go in path)
-            //{
-            //    go.GetComponent<SpriteRenderer>().Color = Color.Aqua;
-            //}
+            foreach (GameObject go in path)
+            {
+                go.GetComponent<SpriteRenderer>().Color = Color.Aqua;
+            }
 
             return path;
         }

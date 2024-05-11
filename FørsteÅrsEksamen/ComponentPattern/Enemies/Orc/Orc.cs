@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FørsteÅrsEksamen.ComponentPattern.Enemies.Orc
+﻿namespace FørsteÅrsEksamen.ComponentPattern.Enemies.Orc
 {
     //Asser
 
@@ -12,7 +6,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies.Orc
     {
         protected Orc(GameObject gameObject) : base(gameObject)
         {
-
         }
     }
 }

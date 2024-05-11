@@ -2,6 +2,7 @@
 using FørsteÅrsEksamen.GameManagement;
 using FørsteÅrsEksamen.ObserverPattern;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace FørsteÅrsEksamen.ComponentPattern.Characters
 {
@@ -24,7 +25,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
             sr.SetLayerDepth(LAYERDEPTH.Player);
 
             Animator animator = GameObject.GetComponent<Animator>();
-            animator.AddAnimation(AnimNames.KnightIdle); //Set all the animations
             animator.PlayAnimation(AnimNames.KnightIdle);
         }
 
@@ -32,32 +32,53 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
 
         public void AddInput(Vector2 input)
         {
+            if (float.IsNaN(input.X))
+            {
+                totalInput = Vector2.Zero;
+            }
             totalInput += input;
         }
 
-        public void Move(Vector2 velocity)
+        public void Move(Vector2 input)
         {
             // Add the additionalVelocity to the current targetVelocity
-            targetVelocity += Vector2.Normalize(velocity);
-
-            // Normalize the targetVelocity in case it's length is more than 1
-            if (velocity != Vector2.Zero)
+            if (input != Vector2.Zero)
             {
-                targetVelocity = Vector2.Normalize(targetVelocity);
+                targetVelocity += input.Length() > 0 ? Vector2.Normalize(input) : input;
+                targetVelocity = targetVelocity.Length() > 0 ? Vector2.Normalize(targetVelocity) : targetVelocity;
             }
             else
             {
                 targetVelocity = Vector2.Zero;
             }
 
+            // Velocity bliver sat til
             this.velocity = Vector2.Lerp(this.velocity, targetVelocity, turnSpeed * GameWorld.DeltaTime);
+
+            if (float.IsNaN(velocity.X))
+            {
+                velocity = Vector2.Zero;
+            }
+
             GameObject.Transform.Translate(this.velocity * speed * GameWorld.DeltaTime);
 
-            GameObject.Transform.GridPosition = GridManager.Instance.GetPointAtPos(GameObject.Transform.Position);
+            SetGridPos();
 
             GameWorld.Instance.WorldCam.Move(this.velocity * speed * GameWorld.DeltaTime);
 
             Notify();
+        }
+
+        private void SetGridPos()
+        {
+            if (GridManager.Instance.CurrentGrid != null)
+            {
+                GameObject gridCell = GridManager.Instance.GetCellAtPos(GameObject.Transform.Position);
+
+                if (gridCell == null) return;
+
+                GameObject.Transform.GridPosition = gridCell.Transform.GridPosition;
+            }
         }
 
         public override void Update(GameTime gameTime)
@@ -71,20 +92,24 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
             totalInput = Vector2.Zero;
         }
 
-        private IObserver testSceneObserver;
+        internal List<IObserver> observers = new();
 
         public void Attach(IObserver observer)
         {
-            testSceneObserver = observer;
+            observers.Add(observer);
         }
 
         public void Detach(IObserver observer)
         {
+            observers.Remove(observer);
         }
 
         public void Notify()
         {
-            testSceneObserver.UpdateObserver();
+            foreach (IObserver observer in observers)
+            {
+                observer.UpdateObserver();
+            }
         }
     }
 }

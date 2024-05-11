@@ -2,7 +2,7 @@
 using FørsteÅrsEksamen.ComponentPattern.GUI;
 using System;
 
-namespace FørsteÅrsEksamen.Factory
+namespace FørsteÅrsEksamen.Factory.Gui
 {
     public class ButtonFactory : Factory
     {
@@ -16,7 +16,6 @@ namespace FørsteÅrsEksamen.Factory
             roomBtn.AddComponent<Button>();
 
             return roomBtn;
-
         }
 
         public GameObject Create(string text, Action onClick)

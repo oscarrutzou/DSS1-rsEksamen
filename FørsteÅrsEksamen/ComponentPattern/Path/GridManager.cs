@@ -1,13 +1,13 @@
 ﻿using FørsteÅrsEksamen.CommandPattern;
 using FørsteÅrsEksamen.ComponentPattern.GUI;
 using FørsteÅrsEksamen.GameManagement;
+using FørsteÅrsEksamen.ObserverPattern;
 using FørsteÅrsEksamen.RepositoryPattern;
 using Microsoft.Xna.Framework;
-using System.Collections.Generic;
 
 namespace FørsteÅrsEksamen.ComponentPattern.Path
 {
-    public class GridManager
+    public class GridManager : ISubject
     {
         #region Parameters
 
@@ -52,6 +52,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
 
         private float overrrideTime = 1;
         private float overrideUpdateTimer;
+
         public void Update()
         {
             overrideUpdateTimer -= GameWorld.DeltaTime;
@@ -91,7 +92,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             GameObject go = repository.GetGrid(gridName);
             CurrentGrid = go.GetComponent<Grid>();
         }
-
 
         public void DrawOnCells()
         {
@@ -136,35 +136,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             CurrentGrid = null;
         }
 
-        /*
-         *         {
-            Vector2 mouseInWorld = InputHandler.Instance.mouseInWorld;
-
-            //Find grid if there is a tile under the mouse. with inputhandler mousepos in world
-            // Check within grid.startpos.x + cell.dem * cell.scale and on the other side
-
-            Grid grid = GridManager.Instance.CurrentGrid;
-
-            if (grid == null) return;
-
-            int scale = Cell.Demension * Cell.Scale;
-            Rectangle gridSize = new((int)grid.StartPostion.X, (int)grid.StartPostion.Y, grid.Width * scale, grid.Height * scale);
-            
-            if (gridSize.Contains(mouseInWorld))
-            {
-                // Mouse inside grid
-                GameObject cellGo = grid.GetCellGameObject(mouseInWorld);
-                if (cellGo == null) return;
-
-                Point cellGridPos = cellGo.Transform.GridPosition;
-                grid.Cells[cellGridPos].GetComponent<SpriteRenderer>().Color = Color.Red;
-                Cell cell = cellGo.GetComponent<Cell>();
-                cell.CellWalkableType = CellWalkableType.FullValid;
-                cell.RoomNr = 2;
-                GridManager.Instance.OverrideSaveGrid(grid);
-            }
-         */
-
         public GameObject GetCellAtPos(Vector2 pos)
         {
             if (CurrentGrid == null) return null;
@@ -178,8 +149,20 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             return null;
         }
 
-        public Point GetPointAtPos(Vector2 pos) => GetCellAtPos(pos).Transform.GridPosition;
+        //public Point GetPointAtPos(Vector2 pos) => GetCellAtPos(pos).Transform.GridPosition;
 
         public void ChangeRoomNrIndex(int addToCurrentRoomNr) => RoomNrIndex += addToCurrentRoomNr;
+
+        public void Attach(IObserver observer)
+        {
+        }
+
+        public void Detach(IObserver observer)
+        {
+        }
+
+        public void Notify()
+        {
+        }
     }
 }

@@ -9,7 +9,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
     // Oscar
     public static class GuiMethods
     {
-
         /// <summary>
         /// <para>Can take and divide the text and center each part of the text.</para>
         /// </summary>
@@ -25,7 +24,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
                 DrawSingleLineCentered(spriteBatch, font, zoom, position, text, textColor);
                 return;
             }
-            
+
             // Create an array to hold the size of each line
             Vector2[] lineSizes = new Vector2[lines.Length];
 
@@ -90,12 +89,11 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
                 Collider collider = gui.GetComponent<Collider>();
 
                 if (collider == null) continue;
-                
+
                 if (collider.CollisionBox.Contains(mousePosUI))
                 {
                     return true;
                 }
-
             }
 
             return false;

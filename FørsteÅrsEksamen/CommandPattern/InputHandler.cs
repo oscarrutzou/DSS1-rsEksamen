@@ -3,7 +3,6 @@ using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -16,7 +15,7 @@ namespace FørsteÅrsEksamen.CommandPattern
 
     public enum MouseCmdState
     {
-        Left, Right   
+        Left, Right
     }
 
     // Oscar
@@ -61,15 +60,17 @@ namespace FørsteÅrsEksamen.CommandPattern
         }
 
         //Make a mark in the right corner that just is a bool that check if there have been made any changes to the data (for debug) so we can save it.
-        //Maybe make a ctrl z + x command. 
+        //Maybe make a ctrl z + x command.
         // Multiple command inputs?
-        // Make it save the new grid. 
+        // Make it save the new grid.
         // Change it so the grid manager only shows 1 grid, since thats what our design is made.
-        // Change all foreach to just check the grid != null. 
+        // Change all foreach to just check the grid != null.
         // Make commen commands to the contains and stuff.
+
         #region Command
 
         #region Add/Remove
+
         public void AddKeyUpdateCommand(Keys inputKey, ICommand command) => keybindsUpdate.Add(inputKey, command);
 
         public void AddKeyButtonDownCommand(Keys inputKey, ICommand command) => keybindsButtonDown.Add(inputKey, command);
@@ -79,7 +80,6 @@ namespace FørsteÅrsEksamen.CommandPattern
         public void AddMouseButtonDownCommand(MouseCmdState inputButton, ICommand command) => mouseButtonDownCommands.Add(inputButton, command);
 
         public void AddScrollWheelCommand(ScrollWheelState scrollWheelState, ICommand command) => scrollWheelCommands.Add(scrollWheelState, command);
-
 
         public void RemoveKeyUpdateCommand(Keys inputKey) => keybindsUpdate.Remove(inputKey);
 
@@ -105,7 +105,7 @@ namespace FørsteÅrsEksamen.CommandPattern
             SetBaseKeys();
         }
 
-        #endregion
+        #endregion Add/Remove
 
         private KeyboardState previousKeyState;
         private MouseState previousMouseState;
@@ -193,9 +193,7 @@ namespace FørsteÅrsEksamen.CommandPattern
             previousMouseState = mouseState;
         }
 
-
         #endregion Command
-
 
         private Vector2 GetMousePositionInWorld(MouseState mouseState)
         {

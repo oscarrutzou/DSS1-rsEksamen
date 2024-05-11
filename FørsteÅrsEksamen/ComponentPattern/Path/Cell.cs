@@ -15,6 +15,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
     public class Cell : Component
     {
         public static int dimension = 16;
+
         //public static readonly Vector2 ScaleSize = new(4, 4);
         public static int Scale = 4;
 
@@ -110,13 +111,11 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             CellWalkableType = cellWalkableType;
 
             switch (CellWalkableType)
-            { 
+            {
                 case CellWalkableType.FullValid:
                     spriteRenderer.Color = Color.DarkOliveGreen;
                     break;
             }
         }
-
-
     }
 }
