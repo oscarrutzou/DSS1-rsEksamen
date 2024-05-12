@@ -34,7 +34,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
         internal Vector2 largeSpriteOffSet = new(0, -96); // Move the animation up more since its a 64x64 insted of 32x32 canvans, for the Run and Death.
 
         internal Vector2 direction;
-        internal CharacterState charcterState; // We set this in the start, so it plays the correct animation
+        internal CharacterState State = CharacterState.Moving; // We use the method SetState, to we can change the animations and other variables. 
         internal AnimationDirectionState directionState = AnimationDirectionState.Right;
 
         internal float attackTimer;
@@ -55,16 +55,6 @@ namespace FørsteÅrsEksamen.ComponentPattern
             collider = GameObject.GetComponent<Collider>();
         }
 
-        public override void Start()
-        {
-            base.Start();
-        }
-
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
-        }
-
         // This is not a abstract method since we only need to set it in the Player and Enemy class, and not in its subclasses
         /// <summary>
         /// A method to set the new state and change the animation drawn.
@@ -72,6 +62,9 @@ namespace FørsteÅrsEksamen.ComponentPattern
         /// <param name="newState"></param>
         internal virtual void SetState(CharacterState newState) { }
 
+        /// <summary>
+        /// Updates the direction of which way the sprite should draw. Remember to set the direction!
+        /// </summary>
         internal void UpdateDirection()
         {
             if (direction.X >= 0)

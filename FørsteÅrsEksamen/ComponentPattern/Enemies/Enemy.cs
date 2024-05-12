@@ -46,11 +46,13 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 
             astar = GameObject.GetComponent<Astar>();
 
-            collider.SetCollisionBox(15, 27, new Vector2(0, -15));
+            collider.SetCollisionBox(15, 27, new Vector2(0, 15));
         }
 
         public override void Start()
         {
+            spriteRenderer.SetLayerDepth(LAYERDEPTH.Enemies);
+
             SetState(CharacterState.Idle);
 
             // Sets start position
@@ -64,13 +66,13 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
         public override void Update(GameTime gameTime)
         {
             // Check om playerGo.Transform.GridPostion er det samme, ellers lav en ny path mod nuværende player gridposition
-            if (playerGo.Transform.GridPosition != targetPoint && charcterState != CharacterState.Dead)
+            if (playerGo.Transform.GridPosition != targetPoint && State != CharacterState.Dead)
             {
                 targetPoint = playerGo.Transform.GridPosition;
                 SetPath(); //To make a new path towards the player, if they have moved.
             }
 
-            switch (charcterState)
+            switch (State)
             {
                 case CharacterState.Idle:
                     break;
@@ -212,22 +214,22 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 
         internal override void SetState(CharacterState newState)
         {
-            if (charcterState == newState) return; // Dont change the state to the same and reset the animation
-            charcterState = newState;
+            if (State == newState) return; // Dont change the state to the same and reset the animation
+            State = newState;
 
             // Something happens with the idle, it disappears for like a frame
-            switch (charcterState)
+            switch (State)
             {
                 case CharacterState.Idle:
                     //animator.PlayAnimation(AnimNames.OrcIdle); // Hands are stuck a little over the normal sprite
-                    animator.PlayAnimation(characterStateAnimations[charcterState]);
+                    animator.PlayAnimation(characterStateAnimations[State]);
 
                     spriteRenderer.OffSet = idlespriteOffset;
                     break;
 
                 case CharacterState.Moving:
                     //animator.PlayAnimation(AnimNames.OrcRun); // Hands are stuck a little over the normal sprite
-                    animator.PlayAnimation(characterStateAnimations[charcterState]);
+                    animator.PlayAnimation(characterStateAnimations[State]);
 
                     spriteRenderer.OffSet = largeSpriteOffSet;
                     break;
@@ -241,7 +243,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 
                 case CharacterState.Dead:
                     //animator.PlayAnimation(AnimNames.OrcDeath);
-                    animator.PlayAnimation(characterStateAnimations[charcterState]);
+                    animator.PlayAnimation(characterStateAnimations[State]);
 
                     spriteRenderer.OffSet = largeSpriteOffSet;
                     animator.StopCurrentAnimationAtLastSprite();

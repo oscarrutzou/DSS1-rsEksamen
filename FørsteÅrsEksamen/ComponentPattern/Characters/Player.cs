@@ -10,25 +10,46 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
 {
 
     // Oscar
-    public class Player : Character, ISubject
+    public abstract class Player : Character, ISubject
     {
-        private Vector2 totalInput, velocity, targetVelocity, previousPosition;
+        internal GameObject handsGo;
+        private GameObject movementColliderGo;
+
+        private Vector2 totalMovementInput, velocity, targetVelocity, previousPosition;
 
         private readonly float turnSpeed = 40f; // Adjust as needed
 
         internal List<IObserver> observers = new();
 
+        private Collider movementCollider;
 
         public Player(GameObject gameObject) : base(gameObject)
         {
             speed = 300;
         }
 
+        public Player(GameObject gameObject, GameObject handsGo, GameObject movementColliderGo) : base(gameObject)
+        {
+            speed = 300;
+            this.handsGo = handsGo;
+            this.movementColliderGo = movementColliderGo;
+        }
+        public override void Awake()
+        {
+            base.Awake();
+            movementCollider = movementColliderGo.GetComponent<Collider>();
+            this.movementColliderGo.Transform.Position = GameObject.Transform.Position;
+
+            Rectangle col = movementCollider.CollisionBox;
+            collider.SetCollisionBox(15, 24, new Vector2(0, 30));
+            
+        }
+
         public override void Start()
         {
             spriteRenderer.SetLayerDepth(LAYERDEPTH.Player);
+            SetState(CharacterState.Idle);
 
-            animator.PlayAnimation(AnimNames.KnightIdle);
         }
 
 
@@ -36,9 +57,9 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
         {
             if (float.IsNaN(input.X))
             {
-                totalInput = Vector2.Zero;
+                totalMovementInput = Vector2.Zero;
             }
-            totalInput += input;
+            totalMovementInput += input;
         }
 
         public void Move(Vector2 input)
@@ -66,11 +87,13 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
             Vector2 xMovement = new Vector2(velocity.X, 0) * speed * GameWorld.DeltaTime;
             Vector2 yMovement = new Vector2(0, velocity.Y) * speed * GameWorld.DeltaTime;
 
+            bool hasMoved = false;
             // Try moving along the X axis
             if (TryMove(xMovement))
             {
                 // Update the previous position after a successful move
                 previousPosition = GameObject.Transform.Position;
+                hasMoved = true;
             }
 
             // Try moving along the Y axis
@@ -78,10 +101,17 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
             {
                 // Update the previous position after a successful move
                 previousPosition = GameObject.Transform.Position;
+                hasMoved = true;
             }
 
-            GameWorld.Instance.WorldCam.position = GameObject.Transform.Position;
+            direction = velocity;
+            UpdateDirection();
 
+            if (!hasMoved) return; // Dont need to set new position, since its the same.
+
+            SetMovement(GameObject.Transform.Position); // So we set the other gameobjects (Hands, Movement Collider...)
+
+            // Updates the grid position
             GameObject cellGoUnderPlayer = GridManager.Instance.GetCellAtPos(GameObject.Transform.Position);
             GameObject.Transform.GridPosition = cellGoUnderPlayer.Transform.GridPosition;
 
@@ -90,28 +120,130 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
 
         private bool TryMove(Vector2 movement)
         {
-            GameObject.Transform.Translate(movement);
-            GameObject gridCell = GridManager.Instance.GetCellAtPos(GameObject.Transform.Position);
-            if (gridCell == null || gridCell.GetComponent<Cell>().CellWalkableType == CellWalkableType.NotValid)
+            // Translate the GameObject, and movement collider.
+            TranslateMovement(movement);
+
+            // Get the CollisionBox
+            Rectangle collisionBox = movementCollider.CollisionBox;
+
+            // Check each corner of the CollisionBox
+            Vector2[] corners = new Vector2[]
             {
-                GameObject.Transform.Position = previousPosition;
-                return false;
+                new Vector2(collisionBox.Left, collisionBox.Top),
+                new Vector2(collisionBox.Right, collisionBox.Top),
+                new Vector2(collisionBox.Right, collisionBox.Bottom),
+                new Vector2(collisionBox.Left, collisionBox.Bottom)
+            };
+
+            foreach (Vector2 corner in corners)
+            {
+                GameObject gridCell = GridManager.Instance.GetCellAtPos(corner);
+                if (gridCell == null || gridCell.GetComponent<Cell>().CellWalkableType == CellWalkableType.NotValid)
+                {
+                    // If any corner is in an invalid cell, revert the movement on both player and 
+                    SetMovement(previousPosition);
+                    return false;
+                }
             }
+
+            // If all corners are in valid cells, the movement is successful
             return true;
+        }
+
+        /// <summary>
+        /// Adds the movement to the gameobject
+        /// </summary>
+        /// <param name="movement"></param>
+        internal void TranslateMovement(Vector2 movement)
+        {
+            //GameObject.Transform.Translate(movement);
+            GameObject.Transform.Position += movement;
+            movementColliderGo.Transform.Position = GameObject.Transform.Position;
+            handsGo.Transform.Position = GameObject.Transform.Position;
+        }
+
+        /// <summary>
+        /// Sets the position of the object to the position.
+        /// </summary>
+        /// <param name="position"></param>
+        internal void SetMovement(Vector2 position)
+        {
+            GameObject.Transform.Position = position;
+            movementColliderGo.Transform.Position = GameObject.Transform.Position;
+            handsGo.Transform.Position = GameObject.Transform.Position;
+            GameWorld.Instance.WorldCam.position = GameObject.Transform.Position; //Sets the new position of the world cam
+
         }
 
         public override void Update(GameTime gameTime)
         {
-            if (totalInput != Vector2.Zero)
+            if (totalMovementInput != Vector2.Zero)
             {
-                totalInput = Vector2.Normalize(totalInput);
+                totalMovementInput = Vector2.Normalize(totalMovementInput);
+                SetState(CharacterState.Moving);
+            }
+            else
+            {
+                SetState(CharacterState.Idle);
+
             }
 
-            Move(totalInput);
-            totalInput = Vector2.Zero;
+            switch (State)
+            {
+                case CharacterState.Idle:
+                    break;
+                case CharacterState.Moving:
+                    Move(totalMovementInput);
+                    break;
+                case CharacterState.Attacking:
+                    break;
+                case CharacterState.Dead:
+                    break;
+
+            }
+
+            totalMovementInput = Vector2.Zero;
         }
 
+        internal override void SetState(CharacterState newState)
+        {
+            if (State == newState) return; // Dont change the state to the same and reset the animation
+            State = newState;
 
+            // Something happens with the idle, it disappears for like a frame
+            switch (State)
+            {
+                case CharacterState.Idle:
+                    // Hands are stuck a little over the normal sprite
+                    animator.PlayAnimation(characterStateAnimations[State]);
+
+                    spriteRenderer.OffSet = idlespriteOffset;
+                    break;
+
+                case CharacterState.Moving:
+                    // Hands are stuck a little over the normal sprite
+                    animator.PlayAnimation(characterStateAnimations[State]);
+
+                    spriteRenderer.OffSet = largeSpriteOffSet;
+                    break;
+
+                case CharacterState.Attacking:
+                    // Is going to animate hands too.
+                    animator.PlayAnimation(characterStateAnimations[CharacterState.Idle]); // Just uses the Idle since we have no attacking animation
+
+                    spriteRenderer.OffSet = idlespriteOffset;
+                    break;
+
+                case CharacterState.Dead:
+                    animator.PlayAnimation(characterStateAnimations[State]);
+
+                    spriteRenderer.OffSet = largeSpriteOffSet;
+                    animator.StopCurrentAnimationAtLastSprite();
+                    break;
+            }
+        }
+
+        #region Observer Pattern
         public void Attach(IObserver observer)
         {
             observers.Add(observer);
@@ -129,5 +261,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
                 observer.UpdateObserver();
             }
         }
+
+
+        #endregion
     }
 }

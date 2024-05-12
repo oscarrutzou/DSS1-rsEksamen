@@ -13,6 +13,8 @@ namespace FørsteÅrsEksamen.ComponentPattern
         private Texture2D texture;
         private int collisionWidth, collisionHeight; //If not set, use the sprite width and height
         private Vector2 offset;
+        
+        public Color DebugColor = Color.Red;
 
         public Rectangle CollisionBox
         {
@@ -33,8 +35,8 @@ namespace FørsteÅrsEksamen.ComponentPattern
 
                 return new Rectangle
                     (
-                        (int)(GameObject.Transform.Position.X - (width * GameObject.Transform.Scale.X * GameWorld.Instance.WorldCam.zoom) / 2),
-                        (int)(GameObject.Transform.Position.Y - (height * GameObject.Transform.Scale.Y * GameWorld.Instance.WorldCam.zoom) / 2),
+                        (int)((GameObject.Transform.Position.X - offset.X) - (width * GameObject.Transform.Scale.X * GameWorld.Instance.WorldCam.zoom) / 2),
+                        (int)((GameObject.Transform.Position.Y - offset.Y) - (height * GameObject.Transform.Scale.Y * GameWorld.Instance.WorldCam.zoom) / 2),
                         (int)(width * GameObject.Transform.Scale.X * GameWorld.Instance.WorldCam.zoom),
                         (int)(height * GameObject.Transform.Scale.Y * GameWorld.Instance.WorldCam.zoom)
                     );
@@ -54,7 +56,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            DrawRectangle(CollisionBox, spriteBatch, offset);
+            DrawRectangle(CollisionBox, spriteBatch);
         }
 
         /// <summary>
@@ -91,9 +93,9 @@ namespace FørsteÅrsEksamen.ComponentPattern
         /// <param name="collisionBox"></param>
         /// <param name="spriteBatch"></param>
         /// <param name="vectorOffSet"></param>
-        private void DrawRectangle(Rectangle collisionBox, SpriteBatch spriteBatch, Vector2 vectorOffSet)
+        private void DrawRectangle(Rectangle collisionBox, SpriteBatch spriteBatch)
         {
-            Vector2 colBoxPos = new Vector2(collisionBox.X, collisionBox.Y) + vectorOffSet;
+            Vector2 colBoxPos = new Vector2(collisionBox.X, collisionBox.Y);
 
             int thickness = Math.Max(1, (int)GameWorld.Instance.WorldCam.zoom);
             Rectangle topLine = new Rectangle((int)colBoxPos.X, (int)colBoxPos.Y, collisionBox.Width, thickness);
@@ -101,10 +103,10 @@ namespace FørsteÅrsEksamen.ComponentPattern
             Rectangle rightLine = new Rectangle((int)colBoxPos.X + collisionBox.Width, (int)colBoxPos.Y, thickness, collisionBox.Height);
             Rectangle leftLine = new Rectangle((int)colBoxPos.X, (int)colBoxPos.Y, thickness, collisionBox.Height);
 
-            spriteBatch.Draw(texture, topLine, null, Color.Red, 0, Vector2.Zero, spriteRenderer.SpriteEffects, 1);
-            spriteBatch.Draw(texture, bottomLine, null, Color.Red, 0, Vector2.Zero, spriteRenderer.SpriteEffects, 1);
-            spriteBatch.Draw(texture, rightLine, null, Color.Red, 0, Vector2.Zero, spriteRenderer.SpriteEffects, 1);
-            spriteBatch.Draw(texture, leftLine, null, Color.Red, 0, Vector2.Zero, spriteRenderer.SpriteEffects, 1);
+            spriteBatch.Draw(texture, topLine, null, DebugColor, 0, Vector2.Zero, spriteRenderer.SpriteEffects, 1);
+            spriteBatch.Draw(texture, bottomLine, null, DebugColor, 0, Vector2.Zero, spriteRenderer.SpriteEffects, 1);
+            spriteBatch.Draw(texture, rightLine, null, DebugColor, 0, Vector2.Zero, spriteRenderer.SpriteEffects, 1);
+            spriteBatch.Draw(texture, leftLine, null, DebugColor, 0, Vector2.Zero, spriteRenderer.SpriteEffects, 1);
         }
     }
 }

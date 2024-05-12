@@ -81,7 +81,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         {
             Point spawn = new Point(6, 6);
             playerFactory = new PlayerFactory();
-            playerGo = playerFactory.Create();
+            playerGo = playerFactory.Create(PlayerClasses.Warrior);
             playerGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[spawn].Transform.Position;
             playerGo.Transform.GridPosition = spawn;
             GameWorld.Instance.WorldCam.position = playerGo.Transform.Position;
@@ -92,7 +92,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
         private void SetCommands()
         {
-            player = playerGo.GetComponent<Player>();
+            player = playerGo.GetComponent<Warrior>();
             player.Attach(this);
             InputHandler.Instance.AddKeyUpdateCommand(Keys.D, new MoveCmd(player, new Vector2(1, 0)));
             InputHandler.Instance.AddKeyUpdateCommand(Keys.A, new MoveCmd(player, new Vector2(-1, 0)));
@@ -142,9 +142,11 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         }
 
         private List<GameObject> list; //For test
-
         public override void DrawOnScreen(SpriteBatch spriteBatch)
         {
+
+            spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], GameWorld.Instance.UiCam.TopLeft, null, Color.WhiteSmoke, 0f, Vector2.Zero, new Vector2(350, 150), SpriteEffects.None, 0f);
+
             Vector2 mousePos = InputHandler.Instance.mouseInWorld;
             spriteBatch.DrawString(GlobalTextures.DefaultFont, $"MousePos {mousePos}", GameWorld.Instance.UiCam.TopLeft, Color.Black);
 

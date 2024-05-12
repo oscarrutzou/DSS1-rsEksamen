@@ -3,13 +3,13 @@ using FørsteÅrsEksamen.GameManagement;
 
 namespace FørsteÅrsEksamen.ComponentPattern
 {
-    public class Warrior : Player
+    public class Archer : Player
     {
-        public Warrior(GameObject gameObject) : base(gameObject)
+        public Archer(GameObject gameObject) : base(gameObject)
         {
         }
 
-        public Warrior(GameObject gameObject, GameObject handsGo, GameObject movementColliderGo) : base(gameObject, handsGo, movementColliderGo)
+        public Archer(GameObject gameObject, GameObject handsGo, GameObject movementColliderGo) : base(gameObject, handsGo, movementColliderGo)
         {
         }
 
