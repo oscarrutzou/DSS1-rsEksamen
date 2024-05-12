@@ -73,7 +73,7 @@ namespace FørsteÅrsEksamen.Factory
             go.AddComponent<SpriteRenderer>().SetLayerDepth(LAYERDEPTH.Player);
             Collider collider = go.AddComponent<Collider>();
 
-            collider.SetCollisionBox(13, 15, new Vector2(0, 0));
+            collider.SetCollisionBox(13, 15);
             collider.DebugColor = Color.Aqua;
 
             return go;

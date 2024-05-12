@@ -38,9 +38,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
         {
             base.Awake();
             movementCollider = movementColliderGo.GetComponent<Collider>();
-            this.movementColliderGo.Transform.Position = GameObject.Transform.Position;
+            //movementColliderGo.Transform.Position = GameObject.Transform.Position;
 
-            Rectangle col = movementCollider.CollisionBox;
             collider.SetCollisionBox(15, 24, new Vector2(0, 30));
             
         }

@@ -22,6 +22,8 @@ namespace FørsteÅrsEksamen.ComponentPattern
         Attacking,
         Dead
     }
+
+    // Oscar
     public abstract class Character : Component
     {
         #region Properties
@@ -40,7 +42,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
         internal float attackTimer;
         internal float attackCooldown = 2f;
 
-        internal int speed = 100;
+        internal int speed = 200;
 
         #endregion
 

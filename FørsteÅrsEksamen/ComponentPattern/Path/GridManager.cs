@@ -34,6 +34,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
         }
         public Grid SelectedGrid { get; private set; }
 
+        private bool showGrid = true;
+
         private int roomNrIndex = 1;
 
         /// <summary>
@@ -110,6 +112,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             DeleteDrawnGrid();
             GameObject go = repository.GetGrid(gridName);
             CurrentGrid = go.GetComponent<Grid>();
+            //ShouldDrawCells();
         }
         #endregion
 
@@ -138,6 +141,9 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
 
         private void SetCellProperties(Cell cell, CellWalkableType walkableType, int roomNr)
         {
+            if (!showGrid) return; // You cant draw on the grid when its not set
+
+            cell.GameObject.GetComponent<SpriteRenderer>().ShouldDraw = true; // Need to be true, so its wlakabletype gets set proberly.
             cell.RoomNr = roomNr;
             cell.ChangeCellWalkalbeType(walkableType);
 
@@ -182,6 +188,25 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
 
             return temp;
         }
+
+        public void ShowHideGrid()
+        {
+            showGrid = !showGrid;
+
+            ShouldDrawCells();
+        }
+
+        private void ShouldDrawCells()
+        {
+            foreach (GameObject go in CurrentGrid.Cells.Values)
+            {
+                // Set all to getting draw if the bool is true.
+                go.GetComponent<SpriteRenderer>().ShouldDraw = showGrid;
+
+                Cell cell = go.GetComponent<Cell>();
+                cell.ChangeCellWalkalbeType(cell.CellWalkableType); // Only draw the ones that have a room.
+            }
+        } 
 
         #endregion
 

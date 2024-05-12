@@ -10,8 +10,9 @@ namespace FørsteÅrsEksamen.ComponentPattern
     {
         Default,
         WorldBackground,
-        Enemies,
+        EnemyUnderPlayer,
         Player,
+        EnemyOverPlayer,
         WorldForeground,
         UI,
         Button,

@@ -20,7 +20,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
         private List<GameObject> path;
         private Vector2 nextTarget, distanceToTarget;
         private Point targetPoint;
-        private readonly float threshold = 50f;
+        private readonly float threshold = 100f;
 
         public Action onGoalReached;
 
@@ -46,12 +46,12 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 
             astar = GameObject.GetComponent<Astar>();
 
-            collider.SetCollisionBox(15, 27, new Vector2(0, 15));
+            collider.SetCollisionBox(15, 27, new Vector2(0, 15)); // Players collider for taking damage
         }
 
         public override void Start()
         {
-            spriteRenderer.SetLayerDepth(LAYERDEPTH.Enemies);
+            spriteRenderer.SetLayerDepth(LAYERDEPTH.EnemyUnderPlayer);
 
             SetState(CharacterState.Idle);
 
@@ -65,7 +65,19 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 
         public override void Update(GameTime gameTime)
         {
-            // Check om playerGo.Transform.GridPostion er det samme, ellers lav en ny path mod nuværende player gridposition
+            if (GameObject.Transform.Position.Y <playerGo.Transform.Position.Y)
+            {
+                spriteRenderer.SetLayerDepth(LAYERDEPTH.EnemyUnderPlayer);
+            }
+            else
+            {
+                spriteRenderer.SetLayerDepth(LAYERDEPTH.EnemyOverPlayer);
+            }
+
+            // Also needs to check if 
+
+            // Checks if the playerGo.Transform.GridPostion is the same, if false, we know that the player has moved -
+            // so we make a new path towards that point.
             if (playerGo.Transform.GridPosition != targetPoint && State != CharacterState.Dead)
             {
                 targetPoint = playerGo.Transform.GridPosition;
@@ -104,15 +116,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             SetPath();
         }
 
-        private void OnGoalReached()
-        {
-            // Burde ikke være attacking siden vores enemies skal også kunne gå rundt
-            // Lav et tjek om vi leder efter en player eller bare går idle rundt.
-            // Hvis vi skal gå idle rundt har vi brug for en liste som
-            SetState(CharacterState.Attacking);
-
-            spriteRenderer.SpriteEffects = SpriteEffects.None;
-        }
 
         #region PathFinding
 
@@ -138,28 +141,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
                     SetNextTargetPos(path[0]);
                 }
             }
-        }
-
-        private void ResetPathColor()
-        {
-            if (path != null)
-            {
-                foreach (GameObject cellGo in path)
-                {
-                    ResetCellColor(cellGo);
-                }
-            }
-        }
-
-        private void ResetCellColor(GameObject cellGo)
-        {
-            Cell cell = cellGo.GetComponent<Cell>();
-            cell.ChangeCellWalkalbeType(cell.CellWalkableType); // Dont change the type, but makes it draw the color of the debug, to the correct color.
-        }
-
-        private void SetNextTargetPos(GameObject cellGo)
-        {
-            nextTarget = cellGo.Transform.Position + new Vector2(0, -Cell.dimension * Cell.Scale / 2);
         }
 
         private void UpdatePathing(GameTime gameTime)
@@ -200,6 +181,37 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             UpdateDirection();
         }
 
+        private void OnGoalReached()
+        {
+            // Burde ikke være attacking siden vores enemies skal også kunne gå rundt
+            // Lav et tjek om vi leder efter en player eller bare går idle rundt.
+            // Hvis vi skal gå idle rundt har vi brug for en liste som
+            SetState(CharacterState.Attacking);
+
+            spriteRenderer.SpriteEffects = SpriteEffects.None;
+        }
+
+        private void ResetPathColor()
+        {
+            if (path != null)
+            {
+                foreach (GameObject cellGo in path)
+                {
+                    ResetCellColor(cellGo);
+                }
+            }
+        }
+
+        private void ResetCellColor(GameObject cellGo)
+        {
+            Cell cell = cellGo.GetComponent<Cell>();
+            cell.ChangeCellWalkalbeType(cell.CellWalkableType); // Dont change the type, but makes it draw the color of the debug, to the correct color.
+        }
+
+        private void SetNextTargetPos(GameObject cellGo)
+        {
+            nextTarget = cellGo.Transform.Position + new Vector2(0, -Cell.dimension * Cell.Scale / 2);
+        }
         #endregion PathFinding
 
         private void Attack()
@@ -250,6 +262,5 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
                     break;
             }
         }
-
     }
 }
