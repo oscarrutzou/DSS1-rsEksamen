@@ -14,9 +14,10 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies.Skeleton
         {
             base.Awake();
 
-            enemyStateAnimations.Add(EnemyState.Idle, AnimNames.OrcIdle);
-            enemyStateAnimations.Add(EnemyState.Moving, AnimNames.OrcRun);
-            enemyStateAnimations.Add(EnemyState.Dead, AnimNames.OrcDeath);
+            characterStateAnimations.Add(CharacterState.Idle, AnimNames.OrcIdle);
+            characterStateAnimations.Add(CharacterState.Moving, AnimNames.OrcRun);
+            characterStateAnimations.Add(CharacterState.Dead, AnimNames.OrcDeath);
         }
+
     }
 }

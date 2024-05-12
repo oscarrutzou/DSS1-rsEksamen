@@ -4,6 +4,8 @@ using FørsteÅrsEksamen.GameManagement;
 using FørsteÅrsEksamen.ObserverPattern;
 using FørsteÅrsEksamen.RepositoryPattern;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace FørsteÅrsEksamen.ComponentPattern.Path
 {
@@ -16,7 +18,20 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
         public static GridManager Instance
         { get { return instance ??= instance = new GridManager(); } }
 
-        public Grid CurrentGrid;
+        private Grid currentGrid;
+
+        public Grid CurrentGrid
+        {
+            get { return currentGrid; }
+            private set
+            {
+                if (value != currentGrid)
+                {
+                    currentGrid = value;
+                    Notify();
+                }
+            } 
+        }
         public Grid SelectedGrid { get; private set; }
 
         private int roomNrIndex = 1;
@@ -38,7 +53,12 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             }
         }
 
+        private float overrrideTime = 1; // How long there should go between grid saves.
+        private float overrideUpdateTimer;
+
         private IRepository repository;
+
+        private List<IObserver> gricCangeObservers = new();
 
         #endregion Parameters
 
@@ -50,9 +70,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
                                                   // Brug file system hvis der ikke er adgang til postgre
         }
 
-        private float overrrideTime = 1;
-        private float overrideUpdateTimer;
-
         public void Update()
         {
             overrideUpdateTimer -= GameWorld.DeltaTime;
@@ -63,7 +80,9 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
                 OverrideSaveGrid(); // Works since we're just changing the CurrentGrid in the GridManager
             }
         }
+        public void ChangeRoomNrIndex(int addToCurrentRoomNr) => RoomNrIndex += addToCurrentRoomNr;
 
+        #region SaveLoad
         public void SaveGrid(Grid grid)
         {
             CurrentGrid = grid;
@@ -92,7 +111,9 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             GameObject go = repository.GetGrid(gridName);
             CurrentGrid = go.GetComponent<Grid>();
         }
+        #endregion
 
+        #region Draw and Remove Current Grid
         public void DrawOnCells()
         {
             if (GuiMethods.IsMouseOverUI()) return;
@@ -135,7 +156,9 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             GameWorld.Instance.Destroy(CurrentGrid.GameObject);
             CurrentGrid = null;
         }
+        #endregion
 
+        #region Return Methods
         public GameObject GetCellAtPos(Vector2 pos)
         {
             if (CurrentGrid == null) return null;
@@ -160,20 +183,26 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             return temp;
         }
 
-        //public Point GetPointAtPos(Vector2 pos) => GetCellAtPos(pos).Transform.GridPosition;
+        #endregion
 
-        public void ChangeRoomNrIndex(int addToCurrentRoomNr) => RoomNrIndex += addToCurrentRoomNr;
-
+        #region Observer Pattern
         public void Attach(IObserver observer)
         {
+            gricCangeObservers.Add(observer);
         }
 
         public void Detach(IObserver observer)
         {
+            gricCangeObservers.Remove(observer);
         }
 
         public void Notify()
         {
+            foreach (IObserver item in gricCangeObservers)
+            {
+                item.UpdateObserver();
+            }
         }
+        #endregion
     }
 }
