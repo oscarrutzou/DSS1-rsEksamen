@@ -18,6 +18,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
 
         Enemy,
         Gui,
+        Items,
 
         Default, //Not set
     }

@@ -1,9 +1,7 @@
-﻿using FørsteÅrsEksamen.ComponentPattern.Enemies;
-using FørsteÅrsEksamen.ComponentPattern.Path;
+﻿using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.GameManagement;
 using FørsteÅrsEksamen.ObserverPattern;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 namespace FørsteÅrsEksamen.ComponentPattern.Characters
@@ -77,6 +75,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
             {
                 targetVelocity = Vector2.Zero;
             }
+            
 
             if (GridManager.Instance.CurrentGrid == null) return; // Player cant walk if there is no grid.
 
