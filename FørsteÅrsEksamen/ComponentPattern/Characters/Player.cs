@@ -34,6 +34,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
             this.handsGo = handsGo;
             this.movementColliderGo = movementColliderGo;
         }
+
         public override void Awake()
         {
             base.Awake();
