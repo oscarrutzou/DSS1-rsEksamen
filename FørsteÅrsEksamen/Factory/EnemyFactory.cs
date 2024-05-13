@@ -1,5 +1,5 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.Enemies.Skeleton;
+using FørsteÅrsEksamen.ComponentPattern.Enemies.MeleeEnemies;
 using FørsteÅrsEksamen.ComponentPattern.Path;
 using Microsoft.Xna.Framework;
 

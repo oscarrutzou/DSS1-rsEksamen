@@ -2,7 +2,7 @@
 using FørsteÅrsEksamen.CommandPattern.Commands;
 using FørsteÅrsEksamen.ComponentPattern;
 using FørsteÅrsEksamen.ComponentPattern.Characters;
-using FørsteÅrsEksamen.ComponentPattern.Enemies.Skeleton;
+using FørsteÅrsEksamen.ComponentPattern.Enemies.MeleeEnemies;
 using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.Factory;
 using FørsteÅrsEksamen.Factory.Gui;
