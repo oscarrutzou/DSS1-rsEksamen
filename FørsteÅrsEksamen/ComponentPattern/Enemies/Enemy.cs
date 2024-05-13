@@ -96,6 +96,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
            
             
         }
+
         public override void Update(GameTime gameTime)
         {
             // Kun en gang når man finder
