@@ -25,7 +25,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
         public Action onGoalReached;
 
         private bool inRange = false;
-        private int distance;
+        private int range;
         #endregion Properties
 
         public Enemy(GameObject gameObject) : base(gameObject)
@@ -103,18 +103,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
         }
 
         // Kig hvad jeg har i starten af update, husk at have de checks med og sætte targetPoint til playerGo GridPosition.
-        private void ViewRange()
-        {
-            if (inRange == false)
-            {
-                if (distance > 20)
-                {
-                    playerGo.Transform.Position = distanceToTarget; //¨Du ska ikke sætte positionen af spilleren.
-                    inRange = true;
-                }
-            }
-            SetPath();
-        }
+
 
 
         #region PathFinding
@@ -183,9 +172,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 
         private void OnGoalReached()
         {
-            // Burde ikke være attacking siden vores enemies skal også kunne gå rundt
-            // Lav et tjek om vi leder efter en player eller bare går idle rundt.
-            // Hvis vi skal gå idle rundt har vi brug for en liste som
+            
             SetState(CharacterState.Attacking);
 
             spriteRenderer.SpriteEffects = SpriteEffects.None;

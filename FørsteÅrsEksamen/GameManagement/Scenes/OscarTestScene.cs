@@ -2,7 +2,7 @@
 using FørsteÅrsEksamen.CommandPattern.Commands;
 using FørsteÅrsEksamen.ComponentPattern;
 using FørsteÅrsEksamen.ComponentPattern.Characters;
-using FørsteÅrsEksamen.ComponentPattern.Enemies.Skeleton;
+using FørsteÅrsEksamen.ComponentPattern.Enemies.MeleeEnemies;
 using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.Factory;
 using FørsteÅrsEksamen.Factory.Gui;
@@ -73,6 +73,15 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
                 SkeletonWarrior enemy = enemGo.GetComponent<SkeletonWarrior>();
                 enemy.SetStartPosition(playerGo, new Point(7, 13));
             }
+        }
+
+        private void MakeItem()
+        {
+            ItemFactory itemFactory = new ItemFactory();
+            GameObject itemGo = itemFactory.Create();
+            GameWorld.Instance.Instantiate(itemGo);
+            
+
         }
 
         private void MakePlayer()

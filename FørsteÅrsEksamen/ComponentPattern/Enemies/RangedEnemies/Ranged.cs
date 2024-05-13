@@ -2,9 +2,9 @@
 {
     //Asser
 
-    public abstract class Skeleton : Enemy
+    public abstract class Ranged : Enemy
     {
-        protected Skeleton(GameObject gameObject) : base(gameObject)
+        protected Ranged(GameObject gameObject) : base(gameObject)
         {
         }
     }

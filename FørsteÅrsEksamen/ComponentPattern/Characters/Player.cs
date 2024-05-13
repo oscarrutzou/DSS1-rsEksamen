@@ -60,6 +60,12 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
             totalMovementInput += input;
         }
 
+        public void inventory()
+        {
+            List<GameObject> inventory = new List<GameObject>();
+            
+        }
+
         public void Move(Vector2 input)
         {
             // Save the previous position
