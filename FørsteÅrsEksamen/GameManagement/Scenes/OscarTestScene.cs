@@ -77,6 +77,15 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             }
         }
 
+        private void MakeItem()
+        {
+            ItemFactory itemFactory = new ItemFactory();
+            GameObject itemGo = itemFactory.Create();
+            GameWorld.Instance.Instantiate(itemGo);
+            
+
+        }
+
         private void MakePlayer()
         {
             Point spawn = new Point(6, 6);
