@@ -13,9 +13,11 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
     public class ErikTestScene : Scene
     {
         private GameObject weapon;
+        private GameObject projectile;
         public override void Initialize()
         {
-            MakeWeapon();
+            //MakeWeapon();
+            MakeProjectile();
             AttackCommand();
         }
 
@@ -27,6 +29,14 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             GameWorld.Instance.Instantiate(weapon);
         }
 
+        private void MakeProjectile()
+        {
+            ProjectileFactory projectileFactory = new();
+            projectile = projectileFactory.Create();
+
+            GameWorld.Instance.Instantiate(projectile);
+        }
+
         private void Attack()
         {
             weapon.GetComponent<MagicStaff>().Attack();
@@ -35,6 +45,8 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         {
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, 
                 new CustomCmd(Attack));
+
+
         }
         public override void Update(GameTime gameTime)
         {

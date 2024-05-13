@@ -19,6 +19,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
        
         
         private Texture2D sprite;
+        private float weaponRotation;
 
         protected Weapon(GameObject gameObject) : base(gameObject)
         {
@@ -51,7 +52,9 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
 
         public void Attack()
         {
-            GameObject.Transform.Rotation += 30f;
+            //GameObject.Transform.Rotation += 30f;
+
+
         }
 
 
