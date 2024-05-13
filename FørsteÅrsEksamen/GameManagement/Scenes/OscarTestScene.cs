@@ -48,7 +48,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             spriteRenderer.SetSprite(TextureNames.TestLevel);
             spriteRenderer.IsCentered = false;
 
-            GameWorld.Instance.Instantiate(go);
+            //GameWorld.Instance.Instantiate(go);
         }
 
         private enum EnemyTypes
@@ -136,7 +136,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         {
             if (GridManager.Instance.CurrentGrid != null)
             {
-                spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], GridManager.Instance.GetCornerPositionOfCell(new Point(3, 1)), null, Color.DarkRed, 0f, Vector2.Zero, 10, SpriteEffects.None, 1);
+                //spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], GridManager.Instance.GetCornerPositionOfCell(new Point(3, 1)), null, Color.DarkRed, 0f, Vector2.Zero, 10, SpriteEffects.None, 1);
 
             }
 

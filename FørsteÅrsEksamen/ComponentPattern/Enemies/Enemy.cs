@@ -221,8 +221,11 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             if (attackTimer < 0)
             {
                 attackTimer = attackCooldown;
+                AttackAction();
             }
         }
+
+        internal virtual void AttackAction() { }
 
         internal override void SetState(CharacterState newState)
         {
@@ -233,28 +236,24 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             switch (State)
             {
                 case CharacterState.Idle:
-                    //animator.PlayAnimation(AnimNames.OrcIdle); // Hands are stuck a little over the normal sprite
                     animator.PlayAnimation(characterStateAnimations[State]);
 
                     spriteRenderer.OffSet = idlespriteOffset;
                     break;
 
                 case CharacterState.Moving:
-                    //animator.PlayAnimation(AnimNames.OrcRun); // Hands are stuck a little over the normal sprite
                     animator.PlayAnimation(characterStateAnimations[State]);
 
                     spriteRenderer.OffSet = largeSpriteOffSet;
                     break;
 
                 case CharacterState.Attacking: 
-                    //animator.PlayAnimation(AnimNames.OrcIdle); // Is going to animate hands too.
                     animator.PlayAnimation(characterStateAnimations[CharacterState.Idle]); // Just uses the Idle since we have no attacking animation
 
                     spriteRenderer.OffSet = idlespriteOffset;
                     break;
 
                 case CharacterState.Dead:
-                    //animator.PlayAnimation(AnimNames.OrcDeath);
                     animator.PlayAnimation(characterStateAnimations[State]);
 
                     spriteRenderer.OffSet = largeSpriteOffSet;
