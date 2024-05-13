@@ -238,25 +238,25 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
                 case CharacterState.Idle:
                     animator.PlayAnimation(characterStateAnimations[State]);
 
-                    spriteRenderer.OffSet = idlespriteOffset;
+                    spriteRenderer.OriginOffSet = idlespriteOffset;
                     break;
 
                 case CharacterState.Moving:
                     animator.PlayAnimation(characterStateAnimations[State]);
 
-                    spriteRenderer.OffSet = largeSpriteOffSet;
+                    spriteRenderer.OriginOffSet = largeSpriteOffSet;
                     break;
 
                 case CharacterState.Attacking: 
                     animator.PlayAnimation(characterStateAnimations[CharacterState.Idle]); // Just uses the Idle since we have no attacking animation
 
-                    spriteRenderer.OffSet = idlespriteOffset;
+                    spriteRenderer.OriginOffSet = idlespriteOffset;
                     break;
 
                 case CharacterState.Dead:
                     animator.PlayAnimation(characterStateAnimations[State]);
 
-                    spriteRenderer.OffSet = largeSpriteOffSet;
+                    spriteRenderer.OriginOffSet = largeSpriteOffSet;
                     animator.StopCurrentAnimationAtLastSprite();
                     break;
             }
