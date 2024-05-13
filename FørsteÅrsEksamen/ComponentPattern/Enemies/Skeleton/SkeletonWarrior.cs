@@ -1,9 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FørsteÅrsEksamen.GameManagement;
 
 namespace FørsteÅrsEksamen.ComponentPattern.Enemies.Skeleton
 {
@@ -13,7 +8,16 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies.Skeleton
     {
         public SkeletonWarrior(GameObject gameObject) : base(gameObject)
         {
-
         }
+
+        public override void Awake()
+        {
+            base.Awake();
+
+            characterStateAnimations.Add(CharacterState.Idle, AnimNames.OrcIdle);
+            characterStateAnimations.Add(CharacterState.Moving, AnimNames.OrcRun);
+            characterStateAnimations.Add(CharacterState.Dead, AnimNames.OrcDeath);
+        }
+
     }
 }

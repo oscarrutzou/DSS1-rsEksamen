@@ -1,13 +1,15 @@
 ﻿using FørsteÅrsEksamen.CommandPattern;
 using FørsteÅrsEksamen.ComponentPattern.GUI;
 using FørsteÅrsEksamen.GameManagement;
+using FørsteÅrsEksamen.ObserverPattern;
 using FørsteÅrsEksamen.RepositoryPattern;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace FørsteÅrsEksamen.ComponentPattern.Path
 {
-    public class GridManager
+    public class GridManager : ISubject
     {
         #region Parameters
 
@@ -16,8 +18,23 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
         public static GridManager Instance
         { get { return instance ??= instance = new GridManager(); } }
 
-        public Grid CurrentGrid;
+        private Grid currentGrid;
+
+        public Grid CurrentGrid
+        {
+            get { return currentGrid; }
+            private set
+            {
+                if (value != currentGrid)
+                {
+                    currentGrid = value;
+                    Notify();
+                }
+            } 
+        }
         public Grid SelectedGrid { get; private set; }
+
+        private bool showGrid = true;
 
         private int roomNrIndex = 1;
 
@@ -38,7 +55,12 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             }
         }
 
+        private float overrrideTime = 1; // How long there should go between grid saves.
+        private float overrideUpdateTimer;
+
         private IRepository repository;
+
+        private List<IObserver> gricCangeObservers = new();
 
         #endregion Parameters
 
@@ -50,8 +72,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
                                                   // Brug file system hvis der ikke er adgang til postgre
         }
 
-        private float overrrideTime = 1;
-        private float overrideUpdateTimer;
         public void Update()
         {
             overrideUpdateTimer -= GameWorld.DeltaTime;
@@ -62,7 +82,9 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
                 OverrideSaveGrid(); // Works since we're just changing the CurrentGrid in the GridManager
             }
         }
+        public void ChangeRoomNrIndex(int addToCurrentRoomNr) => RoomNrIndex += addToCurrentRoomNr;
 
+        #region SaveLoad
         public void SaveGrid(Grid grid)
         {
             CurrentGrid = grid;
@@ -90,9 +112,11 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             DeleteDrawnGrid();
             GameObject go = repository.GetGrid(gridName);
             CurrentGrid = go.GetComponent<Grid>();
+            //ShouldDrawCells();
         }
+        #endregion
 
-
+        #region Draw and Remove Current Grid
         public void DrawOnCells()
         {
             if (GuiMethods.IsMouseOverUI()) return;
@@ -117,6 +141,9 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
 
         private void SetCellProperties(Cell cell, CellWalkableType walkableType, int roomNr)
         {
+            if (!showGrid) return; // You cant draw on the grid when its not set
+
+            cell.GameObject.GetComponent<SpriteRenderer>().ShouldDraw = true; // Need to be true, so its wlakabletype gets set proberly.
             cell.RoomNr = roomNr;
             cell.ChangeCellWalkalbeType(walkableType);
 
@@ -135,36 +162,9 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             GameWorld.Instance.Destroy(CurrentGrid.GameObject);
             CurrentGrid = null;
         }
+        #endregion
 
-        /*
-         *         {
-            Vector2 mouseInWorld = InputHandler.Instance.mouseInWorld;
-
-            //Find grid if there is a tile under the mouse. with inputhandler mousepos in world
-            // Check within grid.startpos.x + cell.dem * cell.scale and on the other side
-
-            Grid grid = GridManager.Instance.CurrentGrid;
-
-            if (grid == null) return;
-
-            int scale = Cell.Demension * Cell.Scale;
-            Rectangle gridSize = new((int)grid.StartPostion.X, (int)grid.StartPostion.Y, grid.Width * scale, grid.Height * scale);
-            
-            if (gridSize.Contains(mouseInWorld))
-            {
-                // Mouse inside grid
-                GameObject cellGo = grid.GetCellGameObject(mouseInWorld);
-                if (cellGo == null) return;
-
-                Point cellGridPos = cellGo.Transform.GridPosition;
-                grid.Cells[cellGridPos].GetComponent<SpriteRenderer>().Color = Color.Red;
-                Cell cell = cellGo.GetComponent<Cell>();
-                cell.CellWalkableType = CellWalkableType.FullValid;
-                cell.RoomNr = 2;
-                GridManager.Instance.OverrideSaveGrid(grid);
-            }
-         */
-
+        #region Return Methods
         public GameObject GetCellAtPos(Vector2 pos)
         {
             if (CurrentGrid == null) return null;
@@ -178,8 +178,56 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             return null;
         }
 
-        public Point GetPointAtPos(Vector2 pos) => GetCellAtPos(pos).Transform.GridPosition;
+        public Vector2 GetCornerPositionOfCell(Point gridCell)
+        {
+            Vector2 temp = Vector2.Zero;
+            if (CurrentGrid == null) return temp;
 
-        public void ChangeRoomNrIndex(int addToCurrentRoomNr) => RoomNrIndex += addToCurrentRoomNr;
+            temp = CurrentGrid.PosFromGridPos(gridCell);
+            temp -= new Vector2(Cell.dimension * Cell.Scale / 2, Cell.dimension * Cell.Scale / 2);
+
+            return temp;
+        }
+
+        public void ShowHideGrid()
+        {
+            showGrid = !showGrid;
+
+            ShouldDrawCells();
+        }
+
+        private void ShouldDrawCells()
+        {
+            foreach (GameObject go in CurrentGrid.Cells.Values)
+            {
+                // Set all to getting draw if the bool is true.
+                go.GetComponent<SpriteRenderer>().ShouldDraw = showGrid;
+
+                Cell cell = go.GetComponent<Cell>();
+                cell.ChangeCellWalkalbeType(cell.CellWalkableType); // Only draw the ones that have a room.
+            }
+        } 
+
+        #endregion
+
+        #region Observer Pattern
+        public void Attach(IObserver observer)
+        {
+            gricCangeObservers.Add(observer);
+        }
+
+        public void Detach(IObserver observer)
+        {
+            gricCangeObservers.Remove(observer);
+        }
+
+        public void Notify()
+        {
+            foreach (IObserver item in gricCangeObservers)
+            {
+                item.UpdateObserver();
+            }
+        }
+        #endregion
     }
 }

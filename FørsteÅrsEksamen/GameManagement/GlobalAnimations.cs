@@ -7,7 +7,6 @@ namespace FørsteÅrsEksamen.GameManagement
 {
     public enum AnimNames
     {
-        TestWizardRightSheet,
         TestWizardRightIndividualFrames,
 
         KnightDeath,
@@ -21,11 +20,9 @@ namespace FørsteÅrsEksamen.GameManagement
 
     // Oscar
 
-
-    // Brug en enum til enemy typer, tag ToString() og det er hvad animationernes base animation (pakke) skal være. 
+    // Brug en enum til enemy typer, tag ToString() og det er hvad animationernes base animation (pakke) skal være.
     // En enemy animations pakke er der for at holde de forskellige animationer som bliver brugt til hver.
     // Kan være en dict
-
 
     /// <summary>
     /// Contains all the Animation used in the project.
@@ -40,10 +37,14 @@ namespace FørsteÅrsEksamen.GameManagement
             Animations = new Dictionary<AnimNames, Animation>();
 
             //Can upload sprite sheets
-            LoadSpriteSheet(AnimNames.TestWizardRightSheet, "Test\\AnimationSheet\\wizardRight", 5, 32);
+            // The Name of the Animation, the path, the FPS (how many times we change the frame per second, and the dimension of each sprite
+            LoadSpriteSheet(AnimNames.KnightIdle, "World\\Classes\\Knight-Idle", 5, 32);
+            LoadSpriteSheet(AnimNames.KnightRun, "World\\Classes\\Knight-Run", 10, 64);
+            LoadSpriteSheet(AnimNames.KnightDeath, "World\\Classes\\Knight-Death", 6, 64);
 
-            LoadSpriteSheet(AnimNames.KnightIdle, "World\\Classes\\Knight-Idle", 4, 32);
             LoadSpriteSheet(AnimNames.OrcIdle, "World\\Enemies\\Orc-Idle", 4, 32);
+            LoadSpriteSheet(AnimNames.OrcRun, "World\\Enemies\\Orc-Run", 10, 64);
+            LoadSpriteSheet(AnimNames.OrcDeath, "World\\Enemies\\Orc-Death", 6, 64);
 
             #region How to Upload Individual Frame Animation
 
@@ -54,8 +55,7 @@ namespace FørsteÅrsEksamen.GameManagement
 
             #endregion How to Upload Individual Frame Animation
 
-            //LoadIndividualFramesAnimation(AnimNames.TestWizardRightIndividualFrames, "Test\\MultipleFilesAnim\\wizardRight", 5, 8);
-            LoadIndividualFramesAnimation(AnimNames.TestWizardRightIndividualFrames, "Test\\MultipleFilesAnim\\wizardRight (1)", 5, 8);
+            //LoadIndividualFramesAnimation(AnimNames.TestWizardRightIndividualFrames, "Test\\MultipleFilesAnim\\wizardRight (1)", 5, 8);
         }
 
         /// <summary>

@@ -1,6 +1,11 @@
 ﻿namespace FørsteÅrsEksamen.ComponentPattern.Weapons.MeleeWeapons
 {
-    internal class Axe
+    internal class Sword : MeleeWeapon
     {
+        public Sword(GameObject gameObject) : base(gameObject)
+        {
+        }
+
+        
     }
 }

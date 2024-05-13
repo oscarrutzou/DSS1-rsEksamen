@@ -26,8 +26,6 @@ namespace FørsteÅrsEksamen.Factory
             sr.SetLayerDepth(LAYERDEPTH.WorldBackground);
             sr.SetSprite(TextureNames.Cell);
 
-            if ((gridPos.X + gridPos.Y) % 2 == 0) sr.Color = new Color(30, 150, 20); // Set color so every second one is colored
-
             return cellGo;
         }
 
@@ -43,8 +41,6 @@ namespace FørsteÅrsEksamen.Factory
             SpriteRenderer sr = cellGo.AddComponent<SpriteRenderer>();
             sr.SetLayerDepth(LAYERDEPTH.WorldBackground);
             sr.SetSprite(TextureNames.Cell);
-
-            if ((gridPos.X + gridPos.Y) % 2 == 0) sr.Color = new Color(30, 150, 20); // Set color so every second one is colored
 
             return cellGo;
         }

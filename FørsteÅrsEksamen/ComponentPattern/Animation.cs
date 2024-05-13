@@ -10,45 +10,45 @@ namespace FørsteÅrsEksamen.ComponentPattern
     {
         public AnimNames Name { get; private set; }
         public Texture2D[] Sprites { get; private set; }
-        public int AmountOfFrames { get; private set; }
+        public int FPS { get; private set; }
         public Action OnAnimationDone { get; set; }
         public bool ShouldPlayAnim { get; set; } = true;
         public bool UseSpriteSheet { get; set; }
         public int FrameDimensions { get; private set; }
         public Rectangle SourceRectangle { get; private set; }
 
-        public Animation(AnimNames name, Texture2D[] sprites, int framesNr)
+        public Animation(AnimNames name, Texture2D[] sprites, int fps)
         {
             Name = name;
             Sprites = sprites;
             FrameDimensions = sprites[0].Width; // Assumes that the frame dem are the same though the animation and the width and height are the same
-            AmountOfFrames = framesNr;
+            FPS = fps;
         }
 
-        public Animation(AnimNames name, Texture2D[] sprites, int framesNr, Action action)
+        public Animation(AnimNames name, Texture2D[] sprites, int fps, Action action)
         {
             Name = name;
             Sprites = sprites;
-            AmountOfFrames = framesNr;
+            FPS = fps;
             FrameDimensions = sprites[0].Width; // Assumes that the frame dem are the same though the animation and the width and height are the same
             OnAnimationDone = action;
         }
 
-        public Animation(AnimNames name, Texture2D[] sprites, int framesNr, int frameDem)
+        public Animation(AnimNames name, Texture2D[] sprites, int fps, int frameDem)
         {
             Name = name;
             Sprites = sprites;
-            AmountOfFrames = framesNr;
+            FPS = fps;
             FrameDimensions = frameDem;
             SourceRectangle = new Rectangle(0, 0, frameDem, frameDem);
             UseSpriteSheet = true;
         }
 
-        public Animation(AnimNames name, Texture2D[] sprites, int framesNr, Action action, int frameDem)
+        public Animation(AnimNames name, Texture2D[] sprites, int fps, Action action, int frameDem)
         {
             Name = name;
             Sprites = sprites;
-            AmountOfFrames = framesNr;
+            FPS = fps;
             OnAnimationDone = action;
             FrameDimensions = frameDem;
             SourceRectangle = new Rectangle(0, 0, frameDem, frameDem);

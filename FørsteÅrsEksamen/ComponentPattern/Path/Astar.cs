@@ -16,13 +16,14 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
 
         public Astar(GameObject gameObject) : base(gameObject)
         {
-            this.grid = GridManager.Instance.CurrentGrid;
-            this.cells = grid.Cells; // Assign existing grid
             gridDem = Cell.dimension * Cell.Scale;
         }
 
         public List<GameObject> FindPath(Point start, Point goal)
         {
+            grid = GridManager.Instance.CurrentGrid;
+            cells = grid.Cells; // Assign existing grid
+
             ResetCells(); // Gets the Cells ready
 
             open = new HashSet<GameObject>(); // Cells to check
@@ -120,10 +121,10 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             path.Add(startPoint);
             path.Reverse();
 
-            //foreach (GameObject go in path)
-            //{
-            //    go.GetComponent<SpriteRenderer>().Color = Color.Aqua;
-            //}
+            foreach (GameObject go in path)
+            {
+                go.GetComponent<SpriteRenderer>().Color = Color.Aqua;
+            }
 
             return path;
         }

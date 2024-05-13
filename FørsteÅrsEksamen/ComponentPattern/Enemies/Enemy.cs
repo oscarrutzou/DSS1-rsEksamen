@@ -1,179 +1,169 @@
-﻿using FørsteÅrsEksamen.ComponentPattern.Path;
-using FørsteÅrsEksamen.GameManagement;
+﻿using FørsteÅrsEksamen.GameManagement;
+using FørsteÅrsEksamen.ObserverPattern;
+using FørsteÅrsEksamen.ComponentPattern.Path;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
-
 namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 {
-    //Asser
-
-    public enum DirectionState
+    //Asser, Oscar
+    public abstract class Enemy : Character
     {
-        Up,
-        Down,
-        Left,
-        Right
-    }
-
-    public enum EnemyState
-    {
-        Inactive,
-        Moving,
-        Attacking,
-        Dead
-    }
-
-    public abstract class Enemy : Component, IEnemyAction
-    {
-
-        private Vector2 direction, nextTarget, distanceToTarget;
-        private GameObject playerGo;
-        public Point targetPoint;
-        public List<GameObject> Path { get; set; }
-        public int speed;
-        private readonly float threshold = 20f;
-
-        public Action onGoalReached;
-        public EnemyState enemyState = EnemyState.Inactive;
-        public DirectionState directionState = DirectionState.Right;
+        #region Properties
         private Grid grid;
         private Astar astar;
+        private GameObject playerGo;
 
-        internal SpriteRenderer spriteRenderer;
-        internal Animator animator;
-        private float attackTimer;
-        private readonly float attackCooldown = 2f;
+
+        private List<GameObject> path;
+        private Vector2 nextTarget, distanceToTarget;
+        private Point targetPoint;
+        private readonly float threshold = 100f;
+
+        public Action onGoalReached;
 
         private bool inRange = false;
         private int distance;
+        #endregion Properties
 
         public Enemy(GameObject gameObject) : base(gameObject)
         {
-
         }
 
-        public void SetStartPosition(GameObject player, Grid grid, Point gridPos)
+        public void SetStartPosition(GameObject player, Point gridPos)
         {
             playerGo = player;
             targetPoint = playerGo.Transform.GridPosition;
-            this.grid = grid;
+            grid = GridManager.Instance.CurrentGrid;
             GameObject.Transform.GridPosition = gridPos;
         }
 
         public override void Awake()
         {
             base.Awake();
+
+            astar = GameObject.GetComponent<Astar>();
+
+            collider.SetCollisionBox(15, 27, new Vector2(0, 15)); // Players collider for taking damage
         }
 
         public override void Start()
         {
-            spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
-            astar = GameObject.GetComponent<Astar>();
+            spriteRenderer.SetLayerDepth(LAYERDEPTH.EnemyUnderPlayer);
 
-            Animator animator = GameObject.GetComponent<Animator>();
-            animator.AddAnimation(AnimNames.OrcIdle);
-            animator.PlayAnimation(AnimNames.OrcIdle);
+            SetState(CharacterState.Idle);
 
+            // Sets start position
             GameObject.Transform.Position = grid.GetCellGameObjectFromPoint(GameObject.Transform.GridPosition).Transform.Position;
+
+            SetPath(); // We know that the player the targetPoint has been set
 
             onGoalReached += OnGoalReached;
         }
 
+        public override void Update(GameTime gameTime)
+        {
+            if (GameObject.Transform.Position.Y <playerGo.Transform.Position.Y)
+            {
+                spriteRenderer.SetLayerDepth(LAYERDEPTH.EnemyUnderPlayer);
+            }
+            else
+            {
+                spriteRenderer.SetLayerDepth(LAYERDEPTH.EnemyOverPlayer);
+            }
+
+            // Also needs to check if 
+
+            // Checks if the playerGo.Transform.GridPostion is the same, if false, we know that the player has moved -
+            // so we make a new path towards that point.
+            if (playerGo.Transform.GridPosition != targetPoint && State != CharacterState.Dead)
+            {
+                targetPoint = playerGo.Transform.GridPosition;
+                SetPath(); //To make a new path towards the player, if they have moved.
+            }
+
+            switch (State)
+            {
+                case CharacterState.Idle:
+                    break;
+
+                case CharacterState.Moving:
+                    UpdatePathing(gameTime);
+                    break;
+
+                case CharacterState.Attacking:
+                    Attack();
+                    break;
+
+                case CharacterState.Dead:
+                    break;
+            }
+        }
+
+        // Kig hvad jeg har i starten af update, husk at have de checks med og sætte targetPoint til playerGo GridPosition.
         private void ViewRange()
         {
             if (inRange == false)
             {
                 if (distance > 20)
                 {
-                    playerGo.Transform.Position = distanceToTarget;
+                    playerGo.Transform.Position = distanceToTarget; //¨Du ska ikke sætte positionen af spilleren.
                     inRange = true;
                 }
             }
             SetPath();
-           
-            
         }
 
-        public override void Update(GameTime gameTime)
-        {
-            // Kun en gang når man finder
-            // Distance check mellem playerGo.Transform.Position og enemy pos. (Vector2) 
-            // Indenfor rækkevide, set path, sætter state til moving og den følger pathen.
-
-
-            // Check om playerGo.Transform.GridPostion er det samme, ellers lav en ny path mod nuværende player gridposition
-            if (playerGo.Transform.GridPosition != targetPoint)
-            {
-                targetPoint = playerGo.Transform.GridPosition;
-                SetPath();
-            }
-
-            switch (enemyState)
-            {
-                case EnemyState.Inactive:
-                    break;
-                case EnemyState.Moving:
-                    UpdatePathing(gameTime);
-                    break;
-                case EnemyState.Attacking:
-                    Attack();
-                    break;
-                case EnemyState.Dead:
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        private void OnGoalReached()
-        {
-            enemyState = EnemyState.Attacking;
-            spriteRenderer.SpriteEffects = SpriteEffects.None;
-        }
 
         #region PathFinding
+
         private void SetPath()
         {
-            MakePath();
-            if (Path.Count > 0)
-            {
-                SetNextTargetPos(Path[0]);
-            }
-        }
+            ResetPathColor();
 
-        private void MakePath()
-        {
-            for (int i = 0; i < 3; i++)
-            {
-                if (Path != null && Path.Count > 0) break;
+            path = null; // We cant use the previous path
 
-                Path = astar.FindPath(GameObject.Transform.GridPosition, targetPoint);
+            path = astar.FindPath(GameObject.Transform.GridPosition, targetPoint);
+
+            if (path != null && path.Count > 0)
+            {
+                SetState(CharacterState.Moving);
+
+                // If a new path is being set, set the next target to the enemy's current position
+                if (GameObject.Transform.Position != path[0].Transform.Position)
+                {
+                    nextTarget = GameObject.Transform.Position;
+                }
+                else
+                {
+                    SetNextTargetPos(path[0]);
+                }
             }
-            if (Path == null) throw new Exception("No path available");
         }
 
         private void UpdatePathing(GameTime gameTime)
         {
-            if (Path == null)
+            if (path == null)
                 return;
             Vector2 position = GameObject.Transform.Position;
 
             if (Vector2.Distance(position, nextTarget) < threshold)
             {
-                if (Path.Count > 1)
+                if (path.Count > 1)
                 {
-                    GameObject.Transform.GridPosition = Path[0].Transform.GridPosition;
-                    Path.RemoveAt(0);
-                    SetNextTargetPos(Path[0]);
+                    GameObject.Transform.GridPosition = path[0].Transform.GridPosition;
+                    ResetCellColor(path[0]);
+                    path.RemoveAt(0);
+                    SetNextTargetPos(path[0]);
                 }
-                else if (Path.Count == 1)
+                else if (path.Count == 1)
                 {
-                    GameObject.Transform.GridPosition = Path[0].Transform.GridPosition;
-                    SetNextTargetPos(Path[0]);
-                    Path.RemoveAt(0);
+                    GameObject.Transform.GridPosition = path[0].Transform.GridPosition;
+                    SetNextTargetPos(path[0]);
+                    ResetCellColor(path[0]);
+                    path.RemoveAt(0);
                 }
             }
 
@@ -181,24 +171,49 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 
             GameObject.Transform.Translate(direction * speed * (float)gameTime.ElapsedGameTime.TotalSeconds);
 
-            if (Path.Count == 0 && Vector2.Distance(position, nextTarget) < threshold)
+            if (path.Count == 0 && Vector2.Distance(position, nextTarget) < threshold)
             {
-                if (onGoalReached != null)
-                {
-                    onGoalReached.Invoke();
-                    onGoalReached = null;
-                }
-                Path = null;
+                onGoalReached?.Invoke();
+
+                path = null;
             }
+
             UpdateDirection();
+        }
+
+        private void OnGoalReached()
+        {
+            // Burde ikke være attacking siden vores enemies skal også kunne gå rundt
+            // Lav et tjek om vi leder efter en player eller bare går idle rundt.
+            // Hvis vi skal gå idle rundt har vi brug for en liste som
+            SetState(CharacterState.Attacking);
+
+            spriteRenderer.SpriteEffects = SpriteEffects.None;
+        }
+
+        private void ResetPathColor()
+        {
+            if (path != null)
+            {
+                foreach (GameObject cellGo in path)
+                {
+                    ResetCellColor(cellGo);
+                }
+            }
+        }
+
+        private void ResetCellColor(GameObject cellGo)
+        {
+            Cell cell = cellGo.GetComponent<Cell>();
+            cell.ChangeCellWalkalbeType(cell.CellWalkableType); // Dont change the type, but makes it draw the color of the debug, to the correct color.
         }
 
         private void SetNextTargetPos(GameObject cellGo)
         {
-            nextTarget = cellGo.Transform.Position + new Vector2(0, -Cell.dimension / 2);
+            nextTarget = cellGo.Transform.Position + new Vector2(0, -Cell.dimension * Cell.Scale / 2);
         }
-        #endregion
-        
+        #endregion PathFinding
+
         private void Attack()
         {
             attackTimer -= GameWorld.DeltaTime;
@@ -206,29 +221,45 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             if (attackTimer < 0)
             {
                 attackTimer = attackCooldown;
-
             }
         }
 
-        public void UpdateDirection()
+        internal override void SetState(CharacterState newState)
         {
-            if (direction.X >= 0)
+            if (State == newState) return; // Dont change the state to the same and reset the animation
+            State = newState;
+
+            // Something happens with the idle, it disappears for like a frame
+            switch (State)
             {
-                directionState = DirectionState.Right;
-                spriteRenderer.SpriteEffects = SpriteEffects.None;
-            }
-            else if (direction.X < 0)
-            {
-                directionState = DirectionState.Left;
-                spriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
-            }
-            else if (direction.Y > 0)
-            {
-                directionState = DirectionState.Down;
-            }
-            else if (direction.Y < 0)
-            {
-                directionState = DirectionState.Up;
+                case CharacterState.Idle:
+                    //animator.PlayAnimation(AnimNames.OrcIdle); // Hands are stuck a little over the normal sprite
+                    animator.PlayAnimation(characterStateAnimations[State]);
+
+                    spriteRenderer.OffSet = idlespriteOffset;
+                    break;
+
+                case CharacterState.Moving:
+                    //animator.PlayAnimation(AnimNames.OrcRun); // Hands are stuck a little over the normal sprite
+                    animator.PlayAnimation(characterStateAnimations[State]);
+
+                    spriteRenderer.OffSet = largeSpriteOffSet;
+                    break;
+
+                case CharacterState.Attacking: 
+                    //animator.PlayAnimation(AnimNames.OrcIdle); // Is going to animate hands too.
+                    animator.PlayAnimation(characterStateAnimations[CharacterState.Idle]); // Just uses the Idle since we have no attacking animation
+
+                    spriteRenderer.OffSet = idlespriteOffset;
+                    break;
+
+                case CharacterState.Dead:
+                    //animator.PlayAnimation(AnimNames.OrcDeath);
+                    animator.PlayAnimation(characterStateAnimations[State]);
+
+                    spriteRenderer.OffSet = largeSpriteOffSet;
+                    animator.StopCurrentAnimationAtLastSprite();
+                    break;
             }
         }
     }

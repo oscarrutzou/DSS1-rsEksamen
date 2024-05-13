@@ -22,8 +22,6 @@ namespace FørsteÅrsEksamen.RepositoryPattern
             string exeDirectory = AppDomain.CurrentDomain.BaseDirectory;
             baseFolderPath = Path.Combine(exeDirectory, "data");
             Directory.CreateDirectory(baseFolderPath);
-
-
         }
 
         public void Initialize()

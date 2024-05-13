@@ -17,7 +17,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
         /// <summary>
         /// If its false, the animation will play once, and then stop
         /// </summary>
-        public bool IsLooping { get; set; }
+        private bool isLooping;
 
         private bool hasPlayedAnim;
 
@@ -66,7 +66,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
 
                 if (CurrentIndex == 0)
                 {
-                    if (!IsLooping) hasPlayedAnim = true; // Stops looping after playing once
+                    if (!isLooping) hasPlayedAnim = true; // Stops looping after playing once
 
                     CurrentAnimation.OnAnimationDone?.Invoke();
                 }
@@ -85,7 +85,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
 
                 if (CurrentIndex == 0)
                 {
-                    if (!IsLooping) hasPlayedAnim = true; // Stops looping after playing once
+                    if (!isLooping) hasPlayedAnim = true; // Stops looping after playing once
 
                     CurrentAnimation.OnAnimationDone?.Invoke();
                 }
@@ -94,7 +94,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
             spriteRenderer.SourceRectangle.X = CurrentIndex * CurrentAnimation.FrameDimensions; // Only works with animation thats horizontal
         }
 
-        public void AddAnimation(AnimNames name) => animations.Add(name, GlobalAnimations.Animations[name]);
+        private void AddAnimation(AnimNames name) => animations.Add(name, GlobalAnimations.Animations[name]);
 
         /// <summary>
         /// <para>Updates params based on chosen Animation. Also resets the IsLopping to true</para>
@@ -103,23 +103,38 @@ namespace FørsteÅrsEksamen.ComponentPattern
         /// <exception cref="Exception"></exception>
         public void PlayAnimation(AnimNames animationName)
         {
-            try
+            if (!animations.ContainsKey(animationName))
             {
-                CurrentAnimation = animations[animationName];
-                spriteRenderer.UsingAnimation = true; // This gets set to false if you have played a Animation, then want to use a normal sprite again
-                frameDuration = 1f / CurrentAnimation.AmountOfFrames; //Sets how long each frame should be
-                IsLooping = true; // Resets loop
-                if (CurrentAnimation.UseSpriteSheet)
-                {
-                    spriteRenderer.SourceRectangle = CurrentAnimation.SourceRectangle; // Use a sourcerectangle to only show the specific part of the animation
-                    spriteRenderer.Sprite = CurrentAnimation.Sprites[0]; //Only one animation in the spritesheet
-                    MaxFrames = spriteRenderer.Sprite.Width / CurrentAnimation.FrameDimensions; // Only works with animation thats horizontal
-                }
+                AddAnimation(animationName);
             }
-            catch (Exception)
+
+            if (CurrentAnimation != null) // Reset previous animation
             {
-                throw new Exception($"Cant find the animation called {animationName} in Animations Dict");
+                CurrentIndex = 0;
+                CurrentAnimation.OnAnimationDone = null; //Resets its commands
+                spriteRenderer.OffSet = Vector2.Zero;
+            }
+
+            CurrentAnimation = animations[animationName];
+            spriteRenderer.UsingAnimation = true; // This gets set to false if you have played a Animation, then want to use a normal sprite again
+            frameDuration = 1f / CurrentAnimation.FPS; //Sets how long each frame should be
+            isLooping = true; // Resets loop
+
+            if (CurrentAnimation.UseSpriteSheet)
+            {
+                spriteRenderer.SourceRectangle = CurrentAnimation.SourceRectangle; // Use a sourcerectangle to only show the specific part of the animation
+                spriteRenderer.Sprite = CurrentAnimation.Sprites[0]; //Only one animation in the spritesheet
+                MaxFrames = spriteRenderer.Sprite.Width / CurrentAnimation.FrameDimensions; // Only works with animation thats horizontal
             }
         }
+
+        public void StopCurrentAnimationAtLastSprite()
+        {
+            if (CurrentAnimation == null) throw new Exception("Set animation before you can call this method");
+
+            isLooping = false; // Stop animation from looping
+            CurrentAnimation.OnAnimationDone += () => { CurrentIndex = MaxFrames - 1; }; ; // The action that gets called when the animation is done
+        }
+
     }
 }

@@ -2,16 +2,15 @@
 using FørsteÅrsEksamen.CommandPattern.Commands;
 using FørsteÅrsEksamen.ComponentPattern;
 using FørsteÅrsEksamen.ComponentPattern.Characters;
+using FørsteÅrsEksamen.ComponentPattern.Enemies.Skeleton;
 using FørsteÅrsEksamen.ComponentPattern.Path;
-using FørsteÅrsEksamen.ComponentPattern.GUI;
 using FørsteÅrsEksamen.Factory;
+using FørsteÅrsEksamen.Factory.Gui;
 using FørsteÅrsEksamen.ObserverPattern;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
-using FørsteÅrsEksamen.ComponentPattern.Enemies;
-using FørsteÅrsEksamen.ComponentPattern.Enemies.Skeleton;
 
 namespace FørsteÅrsEksamen.GameManagement.Scenes
 {
@@ -19,7 +18,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
     {
         private PlayerFactory playerFactory;
         private ButtonFactory buttonFactory;
-        private GameObject level, playerGo, drawRoomBtn, drawAstarPathBtn;
+        private GameObject playerGo, drawRoomBtn, drawAstarPathBtn;
 
         private Vector2 playerPos;
 
@@ -34,7 +33,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
             // then enemies
             MakeEnemy();
-            
+
             MakeButtons();
             SetCommands();
         }
@@ -52,20 +51,18 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             GameWorld.Instance.Instantiate(go);
         }
 
-
-        enum EnemyTypes
+        private enum EnemyTypes
         {
             SkeletonWarrior,
         }
 
-        Dictionary<EnemyTypes, List<GameObject>> enemies = new();
+        private Dictionary<EnemyTypes, List<GameObject>> enemies = new();
 
         private void AddNewEnemy(EnemyTypes type, GameObject enemyGo)
         {
-
         }
 
-        //private 
+        //private
 
         private void MakeEnemy()
         {
@@ -76,15 +73,17 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             if (GridManager.Instance.CurrentGrid != null)
             {
                 SkeletonWarrior enemy = enemGo.GetComponent<SkeletonWarrior>();
-                enemy.SetStartPosition(playerGo, GridManager.Instance.CurrentGrid, new Point(5, 5));
+                enemy.SetStartPosition(playerGo, new Point(7, 13));
             }
         }
 
         private void MakePlayer()
         {
+            Point spawn = new Point(6, 6);
             playerFactory = new PlayerFactory();
-            playerGo = playerFactory.Create();
-            playerGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[new Point(3, 3)].Transform.Position;
+            playerGo = playerFactory.Create(PlayerClasses.Warrior);
+            playerGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[spawn].Transform.Position;
+            playerGo.Transform.GridPosition = spawn;
             GameWorld.Instance.WorldCam.position = playerGo.Transform.Position;
             GameWorld.Instance.Instantiate(playerGo);
         }
@@ -93,12 +92,14 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
         private void SetCommands()
         {
-            player = playerGo.GetComponent<Player>();
+            player = playerGo.GetComponent<Warrior>();
             player.Attach(this);
             InputHandler.Instance.AddKeyUpdateCommand(Keys.D, new MoveCmd(player, new Vector2(1, 0)));
             InputHandler.Instance.AddKeyUpdateCommand(Keys.A, new MoveCmd(player, new Vector2(-1, 0)));
             InputHandler.Instance.AddKeyUpdateCommand(Keys.W, new MoveCmd(player, new Vector2(0, -1)));
             InputHandler.Instance.AddKeyUpdateCommand(Keys.S, new MoveCmd(player, new Vector2(0, 1)));
+
+            InputHandler.Instance.AddKeyButtonDownCommand(Keys.Tab, new CustomCmd(() => { GridManager.Instance.ShowHideGrid(); }));
         }
 
         private void StartGrid()
@@ -107,7 +108,6 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             Grid grid = gridGo.AddComponent<Grid>("Test1", new Vector2(0, 0), 24, 18);
             grid.GenerateGrid();
             GridManager.Instance.SaveGrid(grid);
-
         }
 
         private void MakeButtons()
@@ -125,7 +125,6 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             GameWorld.Instance.Instantiate(drawAstarPathBtn);
         }
 
-
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -135,18 +134,23 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
         public override void DrawInWorld(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], Vector2.Zero, Color.Black);
+            if (GridManager.Instance.CurrentGrid != null)
+            {
+                spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], GridManager.Instance.GetCornerPositionOfCell(new Point(3, 1)), null, Color.DarkRed, 0f, Vector2.Zero, 10, SpriteEffects.None, 1);
+
+            }
 
             base.DrawInWorld(spriteBatch);
         }
 
         private List<GameObject> list; //For test
-
         public override void DrawOnScreen(SpriteBatch spriteBatch)
         {
+
+            spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], GameWorld.Instance.UiCam.TopLeft, null, Color.WhiteSmoke, 0f, Vector2.Zero, new Vector2(350, 150), SpriteEffects.None, 0f);
+
             Vector2 mousePos = InputHandler.Instance.mouseInWorld;
             spriteBatch.DrawString(GlobalTextures.DefaultFont, $"MousePos {mousePos}", GameWorld.Instance.UiCam.TopLeft, Color.Black);
-
 
             DrawCellPos(spriteBatch);
 
@@ -156,7 +160,6 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Cell GameObjects in scene {list.Count}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 90), Color.Black);
 
             spriteBatch.DrawString(GlobalTextures.DefaultFont, $"RoomNr {GridManager.Instance.RoomNrIndex}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 120), Color.Black);
-
 
             base.DrawOnScreen(spriteBatch);
         }

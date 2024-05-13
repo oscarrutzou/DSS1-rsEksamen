@@ -15,6 +15,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
     public class Cell : Component
     {
         public static int dimension = 16;
+
         //public static readonly Vector2 ScaleSize = new(4, 4);
         public static int Scale = 4;
 
@@ -99,24 +100,26 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            if (!spriteRenderer.ShouldDraw) return;
+
             GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, GameWorld.Instance.WorldCam.zoom, GameObject.Transform.Position, RoomNr.ToString(), Color.HotPink);
         }
 
         public void ChangeCellWalkalbeType(CellWalkableType cellWalkableType)
         {
+            if (!spriteRenderer.ShouldDraw) return;
+
             if (RoomNr == -1) spriteRenderer.ShouldDraw = false;
             else spriteRenderer.ShouldDraw = true;
 
             CellWalkableType = cellWalkableType;
 
             switch (CellWalkableType)
-            { 
+            {
                 case CellWalkableType.FullValid:
                     spriteRenderer.Color = Color.DarkOliveGreen;
                     break;
             }
         }
-
-
     }
 }
