@@ -1,4 +1,5 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern;
+using FørsteÅrsEksamen.ComponentPattern.Enemies;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -44,13 +45,21 @@ namespace FørsteÅrsEksamen.GameManagement
                     gameObject.Update(gameTime);
                 }
             }
-
-            CheckCollision();
         }
 
-        public void Instantiate(GameObject gameObject) => newGameObjects.Add(gameObject);
+        public void Instantiate(GameObject gameObject)
+        {
+            SceneData.GameObjects.Add(gameObject);
 
-        public void Destroy(GameObject go) => destoroyedGameObjects.Add(go);
+            newGameObjects.Add(gameObject);
+        }
+
+        public void Destroy(GameObject go)
+        {
+            SceneData.GameObjects.Remove(go);
+
+            destoroyedGameObjects.Add(go);
+        }
 
         /// <summary>
         /// <para>The method adds the newGameobjects to different lists, and calls the Awake and Start on the Objects, so the objects starts properly.</para>
@@ -131,29 +140,29 @@ namespace FørsteÅrsEksamen.GameManagement
             GameWorld.Instance.GraphicsDevice.Clear(Color.Beige);
         }
 
-        public void CheckCollision()
-        {
-            //foreach (GameObject go1 in SceneData.GameObjects)
-            //{
-            //    foreach (GameObject go2 in SceneData.GameObjects)
-            //    {
-            //        if (go1 == go2) continue;
-            //        //Dosent check between enemies
-            //        //Enemy enemy1 = go1.GetComponent<Enemy>();
-            //        //Enemy enemy2 = go2.GetComponent<Enemy>();
-            //        //if (enemy1 != null && enemy2 != null) continue; //Shouldnt make collisions between 2 enemies.
+        //public void CheckCollision()
+        //{
+        //    foreach (GameObject go1 in SceneData.GameObjects)
+        //    {
+        //        foreach (GameObject go2 in SceneData.GameObjects)
+        //        {
+        //            if (go1 == go2) continue;
+        //            //Dosent check between enemies
+        //            Enemy enemy1 = go1.GetComponent<Enemy>();
+        //            Enemy enemy2 = go2.GetComponent<Enemy>();
+        //            if (enemy1 != null && enemy2 != null) continue; //Shouldnt make collisions between 2 enemies.
 
-            //        Collider col1 = go1.GetComponent<Collider>();
-            //        Collider col2 = go2.GetComponent<Collider>();
+        //            Collider col1 = go1.GetComponent<Collider>();
+        //            Collider col2 = go2.GetComponent<Collider>();
 
-            //        //Check base collisionbox
-            //        if (col1 != null && col2 != null && col1.CollisionBox.Intersects(col2.CollisionBox))
-            //        {
-            //            go1.OnCollisionEnter(col2);
-            //            go2.OnCollisionEnter(col1);
-            //        }
-            //    }
-            //}
-        }
+        //            //Check base collisionbox
+        //            if (col1 != null && col2 != null && col1.CollisionBox.Intersects(col2.CollisionBox))
+        //            {
+        //                go1.OnCollisionEnter(col2);
+        //                go2.OnCollisionEnter(col1);
+        //            }
+        //        }
+        //    }
+        //}
     }
 }

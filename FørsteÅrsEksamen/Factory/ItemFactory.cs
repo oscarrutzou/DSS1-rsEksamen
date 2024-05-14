@@ -1,10 +1,6 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+using FørsteÅrsEksamen.GameManagement;
 
 namespace FørsteÅrsEksamen.Factory
 {
@@ -15,8 +11,11 @@ namespace FørsteÅrsEksamen.Factory
         {
             GameObject itemGo = new GameObject();
             itemGo.Transform.Scale = new Vector2(4, 4);
-            itemGo.AddComponent<SpriteRenderer>();
+            SpriteRenderer sr = itemGo.AddComponent<SpriteRenderer>();
+            sr.SetSprite(TextureNames.WoodSword);
+            sr.SetLayerDepth(LAYERDEPTH.WorldForeground);
             itemGo.AddComponent<Collider>();
+            itemGo.AddComponent<PickupableItem>();
 
             return itemGo;
         }

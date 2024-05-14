@@ -10,20 +10,27 @@ namespace FørsteÅrsEksamen.GameManagement
         /// <summary>
         /// Every GameObject will be in these lists. There is a default type if its not important where the GameObject is placed
         /// </summary>
-        public static Dictionary<GameObjectTypes, List<GameObject>> GameObjectLists;
+        public static Dictionary<GameObjectTypes, List<GameObject>> GameObjectLists {  get; set; }
 
+        public static List<GameObject> GameObjects;
         /// <summary>
         /// Generatates lists based on GameObjectTypes Enum
         /// Should only be called once in the GameWorld.
         /// </summary>
         public static void GenereateGameObjectDicionary()
         {
+            GameObjects = new List<GameObject>();
             GameObjectLists = new Dictionary<GameObjectTypes, List<GameObject>>();
 
             foreach (GameObjectTypes type in Enum.GetValues(typeof(GameObjectTypes)))
             {
                 GameObjectLists.Add(type, new List<GameObject>());
             }
+        }
+
+        public static void Test()
+        {
+
         }
 
         /// <summary>

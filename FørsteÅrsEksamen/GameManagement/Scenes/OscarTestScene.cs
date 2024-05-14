@@ -34,6 +34,8 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             // then enemies
             MakeEnemy();
 
+            MakeItem();
+
             MakeButtons();
             SetCommands();
         }
@@ -80,7 +82,8 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             ItemFactory itemFactory = new ItemFactory();
             GameObject itemGo = itemFactory.Create();
             GameWorld.Instance.Instantiate(itemGo);
-            
+
+            itemGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[new Point(3,3)].Transform.Position;
 
         }
 

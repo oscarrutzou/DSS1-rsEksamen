@@ -20,7 +20,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
         private List<GameObject> path;
         private Vector2 nextTarget, distanceToTarget;
         private Point targetPoint;
-        private readonly float threshold = 100f;
+        private readonly float threshold = 10f;
 
         public Action onGoalReached;
 
@@ -140,14 +140,14 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 
             if (Vector2.Distance(position, nextTarget) < threshold)
             {
-                if (path.Count > 1)
+                if (path.Count > 2)
                 {
                     GameObject.Transform.GridPosition = path[0].Transform.GridPosition;
                     ResetCellColor(path[0]);
                     path.RemoveAt(0);
                     SetNextTargetPos(path[0]);
                 }
-                else if (path.Count == 1)
+                else if (path.Count == 2)
                 {
                     GameObject.Transform.GridPosition = path[0].Transform.GridPosition;
                     SetNextTargetPos(path[0]);
@@ -160,7 +160,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 
             GameObject.Transform.Translate(direction * speed * (float)gameTime.ElapsedGameTime.TotalSeconds);
 
-            if (path.Count == 0 && Vector2.Distance(position, nextTarget) < threshold)
+            if (path.Count == 1 && Vector2.Distance(position, nextTarget) < threshold)
             {
                 onGoalReached?.Invoke();
 

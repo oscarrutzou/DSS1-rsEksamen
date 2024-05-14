@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using FørsteÅrsEksamen.GameManagement;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -15,11 +16,11 @@ namespace FørsteÅrsEksamen.ComponentPattern
         Background,
         Cell,
         Player,
-
         Enemy,
         Gui,
         Items,
-
+        Weapon,
+        Projectile,
         Default, //Not set
     }
 
@@ -137,6 +138,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
             }
         }
 
+
         public void OnCollisionEnter(Collider collider)
         {
             foreach (var component in components.Values)
@@ -149,6 +151,36 @@ namespace FørsteÅrsEksamen.ComponentPattern
         {
             components[component.GetType()] = component;
             return component;
+        }
+
+        /// <summary>
+        /// How we can check on each of the gameobjects what they should collide with.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="gameobjectType"></param>
+        /// <returns></returns>
+        public bool CollidesWithGameObject<T>(GameObjectTypes gameobjectType) where T : Component
+        {
+            Collider thisGoCollider = GetComponent<Collider>() ?? throw new Exception("This Gameobject need a collider to check for collision");
+
+            foreach (GameObject otherGo in SceneData.GameObjectLists[gameobjectType])
+            {
+                Collider otherCollider = otherGo.GetComponent<Collider>();
+                if (otherCollider == null) continue;
+
+                // Find the Component type
+                Type componentType = typeof(T); //Check om den nedarver
+
+                // Tries to get the component in the other gameobject
+                if (!otherGo.components.TryGetValue(componentType, out Component component)) continue; // If not a component
+
+                if (thisGoCollider.CollisionBox.Intersects(otherCollider.CollisionBox))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>

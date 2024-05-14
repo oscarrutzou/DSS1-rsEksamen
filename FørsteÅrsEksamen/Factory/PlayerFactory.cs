@@ -24,6 +24,7 @@ namespace FørsteÅrsEksamen.Factory
         {
             GameObject playerGo = new GameObject();
             playerGo.Transform.Scale = new Vector2(4, 4);
+            playerGo.Type = GameObjectTypes.Player;
             playerGo.AddComponent<SpriteRenderer>();
             playerGo.AddComponent<Animator>();
             playerGo.AddComponent<Collider>();

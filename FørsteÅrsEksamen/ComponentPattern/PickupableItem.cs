@@ -18,21 +18,38 @@ namespace FørsteÅrsEksamen.ComponentPattern
         private readonly float threshold = 20f;
         private Vector2 position, distanceToPlayer;
         private GameObject playerGo;
-        
-        public PickupableItem(GameObject gameObject, GameObject player, Vector2 position) : base(gameObject)
+
+        public PickupableItem(GameObject gameObject) : base(gameObject)
         {
-            playerGo = player;
         }
+
+        //public PickupableItem(GameObject gameObject, GameObject player, Vector2 position) : base(gameObject)
+        //{
+        //    playerGo = player;
+        //}
 
         public override void Awake()
         {
             base.Awake();
+            collider = GameObject.GetComponent<Collider>();
             collider.SetCollisionBox(12, 19, new Vector2(2, 2));
+            spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
         }
 
-        public void InPickUpRange()
+        public override void Update(GameTime gameTime)
         {
-            collider.CollisionBox.Intersects(playerGo.GetComponent<Collider>(collider.CollisionBox));
+            bool collidesWithPlayer = GameObject.CollidesWithGameObject(GameObjectTypes.Player);
+
+            if (collidesWithPlayer)
+            {
+                //spriteRenderer.Color = Color.AliceBlue;
+                GameObject.Transform.Scale = new Vector2(6, 6);
+            }
+            else
+            {
+                GameObject.Transform.Scale = new Vector2(4, 4);
+            }
+
         }
     }
 }
