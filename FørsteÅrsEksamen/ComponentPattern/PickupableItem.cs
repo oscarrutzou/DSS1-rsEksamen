@@ -16,12 +16,14 @@ namespace FørsteÅrsEksamen.ComponentPattern
         internal Collider collider;
         
         private readonly float threshold = 20f;
-        private Vector2 position, distanceToPlayer;
+        private Vector2 position;
+        private Point distanceToPlayer;
         private GameObject playerGo;
         
         public PickupableItem(GameObject gameObject, GameObject player, Vector2 position) : base(gameObject)
         {
             playerGo = player;
+            
         }
 
         public override void Awake()
@@ -30,9 +32,14 @@ namespace FørsteÅrsEksamen.ComponentPattern
             collider.SetCollisionBox(12, 19, new Vector2(2, 2));
         }
 
-        public void InPickUpRange()
+        public override void Update(GameTime gameTime)
         {
-            collider.CollisionBox.Intersects(playerGo.GetComponent<Collider>(collider.CollisionBox));
+            
+        }
+
+        public override void OnCollisionEnter(Collider collider)
+        {
+            
         }
     }
 }

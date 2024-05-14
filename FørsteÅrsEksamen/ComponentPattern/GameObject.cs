@@ -15,9 +15,11 @@ namespace FørsteÅrsEksamen.ComponentPattern
         Background,
         Cell,
         Player,
-
         Enemy,
+        Weapon,
+        Projectile,
         Gui,
+        Items,
 
         Default, //Not set
     }

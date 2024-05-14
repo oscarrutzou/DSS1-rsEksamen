@@ -1,4 +1,5 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern;
+using FørsteÅrsEksamen.ComponentPattern.Enemies;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -133,15 +134,19 @@ namespace FørsteÅrsEksamen.GameManagement
 
         public void CheckCollision()
         {
-            //foreach (GameObject go1 in SceneData.GameObjects)
+            foreach (List<GameObject> list in SceneData.GameObjectLists.Values)
+            {
+
+            }
+            //foreach (GameObject go1 in SceneData.GameObjectLists.Values)
             //{
-            //    foreach (GameObject go2 in SceneData.GameObjects)
+            //    foreach (GameObject go2 in SceneData.GameObjectLists.Values)
             //    {
             //        if (go1 == go2) continue;
             //        //Dosent check between enemies
-            //        //Enemy enemy1 = go1.GetComponent<Enemy>();
-            //        //Enemy enemy2 = go2.GetComponent<Enemy>();
-            //        //if (enemy1 != null && enemy2 != null) continue; //Shouldnt make collisions between 2 enemies.
+            //        Enemy enemy1 = go1.GetComponent<Enemy>();
+            //        Enemy enemy2 = go2.GetComponent<Enemy>();
+            //        if (enemy1 != null && enemy2 != null) continue; //Shouldnt make collisions between 2 enemies.
 
             //        Collider col1 = go1.GetComponent<Collider>();
             //        Collider col2 = go2.GetComponent<Collider>();
