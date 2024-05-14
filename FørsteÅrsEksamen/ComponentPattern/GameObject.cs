@@ -156,10 +156,9 @@ namespace FørsteÅrsEksamen.ComponentPattern
         /// <summary>
         /// How we can check on each of the gameobjects what they should collide with.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="gameobjectType"></param>
         /// <returns></returns>
-        public bool CollidesWithGameObject<T>(GameObjectTypes gameobjectType) where T : Component
+        public bool CollidesWithGameObject(GameObjectTypes gameobjectType) 
         {
             Collider thisGoCollider = GetComponent<Collider>() ?? throw new Exception("This Gameobject need a collider to check for collision");
 
@@ -167,12 +166,6 @@ namespace FørsteÅrsEksamen.ComponentPattern
             {
                 Collider otherCollider = otherGo.GetComponent<Collider>();
                 if (otherCollider == null) continue;
-
-                // Find the Component type
-                Type componentType = typeof(T); //Check om den nedarver
-
-                // Tries to get the component in the other gameobject
-                if (!otherGo.components.TryGetValue(componentType, out Component component)) continue; // If not a component
 
                 if (thisGoCollider.CollisionBox.Intersects(otherCollider.CollisionBox))
                 {

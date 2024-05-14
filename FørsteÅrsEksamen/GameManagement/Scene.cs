@@ -49,15 +49,11 @@ namespace FørsteÅrsEksamen.GameManagement
 
         public void Instantiate(GameObject gameObject)
         {
-            SceneData.GameObjects.Add(gameObject);
-
             newGameObjects.Add(gameObject);
         }
 
         public void Destroy(GameObject go)
         {
-            SceneData.GameObjects.Remove(go);
-
             destoroyedGameObjects.Add(go);
         }
 

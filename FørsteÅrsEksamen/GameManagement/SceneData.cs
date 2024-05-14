@@ -12,14 +12,12 @@ namespace FørsteÅrsEksamen.GameManagement
         /// </summary>
         public static Dictionary<GameObjectTypes, List<GameObject>> GameObjectLists {  get; set; }
 
-        public static List<GameObject> GameObjects;
         /// <summary>
         /// Generatates lists based on GameObjectTypes Enum
         /// Should only be called once in the GameWorld.
         /// </summary>
         public static void GenereateGameObjectDicionary()
         {
-            GameObjects = new List<GameObject>();
             GameObjectLists = new Dictionary<GameObjectTypes, List<GameObject>>();
 
             foreach (GameObjectTypes type in Enum.GetValues(typeof(GameObjectTypes)))

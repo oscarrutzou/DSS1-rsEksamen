@@ -21,6 +21,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
 
         private Collider movementCollider;
 
+
         public Player(GameObject gameObject) : base(gameObject)
         {
             speed = 300;
