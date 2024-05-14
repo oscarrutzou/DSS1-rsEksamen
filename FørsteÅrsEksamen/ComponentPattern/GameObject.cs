@@ -17,6 +17,8 @@ namespace FørsteÅrsEksamen.ComponentPattern
         Cell,
         Player,
         Enemy,
+        Weapon,
+        Projectile,
         Gui,
         Items,
         Weapon,

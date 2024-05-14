@@ -16,7 +16,8 @@ namespace FørsteÅrsEksamen.ComponentPattern
         internal Collider collider;
         
         private readonly float threshold = 20f;
-        private Vector2 position, distanceToPlayer;
+        private Vector2 position;
+        private Point distanceToPlayer;
         private GameObject playerGo;
 
         public PickupableItem(GameObject gameObject) : base(gameObject)
@@ -26,6 +27,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
         public PickupableItem(GameObject gameObject, GameObject player) : base(gameObject)
         {
             playerGo = player;
+            
         }
 
         public override void Awake()
@@ -39,21 +41,12 @@ namespace FørsteÅrsEksamen.ComponentPattern
 
         public override void Update(GameTime gameTime)
         {
-            // if (bool) return;
-            bool collidesWithPlayer = GameObject.CollidesWithGameObject(GameObjectTypes.Player);
+            
+        }
 
-            if (collidesWithPlayer)
-            {
-                //spriteRenderer.Color = Color.AliceBlue;
-                GameObject.Transform.Scale = new Vector2(6, 6);
-                //Kun ske en gang. Brug en hasAdded bool(udenfor update) og sæt den til true her
-                //playerGo.GetComponent<player>().inventory.add(GameObject)
-                //Gameworld.instance.destroy(GameObject)
-            }
-            else
-            {
-                GameObject.Transform.Scale = new Vector2(4, 4);
-            }
+        public override void OnCollisionEnter(Collider collider)
+        {
+            
         }
     }
 }
