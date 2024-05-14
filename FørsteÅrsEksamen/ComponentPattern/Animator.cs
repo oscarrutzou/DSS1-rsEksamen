@@ -112,7 +112,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
             {
                 CurrentIndex = 0;
                 CurrentAnimation.OnAnimationDone = null; //Resets its commands
-                spriteRenderer.OffSet = Vector2.Zero;
+                spriteRenderer.OriginOffSet = Vector2.Zero;
             }
 
             CurrentAnimation = animations[animationName];

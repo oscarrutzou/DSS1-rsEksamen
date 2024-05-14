@@ -1,9 +1,7 @@
-﻿using FørsteÅrsEksamen.ComponentPattern.Enemies;
-using FørsteÅrsEksamen.ComponentPattern.Path;
+﻿using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.GameManagement;
 using FørsteÅrsEksamen.ObserverPattern;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 namespace FørsteÅrsEksamen.ComponentPattern.Characters
@@ -83,6 +81,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
             {
                 targetVelocity = Vector2.Zero;
             }
+            
 
             if (GridManager.Instance.CurrentGrid == null) return; // Player cant walk if there is no grid.
 
@@ -223,27 +222,27 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
                     // Hands are stuck a little over the normal sprite
                     animator.PlayAnimation(characterStateAnimations[State]);
 
-                    spriteRenderer.OffSet = idlespriteOffset;
+                    spriteRenderer.OriginOffSet = idlespriteOffset;
                     break;
 
                 case CharacterState.Moving:
                     // Hands are stuck a little over the normal sprite
                     animator.PlayAnimation(characterStateAnimations[State]);
 
-                    spriteRenderer.OffSet = largeSpriteOffSet;
+                    spriteRenderer.OriginOffSet = largeSpriteOffSet;
                     break;
 
                 case CharacterState.Attacking:
                     // Is going to animate hands too.
                     animator.PlayAnimation(characterStateAnimations[CharacterState.Idle]); // Just uses the Idle since we have no attacking animation
 
-                    spriteRenderer.OffSet = idlespriteOffset;
+                    spriteRenderer.OriginOffSet = idlespriteOffset;
                     break;
 
                 case CharacterState.Dead:
                     animator.PlayAnimation(characterStateAnimations[State]);
 
-                    spriteRenderer.OffSet = largeSpriteOffSet;
+                    spriteRenderer.OriginOffSet = largeSpriteOffSet;
                     animator.StopCurrentAnimationAtLastSprite();
                     break;
             }

@@ -16,11 +16,10 @@ namespace FørsteÅrsEksamen.Factory
         public override GameObject Create()
         {
             GameObject sword = new GameObject();
-            sword.Transform.Scale = new Vector2(3,8);
+            sword.Transform.Scale = new Vector2(4,4);
             SpriteRenderer sr = sword.AddComponent<SpriteRenderer>();
-            sr.SetSprite(TextureNames.Cell);
+            sr.SetSprite(TextureNames.WoodSword);
             sr.SetLayerDepth(LAYERDEPTH.Player);
-            sword.AddComponent<Collider>();
             sword.AddComponent<MagicStaff>();
 
             return sword;

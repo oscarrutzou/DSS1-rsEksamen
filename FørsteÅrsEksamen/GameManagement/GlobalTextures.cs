@@ -9,6 +9,7 @@ namespace FørsteÅrsEksamen.GameManagement
         Cell,
         Pixel,
         TestLevel,
+        WoodSword,
     }
 
     // Oscar
@@ -30,7 +31,8 @@ namespace FørsteÅrsEksamen.GameManagement
             {
                 {TextureNames.Cell, content.Load<Texture2D>("World\\16x16White") },
                 {TextureNames.Pixel, content.Load<Texture2D>("World\\Pixel") },
-                {TextureNames.TestLevel, content.Load<Texture2D>("World\\Levels\\TestLevel") }
+                {TextureNames.TestLevel, content.Load<Texture2D>("World\\Levels\\TestLevel") },
+                {TextureNames.WoodSword, content.Load<Texture2D>("World\\Classes\\Weapons\\WoodSword") },
             };
 
             // Load all fonts
