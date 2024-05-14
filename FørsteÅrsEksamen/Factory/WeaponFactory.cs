@@ -1,4 +1,5 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern;
+using FørsteÅrsEksamen.ComponentPattern.Characters;
 using FørsteÅrsEksamen.ComponentPattern.Weapons;
 using FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons;
 using FørsteÅrsEksamen.GameManagement;
@@ -13,6 +14,7 @@ namespace FørsteÅrsEksamen.Factory
 {
     internal class WeaponFactory : Factory
     {
+        private Player player;
         public override GameObject Create()
         {
             GameObject sword = new GameObject();
