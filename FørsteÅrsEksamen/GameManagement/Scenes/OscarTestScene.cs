@@ -48,21 +48,19 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             spriteRenderer.SetSprite(TextureNames.TestLevel);
             spriteRenderer.IsCentered = false;
 
-            //GameWorld.Instance.Instantiate(go);
+            GameWorld.Instance.Instantiate(go);
         }
 
-        private enum EnemyTypes
-        {
-            SkeletonWarrior,
-        }
+        //private enum EnemyTypes
+        //{
+        //    SkeletonWarrior,
+        //}
 
-        private Dictionary<EnemyTypes, List<GameObject>> enemies = new();
+        //private Dictionary<EnemyTypes, List<GameObject>> enemies = new();
 
-        private void AddNewEnemy(EnemyTypes type, GameObject enemyGo)
-        {
-        }
-
-        //private
+        //private void AddNewEnemy(EnemyTypes type, GameObject enemyGo)
+        //{
+        //}
 
         private void MakeEnemy()
         {
@@ -75,6 +73,15 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
                 SkeletonWarrior enemy = enemGo.GetComponent<SkeletonWarrior>();
                 enemy.SetStartPosition(playerGo, new Point(7, 13));
             }
+        }
+
+        private void MakeItem()
+        {
+            ItemFactory itemFactory = new ItemFactory();
+            GameObject itemGo = itemFactory.Create();
+            GameWorld.Instance.Instantiate(itemGo);
+            
+
         }
 
         private void MakePlayer()

@@ -30,7 +30,8 @@ namespace FørsteÅrsEksamen.ComponentPattern
 
         public Color Color { get; set; } = Color.White;
         public Vector2 Origin { get; set; }
-        public Vector2 OffSet { get; set; }
+        public Vector2 OriginOffSet { get; set; }
+        public Vector2 DrawPosOffSet { get; set; }
         public bool IsCentered = true;
         public LAYERDEPTH LayerName { get; private set; } = LAYERDEPTH.Default;
         public SpriteEffects SpriteEffects { get; set; } = SpriteEffects.None;
@@ -64,7 +65,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
         {
             if (Sprite == null || !ShouldDraw) return;
 
-            Origin = IsCentered ? new Vector2(Sprite.Width / 2, Sprite.Height / 2) : Vector2.Zero;
+            Origin = IsCentered ? new Vector2(Sprite.Width / 2, Sprite.Height / 2) : OriginOffSet; 
 
             drawPos = GameObject.Transform.Position;
 
@@ -73,7 +74,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
                 drawPos += new Vector2(animator.MaxFrames * animator.CurrentAnimation.FrameDimensions * GameObject.Transform.Scale.X / 2 - animator.CurrentAnimation.FrameDimensions * 2, 0);
             }
 
-            drawPos += OffSet;
+            drawPos += OriginOffSet + DrawPosOffSet;
 
             //Draws the sprite, and if there is a sourcerectangle set, then it uses that.
             spriteBatch.Draw(Sprite, drawPos, SourceRectangle == Rectangle.Empty ? null : SourceRectangle, Color, GameObject.Transform.Rotation, Origin, GameObject.Transform.Scale, SpriteEffects, LayerDepth);
@@ -82,7 +83,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
         public void SetSprite(TextureNames spriteName)
         {
             UsingAnimation = false;
-            OffSet = Vector2.Zero;
+            OriginOffSet = Vector2.Zero;
             Sprite = GlobalTextures.Textures[spriteName];
         }
     }
