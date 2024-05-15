@@ -111,8 +111,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
                 hasMoved = true;
             }
 
-
-
             if (!hasMoved) return; // Dont need to set new position, since its the same.
 
             SetMovement(GameObject.Transform.Position); // So we set the other gameobjects (Hands, Movement Collider...)
@@ -165,7 +163,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
             GameObject.Transform.Translate(movement);
             movementColliderGo.Transform.Position = GameObject.Transform.Position;
             handsGo.Transform.Position = GameObject.Transform.Position;
-            WeaponGo.Transform.Position = GameObject.Transform.Position;
+            weapon.MoveWeapon(GameObject.Transform.Position);
         }
 
         /// <summary>
@@ -177,7 +175,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
             GameObject.Transform.Position = position;
             movementColliderGo.Transform.Position = GameObject.Transform.Position;
             handsGo.Transform.Position = GameObject.Transform.Position;
-            WeaponGo.Transform.Position = GameObject.Transform.Position;
+            weapon.MoveWeapon(GameObject.Transform.Position);
             GameWorld.Instance.WorldCam.position = GameObject.Transform.Position; //Sets the new position of the world cam
         }
 

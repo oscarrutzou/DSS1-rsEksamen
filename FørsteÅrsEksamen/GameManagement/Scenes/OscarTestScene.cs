@@ -110,6 +110,12 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             InputHandler.Instance.AddKeyUpdateCommand(Keys.S, new MoveCmd(player, new Vector2(0, 1)));
 
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Tab, new CustomCmd(() => { GridManager.Instance.ShowHideGrid(); }));
+            InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, new CustomCmd(Attack));
+        }
+
+        private void Attack()
+        {
+            player.weapon.Attack();
         }
 
         private void TestRemoveComm()
@@ -164,8 +170,8 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
             spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], GameWorld.Instance.UiCam.TopLeft, null, Color.WhiteSmoke, 0f, Vector2.Zero, new Vector2(350, 150), SpriteEffects.None, 0f);
 
-            Vector2 mousePos = InputHandler.Instance.MouseInWorld;
-            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"MousePos {mousePos}", GameWorld.Instance.UiCam.TopLeft, Color.Black);
+            Vector2 mousePos = InputHandler.Instance.MouseOnUI;
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"MousePos UI {mousePos}", GameWorld.Instance.UiCam.TopLeft, Color.Black);
 
             DrawCellPos(spriteBatch);
 

@@ -13,7 +13,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
     internal class CollisionRectangle
     {
         public Rectangle Rectangle;
-        public Vector2 StartPos;
+        public Vector2 StartRelativePos;
     }
 
     // Only happen on attack. Also add hands. Remove it from the player and use 2 hands. 
@@ -99,7 +99,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
                 weaponColliders.Add(new CollisionRectangle()
                 {
                     Rectangle = MakeRec(pos, width, height, scale),
-                    StartPos = pos
+                    StartRelativePos = pos
                 });
             }
         }
@@ -115,24 +115,50 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
             attacking = true;
             totalElapsedTime = 0f;
 
-            startAnimationAngle = GameObject.Transform.Rotation;
-
             Vector2 mouseInUI = InputHandler.Instance.MouseOnUI;
-            Vector2 weaponToMouse = mouseInUI - GameObject.Transform.Position;
-            float angleToMouse = (float)Math.Atan2(weaponToMouse.Y, weaponToMouse.X) + MathHelper.PiOver2;
 
-            if (angleToMouse > 0f)
+            if (mouseInUI.X > 0f) // Right
             {
-                totalLerp = lerpFromTo;
+                // -Y op
+                // +Y ned
+                if (mouseInUI.Y > 0f) // Down
+                {
+                    //start angle
+                    totalLerp = MathHelper.Pi + MathHelper.PiOver2;
+                }
+                else // Up
+                {
+                    //start angle
+                    totalLerp = MathHelper.Pi;
+                }
             }
             else
             {
-                totalLerp = -lerpFromTo;
+                // Y > 0f
+                if (mouseInUI.Y > 0f) // Down
+                {
+                    //start angle
+                    totalLerp = - (MathHelper.Pi + MathHelper.PiOver2);
+                }
+                else // Up
+                {
+                    //start angle
+                    totalLerp = -lerpFromTo;
+                }
             }
+
         }
+
+        //startAnimationAngle = angleToMouse;
 
         public override void Update(GameTime gameTime)
         {
+            // Attack direction
+            //startAnimationAngle = GameObject.Transform.Rotation;
+            //Vector2 mouseInUI = InputHandler.Instance.MouseOnUI;
+            //float angleToMouse = (float)Math.Atan2(mouseInUI.Y, mouseInUI.X) + MathHelper.PiOver2;
+            //startAnimationAngle = angleToMouse;
+
             if (attacking)
             {
                 //Move a lot to attack method.
@@ -140,8 +166,14 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
                 AttackAnimation();
             } 
 
-
             UpdateCollisionBoxesPos(GameObject.Transform.Rotation);
+        }
+
+        public void MoveWeapon(Vector2 movePos)
+        {
+            GameObject.Transform.Position = movePos;
+
+            //move the weapon colliders start pos.
         }
 
         private void AttackAnimation()
@@ -176,21 +208,20 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
 
 
         }
-        //Ændre retning
-        //else
-        //{
-        //    Vector2 mouseInUI = InputHandler.Instance.MouseOnUI;
-        //    Vector2 weaponToMouse = mouseInUI - GameObject.Transform.Position;
-        //    float angleToMouse = (float)Math.Atan2(weaponToMouse.Y, weaponToMouse.X) + MathHelper.PiOver2;
-        //    GameObject.Transform.Rotation = angleToMouse;
-        //}
+
         private void UpdateCollisionBoxesPos(float rotation)
         {
             foreach (CollisionRectangle collisionRectangle in weaponColliders)
             {
-                Vector2 newPos = Rotate(collisionRectangle.StartPos, rotation);
-                collisionRectangle.Rectangle.X = (int)newPos.X - collisionRectangle.Rectangle.Width / 2;
-                collisionRectangle.Rectangle.Y = (int)newPos.Y - collisionRectangle.Rectangle.Height / 2;
+                // Calculate the position relative to the center of the weapon
+                Vector2 relativePos = collisionRectangle.StartRelativePos;
+
+                // Rotate the relative position
+                Vector2 newPos = Rotate(relativePos, rotation);
+
+                // Set the collision rectangle position based on the rotated relative position
+                collisionRectangle.Rectangle.X = (int)(GameObject.Transform.Position.X + newPos.X) - collisionRectangle.Rectangle.Width / 2;
+                collisionRectangle.Rectangle.Y = (int)(GameObject.Transform.Position.Y + newPos.Y) - collisionRectangle.Rectangle.Height / 2;
             }
         }
 
