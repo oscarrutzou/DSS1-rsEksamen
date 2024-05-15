@@ -18,7 +18,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 
 
         private List<GameObject> path;
-        private Vector2 nextTarget, distanceToTarget;
+        private Vector2 nextTarget;
         private Point targetPoint;
         private readonly float threshold = 10f;
 

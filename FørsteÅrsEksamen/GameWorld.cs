@@ -41,7 +41,7 @@ namespace FørsteÅrsEksamen.GameManagement
             GlobalAnimations.LoadContent();
 
             GenerateScenes();
-            ChangeScene(ScenesNames.ErikTestScene);
+            ChangeScene(ScenesNames.OscarTestScene);
 
             base.Initialize();
         }
@@ -90,6 +90,7 @@ namespace FørsteÅrsEksamen.GameManagement
         {
             Scenes = new Dictionary<ScenesNames, Scene>();
             Scenes[ScenesNames.GameScene] = new GameScene();
+            Scenes[ScenesNames.WeaponTestScene] = new WeaponTestScene();
             Scenes[ScenesNames.OscarTestScene] = new OscarTestScene();
             Scenes[ScenesNames.ErikTestScene] = new ErikTestScene();
             Scenes[ScenesNames.StefanTestScene] = new StefanTestScene();

@@ -1,6 +1,8 @@
-﻿using FørsteÅrsEksamen.ComponentPattern;
+﻿using FørsteÅrsEksamen.CommandPattern;
+using FørsteÅrsEksamen.ComponentPattern;
 using FørsteÅrsEksamen.ComponentPattern.Characters;
 using FørsteÅrsEksamen.ComponentPattern.Weapons;
+using FørsteÅrsEksamen.ComponentPattern.Weapons.MeleeWeapons;
 using FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons;
 using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
@@ -12,19 +14,54 @@ using System.Threading.Tasks;
 
 namespace FørsteÅrsEksamen.Factory
 {
-    internal class WeaponFactory : Factory
+    public enum WeaponTypes
     {
-        private Player player;
-        public override GameObject Create()
-        {
-            GameObject sword = new GameObject();
-            sword.Transform.Scale = new Vector2(4,4);
-            SpriteRenderer sr = sword.AddComponent<SpriteRenderer>();
-            sr.SetSprite(TextureNames.WoodSword);
-            sr.SetLayerDepth(LAYERDEPTH.Player);
-            sword.AddComponent<MagicStaff>();
+        Sword,
+        Axe,
+        MagicStaff,
+        MagicStaffFire,
+        Bow,
+        BowFire,
+    }
 
-            return sword;
+    internal static class WeaponFactory
+    {
+        public static GameObject Create(WeaponTypes type)
+        {
+            GameObject weaponGo = new GameObject();
+            weaponGo.Transform.Scale = new Vector2(4, 4);
+            weaponGo.AddComponent<SpriteRenderer>();
+            AddClassComponent(weaponGo, type);
+
+            return weaponGo;
         }
+
+        private static GameObject AddClassComponent(GameObject weaponGo, WeaponTypes type)
+        {
+            switch (type)
+            {
+                case WeaponTypes.Sword:
+                    weaponGo.AddComponent<Sword>();
+                    break;
+                case WeaponTypes.Axe:
+                    weaponGo.AddComponent<Axe>();
+                    break;
+                case WeaponTypes.MagicStaff:
+                    weaponGo.AddComponent<MagicStaff>();
+                    break;
+                case WeaponTypes.MagicStaffFire:
+                    weaponGo.AddComponent<MagicStaff>();
+                    break;
+                case WeaponTypes.Bow:
+                    weaponGo.AddComponent<Bow>();
+                    break;
+                case WeaponTypes.BowFire:
+                    weaponGo.AddComponent<MagicStaff>();
+                    break;
+            }
+
+            return weaponGo;
+        }
+
     }
 }

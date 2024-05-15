@@ -11,7 +11,7 @@ namespace FørsteÅrsEksamen.GameManagement
         //MainMenu,
         //LoadingScreen,
         GameScene,
-
+        WeaponTestScene,
         OscarTestScene,
         StefanTestScene,
         ErikTestScene,

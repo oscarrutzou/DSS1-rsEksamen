@@ -91,7 +91,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         {
             Point spawn = new Point(6, 6);
             playerFactory = new PlayerFactory();
-            playerGo = playerFactory.Create(PlayerClasses.Warrior);
+            playerGo = playerFactory.Create(PlayerClasses.Warrior, WeaponTypes.Sword);
             playerGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[spawn].Transform.Position;
             playerGo.Transform.GridPosition = spawn;
             GameWorld.Instance.WorldCam.position = playerGo.Transform.Position;
@@ -102,7 +102,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
         private void SetCommands()
         {
-            player = playerGo.GetComponent<Warrior>();
+            player = playerGo.GetComponent<Player>();
             player.Attach(this);
             InputHandler.Instance.AddKeyUpdateCommand(Keys.D, new MoveCmd(player, new Vector2(1, 0)));
             InputHandler.Instance.AddKeyUpdateCommand(Keys.A, new MoveCmd(player, new Vector2(-1, 0)));
@@ -110,6 +110,11 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             InputHandler.Instance.AddKeyUpdateCommand(Keys.S, new MoveCmd(player, new Vector2(0, 1)));
 
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Tab, new CustomCmd(() => { GridManager.Instance.ShowHideGrid(); }));
+        }
+
+        private void TestRemoveComm()
+        {
+            InputHandler.Instance.RemoveKeyUpdateCommand(Keys.S);
         }
 
         private void StartGrid()
@@ -159,7 +164,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
             spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], GameWorld.Instance.UiCam.TopLeft, null, Color.WhiteSmoke, 0f, Vector2.Zero, new Vector2(350, 150), SpriteEffects.None, 0f);
 
-            Vector2 mousePos = InputHandler.Instance.mouseInWorld;
+            Vector2 mousePos = InputHandler.Instance.MouseInWorld;
             spriteBatch.DrawString(GlobalTextures.DefaultFont, $"MousePos {mousePos}", GameWorld.Instance.UiCam.TopLeft, Color.Black);
 
             DrawCellPos(spriteBatch);
@@ -177,7 +182,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         private void DrawCellPos(SpriteBatch spriteBatch)
         {
             //if (GridManager.Instance.CurrentGrid == null) throw new System.Exception("Error spørg da Oscar");
-            GameObject cellGo = GridManager.Instance.GetCellAtPos(InputHandler.Instance.mouseInWorld);
+            GameObject cellGo = GridManager.Instance.GetCellAtPos(InputHandler.Instance.MouseInWorld);
 
             if (cellGo == null) return;
 

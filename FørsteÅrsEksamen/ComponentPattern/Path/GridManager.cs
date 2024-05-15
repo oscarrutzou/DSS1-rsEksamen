@@ -121,7 +121,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
         {
             if (GuiMethods.IsMouseOverUI()) return;
 
-            GameObject cellGo = GetCellAtPos(InputHandler.Instance.mouseInWorld);
+            GameObject cellGo = GetCellAtPos(InputHandler.Instance.MouseInWorld);
             if (cellGo == null) return;
 
             Cell cell = cellGo.GetComponent<Cell>();
@@ -132,7 +132,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
         {
             if (GuiMethods.IsMouseOverUI()) return;
 
-            GameObject cellGo = GetCellAtPos(InputHandler.Instance.mouseInWorld);
+            GameObject cellGo = GetCellAtPos(InputHandler.Instance.MouseInWorld);
             if (cellGo == null) return;
 
             Cell cell = cellGo.GetComponent<Cell>();

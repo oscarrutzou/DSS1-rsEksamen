@@ -42,7 +42,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
 
         public override void Update(GameTime gameTime)
         {
-            if (collider.CollisionBox.Contains(InputHandler.Instance.mouseOnUI))
+            if (collider.CollisionBox.Contains(InputHandler.Instance.MouseOnUI))
             {
                 spriteRenderer.Color = onHoverColor;
             }

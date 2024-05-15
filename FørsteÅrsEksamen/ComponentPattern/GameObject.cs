@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace FørsteÅrsEksamen.ComponentPattern
@@ -89,22 +90,33 @@ namespace FørsteÅrsEksamen.ComponentPattern
         }
 
         /// <summary>
-        /// When used in other Component scripts, remember to first call this in the Awake or Start, so it dosent return null
+        /// <para>Can get the component from the GameObject. Also works with calling Superclasses</para>
+        /// <para>When used in other scripts, remember to first call this in the Awake or Start, so it dosent return null</para>
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T">The specific component class or a superclass of the specific component</typeparam>
         /// <returns></returns>
         public T GetComponent<T>() where T : Component
         {
             Type componentType = typeof(T);
+
+            // First check if the component is in the GameObject
             if (components.TryGetValue(componentType, out Component component))
             {
                 return (T)component;
             }
 
+            // Make a check to see if "T" is a subclass of one of the components.
+            foreach (Component componentVal in components.Values)
+            {
+                if (componentType.IsAssignableFrom(componentVal.GetType()))
+                {
+                    return (T)componentVal;
+                }
+            }
+
+            // Cant find the class T
             return null;
         }
-
-        // Lav om component nedarver for classe typen. (Find om man kan finde metoderne for en abstract klasse her)
 
         public void Awake()
         {

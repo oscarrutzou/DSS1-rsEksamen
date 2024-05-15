@@ -1,7 +1,9 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern.Path;
+using FørsteÅrsEksamen.ComponentPattern.Weapons;
 using FørsteÅrsEksamen.GameManagement;
 using FørsteÅrsEksamen.ObserverPattern;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 namespace FørsteÅrsEksamen.ComponentPattern.Characters
@@ -11,6 +13,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
     public abstract class Player : Character, ISubject
     {
         internal GameObject handsGo;
+        internal Weapon weapon;
         private GameObject movementColliderGo;
 
         private Vector2 totalMovementInput, velocity, targetVelocity, previousPosition;
@@ -38,10 +41,13 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
         {
             base.Awake();
             movementCollider = movementColliderGo.GetComponent<Collider>();
-            //movementColliderGo.Transform.Position = GameObject.Transform.Position;
-
-            collider.SetCollisionBox(15, 24, new Vector2(0, 30));
             
+            if (WeaponGo != null)
+            {
+                weapon = WeaponGo.GetComponent<Weapon>();
+            }
+            
+            collider.SetCollisionBox(15, 24, new Vector2(0, 30));
         }
 
         public override void Start()
@@ -61,12 +67,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
             totalMovementInput += input;
         }
 
-        public void inventory()
-        {
-            List<GameObject> inventory = new List<GameObject>();
-            
-        }
-
         public void Move(Vector2 input)
         {
             // Save the previous position
@@ -82,12 +82,13 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
             {
                 targetVelocity = Vector2.Zero;
             }
-            
+
+
+            velocity = Vector2.Lerp(velocity, targetVelocity, turnSpeed * GameWorld.DeltaTime);
+            direction = velocity;
+            UpdateDirection();
 
             if (GridManager.Instance.CurrentGrid == null) return; // Player cant walk if there is no grid.
-
-            // Velocity bliver sat til
-            velocity = Vector2.Lerp(velocity, targetVelocity, turnSpeed * GameWorld.DeltaTime);
 
             // Separate the movement into X and Y components
             Vector2 xMovement = new Vector2(velocity.X, 0) * speed * GameWorld.DeltaTime;
@@ -110,8 +111,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
                 hasMoved = true;
             }
 
-            direction = velocity;
-            UpdateDirection();
+
 
             if (!hasMoved) return; // Dont need to set new position, since its the same.
 
@@ -162,10 +162,10 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
         /// <param name="movement"></param>
         internal void TranslateMovement(Vector2 movement)
         {
-            //GameObject.Transform.Translate(movement);
-            GameObject.Transform.Position += movement;
+            GameObject.Transform.Translate(movement);
             movementColliderGo.Transform.Position = GameObject.Transform.Position;
             handsGo.Transform.Position = GameObject.Transform.Position;
+            WeaponGo.Transform.Position = GameObject.Transform.Position;
         }
 
         /// <summary>
@@ -177,8 +177,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
             GameObject.Transform.Position = position;
             movementColliderGo.Transform.Position = GameObject.Transform.Position;
             handsGo.Transform.Position = GameObject.Transform.Position;
+            WeaponGo.Transform.Position = GameObject.Transform.Position;
             GameWorld.Instance.WorldCam.position = GameObject.Transform.Position; //Sets the new position of the world cam
-
         }
 
         public override void Update(GameTime gameTime)
@@ -209,6 +209,21 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
             }
 
             totalMovementInput = Vector2.Zero;
+        }
+
+        internal override void UpdateDirection()
+        {
+            if (direction.X >= 0)
+            {
+                directionState = AnimationDirectionState.Right;
+                spriteRenderer.SpriteEffects = SpriteEffects.None;
+                
+            }
+            else if (direction.X < 0)
+            {
+                directionState = AnimationDirectionState.Left;
+                spriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
+            }
         }
 
         internal override void SetState(CharacterState newState)
