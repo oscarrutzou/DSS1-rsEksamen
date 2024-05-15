@@ -32,7 +32,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
 
         public void InPickUpRange()
         {
-            collider.CollisionBox.Intersects(playerGo.GetComponent<Collider>(collider.CollisionBox));
+            //collider.CollisionBox.Intersects(playerGo.GetComponent<Collider>(collider.CollisionBox));
         }
     }
 }
