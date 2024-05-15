@@ -1,7 +1,10 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern.Characters;
+using FørsteÅrsEksamen.ComponentPattern.GUI;
+using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -19,6 +22,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
         private Vector2 position;
         private Point distanceToPlayer;
         private GameObject playerGo;
+        private List<GameObject> itemsOnGround = new List<GameObject>();
 
         public PickupableItem(GameObject gameObject) : base(gameObject)
         {
@@ -46,7 +50,15 @@ namespace FørsteÅrsEksamen.ComponentPattern
 
         public override void OnCollisionEnter(Collider collider)
         {
+
+            // Skal kun fjerne item ved player position, ikke alle items.
+            if (playerGo.CollidesWithGameObject(GameObjectTypes.Items))
+            {
+                itemsOnGround.Remove(itemAtPlayerPosition);
+            }
             
         }
+
+     
     }
 }

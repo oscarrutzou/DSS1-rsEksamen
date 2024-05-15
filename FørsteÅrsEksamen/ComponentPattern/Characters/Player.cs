@@ -19,6 +19,10 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
 
         internal List<IObserver> observers = new();
 
+        public List<GameObject> bag = new List<GameObject>();
+        public GameObject item;
+        private int carriedItem;
+
         private Collider movementCollider;
 
 
@@ -41,7 +45,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
             //movementColliderGo.Transform.Position = GameObject.Transform.Position;
 
             collider.SetCollisionBox(15, 24, new Vector2(0, 30));
-            
+
         }
 
         public override void Start()
@@ -61,11 +65,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
             totalMovementInput += input;
         }
 
-        public void inventory()
-        {
-            List<GameObject> inventory = new List<GameObject>();
-            
-        }
+
 
         public void Move(Vector2 input)
         {
@@ -82,7 +82,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
             {
                 targetVelocity = Vector2.Zero;
             }
-            
+
 
             if (GridManager.Instance.CurrentGrid == null) return; // Player cant walk if there is no grid.
 
@@ -246,6 +246,26 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
                     spriteRenderer.OriginOffSet = largeSpriteOffSet;
                     animator.StopCurrentAnimationAtLastSprite();
                     break;
+            }
+        }
+
+        public void PickUpItem(GameObject item)
+        {
+            if (item.CollidesWithGameObject(GameObjectTypes.Player))
+            {
+                if (carriedItem < 2)
+                {
+                    bag.Add(item);
+                }
+            }
+        }
+
+        public void UseItem()
+        {
+            if (carriedItem > 0)
+            {
+                //Restore health on usage(removal)
+                bag.Remove(item);
             }
         }
 
