@@ -163,6 +163,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             if (path.Count == 1 && Vector2.Distance(position, nextTarget) < threshold)
             {
                 onGoalReached?.Invoke();
+                ResetCellColor(path[0]);
 
                 path = null;
             }

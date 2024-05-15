@@ -21,8 +21,6 @@ namespace FørsteÅrsEksamen.ComponentPattern
         Projectile,
         Gui,
         Items,
-        Weapon,
-        Projectile,
         Default, //Not set
     }
 
