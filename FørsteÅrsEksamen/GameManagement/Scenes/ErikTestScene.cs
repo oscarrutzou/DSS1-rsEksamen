@@ -62,24 +62,30 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, 
                 new CustomCmd(Attack));
 
-            //InputHandler.Instance.AddKeyButtonDownCommand(Keys.B,
-            //    new CustomCmd(Shoot));
+            InputHandler.Instance.AddKeyButtonDownCommand(Keys.B,
+                new CustomCmd(Shoot));
 
 
         }
 
-        private void Shoot()
-        {
-            if (canShoot)
-            {
-                canShoot = false;
-                lastShot = 0;
-                
-            }
-            
-        }
-      
+        private void Shoot() { 
         
+            projectile.GetComponent<Projectile>().SetValues(MathHelper.Pi);
+
+        }
+
+        //private void Shoot()
+        //{
+        //    if (canShoot)
+        //    {
+        //        canShoot = false;
+        //        lastShot = 0;
+
+        //    }
+
+        //}
+
+
 
         public override void DrawInWorld(SpriteBatch spriteBatch)
         {
