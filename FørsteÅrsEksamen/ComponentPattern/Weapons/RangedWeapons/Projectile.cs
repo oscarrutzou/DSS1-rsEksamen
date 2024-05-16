@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 
 namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
 {
+
+    // Erik
     internal class Projectile : Component
     {
         private float speed;
@@ -19,7 +21,15 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
         public Projectile(GameObject gameObject) : base(gameObject)
         {
             this.speed = 400;
-            SetDirection();
+            //SetDirection();
+        }
+
+        public override void Start()
+        {
+            SpriteRenderer sr = GameObject.GetComponent<SpriteRenderer>();
+            sr.SetLayerDepth(LAYERDEPTH.Player);
+
+            sr.SetSprite(TextureNames.WoodSword);
         }
 
         public void SetDirection()
@@ -74,6 +84,11 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
             
 
             
+        }
+
+        public void Attack()
+        {
+
         }
 
 
