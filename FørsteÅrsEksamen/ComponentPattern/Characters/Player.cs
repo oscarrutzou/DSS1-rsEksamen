@@ -22,6 +22,10 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
 
         internal List<IObserver> observers = new();
 
+        public List<GameObject> bag = new List<GameObject>();
+        public GameObject item;
+        private int carriedItem;
+
         private Collider movementCollider;
 
 
@@ -259,6 +263,26 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
                     spriteRenderer.OriginOffSet = largeSpriteOffSet;
                     animator.StopCurrentAnimationAtLastSprite();
                     break;
+            }
+        }
+
+        public void PickUpItem(GameObject item)
+        {
+            if (item.CollidesWithGameObject(GameObjectTypes.Player))
+            {
+                if (carriedItem < 2)
+                {
+                    bag.Add(item);
+                }
+            }
+        }
+
+        public void UseItem()
+        {
+            if (carriedItem > 0)
+            {
+                //Restore health on usage(removal)
+                bag.Remove(item);
             }
         }
 

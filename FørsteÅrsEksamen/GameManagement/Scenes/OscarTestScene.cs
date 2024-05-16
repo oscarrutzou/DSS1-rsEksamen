@@ -109,6 +109,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             InputHandler.Instance.AddKeyUpdateCommand(Keys.W, new MoveCmd(player, new Vector2(0, -1)));
             InputHandler.Instance.AddKeyUpdateCommand(Keys.S, new MoveCmd(player, new Vector2(0, 1)));
 
+            InputHandler.Instance.AddKeyButtonDownCommand(Keys.D1, new CustomCmd(player.UseItem));
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Tab, new CustomCmd(() => { GridManager.Instance.ShowHideGrid(); }));
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, new CustomCmd(Attack));
         }
