@@ -7,9 +7,11 @@ using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.Factory;
 using FørsteÅrsEksamen.Factory.Gui;
 using FørsteÅrsEksamen.ObserverPattern;
+using FørsteÅrsEksamen.RepositoryPattern;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
 
 namespace FørsteÅrsEksamen.GameManagement.Scenes
@@ -21,9 +23,23 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         private GameObject playerGo, drawRoomBtn, drawAstarPathBtn;
 
         private Vector2 playerPos;
-
+        private DataBase data;
         public override void Initialize()
         {
+            data = new DataBase();
+            data.Save(new CellData
+            {
+                Room_Nr = 3,
+                Position = new Point(0, 0),
+                Cell_Type = CellWalkableType.NotValid,
+            });
+
+            List<CellData> cells = data.GetAll();
+            foreach (CellData item in cells)
+            {
+                Console.WriteLine(item.Room_Nr);
+            }
+
             SetLevelBG();
             //First grid
             StartGrid();

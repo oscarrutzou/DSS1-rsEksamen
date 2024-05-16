@@ -4,6 +4,7 @@ using FørsteÅrsEksamen.GameManagement;
 using FørsteÅrsEksamen.ObserverPattern;
 using FørsteÅrsEksamen.RepositoryPattern;
 using Microsoft.Xna.Framework;
+using SharpDX.Direct3D11;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -64,12 +65,18 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
 
         #endregion Parameters
 
-        // Måske skal der ikke være en gridmanager siden der nok max vil være 1 grid på
-        public GridManager()
+        // Lav det til at alt er saved på pc og hvis timestamp er anderledet på postgre end file, skal den først uploade alt hvis den har adgang, før den starter?
+
+        //public GridManager()
+        //{
+        //    repository = FileRepository.Instance; 
+                                                  
+                                                  
+        //}
+
+        public void Initialize()
         {
-            repository = FileRepository.Instance; //Måske lav rep til en static som er den måde den save på, som bliver bestemt i starten.
-                                                  // Lav det til at alt er saved på pc og hvis timestamp er anderledet på postgre end file, skal den først uploade alt hvis den har adgang, før den starter?
-                                                  // Brug file system hvis der ikke er adgang til postgre
+            repository = GameWorld.Instance.Repository;
         }
 
         public void Update()
@@ -111,7 +118,15 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             // A little dumb that it first gets made and then deleted? Fix, if u have time
             DeleteDrawnGrid();
             GameObject go = repository.GetGrid(gridName);
+
+            if (go == null)
+            {
+                CurrentGrid = null;
+                return; //Didnt find the Grid in the repository.
+            }
+
             CurrentGrid = go.GetComponent<Grid>();
+            
             //ShouldDrawCells();
         }
         #endregion

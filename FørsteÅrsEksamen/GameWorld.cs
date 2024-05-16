@@ -1,5 +1,6 @@
 ﻿using FørsteÅrsEksamen.CommandPattern;
 using FørsteÅrsEksamen.ComponentPattern;
+using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.GameManagement.Scenes;
 using FørsteÅrsEksamen.RepositoryPattern;
 using Microsoft.Xna.Framework;
@@ -35,6 +36,8 @@ namespace FørsteÅrsEksamen.GameManagement
         {
             SceneData.GenereateGameObjectDicionary();
 
+            SetRepository();
+
             ResolutionSize(1280, 720);
             //Fullscreen();
             WorldCam = new Camera(true);
@@ -44,9 +47,25 @@ namespace FørsteÅrsEksamen.GameManagement
             GlobalAnimations.LoadContent();
 
             GenerateScenes();
-            ChangeScene(ScenesNames.ErikTestScene);
+            ChangeScene(ScenesNames.OscarTestScene);
 
             base.Initialize();
+        }
+
+        private void SetRepository()
+        {
+            //Try to connect to Postgre
+            PostgreRepository.Instance.Initialize();
+            if (PostgreRepository.Instance.DateSource != null)
+            {
+                Repository = PostgreRepository.Instance;
+            }
+            else
+            {
+                Repository = FileRepository.Instance;
+            }
+
+            GridManager.Instance.Initialize();
         }
 
         protected override void LoadContent()

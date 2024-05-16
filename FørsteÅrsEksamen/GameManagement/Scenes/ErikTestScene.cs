@@ -54,7 +54,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
         private void Attack()
         {
-            weapon.GetComponent<MagicStaff>().Attack();
+            weapon.GetComponent<Weapon>().Attack();
             //projectile.GetComponent<MagicStaff>().Attack();
         }
        private void AttackCommand()
