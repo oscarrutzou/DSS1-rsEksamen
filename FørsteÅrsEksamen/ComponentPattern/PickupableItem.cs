@@ -16,13 +16,10 @@ namespace FørsteÅrsEksamen.ComponentPattern
     public class PickupableItem : Component
     {
         internal SpriteRenderer spriteRenderer;
-        internal Collider collider;
+        internal Collider collider, playerCollider;
+        internal Player player;
         
-        private readonly float threshold = 20f;
-        private Vector2 position;
-        private Point distanceToPlayer;
         private GameObject playerGo;
-        private List<GameObject> itemsOnGround = new List<GameObject>();
 
         public PickupableItem(GameObject gameObject) : base(gameObject)
         {
@@ -40,7 +37,8 @@ namespace FørsteÅrsEksamen.ComponentPattern
             collider = GameObject.GetComponent<Collider>();
             collider.SetCollisionBox(12, 19, new Vector2(2, 2));
             spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
-
+            playerCollider = playerGo.GetComponent<Collider>();
+            player = playerGo.GetComponent<Player>();
         }
 
         public override void Update(GameTime gameTime)
@@ -52,11 +50,28 @@ namespace FørsteÅrsEksamen.ComponentPattern
         {
 
             // Skal kun fjerne item ved player position, ikke alle items.
-            if (playerGo.CollidesWithGameObject(GameObjectTypes.Items))
+            if (collider.CollisionBox.Intersects(playerCollider.CollisionBox))
             {
-                itemsOnGround.Remove(itemAtPlayerPosition);
+                player.PickUpItem(GameObject);
+                GameWorld.Instance.Destroy(GameObject);
             }
             
+        }
+
+        public void Use()
+        {
+            if (player.CurrentHealth < player.MaxHealth)
+            {
+            player.CurrentHealth += 50;
+                if (player.CurrentHealth > player.MaxHealth)
+                {
+                    player.CurrentHealth = 100;
+                }
+            }
+            else if (player.CurrentHealth == player.MaxHealth)
+            {
+                throw new Exception("I already have full health, it would be a waste to drink this now");
+            }
         }
 
      

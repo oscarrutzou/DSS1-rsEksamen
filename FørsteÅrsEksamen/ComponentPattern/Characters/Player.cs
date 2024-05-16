@@ -268,22 +268,13 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
 
         public void PickUpItem(GameObject item)
         {
-            if (item.CollidesWithGameObject(GameObjectTypes.Player))
-            {
-                if (carriedItem < 2)
-                {
-                    bag.Add(item);
-                }
-            }
+            this.item = item;
         }
-
         public void UseItem()
         {
-            if (carriedItem > 0)
-            {
-                //Restore health on usage(removal)
-                bag.Remove(item);
-            }
+            if (item == null) return;
+
+            item.GetComponent<PickupableItem>().Use();
         }
 
         #region Observer Pattern
