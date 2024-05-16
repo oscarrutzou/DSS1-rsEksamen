@@ -54,7 +54,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
             // Skal kun fjerne item ved player position, ikke alle items.
             if (playerGo.CollidesWithGameObject(GameObjectTypes.Items))
             {
-                itemsOnGround.Remove(itemAtPlayerPosition);
+                //itemsOnGround.Remove(itemAtPlayerPosition);
             }
             
         }

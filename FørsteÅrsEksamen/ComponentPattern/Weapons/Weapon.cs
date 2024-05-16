@@ -150,6 +150,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
         }
 
         //startAnimationAngle = angleToMouse;
+        
 
         public override void Update(GameTime gameTime)
         {

@@ -1,6 +1,7 @@
 ﻿using FørsteÅrsEksamen.CommandPattern;
 using FørsteÅrsEksamen.ComponentPattern;
 using FørsteÅrsEksamen.GameManagement.Scenes;
+using FørsteÅrsEksamen.RepositoryPattern;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -19,6 +20,8 @@ namespace FørsteÅrsEksamen.GameManagement
         public static float DeltaTime { get; private set; }
         public GraphicsDeviceManager GfxManager { get; private set; }
         private SpriteBatch _spriteBatch;
+
+        public IRepository Repository { get; private set; }
 
         public GameWorld()
         {
@@ -41,7 +44,7 @@ namespace FørsteÅrsEksamen.GameManagement
             GlobalAnimations.LoadContent();
 
             GenerateScenes();
-            ChangeScene(ScenesNames.OscarTestScene);
+            ChangeScene(ScenesNames.ErikTestScene);
 
             base.Initialize();
         }
