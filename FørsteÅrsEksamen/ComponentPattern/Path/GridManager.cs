@@ -198,6 +198,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
 
         private void ShouldDrawCells()
         {
+            if (CurrentGrid == null) return;
+
             foreach (GameObject go in CurrentGrid.Cells.Values)
             {
                 // Set all to getting draw if the bool is true.

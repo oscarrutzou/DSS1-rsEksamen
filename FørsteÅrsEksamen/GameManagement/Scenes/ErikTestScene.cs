@@ -20,19 +20,21 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         private float shootTimer = 1;
         public override void Initialize()
         {
-            MakeWeapon();
+            //MakeWeapon();
+            GameWorld.Instance.WorldCam.position = Vector2.Zero;
             MakeProjectile();
             AttackCommand();
         }
 
         public override void Update(GameTime gameTime)
         {
-            lastShot += GameWorld.DeltaTime;
+            base.Update(gameTime);
+            //lastShot += GameWorld.DeltaTime;
 
-            if (lastShot > shootTimer)
-            {
-                canShoot = true;
-            }
+            //if (lastShot > shootTimer)
+            //{
+            //    canShoot = true;
+            //}
         }
 
         private void MakeWeapon()
@@ -44,27 +46,24 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
         private void MakeProjectile()
         {
-            
-                ProjectileFactory projectileFactory = new();
-                projectile = projectileFactory.Create();
+            ProjectileFactory projectileFactory = new ProjectileFactory();
+            projectile = projectileFactory.Create();
 
-                GameWorld.Instance.Instantiate(projectile);
-                       
-            
+            GameWorld.Instance.Instantiate(projectile);
         }
 
         private void Attack()
         {
             weapon.GetComponent<MagicStaff>().Attack();
-            projectile.GetComponent<MagicStaff>().Attack();
+            //projectile.GetComponent<MagicStaff>().Attack();
         }
        private void AttackCommand()
         {
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, 
                 new CustomCmd(Attack));
 
-            InputHandler.Instance.AddKeyButtonDownCommand(Keys.B,
-                new CustomCmd(Shoot));
+            //InputHandler.Instance.AddKeyButtonDownCommand(Keys.B,
+            //    new CustomCmd(Shoot));
 
 
         }
@@ -75,7 +74,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             {
                 canShoot = false;
                 lastShot = 0;
-                MakeProjectile();
+                
             }
             
         }
@@ -85,6 +84,8 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         public override void DrawInWorld(SpriteBatch spriteBatch)
         {
             base.DrawInWorld(spriteBatch);
+
+            //spriteBatch.Draw(GlobalTextures.Textures[TextureNames.WoodSword], Vector2.Zero, Color.White);
         }
 
         public override void DrawOnScreen(SpriteBatch spriteBatch)
