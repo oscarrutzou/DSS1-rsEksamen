@@ -1,22 +1,23 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+using FørsteÅrsEksamen.GameManagement;
+using FørsteÅrsEksamen.ComponentPattern.Characters;
 
 namespace FørsteÅrsEksamen.Factory
 {
     //Asser
     internal class ItemFactory : Factory
     {
-        public override GameObject Create()
+
+        public GameObject Create(GameObject playerGo)
         {
             GameObject itemGo = new GameObject();
             itemGo.Transform.Scale = new Vector2(4, 4);
-            itemGo.AddComponent<SpriteRenderer>();
+            SpriteRenderer sr = itemGo.AddComponent<SpriteRenderer>();
+            sr.SetSprite(TextureNames.WoodSword);
+            sr.SetLayerDepth(LAYERDEPTH.WorldForeground);
             itemGo.AddComponent<Collider>();
+            itemGo.AddComponent<PickupableItem>(playerGo);
 
             return itemGo;
         }

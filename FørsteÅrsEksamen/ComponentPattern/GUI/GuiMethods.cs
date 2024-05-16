@@ -82,7 +82,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
 
         public static bool IsMouseOverUI()
         {
-            Vector2 mousePosUI = InputHandler.Instance.mouseOnUI;
+            Vector2 mousePosUI = InputHandler.Instance.MouseOnUI;
 
             foreach (GameObject gui in SceneData.GameObjectLists[GameObjectTypes.Gui])
             {

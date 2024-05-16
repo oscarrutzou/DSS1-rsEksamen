@@ -10,7 +10,7 @@ namespace FørsteÅrsEksamen.GameManagement
         /// <summary>
         /// Every GameObject will be in these lists. There is a default type if its not important where the GameObject is placed
         /// </summary>
-        public static Dictionary<GameObjectTypes, List<GameObject>> GameObjectLists;
+        public static Dictionary<GameObjectTypes, List<GameObject>> GameObjectLists {  get; set; }
 
         /// <summary>
         /// Generatates lists based on GameObjectTypes Enum
@@ -24,6 +24,11 @@ namespace FørsteÅrsEksamen.GameManagement
             {
                 GameObjectLists.Add(type, new List<GameObject>());
             }
+        }
+
+        public static void Test()
+        {
+
         }
 
         /// <summary>

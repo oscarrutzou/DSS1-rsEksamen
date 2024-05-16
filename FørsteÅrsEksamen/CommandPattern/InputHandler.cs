@@ -39,8 +39,8 @@ namespace FørsteÅrsEksamen.CommandPattern
         private Dictionary<MouseCmdState, ICommand> mouseButtonDownCommands = new();
         private Dictionary<ScrollWheelState, ICommand> scrollWheelCommands = new();
 
-        public Vector2 mouseInWorld, mouseOnUI;
-        public bool mouseOutOfBounds;
+        public Vector2 MouseInWorld, MouseOnUI;
+        public bool MouseOutOfBounds;
 
         #endregion Properties
 
@@ -115,11 +115,11 @@ namespace FørsteÅrsEksamen.CommandPattern
             KeyboardState keyState = Keyboard.GetState();
             MouseState mouseState = Mouse.GetState();
 
-            mouseInWorld = GetMousePositionInWorld(mouseState);
-            mouseOnUI = GetMousePositionOnUI(mouseState);
+            MouseInWorld = GetMousePositionInWorld(mouseState);
+            MouseOnUI = GetMousePositionOnUI(mouseState);
 
             Camera worldCam = GameWorld.Instance.WorldCam;
-            if (float.IsNaN(mouseInWorld.X) || float.IsNaN(mouseOnUI.X))
+            if (float.IsNaN(MouseInWorld.X) || float.IsNaN(MouseOnUI.X))
             {
                 Debug.WriteLine("ERROR WORLD CAM IS NAN");
             }
@@ -207,7 +207,7 @@ namespace FørsteÅrsEksamen.CommandPattern
             Vector2 pos = new Vector2(mouseState.X, mouseState.Y);
             Matrix invMatrix = Matrix.Invert(GameWorld.Instance.UiCam.GetMatrix());
             Vector2 returnValue = Vector2.Transform(pos, invMatrix);
-            mouseOutOfBounds = (returnValue.X < 0 || returnValue.Y < 0 || returnValue.X > GameWorld.Instance.GfxManager.PreferredBackBufferWidth || returnValue.Y > GameWorld.Instance.GfxManager.PreferredBackBufferHeight);
+            MouseOutOfBounds = (returnValue.X < 0 || returnValue.Y < 0 || returnValue.X > GameWorld.Instance.GfxManager.PreferredBackBufferWidth || returnValue.Y > GameWorld.Instance.GfxManager.PreferredBackBufferHeight);
             return returnValue;
         }
     }

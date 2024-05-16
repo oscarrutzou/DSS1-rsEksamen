@@ -3,9 +3,9 @@ using Microsoft.Xna.Framework;
 
 namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
 {
-    internal class Bow : RangedWeapon
+    internal class BowFire : RangedWeapon
     {
-        public Bow(GameObject gameObject) : base(gameObject)
+        public BowFire(GameObject gameObject) : base(gameObject)
         {
         }
     }

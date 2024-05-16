@@ -31,6 +31,8 @@ namespace FørsteÅrsEksamen.ComponentPattern
         internal Animator animator;
         internal Collider collider;
 
+        public GameObject WeaponGo, HandLeft, HandRight;
+
         internal Dictionary<CharacterState, AnimNames> characterStateAnimations = new();
         internal Vector2 idlespriteOffset = new(0, -32); // Move the animation up a bit so it looks like it walks correctly.
         internal Vector2 largeSpriteOffSet = new(0, -96); // Move the animation up more since its a 64x64 insted of 32x32 canvans, for the Run and Death.
@@ -67,7 +69,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
         /// <summary>
         /// Updates the direction of which way the sprite should draw. Remember to set the direction!
         /// </summary>
-        internal void UpdateDirection()
+        internal virtual void UpdateDirection()
         {
             if (direction.X >= 0)
             {

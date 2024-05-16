@@ -24,21 +24,51 @@ namespace FørsteÅrsEksamen.Factory
         {
             GameObject playerGo = new GameObject();
             playerGo.Transform.Scale = new Vector2(4, 4);
+            playerGo.Type = GameObjectTypes.Player;
             playerGo.AddComponent<SpriteRenderer>();
             playerGo.AddComponent<Animator>();
             playerGo.AddComponent<Collider>();
 
             GameObject hands = CreateHands();
-            GameWorld.Instance.Instantiate(hands);
+            GameWorld.Instance.Instantiate(hands); // Makes hands
 
             GameObject movementCollider = CreatePlayerMovementCollider();
-            GameWorld.Instance.Instantiate(movementCollider);
+            GameWorld.Instance.Instantiate(movementCollider); // Makes the collider
 
             playerGo = AddClassComponent(playerGo, hands, movementCollider, playerClass);
 
             return playerGo;
         }
 
+
+        public GameObject Create(PlayerClasses playerClass, WeaponTypes weaponType)
+        {
+            GameObject playerGo = new GameObject();
+            playerGo.Transform.Scale = new Vector2(4, 4);
+            playerGo.Type = GameObjectTypes.Player;
+            playerGo.AddComponent<SpriteRenderer>();
+            playerGo.AddComponent<Animator>();
+            playerGo.AddComponent<Collider>();
+
+            GameObject hands = CreateHands();
+            GameWorld.Instance.Instantiate(hands); // Makes hands
+
+            GameObject movementCollider = CreatePlayerMovementCollider();
+            GameWorld.Instance.Instantiate(movementCollider); // Makes the collider
+
+            // remove the hands from the constructer
+            playerGo = AddClassComponent(playerGo, hands, movementCollider, playerClass);
+            
+            //Weapon
+            GameObject weapon = WeaponFactory.Create(weaponType);
+            GameWorld.Instance.Instantiate(weapon);
+
+            // Add weapon to player
+            Player player = playerGo.GetComponent<Player>();
+            player.WeaponGo = weapon;
+
+            return playerGo;
+        }
         private GameObject AddClassComponent(GameObject playerGo, GameObject handsGo, GameObject movementColliderGo, PlayerClasses playerClass)
         {
             switch (playerClass)

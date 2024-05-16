@@ -24,7 +24,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
 
         public void SetDirection()
         {
-            direction = (InputHandler.Instance.mouseOnUI) - GameObject.Transform.Position;
+            direction = (InputHandler.Instance.MouseOnUI) - GameObject.Transform.Position;
             if (direction != Vector2.Zero) direction.Normalize();
 
             //regner punktet ud mellem x og y aksen

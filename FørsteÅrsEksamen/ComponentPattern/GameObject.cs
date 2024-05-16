@@ -1,7 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using FørsteÅrsEksamen.GameManagement;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace FørsteÅrsEksamen.ComponentPattern
@@ -15,11 +17,11 @@ namespace FørsteÅrsEksamen.ComponentPattern
         Background,
         Cell,
         Player,
-
         Enemy,
+        Weapon,
+        Projectile,
         Gui,
         Items,
-
         Default, //Not set
     }
 
@@ -88,22 +90,33 @@ namespace FørsteÅrsEksamen.ComponentPattern
         }
 
         /// <summary>
-        /// When used in other Component scripts, remember to first call this in the Awake or Start, so it dosent return null
+        /// <para>Can get the component from the GameObject. Also works with calling Superclasses</para>
+        /// <para>When used in other scripts, remember to first call this in the Awake or Start, so it dosent return null</para>
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T">The specific component class or a superclass of the specific component</typeparam>
         /// <returns></returns>
         public T GetComponent<T>() where T : Component
         {
             Type componentType = typeof(T);
+
+            // First check if the component is in the GameObject
             if (components.TryGetValue(componentType, out Component component))
             {
                 return (T)component;
             }
 
+            // Make a check to see if "T" is a subclass of one of the components.
+            foreach (Component componentVal in components.Values)
+            {
+                if (componentType.IsAssignableFrom(componentVal.GetType()))
+                {
+                    return (T)componentVal;
+                }
+            }
+
+            // Cant find the class T
             return null;
         }
-
-        // Lav om component nedarver for classe typen. (Find om man kan finde metoderne for en abstract klasse her)
 
         public void Awake()
         {
@@ -137,6 +150,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
             }
         }
 
+
         public void OnCollisionEnter(Collider collider)
         {
             foreach (var component in components.Values)
@@ -149,6 +163,29 @@ namespace FørsteÅrsEksamen.ComponentPattern
         {
             components[component.GetType()] = component;
             return component;
+        }
+
+        /// <summary>
+        /// How we can check on each of the gameobjects what they should collide with.
+        /// </summary>
+        /// <param name="gameobjectType"></param>
+        /// <returns></returns>
+        public bool CollidesWithGameObject(GameObjectTypes gameobjectType) 
+        {
+            Collider thisGoCollider = GetComponent<Collider>() ?? throw new Exception("This Gameobject need a collider to check for collision");
+
+            foreach (GameObject otherGo in SceneData.GameObjectLists[gameobjectType])
+            {
+                Collider otherCollider = otherGo.GetComponent<Collider>();
+                if (otherCollider == null) continue;
+
+                if (thisGoCollider.CollisionBox.Intersects(otherCollider.CollisionBox))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
