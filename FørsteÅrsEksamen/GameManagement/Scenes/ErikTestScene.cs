@@ -14,11 +14,25 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
     {
         private GameObject weapon;
         private GameObject projectile;
+        
+        private bool canShoot = true;
+        private float lastShot = 0;
+        private float shootTimer = 1;
         public override void Initialize()
         {
-            //MakeWeapon();
+            MakeWeapon();
             MakeProjectile();
             AttackCommand();
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            lastShot += GameWorld.DeltaTime;
+
+            if (lastShot > shootTimer)
+            {
+                canShoot = true;
+            }
         }
 
         private void MakeWeapon()
@@ -31,27 +45,43 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
         private void MakeProjectile()
         {
-            ProjectileFactory projectileFactory = new();
-            projectile = projectileFactory.Create();
+            
+                ProjectileFactory projectileFactory = new();
+                projectile = projectileFactory.Create();
 
-            GameWorld.Instance.Instantiate(projectile);
+                GameWorld.Instance.Instantiate(projectile);
+                       
+            
         }
 
         private void Attack()
         {
             weapon.GetComponent<MagicStaff>().Attack();
+            projectile.GetComponent<MagicStaff>().Attack();
         }
        private void AttackCommand()
         {
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, 
                 new CustomCmd(Attack));
 
+            InputHandler.Instance.AddKeyButtonDownCommand(Keys.B,
+                new CustomCmd(Shoot));
+
 
         }
-        public override void Update(GameTime gameTime)
+
+        private void Shoot()
         {
-            base.Update(gameTime);
+            if (canShoot)
+            {
+                canShoot = false;
+                lastShot = 0;
+                MakeProjectile();
+            }
+            
         }
+      
+        
 
         public override void DrawInWorld(SpriteBatch spriteBatch)
         {

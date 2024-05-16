@@ -76,6 +76,11 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
             
         }
 
+        public void Attack()
+        {
+
+        }
+
 
     }
 }

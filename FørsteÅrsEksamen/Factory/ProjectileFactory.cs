@@ -1,4 +1,5 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern;
+using FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons;
 using Microsoft.Xna.Framework;
 
 namespace FørsteÅrsEksamen.Factory
@@ -13,7 +14,7 @@ namespace FørsteÅrsEksamen.Factory
             sr.SetSprite(GameManagement.TextureNames.Cell);
             sr.SetLayerDepth(LAYERDEPTH.Player);
             arrow.AddComponent<Collider>().SetCollisionBox(30, 30);
-
+            arrow.AddComponent<MagicStaff>();
 
             return arrow;
         }
