@@ -23,21 +23,59 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         private GameObject playerGo, drawRoomBtn, drawAstarPathBtn;
 
         private Vector2 playerPos;
-        private DataBase data;
+
         public override void Initialize()
         {
-            data = new DataBase();
-            data.Save(new CellData
+            DataBase.DeleteRunData();
+
+            CellData cellData = new CellData
             {
                 Room_Nr = 3,
-                Position = new Point(0, 0),
+                PointPositionX = 10,
+                PointPositionY = 2,
                 Cell_Type = CellWalkableType.NotValid,
-            });
+            };
 
-            List<CellData> cells = data.GetAll();
-            foreach (CellData item in cells)
+            using (var db = new DataBase(CollectionName.Cells))
             {
-                Console.WriteLine(item.Room_Nr);
+                db.SaveSingle(cellData, cell => cell.Cell_ID == cellData.Cell_ID);
+
+                List<CellData> cells = db.GetAll<CellData>();
+
+                foreach (CellData item in cells)
+                {
+                    Console.WriteLine(item.Room_Nr);
+                }
+            }
+
+            GridData gridData = new GridData
+            {
+                Grid_Name = "Bottom",
+                Start_SizeX = 4,
+                Start_SizeY = 4,
+                PositionX = 102,
+                PositionY = 502,
+            };
+
+            using (var db = new DataBase(CollectionName.Grids))
+            {
+                db.SaveSingle(gridData, grid => grid.Grid_Name == gridData.Grid_Name);
+            }
+            
+            GridHasCells gridHasCells = new GridHasCells
+            {
+                Cell_ID = cellData.Cell_ID,
+                Grid_Name = gridData.Grid_Name,
+            };
+
+            using (var db = new DataBase(CollectionName.GridHasCells))
+            {
+                db.SaveSingle(gridHasCells);
+            }
+
+            using (var db = new DataBase(CollectionName.Cells))
+            {
+                db.UpdateSingleValue<CellData>(cellData.Cell_ID, cell => cell.Cell_Type = CellWalkableType.FullValid);
             }
 
             SetLevelBG();
