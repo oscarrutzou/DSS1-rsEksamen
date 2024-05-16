@@ -158,6 +158,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
             //Vector2 mouseInUI = InputHandler.Instance.MouseOnUI;
             //float angleToMouse = (float)Math.Atan2(mouseInUI.Y, mouseInUI.X) + MathHelper.PiOver2;
             //startAnimationAngle = angleToMouse;
+            // should lerp to the correct angle before attacking. Use a bool to see if the angle has been set
 
             if (attacking)
             {
