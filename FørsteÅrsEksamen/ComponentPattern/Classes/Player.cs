@@ -29,10 +29,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
 
         internal List<IObserver> observers = new();
 
-        //public List<GameObject> bag = new List<GameObject>();
-        //public GameObject item;
-        //private int carriedItem;
-        public PickupableItem ItemInInventory { get; private set; }
+        public PickupableItem ItemInInventory;
 
         private Collider movementCollider;
 

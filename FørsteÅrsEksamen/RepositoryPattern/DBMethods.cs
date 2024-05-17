@@ -34,19 +34,29 @@ namespace FørsteÅrsEksamen.RepositoryPattern
             UnlockClass(ClassTypes.Archer);
             UnlockClass(ClassTypes.Warrior);
             UnlockClass(ClassTypes.Mage);
-            //DBSaveFile.OverrideSaveWeaponData(saveFileData);
-            //DBSaveFile.OverrideSaveClassData(saveFileData);
 
-            //RunData runData = DBRunData.RunDataWithSaveFileData(saveFileData);
-            //DBRunData.RunDataHasPlayerConnection(runData);
-
-
-            //DBSaveFile.OverrideSaveFileData(saveFileData);
+            SavePlayer(); // Right now the player gets saved multiple times in PlayerData. Same fix as SaveUnlockedClass!!
         }
 
         public static void DeleteSave()
         {
 
+        }
+
+        public static void SavePlayer()
+        {
+            SaveFileData saveFileData = DBSaveFile.LoadSaveFileData(SaveFileManager.CurrentSaveID);
+            RunData runData = DBRunData.RunDataWithSaveFileData(saveFileData);
+            PlayerData playerData = DBRunData.SavePlayer(runData);
+
+            // Add player. Also set other variables so this player go becomes the "real player"
+
+            //GameObject playerGo = PlayerFactory.Create(playerData.Class_Type, playerData.Weapon_Type);
+            //Player player = playerGo.GetComponent<Player>();
+            //player.CurrentHealth = playerData.Health;
+            //player.ItemInInventory = ItemFactory.Create(playerGo).GetComponent<PickupableItem>();
+            //player.ItemInInventory.Name = playerData.Potion_Name;
+            //GameWorld.Instance.Instantiate(playerGo);
         }
 
         public static void UnlockClass(ClassTypes classType)

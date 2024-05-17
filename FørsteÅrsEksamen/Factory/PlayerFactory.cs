@@ -7,9 +7,9 @@ using Microsoft.Xna.Framework;
 
 namespace FørsteÅrsEksamen.Factory
 {
-    public class PlayerFactory
+    public static class PlayerFactory
     {
-        public GameObject Create(ClassTypes playerClass, WeaponTypes weaponType)
+        public static GameObject Create(ClassTypes playerClass, WeaponTypes weaponType)
         {
             GameObject playerGo = new GameObject();
             playerGo.Transform.Scale = new Vector2(4, 4);
@@ -43,7 +43,7 @@ namespace FørsteÅrsEksamen.Factory
             return playerGo;
         }
 
-        private GameObject AddClassComponent(GameObject playerGo, GameObject handsGo, GameObject movementColliderGo, ClassTypes playerClass)
+        private static GameObject AddClassComponent(GameObject playerGo, GameObject handsGo, GameObject movementColliderGo, ClassTypes playerClass)
         {
             switch (playerClass)
             {
@@ -61,7 +61,7 @@ namespace FørsteÅrsEksamen.Factory
             return playerGo;
         }
 
-        private GameObject CreateHands()
+        private static GameObject CreateHands()
         {
             GameObject go = new();
             go.Transform.Scale = new(4, 4);
@@ -70,7 +70,7 @@ namespace FørsteÅrsEksamen.Factory
             return go;
         }
 
-        private GameObject CreatePlayerMovementCollider()
+        private static GameObject CreatePlayerMovementCollider()
         {
             GameObject go = new();
             go.Transform.Scale = new(4, 4);

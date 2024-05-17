@@ -6,13 +6,8 @@ using System;
 
 namespace FørsteÅrsEksamen.Factory
 {
-    public class CellFactory : Factory
+    public static class CellFactory
     {
-        public override GameObject Create()
-        {
-            throw new Exception("Need to get the ");
-        }
-
         public static GameObject Create(Grid grid, Point gridPos)
         {
             GameObject cellGo = new()

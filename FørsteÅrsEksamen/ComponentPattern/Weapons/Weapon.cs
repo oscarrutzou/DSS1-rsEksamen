@@ -26,7 +26,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
     // A really nice to have to so make a trail behind the weapon when it swings:D Would be fun to make
     internal abstract class Weapon : Component
     {
-        public string weaponName;
         public int damage;
 
         internal float attackSpeed;

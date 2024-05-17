@@ -12,12 +12,6 @@ namespace FørsteÅrsEksamen.RepositoryPattern
 {
     public static class DBRunData
     {
-
-        // Player save, run data and connect with current grid?.
-
-
-
-
         public static RunData RunDataWithSaveFileData(SaveFileData saveFileData)
         {
             using var fileHasRunDataLinkDB = new DataBase(CollectionName.SaveFileHasRunData);
@@ -62,7 +56,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
             return runData;
         }
 
-        public static void RunDataHasPlayerConnection(RunData runData)
+        public static PlayerData SavePlayer(RunData runData)
         {
             using var runDataHasPlayerLinkDB = new DataBase(CollectionName.RunDataHasPlayerData);
             using var playerDB = new DataBase(CollectionName.PlayerData);
@@ -79,7 +73,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
             }
 
             // Create and save the new RunData
-            PlayerData playerData = SavePlayer(playerDB);
+            PlayerData playerData = MakePlayer(playerDB);
 
             // Create and save the new link
             RunDataHasPlayerData newLink = new()
@@ -89,9 +83,11 @@ namespace FørsteÅrsEksamen.RepositoryPattern
             };
             
             runDataHasPlayerLinkDB.SaveSingle(newLink);
+
+            return playerData;
         }
 
-        private static PlayerData SavePlayer(DataBase playerDB)
+        private static PlayerData MakePlayer(DataBase playerDB)
         {
             string potionName = SaveFileManager.Player.ItemInInventory == null ? string.Empty: SaveFileManager.Player.ItemInInventory.Name;
 

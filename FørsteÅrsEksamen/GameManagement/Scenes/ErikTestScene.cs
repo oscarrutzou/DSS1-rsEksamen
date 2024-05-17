@@ -46,8 +46,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
         private void MakeProjectile()
         {
-            ProjectileFactory projectileFactory = new ProjectileFactory();
-            projectile = projectileFactory.Create();
+            projectile = ProjectileFactory.Create();
 
             GameWorld.Instance.Instantiate(projectile);
         }
