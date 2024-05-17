@@ -163,9 +163,8 @@ namespace FørsteÅrsEksamen.RepositoryPattern
 
         public static string GetConnectionString(CollectionName collectionName)
         {
-            var pathAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-
-            var path = Path.Combine(pathAppData, "DoctorsDungeon");
+            string pathAppData = AppDomain.CurrentDomain.BaseDirectory;
+            var path = Path.Combine(pathAppData, "data");
             Directory.CreateDirectory(path);
 
             return Path.Combine(path, $"{collectionName}.db");

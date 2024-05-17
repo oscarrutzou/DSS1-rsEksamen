@@ -22,9 +22,73 @@ namespace FørsteÅrsEksamen.RepositoryPattern
 
         public static void SaveGame()
         {
-            SaveFileData saveFileData = DBSaveFile.OverrideSaveFileData();
-            DBSaveFile.SaveWeaponData(saveFileData);
-            DBSaveFile.SaveClassData(saveFileData);
+            SaveFileData saveFileData = DBSaveFile.LoadSaveFileData(SaveFileManager.CurrentSaveID);
+
+            SaveFileManager.UnlockedWeapons = DBSaveFile.LoadSaveWeaponType(saveFileData, false);
+            SaveFileManager.UnlockedClasses = DBSaveFile.LoadSaveClassType(saveFileData, false);
+
+            UnlockWeapon(WeaponTypes.Axe);
+            UnlockWeapon(WeaponTypes.MagicStaffFire);
+            UnlockWeapon(WeaponTypes.Bow);
+
+            UnlockClass(ClassTypes.Archer);
+            UnlockClass(ClassTypes.Warrior);
+            UnlockClass(ClassTypes.Mage);
+            //DBSaveFile.OverrideSaveWeaponData(saveFileData);
+            //DBSaveFile.OverrideSaveClassData(saveFileData);
+
+            //RunData runData = DBRunData.RunDataWithSaveFileData(saveFileData);
+            //DBRunData.RunDataHasPlayerConnection(runData);
+
+
+            //DBSaveFile.OverrideSaveFileData(saveFileData);
+        }
+
+        public static void DeleteSave()
+        {
+
+        }
+
+        public static void UnlockClass(ClassTypes classType)
+        {
+            if (SaveFileManager.UnlockedClasses.Contains(classType)) return;
+
+            SaveFileManager.UnlockedClasses.Add(classType);
+
+            SaveFileData saveFileData = DBSaveFile.LoadSaveFileData(SaveFileManager.CurrentSaveID);
+
+            SaveFileManager.UnlockedClasses = DBSaveFile.LoadSaveClassType(saveFileData, true);
+        }
+
+        public static void UnlockWeapon(WeaponTypes unlockedWeapon)
+        {
+            // Only add the weapon if it's not already in the list
+            if (SaveFileManager.UnlockedWeapons.Contains(unlockedWeapon)) return;
+
+            SaveFileManager.UnlockedWeapons.Add(unlockedWeapon);
+
+            SaveFileData saveFileData = DBSaveFile.LoadSaveFileData(SaveFileManager.CurrentSaveID);
+
+            SaveFileManager.UnlockedWeapons = DBSaveFile.LoadSaveWeaponType(saveFileData, true);
+        }
+
+        public static void AddCurrency(int amount)
+        {
+            // Get current amount
+            // add it with the amount
+            // Update value
+        }
+
+        public static void AddRemove(int amount)
+        {
+            // Get current amount
+            // remove it with the amount
+            // Update value
+        }
+
+        public static void RegularSave()
+        {
+
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.ComponentPattern.Weapons;
+using FørsteÅrsEksamen.Factory;
 using FørsteÅrsEksamen.GameManagement;
 using FørsteÅrsEksamen.ObserverPattern;
 using Microsoft.Xna.Framework;
@@ -35,6 +36,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
 
         private Collider movementCollider;
 
+        public WeaponTypes WeaponType = WeaponTypes.Sword;
+        public ClassTypes ClassType = ClassTypes.Warrior;
 
         public Player(GameObject gameObject) : base(gameObject)
         {

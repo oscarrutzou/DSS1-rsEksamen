@@ -170,5 +170,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
 
             return gridGo;
         }
+
+
     }
 }

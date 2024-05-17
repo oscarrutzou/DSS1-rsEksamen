@@ -34,6 +34,8 @@ namespace FørsteÅrsEksamen.Factory
             // Add weapon to player
             Player player = playerGo.GetComponent<Player>();
             player.WeaponGo = weapon;
+            player.WeaponType = weaponType;
+            player.ClassType = playerClass;
 
             // Set the data that will be downloaded to this player
             SaveFileManager.Player = player;
