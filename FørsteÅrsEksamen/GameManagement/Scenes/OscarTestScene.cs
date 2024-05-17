@@ -26,58 +26,6 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
         public override void Initialize()
         {
-            DataBase.DeleteRunData();
-
-            CellData cellData = new CellData
-            {
-                Room_Nr = 3,
-                PointPositionX = 10,
-                PointPositionY = 2,
-                Cell_Type = CellWalkableType.NotValid,
-            };
-
-            using (var db = new DataBase(CollectionName.Cells))
-            {
-                db.SaveSingle(cellData, cell => cell.Cell_ID == cellData.Cell_ID);
-
-                List<CellData> cells = db.GetAll<CellData>();
-
-                foreach (CellData item in cells)
-                {
-                    Console.WriteLine(item.Room_Nr);
-                }
-            }
-
-            GridData gridData = new GridData
-            {
-                Grid_Name = "Bottom",
-                Start_SizeX = 4,
-                Start_SizeY = 4,
-                PositionX = 102,
-                PositionY = 502,
-            };
-
-            using (var db = new DataBase(CollectionName.Grids))
-            {
-                db.SaveSingle(gridData, grid => grid.Grid_Name == gridData.Grid_Name);
-            }
-            
-            GridHasCells gridHasCells = new GridHasCells
-            {
-                Cell_ID = cellData.Cell_ID,
-                Grid_Name = gridData.Grid_Name,
-            };
-
-            using (var db = new DataBase(CollectionName.GridHasCells))
-            {
-                db.SaveSingle(gridHasCells);
-            }
-
-            using (var db = new DataBase(CollectionName.Cells))
-            {
-                db.UpdateSingleValue<CellData>(cellData.Cell_ID, cell => cell.Cell_Type = CellWalkableType.FullValid);
-            }
-
             SetLevelBG();
             //First grid
             StartGrid();
@@ -166,6 +114,8 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.D1, new CustomCmd(player.UseItem));
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Tab, new CustomCmd(() => { GridManager.Instance.ShowHideGrid(); }));
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, new CustomCmd(Attack));
+            InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DBMethods.SaveGrid(GridManager.Instance.CurrentGrid); }));
+
         }
 
         private void Attack()

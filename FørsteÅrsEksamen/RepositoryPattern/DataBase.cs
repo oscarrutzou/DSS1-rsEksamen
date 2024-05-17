@@ -1,19 +1,8 @@
-﻿
-
-using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.Characters;
-using FørsteÅrsEksamen.ComponentPattern.Path;
-using FørsteÅrsEksamen.Factory;
-using LiteDB;
-using Microsoft.VisualBasic;
-using Microsoft.Xna.Framework;
-using SharpDX.Direct3D9;
+﻿using LiteDB;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq.Expressions;
-using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace FørsteÅrsEksamen.RepositoryPattern
 {
@@ -35,22 +24,6 @@ namespace FørsteÅrsEksamen.RepositoryPattern
 
     public class DataBase: IDisposable
     {
-        public readonly static Dictionary<CollectionName, Type> CollectionTypeMap = new Dictionary<CollectionName, Type>
-        {
-            { CollectionName.Cells, typeof(CellData) },
-            { CollectionName.Grids, typeof(GridData) },
-            { CollectionName.SaveFile, typeof(SaveFile) },
-            { CollectionName.UnlockedClass, typeof(UnlockedClass) },
-            { CollectionName.UnlockedWeapon, typeof(UnclockedWeapon) },
-            { CollectionName.GridHasCells, typeof(GridHasCells) },
-            { CollectionName.SaveFileHasClass, typeof(SaveFileHasUnlockedClass) },
-            { CollectionName.SaveFileHasWeapon, typeof(SaveFileHasUnclockedWeapon) },
-            { CollectionName.RunData, typeof(RunData) },
-            { CollectionName.SaveFileHasRunData, typeof(SaveFileHasRunData) },
-            { CollectionName.PlayerData, typeof(PlayerData) },
-            { CollectionName.RunDataHasPlayerData, typeof(RunDataHasPlayerData) },
-        };
-
         private readonly static List<CollectionName> deleteRunCollections = new() {
             CollectionName.RunData,
             CollectionName.SaveFileHasRunData,
@@ -84,28 +57,23 @@ namespace FørsteÅrsEksamen.RepositoryPattern
             }
         }
 
-        #region Grid
-        public GameObject GetGrid(string description)
-        {
-            GameObject gridGo = new();
 
-            //Get grid with same 
-
-            return gridGo;
-        }
-        #endregion
-
-        #region Generic Methods
         public ILiteCollection<T> GetCollection<T>(CollectionName collectionName)
         {
             return db.GetCollection<T>(collectionName.ToString());
         }
 
-        public void SaveSingle<T1>(T1 input)
+        /// <summary>
+        /// Save a single data into the db
+        /// </summary>
+        /// <typeparam name="T1"></typeparam>
+        /// <param name="input"></param>
+        /// <returns>Returns a bool on if it has saved the data</returns>
+        public BsonValue SaveSingle<T1>(T1 input)
         {
             var collection = GetCollection<T1>(currentCollection);
-            
-            collection.Insert(input);
+
+            return collection.Insert(input);
         }
 
         public void SaveAll<T>(IEnumerable<T> items)
@@ -114,15 +82,24 @@ namespace FørsteÅrsEksamen.RepositoryPattern
             collection.InsertBulk(items);
         }
 
-        public void SaveSingle<T>(T input, Expression<Func<T, bool>> predicate)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="input"></param>
+        /// <param name="predicate"></param>
+        /// <returns>Returns a bool on if it has saved the data</returns>
+        public BsonValue SaveSingle<T>(T input, Expression<Func<T, bool>> predicate)
         {
             var collection = GetCollection<T>(currentCollection);
 
             var existingItem = FindOne(predicate);
             if (existingItem == null)
             {
-                collection.Insert(input);
+                return collection.Insert(input);
             }
+
+            return null;
         }
 
         public void SaveAll<T>(IEnumerable<T> items, Expression<Func<T, bool>> predicate)
@@ -138,7 +115,6 @@ namespace FørsteÅrsEksamen.RepositoryPattern
                 }
             }
         }
-
 
         public T FindOne<T>(Expression<Func<T, bool>> predicate)
         {
@@ -182,7 +158,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
             collection.Update(id, updatedData);
         }
 
-        public void Delete<T>(CollectionName collectionName, BsonValue id)
+        public void Delete<T>(BsonValue id)
         {
             var collection = GetCollection<T>(currentCollection);
             collection.Delete(id);
@@ -208,93 +184,5 @@ namespace FørsteÅrsEksamen.RepositoryPattern
         {
             db?.Dispose();
         }
-        #endregion
     }
-
-    #region Data Classes
-    public class SaveFile
-    {
-        [BsonId]
-        public int Save_ID { get; set; }
-        public DateTime Last_Login { get; set; }
-        public int Currency { get; set; }
-    }
-
-    public class UnlockedClass
-    {
-        [BsonId]
-        public ClassTypes Class_Type { get; set; }
-    }
-    public class SaveFileHasUnlockedClass
-    {
-        public int Save_ID { get; set; }
-        public ClassTypes Class_Type { get; set; }
-    }
-    public class UnclockedWeapon
-    {
-        [BsonId]
-        public WeaponTypes Weapon_Type { get; set; }
-    }
-    public class SaveFileHasUnclockedWeapon
-    {
-        public int Save_ID { get; set; }
-        public WeaponTypes Weapon_Type { get; set; }
-    }
-
-    public class SaveFileHasRunData
-    {
-        public int Save_ID { get; set; }
-        public string Run_ID { get; set; }
-    }
-
-    public class RunData
-    {
-        [BsonId]
-        public string Run_ID { get; set; }
-        public int Room_Reached { get; set; }
-        public float Time_Left { get; set; }
-    }
-
-    public class RunDataHasPlayerData
-    {
-        public string Run_ID { get; set; }
-        public int Player_ID { get; set; }
-    }
-
-    public class PlayerData
-    {
-        [BsonId]
-        public int Player_ID { get; set; }
-        public int Health { get; set; }
-        public string Potion_Name { get; set; }
-        public ClassTypes Class_Type { get; set; }
-        public WeaponTypes Weapon_Type { get; set; }
-    }
-
-    public class GridData
-    {
-        [BsonId]
-        public string Grid_Name { get; set; }
-        public int PositionX { get; set; }
-        public int PositionY { get; set; }
-        public int Start_SizeX { get; set; }
-        public int Start_SizeY { get; set; }
-    }
-
-    public class GridHasCells
-    {
-        public string Grid_Name { get; set; }
-        public int Cell_ID { get; set; }
-    }
-
-    public class CellData
-    {
-        [BsonId]
-        public int Cell_ID { get; set; }
-        public int PointPositionX { get; set; }
-        public int PointPositionY { get; set; }
-        public int Room_Nr { get; set; }
-        public CellWalkableType Cell_Type { get; set; }
-    }
-    #endregion
 }

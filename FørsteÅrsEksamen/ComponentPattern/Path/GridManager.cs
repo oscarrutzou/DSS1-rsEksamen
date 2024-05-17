@@ -111,13 +111,15 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             if (CurrentGrid == null) return;
 
             repository.SaveGrid(CurrentGrid);
+            //DBMethods.SaveGrid(CurrentGrid);
         }
 
         public void LoadGrid(string gridName)
         {
             // A little dumb that it first gets made and then deleted? Fix, if u have time
             DeleteDrawnGrid();
-            GameObject go = repository.GetGrid(gridName);
+            //GameObject go = repository.GetGrid(gridName);
+            GameObject go = DBMethods.GetGrid(gridName);
 
             if (go == null)
             {
