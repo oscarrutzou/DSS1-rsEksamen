@@ -24,12 +24,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
 
     public class DataBase: IDisposable
     {
-        private readonly static List<CollectionName> deleteRunCollections = new() {
-            CollectionName.RunData,
-            CollectionName.SaveFileHasRunData,
-            CollectionName.PlayerData,
-            CollectionName.RunDataHasPlayerData,
-        };
+
 
         private readonly LiteDatabase db;
 
@@ -42,27 +37,11 @@ namespace FørsteÅrsEksamen.RepositoryPattern
         }
 
 
-        /// <summary>
-        /// A method that deletes all data related to each run.
-        /// </summary>
-        public static void DeleteRunData()
+
+        public ILiteCollection<T> GetCollection<T>()
         {
-            // This is ineffecient since we open and close connections,
-            // but since we are just dropping the collection, we are fine with some of the code being less effient.
-            // This metod will also only be called very rarely, so it wont make a difference, if we optimize this method.
-            foreach (CollectionName name in deleteRunCollections)
-            {
-                using LiteDatabase db = new (GetConnectionString(name));
-                db.DropCollection(name.ToString());
-            }
+            return db.GetCollection<T>(currentCollection.ToString());
         }
-
-
-        public ILiteCollection<T> GetCollection<T>(CollectionName collectionName)
-        {
-            return db.GetCollection<T>(collectionName.ToString());
-        }
-
         /// <summary>
         /// Save a single data into the db
         /// </summary>
@@ -71,14 +50,14 @@ namespace FørsteÅrsEksamen.RepositoryPattern
         /// <returns>Returns a bool on if it has saved the data</returns>
         public BsonValue SaveSingle<T1>(T1 input)
         {
-            var collection = GetCollection<T1>(currentCollection);
+            var collection = GetCollection<T1>();
 
             return collection.Insert(input);
         }
 
         public void SaveAll<T>(IEnumerable<T> items)
         {
-            var collection = GetCollection<T>(currentCollection);
+            var collection = GetCollection<T>();
             collection.InsertBulk(items);
         }
 
@@ -91,7 +70,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
         /// <returns>Returns a bool on if it has saved the data</returns>
         public BsonValue SaveSingle<T>(T input, Expression<Func<T, bool>> predicate)
         {
-            var collection = GetCollection<T>(currentCollection);
+            var collection = GetCollection<T>();
 
             var existingItem = FindOne(predicate);
             if (existingItem == null)
@@ -102,9 +81,21 @@ namespace FørsteÅrsEksamen.RepositoryPattern
             return null;
         }
 
+        public void SaveOverrideSingle<T>(T input, BsonValue id, Expression<Func<T, bool>> findPredicate)
+        {
+            T file = FindOne(findPredicate);
+
+            if (file != null)
+            {
+                Delete<T>(id);
+            }
+
+            SaveSingle(input);
+        }
+
         public void SaveAll<T>(IEnumerable<T> items, Expression<Func<T, bool>> predicate)
         {
-            var collection = GetCollection<T>(currentCollection);
+            var collection = GetCollection<T>();
 
             foreach (var item in items)
             {
@@ -118,20 +109,20 @@ namespace FørsteÅrsEksamen.RepositoryPattern
 
         public T FindOne<T>(Expression<Func<T, bool>> predicate)
         {
-            var collection = GetCollection<T>(currentCollection);
+            var collection = GetCollection<T>();
             return collection.FindOne(predicate);
         }
 
         public List<T> GetAll<T>()
         {
-            var collection = GetCollection<T>(currentCollection);
+            var collection = GetCollection<T>();
             var returnData = collection.Query().ToList();
             return returnData;
         }
 
         public void EnsureIndex<T>(Expression<Func<T, object>> field)
         {
-            var collection = GetCollection<T>(currentCollection);
+            var collection = GetCollection<T>();
             collection.EnsureIndex(field);
         }
 
@@ -143,7 +134,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
         /// <param name="updateAction">Use lamda expression to set new value (cell => cell.SomeProperty = newValue) </param>
         public void UpdateSingleValue<T>(BsonValue id, Action<T> updateAction)
         {
-            var collection = GetCollection<T>(currentCollection);
+            var collection = GetCollection<T>();
             var existingData = collection.FindById(id);
             if (existingData != null)
             {
@@ -154,23 +145,23 @@ namespace FørsteÅrsEksamen.RepositoryPattern
 
         public void UpdateReplaceData<T>(BsonValue id, T updatedData)
         {
-            var collection = GetCollection<T>(currentCollection);
+            var collection = GetCollection<T>();
             collection.Update(id, updatedData);
         }
 
         public void Delete<T>(BsonValue id)
         {
-            var collection = GetCollection<T>(currentCollection);
+            var collection = GetCollection<T>();
             collection.Delete(id);
         }
 
         public void DeleteAll<T>()
         {
-            var collection = GetCollection<T>(currentCollection);
+            var collection = GetCollection<T>();
             collection.DeleteAll();
         }
 
-        private static string GetConnectionString(CollectionName collectionName)
+        public static string GetConnectionString(CollectionName collectionName)
         {
             var pathAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 

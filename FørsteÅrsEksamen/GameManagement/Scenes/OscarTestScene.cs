@@ -1,7 +1,7 @@
 ﻿using FørsteÅrsEksamen.CommandPattern;
 using FørsteÅrsEksamen.CommandPattern.Commands;
 using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.Characters;
+using FørsteÅrsEksamen.ComponentPattern.Classes;
 using FørsteÅrsEksamen.ComponentPattern.Enemies.MeleeEnemies;
 using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.Factory;
@@ -40,6 +40,8 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
             MakeButtons();
             SetCommands();
+
+            DBMethods.SaveGame();
         }
 
         private void SetLevelBG()
@@ -93,7 +95,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         {
             Point spawn = new Point(6, 6);
             playerFactory = new PlayerFactory();
-            playerGo = playerFactory.Create(PlayerClasses.Warrior, WeaponTypes.Sword);
+            playerGo = playerFactory.Create(ClassTypes.Warrior, WeaponTypes.Sword);
             playerGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[spawn].Transform.Position;
             playerGo.Transform.GridPosition = spawn;
             GameWorld.Instance.WorldCam.position = playerGo.Transform.Position;
@@ -114,7 +116,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.D1, new CustomCmd(player.UseItem));
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Tab, new CustomCmd(() => { GridManager.Instance.ShowHideGrid(); }));
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, new CustomCmd(Attack));
-            InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DBMethods.SaveGrid(GridManager.Instance.CurrentGrid); }));
+            InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DBGrid.SaveGrid(GridManager.Instance.CurrentGrid); }));
 
         }
 
@@ -154,8 +156,6 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
-            GridManager.Instance.Update();
         }
 
         public override void DrawInWorld(SpriteBatch spriteBatch)

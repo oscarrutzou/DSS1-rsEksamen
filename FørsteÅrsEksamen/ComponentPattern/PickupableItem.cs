@@ -1,4 +1,4 @@
-﻿using FørsteÅrsEksamen.ComponentPattern.Characters;
+﻿using FørsteÅrsEksamen.ComponentPattern.Classes;
 using FørsteÅrsEksamen.ComponentPattern.GUI;
 using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;

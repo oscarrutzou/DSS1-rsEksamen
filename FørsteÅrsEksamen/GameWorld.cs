@@ -22,8 +22,6 @@ namespace FørsteÅrsEksamen.GameManagement
         public GraphicsDeviceManager GfxManager { get; private set; }
         private SpriteBatch _spriteBatch;
 
-        public IRepository Repository { get; private set; }
-
         public GameWorld()
         {
             GfxManager = new GraphicsDeviceManager(this);
@@ -35,8 +33,6 @@ namespace FørsteÅrsEksamen.GameManagement
         protected override void Initialize()
         {
             SceneData.GenereateGameObjectDicionary();
-
-            SetRepository();
 
             ResolutionSize(1280, 720);
             //Fullscreen();
@@ -50,22 +46,6 @@ namespace FørsteÅrsEksamen.GameManagement
             ChangeScene(ScenesNames.OscarTestScene);
 
             base.Initialize();
-        }
-
-        private void SetRepository()
-        {
-            //Try to connect to Postgre
-            PostgreRepository.Instance.Initialize();
-            if (PostgreRepository.Instance.DateSource != null)
-            {
-                Repository = PostgreRepository.Instance;
-            }
-            else
-            {
-                Repository = FileRepository.Instance;
-            }
-
-            GridManager.Instance.Initialize();
         }
 
         protected override void LoadContent()

@@ -1,47 +1,15 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.Characters;
+using FørsteÅrsEksamen.ComponentPattern.Classes;
 using FørsteÅrsEksamen.GameManagement;
+using FørsteÅrsEksamen.RepositoryPattern;
 using Microsoft.Xna.Framework;
 
 
 namespace FørsteÅrsEksamen.Factory
 {
-    public enum PlayerClasses
+    public class PlayerFactory
     {
-        Warrior,
-        Archer,
-        Mage
-    }
-
-    public class PlayerFactory : Factory
-    {
-        public override GameObject Create()
-        {
-            throw new System.Exception("Need to specify a class for the player");
-        }
-
-        public GameObject Create(PlayerClasses playerClass)
-        {
-            GameObject playerGo = new GameObject();
-            playerGo.Transform.Scale = new Vector2(4, 4);
-            playerGo.Type = GameObjectTypes.Player;
-            playerGo.AddComponent<SpriteRenderer>();
-            playerGo.AddComponent<Animator>();
-            playerGo.AddComponent<Collider>();
-
-            GameObject hands = CreateHands();
-            GameWorld.Instance.Instantiate(hands); // Makes hands
-
-            GameObject movementCollider = CreatePlayerMovementCollider();
-            GameWorld.Instance.Instantiate(movementCollider); // Makes the collider
-
-            playerGo = AddClassComponent(playerGo, hands, movementCollider, playerClass);
-
-            return playerGo;
-        }
-
-
-        public GameObject Create(PlayerClasses playerClass, WeaponTypes weaponType)
+        public GameObject Create(ClassTypes playerClass, WeaponTypes weaponType)
         {
             GameObject playerGo = new GameObject();
             playerGo.Transform.Scale = new Vector2(4, 4);
@@ -67,19 +35,23 @@ namespace FørsteÅrsEksamen.Factory
             Player player = playerGo.GetComponent<Player>();
             player.WeaponGo = weapon;
 
+            // Set the data that will be downloaded to this player
+            SaveFileManager.Player = player;
+
             return playerGo;
         }
-        private GameObject AddClassComponent(GameObject playerGo, GameObject handsGo, GameObject movementColliderGo, PlayerClasses playerClass)
+
+        private GameObject AddClassComponent(GameObject playerGo, GameObject handsGo, GameObject movementColliderGo, ClassTypes playerClass)
         {
             switch (playerClass)
             {
-                case PlayerClasses.Warrior:
+                case ClassTypes.Warrior:
                     playerGo.AddComponent<Warrior>(handsGo, movementColliderGo);
                     break;
-                case PlayerClasses.Archer:
+                case ClassTypes.Archer:
                     playerGo.AddComponent<Archer>(handsGo, movementColliderGo);
                     break;
-                case PlayerClasses.Mage:
+                case ClassTypes.Mage:
                     playerGo.AddComponent<Mage>(handsGo, movementColliderGo);
                     break;
             }

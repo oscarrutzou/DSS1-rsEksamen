@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
-namespace FørsteÅrsEksamen.ComponentPattern.Characters
+namespace FørsteÅrsEksamen.ComponentPattern.Classes
 {
 
     public enum ClassTypes
@@ -28,9 +28,10 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
 
         internal List<IObserver> observers = new();
 
-        public List<GameObject> bag = new List<GameObject>();
-        public GameObject item;
-        private int carriedItem;
+        //public List<GameObject> bag = new List<GameObject>();
+        //public GameObject item;
+        //private int carriedItem;
+        public PickupableItem ItemInInventory { get; private set; }
 
         private Collider movementCollider;
 
@@ -274,13 +275,13 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
 
         public void PickUpItem(GameObject item)
         {
-            this.item = item;
+            ItemInInventory = item.GetComponent<PickupableItem>();
         }
         public void UseItem()
         {
-            if (item == null) return;
+            if (ItemInInventory == null) return;
 
-            item.GetComponent<PickupableItem>().Use();
+            ItemInInventory.Use();
         }
 
         #region Observer Pattern

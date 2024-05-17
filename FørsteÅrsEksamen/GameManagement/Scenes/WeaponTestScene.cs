@@ -4,7 +4,7 @@ using FørsteÅrsEksamen.ComponentPattern;
 using FørsteÅrsEksamen.ComponentPattern.Weapons;
 using FørsteÅrsEksamen.Factory;
 using Microsoft.Xna.Framework.Input;
-using FørsteÅrsEksamen.ComponentPattern.Characters;
+using FørsteÅrsEksamen.ComponentPattern.Classes;
 using FørsteÅrsEksamen.ComponentPattern.Path;
 using Microsoft.Xna.Framework;
 
@@ -33,7 +33,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         private void MakePlayer()
         {
             playerFactory = new PlayerFactory();
-            playerGo = playerFactory.Create(PlayerClasses.Warrior, WeaponTypes.Sword);
+            playerGo = playerFactory.Create(ClassTypes.Warrior, WeaponTypes.Sword);
             GameWorld.Instance.WorldCam.position = playerGo.Transform.Position;
             GameWorld.Instance.Instantiate(playerGo);
         }

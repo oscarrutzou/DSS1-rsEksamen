@@ -1,4 +1,4 @@
-﻿using FørsteÅrsEksamen.ComponentPattern.Characters;
+﻿using FørsteÅrsEksamen.ComponentPattern.Classes;
 using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.Factory;
 using LiteDB;
@@ -6,50 +6,57 @@ using System;
 
 namespace FørsteÅrsEksamen.RepositoryPattern
 {
-    public class SaveFile
+    public class SaveFileData
     {
         [BsonId]
-        public Guid Save_ID { get; set; }
+        public int Save_ID { get; set; }
         public int Currency { get; set; }
         public DateTime Last_Login { get; set; }
-        public SaveFile()
+        public SaveFileData()
         {
             Last_Login = DateTime.Now;
         }
     }
 
-    public class UnlockedClass
+    public class UnlockedClassData
     {
         [BsonId]
+        public Guid Class_ID { get; set; }
         public ClassTypes Class_Type { get; set; }
     }
+
     public class SaveFileHasUnlockedClass
     {
-        public Guid Save_ID { get; set; }
-        public ClassTypes Class_Type { get; set; }
+        [BsonId]
+        public Guid Class_ID { get; set; }
+        public int Save_ID { get; set; }
     }
-    public class UnclockedWeapon
+
+    public class UnlockedWeaponData
     {
         [BsonId]
+        public Guid Weapon_ID { get; set; }
         public WeaponTypes Weapon_Type { get; set; }
     }
-    public class SaveFileHasUnclockedWeapon
+
+    public class SaveFileHasUnlockedWeapon
     {
-        public Guid Save_ID { get; set; }
-        public WeaponTypes Weapon_Type { get; set; }
+        [BsonId]
+        public Guid Weapon_ID { get; set; }
+        public int Save_ID { get; set; }
     }
 
     public class SaveFileHasRunData
     {
         [BsonId]
-        public Guid Save_ID { get; set; }
-        public Guid Run_ID { get; set; }
+        public int Save_ID { get; set; }
+        public int Run_ID { get; set; }
     }
 
     public class RunData
     {
         [BsonId]
-        public Guid Run_ID { get; set; }
+        public int Run_ID { get; set; }
         public int Room_Reached { get; set; }
         public float Time_Left { get; set; }
     }
@@ -57,7 +64,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
     public class RunDataHasPlayerData
     {
         [BsonId]
-        public Guid Run_ID { get; set; }
+        public int Run_ID { get; set; }
         public Guid Player_ID { get; set; }
     }
 
