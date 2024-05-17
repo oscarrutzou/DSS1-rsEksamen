@@ -45,6 +45,8 @@ namespace FørsteÅrsEksamen.ComponentPattern
         internal float attackCooldown = 2f;
 
         internal int speed = 200;
+        public int CurrentHealth = 100;
+        public int MaxHealth = 100;
 
         #endregion
 
