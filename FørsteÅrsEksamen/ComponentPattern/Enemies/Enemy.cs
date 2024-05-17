@@ -205,6 +205,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
         private void Attack()
         {
             attackTimer -= GameWorld.DeltaTime;
+                SetState(CharacterState.Idle);
 
             if (attackTimer < 0)
             {

@@ -29,10 +29,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies.MeleeEnemies
 
         internal override void AttackAction()
         {
-            if (playerCollider.CollisionBox.Location)
-            {
-
-            }
+           
         }
 
     }
