@@ -1,4 +1,6 @@
-﻿using FørsteÅrsEksamen.GameManagement;
+﻿using FørsteÅrsEksamen.ComponentPattern.Enemies;
+using FørsteÅrsEksamen.GameManagement;
+using FørsteÅrsEksamen.ObjectPoolPattern;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -84,6 +86,35 @@ namespace FørsteÅrsEksamen.ComponentPattern
                 spriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
             }
         }
+
+        // WIP
+
+        //public void DealDamage(GameObject damageGo)
+        //{
+        //    Stats damageGoHealth = damageGo.GetComponent<Stats>();
+        //    damageGoHealth.TakeDamage(damage);
+        //}
+
+        //private void TakeDamage(int damage)
+        //{
+        //    int newHealth = health - damage;
+
+        //    if (newHealth < 0) health = 0;
+        //    else health = newHealth;
+
+        //    //Delete or add to pool.
+        //    if (health > 0) return;
+
+        //    Enemy enemy = GameObject.GetComponent<Enemy>();
+        //    if (enemy != null)
+        //    {
+        //        EnemyPool.Instance.ReleaseObject(GameObject);
+        //    }
+        //    else
+        //    {
+        //        GameWorld.Instance.Destroy(GameObject);
+        //    }
+        //}
 
         public override void Draw(SpriteBatch spriteBatch)
         {

@@ -210,7 +210,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             if (attackTimer < 0)
             {
                 attackTimer = attackCooldown;
-                AttackAction();
+                GameObject.GetComponent<Character>().DealDamage(towerGameObject);
             }
         }
 
