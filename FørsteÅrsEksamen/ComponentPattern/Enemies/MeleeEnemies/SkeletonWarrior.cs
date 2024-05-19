@@ -1,4 +1,4 @@
-﻿using FørsteÅrsEksamen.ComponentPattern.Characters;
+﻿//using FørsteÅrsEksamen.ComponentPattern.Characters;
 using FørsteÅrsEksamen.ComponentPattern.Enemies.Skeleton;
 using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
