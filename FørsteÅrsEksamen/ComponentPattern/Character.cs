@@ -1,4 +1,5 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern.Enemies;
+using FørsteÅrsEksamen.ComponentPattern.Weapons;
 using FørsteÅrsEksamen.GameManagement;
 using FørsteÅrsEksamen.ObjectPoolPattern;
 using Microsoft.Xna.Framework;
@@ -32,6 +33,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
         internal SpriteRenderer spriteRenderer;
         internal Animator animator;
         internal Collider collider;
+        internal Weapon weapon;
 
         public GameObject WeaponGo, HandLeft, HandRight;
 
@@ -61,6 +63,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
             spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
             animator = GameObject.GetComponent<Animator>();
             collider = GameObject.GetComponent<Collider>();
+            weapon = GameObject.GetComponent<Weapon>();
         }
 
         // This is not a abstract method since we only need to set it in the Player and Enemy class, and not in its subclasses
@@ -89,32 +92,32 @@ namespace FørsteÅrsEksamen.ComponentPattern
 
         // WIP
 
-        //public void DealDamage(GameObject damageGo)
-        //{
-        //    Stats damageGoHealth = damageGo.GetComponent<Stats>();
-        //    damageGoHealth.TakeDamage(damage);
-        //}
+        public void DealDamage(GameObject damageGo)
+        {
+            Character damageGoHealth = damageGo.GetComponent<Character>();
+            damageGoHealth.TakeDamage(weapon.damage);
+        }
 
-        //private void TakeDamage(int damage)
-        //{
-        //    int newHealth = health - damage;
+        private void TakeDamage(int damage)
+        {
+            int newHealth = CurrentHealth - damage;
 
-        //    if (newHealth < 0) health = 0;
-        //    else health = newHealth;
+            if (newHealth < 0) CurrentHealth = 0;
+            else CurrentHealth = newHealth;
 
-        //    //Delete or add to pool.
-        //    if (health > 0) return;
+            //Delete or add to pool.
+            if (CurrentHealth > 0) return;
 
-        //    Enemy enemy = GameObject.GetComponent<Enemy>();
-        //    if (enemy != null)
-        //    {
-        //        EnemyPool.Instance.ReleaseObject(GameObject);
-        //    }
-        //    else
-        //    {
-        //        GameWorld.Instance.Destroy(GameObject);
-        //    }
-        //}
+            Enemy enemy = GameObject.GetComponent<Enemy>();
+            if (enemy != null)
+            {
+            //    EnemyPool.Instance.ReleaseObject(GameObject);
+            //}
+            //else
+            //{
+                GameWorld.Instance.Destroy(GameObject);
+            }
+        }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
