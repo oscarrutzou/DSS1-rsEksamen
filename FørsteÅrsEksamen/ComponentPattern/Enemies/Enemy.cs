@@ -19,13 +19,13 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 
         private List<GameObject> path;
         private Vector2 nextTarget;
-        private Point targetPoint;
+        internal Point targetPoint;
         private readonly float threshold = 10f;
 
         public Action onGoalReached;
 
         private bool inRange = false;
-        private int range;
+        private float range;
         #endregion Properties
 
         public Enemy(GameObject gameObject) : base(gameObject)
@@ -205,11 +205,12 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
         private void Attack()
         {
             attackTimer -= GameWorld.DeltaTime;
+                SetState(CharacterState.Idle);
 
             if (attackTimer < 0)
             {
                 attackTimer = attackCooldown;
-                AttackAction();
+                GameObject.GetComponent<Character>().DealDamage(playerGo);
             }
         }
 
