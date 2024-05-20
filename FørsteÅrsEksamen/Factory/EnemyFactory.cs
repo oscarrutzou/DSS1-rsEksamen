@@ -6,9 +6,9 @@ using Microsoft.Xna.Framework;
 namespace FørsteÅrsEksamen.Factory
 {
     //Asser
-    internal class EnemyFactory : Factory
+    internal static class EnemyFactory
     {
-        public override GameObject Create()
+        public static GameObject Create()
         {
             GameObject enemyGo = new GameObject();
             enemyGo.Transform.Scale = new Vector2(4, 4);

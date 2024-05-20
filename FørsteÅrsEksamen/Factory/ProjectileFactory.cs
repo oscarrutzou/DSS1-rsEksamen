@@ -4,10 +4,10 @@ using Microsoft.Xna.Framework;
 
 namespace FørsteÅrsEksamen.Factory
 {
-    internal class ProjectileFactory : Factory
+    internal static class ProjectileFactory
     {
         // Erik
-        public override GameObject Create()
+        public static GameObject Create()
         {
             GameObject arrow = new GameObject();
             arrow.Transform.Scale = new Vector2(4, 4f);

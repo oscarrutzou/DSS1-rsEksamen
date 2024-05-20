@@ -1,7 +1,7 @@
 ﻿using FørsteÅrsEksamen.CommandPattern;
 using FørsteÅrsEksamen.CommandPattern.Commands;
 using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.Characters;
+using FørsteÅrsEksamen.ComponentPattern.Classes;
 using FørsteÅrsEksamen.ComponentPattern.Enemies.MeleeEnemies;
 using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.Factory;
@@ -18,66 +18,12 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 {
     public class OscarTestScene : Scene, IObserver
     {
-        private PlayerFactory playerFactory;
-        private ButtonFactory buttonFactory;
         private GameObject playerGo, drawRoomBtn, drawAstarPathBtn;
 
         private Vector2 playerPos;
 
         public override void Initialize()
         {
-            DataBase.DeleteRunData();
-
-            CellData cellData = new CellData
-            {
-                Room_Nr = 3,
-                PointPositionX = 10,
-                PointPositionY = 2,
-                Cell_Type = CellWalkableType.NotValid,
-            };
-
-            using (var db = new DataBase(CollectionName.Cells))
-            {
-                db.SaveSingle(cellData, cell => cell.Cell_ID == cellData.Cell_ID);
-
-                List<CellData> cells = db.GetAll<CellData>();
-
-                foreach (CellData item in cells)
-                {
-                    Console.WriteLine(item.Room_Nr);
-                }
-            }
-
-            GridData gridData = new GridData
-            {
-                Grid_Name = "Bottom",
-                Start_SizeX = 4,
-                Start_SizeY = 4,
-                PositionX = 102,
-                PositionY = 502,
-            };
-
-            using (var db = new DataBase(CollectionName.Grids))
-            {
-                db.SaveSingle(gridData, grid => grid.Grid_Name == gridData.Grid_Name);
-            }
-            
-            GridHasCells gridHasCells = new GridHasCells
-            {
-                Cell_ID = cellData.Cell_ID,
-                Grid_Name = gridData.Grid_Name,
-            };
-
-            using (var db = new DataBase(CollectionName.GridHasCells))
-            {
-                db.SaveSingle(gridHasCells);
-            }
-
-            using (var db = new DataBase(CollectionName.Cells))
-            {
-                db.UpdateSingleValue<CellData>(cellData.Cell_ID, cell => cell.Cell_Type = CellWalkableType.FullValid);
-            }
-
             SetLevelBG();
             //First grid
             StartGrid();
@@ -92,6 +38,8 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
             MakeButtons();
             SetCommands();
+
+            DBMethods.SaveGame();
         }
 
         private void SetLevelBG()
@@ -120,8 +68,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
         private void MakeEnemy()
         {
-            EnemyFactory enemyFactory = new EnemyFactory();
-            GameObject enemGo = enemyFactory.Create();
+            GameObject enemGo = EnemyFactory.Create();
             GameWorld.Instance.Instantiate(enemGo);
 
             if (GridManager.Instance.CurrentGrid != null)
@@ -133,8 +80,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
         private void MakeItem()
         {
-            ItemFactory itemFactory = new ItemFactory();
-            GameObject itemGo = itemFactory.Create();
+            GameObject itemGo = ItemFactory.Create(playerGo);
             GameWorld.Instance.Instantiate(itemGo);
 
             itemGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[new Point(3,3)].Transform.Position;
@@ -144,8 +90,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         private void MakePlayer()
         {
             Point spawn = new Point(6, 6);
-            playerFactory = new PlayerFactory();
-            playerGo = playerFactory.Create(PlayerClasses.Warrior, WeaponTypes.Sword);
+            playerGo = PlayerFactory.Create(ClassTypes.Warrior, WeaponTypes.Sword);
             playerGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[spawn].Transform.Position;
             playerGo.Transform.GridPosition = spawn;
             GameWorld.Instance.WorldCam.position = playerGo.Transform.Position;
@@ -166,6 +111,8 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.D1, new CustomCmd(player.UseItem));
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Tab, new CustomCmd(() => { GridManager.Instance.ShowHideGrid(); }));
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, new CustomCmd(Attack));
+            InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DBGrid.SaveGrid(GridManager.Instance.CurrentGrid); }));
+
         }
 
         private void Attack()
@@ -190,13 +137,12 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         {
             Camera uiCam = GameWorld.Instance.UiCam;
 
-            buttonFactory = new();
-            drawRoomBtn = buttonFactory.Create("Draw Room", () => { });
+            drawRoomBtn = ButtonFactory.Create("Draw Room", () => { });
             drawRoomBtn.Transform.Translate(uiCam.TopRight + new Vector2(-100, 50));
 
             GameWorld.Instance.Instantiate(drawRoomBtn);
 
-            drawAstarPathBtn = buttonFactory.Create("Draw Valid Path", () => { });
+            drawAstarPathBtn = ButtonFactory.Create("Draw Valid Path", () => { });
             drawAstarPathBtn.Transform.Translate(uiCam.TopRight + new Vector2(-100, 120));
             GameWorld.Instance.Instantiate(drawAstarPathBtn);
         }
@@ -204,8 +150,6 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
-            GridManager.Instance.Update();
         }
 
         public override void DrawInWorld(SpriteBatch spriteBatch)

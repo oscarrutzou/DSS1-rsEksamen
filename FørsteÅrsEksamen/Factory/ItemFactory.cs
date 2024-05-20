@@ -1,15 +1,14 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern;
 using System.Numerics;
 using FørsteÅrsEksamen.GameManagement;
-using FørsteÅrsEksamen.ComponentPattern.Characters;
+using FørsteÅrsEksamen.ComponentPattern.Classes;
 
 namespace FørsteÅrsEksamen.Factory
 {
     //Asser
-    internal class ItemFactory : Factory
+    internal static class ItemFactory
     {
-
-        public GameObject Create(GameObject playerGo)
+        public static GameObject Create(GameObject playerGo)
         {
             GameObject itemGo = new GameObject();
             itemGo.Transform.Scale = new Vector2(4, 4);

@@ -1,4 +1,4 @@
-﻿using FørsteÅrsEksamen.ComponentPattern.Characters;
+﻿using FørsteÅrsEksamen.ComponentPattern.Classes;
 using FørsteÅrsEksamen.ComponentPattern.GUI;
 using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
@@ -21,6 +21,8 @@ namespace FørsteÅrsEksamen.ComponentPattern
         
         private GameObject playerGo;
 
+        public string Name = "Health Potion";
+
         public PickupableItem(GameObject gameObject) : base(gameObject)
         {
         }
@@ -28,7 +30,6 @@ namespace FørsteÅrsEksamen.ComponentPattern
         public PickupableItem(GameObject gameObject, GameObject player) : base(gameObject)
         {
             playerGo = player;
-            
         }
 
         public override void Awake()

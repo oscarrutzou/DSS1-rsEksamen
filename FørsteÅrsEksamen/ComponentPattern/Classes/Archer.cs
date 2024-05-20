@@ -1,15 +1,15 @@
-﻿using FørsteÅrsEksamen.ComponentPattern.Characters;
+﻿using FørsteÅrsEksamen.ComponentPattern.Classes;
 using FørsteÅrsEksamen.GameManagement;
 
 namespace FørsteÅrsEksamen.ComponentPattern
 {
-    public class Mage : Player
+    public class Archer : Player
     {
-        public Mage(GameObject gameObject) : base(gameObject)
+        public Archer(GameObject gameObject) : base(gameObject)
         {
         }
 
-        public Mage(GameObject gameObject, GameObject handsGo, GameObject movementColliderGo) : base(gameObject, handsGo, movementColliderGo)
+        public Archer(GameObject gameObject, GameObject handsGo, GameObject movementColliderGo) : base(gameObject, handsGo, movementColliderGo)
         {
         }
 

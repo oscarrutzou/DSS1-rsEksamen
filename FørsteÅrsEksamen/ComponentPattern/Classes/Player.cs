@@ -1,12 +1,13 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.ComponentPattern.Weapons;
+using FørsteÅrsEksamen.Factory;
 using FørsteÅrsEksamen.GameManagement;
 using FørsteÅrsEksamen.ObserverPattern;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
-namespace FørsteÅrsEksamen.ComponentPattern.Characters
+namespace FørsteÅrsEksamen.ComponentPattern.Classes
 {
 
     public enum ClassTypes
@@ -28,12 +29,12 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
 
         internal List<IObserver> observers = new();
 
-        public List<GameObject> bag = new List<GameObject>();
-        public GameObject item;
-        private int carriedItem;
+        public PickupableItem ItemInInventory;
 
         private Collider movementCollider;
 
+        public WeaponTypes WeaponType = WeaponTypes.Sword;
+        public ClassTypes ClassType = ClassTypes.Warrior;
 
         public Player(GameObject gameObject) : base(gameObject)
         {
@@ -274,13 +275,13 @@ namespace FørsteÅrsEksamen.ComponentPattern.Characters
 
         public void PickUpItem(GameObject item)
         {
-            this.item = item;
+            ItemInInventory = item.GetComponent<PickupableItem>();
         }
         public void UseItem()
         {
-            if (item == null) return;
+            if (ItemInInventory == null) return;
 
-            item.GetComponent<PickupableItem>().Use();
+            ItemInInventory.Use();
         }
 
         #region Observer Pattern

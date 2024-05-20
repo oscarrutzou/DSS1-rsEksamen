@@ -56,39 +56,10 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             }
         }
 
-        private float overrrideTime = 1; // How long there should go between grid saves.
-        private float overrideUpdateTimer;
-
-        private IRepository repository;
-
-        private List<IObserver> gricCangeObservers = new();
+        private List<IObserver> gridChangeObservers = new();
 
         #endregion Parameters
 
-        // Lav det til at alt er saved på pc og hvis timestamp er anderledet på postgre end file, skal den først uploade alt hvis den har adgang, før den starter?
-
-        //public GridManager()
-        //{
-        //    repository = FileRepository.Instance; 
-                                                  
-                                                  
-        //}
-
-        public void Initialize()
-        {
-            repository = GameWorld.Instance.Repository;
-        }
-
-        public void Update()
-        {
-            overrideUpdateTimer -= GameWorld.DeltaTime;
-
-            if (overrideUpdateTimer < 0)
-            {
-                overrideUpdateTimer = overrrideTime;
-                OverrideSaveGrid(); // Works since we're just changing the CurrentGrid in the GridManager
-            }
-        }
         public void ChangeRoomNrIndex(int addToCurrentRoomNr) => RoomNrIndex += addToCurrentRoomNr;
 
         #region SaveLoad
@@ -96,28 +67,24 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
         {
             CurrentGrid = grid;
 
-            if (!repository.DoesGridExist(grid.Name))
+            if (DBGrid.DoesGridExits(CurrentGrid.Name))
             {
-                OverrideSaveGrid();
+                // Load grid
+                LoadGrid(grid.Name);
             }
             else
             {
-                LoadGrid(grid.Name);
+                // Save Grid
+                DBGrid.SaveGrid(CurrentGrid);
             }
-        }
-
-        public void OverrideSaveGrid()
-        {
-            if (CurrentGrid == null) return;
-
-            repository.SaveGrid(CurrentGrid);
         }
 
         public void LoadGrid(string gridName)
         {
             // A little dumb that it first gets made and then deleted? Fix, if u have time
             DeleteDrawnGrid();
-            GameObject go = repository.GetGrid(gridName);
+            //GameObject go = repository.GetGrid(gridName);
+            GameObject go = DBGrid.GetGrid(gridName);
 
             if (go == null)
             {
@@ -230,17 +197,17 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
         #region Observer Pattern
         public void Attach(IObserver observer)
         {
-            gricCangeObservers.Add(observer);
+            gridChangeObservers.Add(observer);
         }
 
         public void Detach(IObserver observer)
         {
-            gricCangeObservers.Remove(observer);
+            gridChangeObservers.Remove(observer);
         }
 
         public void Notify()
         {
-            foreach (IObserver item in gricCangeObservers)
+            foreach (IObserver item in gridChangeObservers)
             {
                 item.UpdateObserver();
             }

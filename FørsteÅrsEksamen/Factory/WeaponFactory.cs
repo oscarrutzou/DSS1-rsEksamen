@@ -1,6 +1,6 @@
 ﻿using FørsteÅrsEksamen.CommandPattern;
 using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.Characters;
+using FørsteÅrsEksamen.ComponentPattern.Classes;
 using FørsteÅrsEksamen.ComponentPattern.Weapons;
 using FørsteÅrsEksamen.ComponentPattern.Weapons.MeleeWeapons;
 using FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons;

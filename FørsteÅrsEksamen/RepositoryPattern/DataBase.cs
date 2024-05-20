@@ -1,19 +1,8 @@
-﻿
-
-using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.Characters;
-using FørsteÅrsEksamen.ComponentPattern.Path;
-using FørsteÅrsEksamen.Factory;
-using LiteDB;
-using Microsoft.VisualBasic;
-using Microsoft.Xna.Framework;
-using SharpDX.Direct3D9;
+﻿using LiteDB;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq.Expressions;
-using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace FørsteÅrsEksamen.RepositoryPattern
 {
@@ -35,28 +24,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
 
     public class DataBase: IDisposable
     {
-        public readonly static Dictionary<CollectionName, Type> CollectionTypeMap = new Dictionary<CollectionName, Type>
-        {
-            { CollectionName.Cells, typeof(CellData) },
-            { CollectionName.Grids, typeof(GridData) },
-            { CollectionName.SaveFile, typeof(SaveFile) },
-            { CollectionName.UnlockedClass, typeof(UnlockedClass) },
-            { CollectionName.UnlockedWeapon, typeof(UnclockedWeapon) },
-            { CollectionName.GridHasCells, typeof(GridHasCells) },
-            { CollectionName.SaveFileHasClass, typeof(SaveFileHasUnlockedClass) },
-            { CollectionName.SaveFileHasWeapon, typeof(SaveFileHasUnclockedWeapon) },
-            { CollectionName.RunData, typeof(RunData) },
-            { CollectionName.SaveFileHasRunData, typeof(SaveFileHasRunData) },
-            { CollectionName.PlayerData, typeof(PlayerData) },
-            { CollectionName.RunDataHasPlayerData, typeof(RunDataHasPlayerData) },
-        };
 
-        private readonly static List<CollectionName> deleteRunCollections = new() {
-            CollectionName.RunData,
-            CollectionName.SaveFileHasRunData,
-            CollectionName.PlayerData,
-            CollectionName.RunDataHasPlayerData,
-        };
 
         private readonly LiteDatabase db;
 
@@ -69,65 +37,65 @@ namespace FørsteÅrsEksamen.RepositoryPattern
         }
 
 
+
+        public ILiteCollection<T> GetCollection<T>()
+        {
+            return db.GetCollection<T>(currentCollection.ToString());
+        }
         /// <summary>
-        /// A method that deletes all data related to each run.
+        /// Save a single data into the db
         /// </summary>
-        public static void DeleteRunData()
+        /// <typeparam name="T1"></typeparam>
+        /// <param name="input"></param>
+        /// <returns>Returns a bool on if it has saved the data</returns>
+        public BsonValue SaveSingle<T1>(T1 input)
         {
-            // This is ineffecient since we open and close connections,
-            // but since we are just dropping the collection, we are fine with some of the code being less effient.
-            // This metod will also only be called very rarely, so it wont make a difference, if we optimize this method.
-            foreach (CollectionName name in deleteRunCollections)
-            {
-                using LiteDatabase db = new (GetConnectionString(name));
-                db.DropCollection(name.ToString());
-            }
-        }
+            var collection = GetCollection<T1>();
 
-        #region Grid
-        public GameObject GetGrid(string description)
-        {
-            GameObject gridGo = new();
-
-            //Get grid with same 
-
-            return gridGo;
-        }
-        #endregion
-
-        #region Generic Methods
-        public ILiteCollection<T> GetCollection<T>(CollectionName collectionName)
-        {
-            return db.GetCollection<T>(collectionName.ToString());
-        }
-
-        public void SaveSingle<T1>(T1 input)
-        {
-            var collection = GetCollection<T1>(currentCollection);
-            
-            collection.Insert(input);
+            return collection.Insert(input);
         }
 
         public void SaveAll<T>(IEnumerable<T> items)
         {
-            var collection = GetCollection<T>(currentCollection);
+            var collection = GetCollection<T>();
             collection.InsertBulk(items);
         }
 
-        public void SaveSingle<T>(T input, Expression<Func<T, bool>> predicate)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="input"></param>
+        /// <param name="predicate"></param>
+        /// <returns>Returns a bool on if it has saved the data</returns>
+        public BsonValue SaveSingle<T>(T input, Expression<Func<T, bool>> predicate)
         {
-            var collection = GetCollection<T>(currentCollection);
+            var collection = GetCollection<T>();
 
             var existingItem = FindOne(predicate);
             if (existingItem == null)
             {
-                collection.Insert(input);
+                return collection.Insert(input);
             }
+
+            return null;
+        }
+
+        public void SaveOverrideSingle<T>(T input, BsonValue id, Expression<Func<T, bool>> findPredicate)
+        {
+            T file = FindOne(findPredicate);
+
+            if (file != null)
+            {
+                Delete<T>(id);
+            }
+
+            SaveSingle(input);
         }
 
         public void SaveAll<T>(IEnumerable<T> items, Expression<Func<T, bool>> predicate)
         {
-            var collection = GetCollection<T>(currentCollection);
+            var collection = GetCollection<T>();
 
             foreach (var item in items)
             {
@@ -139,23 +107,22 @@ namespace FørsteÅrsEksamen.RepositoryPattern
             }
         }
 
-
         public T FindOne<T>(Expression<Func<T, bool>> predicate)
         {
-            var collection = GetCollection<T>(currentCollection);
+            var collection = GetCollection<T>();
             return collection.FindOne(predicate);
         }
 
         public List<T> GetAll<T>()
         {
-            var collection = GetCollection<T>(currentCollection);
+            var collection = GetCollection<T>();
             var returnData = collection.Query().ToList();
             return returnData;
         }
 
         public void EnsureIndex<T>(Expression<Func<T, object>> field)
         {
-            var collection = GetCollection<T>(currentCollection);
+            var collection = GetCollection<T>();
             collection.EnsureIndex(field);
         }
 
@@ -167,7 +134,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
         /// <param name="updateAction">Use lamda expression to set new value (cell => cell.SomeProperty = newValue) </param>
         public void UpdateSingleValue<T>(BsonValue id, Action<T> updateAction)
         {
-            var collection = GetCollection<T>(currentCollection);
+            var collection = GetCollection<T>();
             var existingData = collection.FindById(id);
             if (existingData != null)
             {
@@ -178,27 +145,26 @@ namespace FørsteÅrsEksamen.RepositoryPattern
 
         public void UpdateReplaceData<T>(BsonValue id, T updatedData)
         {
-            var collection = GetCollection<T>(currentCollection);
+            var collection = GetCollection<T>();
             collection.Update(id, updatedData);
         }
 
-        public void Delete<T>(CollectionName collectionName, BsonValue id)
+        public void Delete<T>(BsonValue id)
         {
-            var collection = GetCollection<T>(currentCollection);
+            var collection = GetCollection<T>();
             collection.Delete(id);
         }
 
         public void DeleteAll<T>()
         {
-            var collection = GetCollection<T>(currentCollection);
+            var collection = GetCollection<T>();
             collection.DeleteAll();
         }
 
-        private static string GetConnectionString(CollectionName collectionName)
+        public static string GetConnectionString(CollectionName collectionName)
         {
-            var pathAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-
-            var path = Path.Combine(pathAppData, "DoctorsDungeon");
+            string pathAppData = AppDomain.CurrentDomain.BaseDirectory;
+            var path = Path.Combine(pathAppData, "data");
             Directory.CreateDirectory(path);
 
             return Path.Combine(path, $"{collectionName}.db");
@@ -208,93 +174,5 @@ namespace FørsteÅrsEksamen.RepositoryPattern
         {
             db?.Dispose();
         }
-        #endregion
     }
-
-    #region Data Classes
-    public class SaveFile
-    {
-        [BsonId]
-        public int Save_ID { get; set; }
-        public DateTime Last_Login { get; set; }
-        public int Currency { get; set; }
-    }
-
-    public class UnlockedClass
-    {
-        [BsonId]
-        public ClassTypes Class_Type { get; set; }
-    }
-    public class SaveFileHasUnlockedClass
-    {
-        public int Save_ID { get; set; }
-        public ClassTypes Class_Type { get; set; }
-    }
-    public class UnclockedWeapon
-    {
-        [BsonId]
-        public WeaponTypes Weapon_Type { get; set; }
-    }
-    public class SaveFileHasUnclockedWeapon
-    {
-        public int Save_ID { get; set; }
-        public WeaponTypes Weapon_Type { get; set; }
-    }
-
-    public class SaveFileHasRunData
-    {
-        public int Save_ID { get; set; }
-        public string Run_ID { get; set; }
-    }
-
-    public class RunData
-    {
-        [BsonId]
-        public string Run_ID { get; set; }
-        public int Room_Reached { get; set; }
-        public float Time_Left { get; set; }
-    }
-
-    public class RunDataHasPlayerData
-    {
-        public string Run_ID { get; set; }
-        public int Player_ID { get; set; }
-    }
-
-    public class PlayerData
-    {
-        [BsonId]
-        public int Player_ID { get; set; }
-        public int Health { get; set; }
-        public string Potion_Name { get; set; }
-        public ClassTypes Class_Type { get; set; }
-        public WeaponTypes Weapon_Type { get; set; }
-    }
-
-    public class GridData
-    {
-        [BsonId]
-        public string Grid_Name { get; set; }
-        public int PositionX { get; set; }
-        public int PositionY { get; set; }
-        public int Start_SizeX { get; set; }
-        public int Start_SizeY { get; set; }
-    }
-
-    public class GridHasCells
-    {
-        public string Grid_Name { get; set; }
-        public int Cell_ID { get; set; }
-    }
-
-    public class CellData
-    {
-        [BsonId]
-        public int Cell_ID { get; set; }
-        public int PointPositionX { get; set; }
-        public int PointPositionY { get; set; }
-        public int Room_Nr { get; set; }
-        public CellWalkableType Cell_Type { get; set; }
-    }
-    #endregion
 }
