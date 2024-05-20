@@ -27,6 +27,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
             SaveFileManager.UnlockedWeapons = DBSaveFile.LoadSaveWeaponType(saveFileData, false);
             SaveFileManager.UnlockedClasses = DBSaveFile.LoadSaveClassType(saveFileData, false);
 
+            // In buy menu.
             UnlockWeapon(WeaponTypes.Axe);
             UnlockWeapon(WeaponTypes.MagicStaffFire);
             UnlockWeapon(WeaponTypes.Bow);
@@ -35,7 +36,38 @@ namespace FørsteÅrsEksamen.RepositoryPattern
             UnlockClass(ClassTypes.Warrior);
             UnlockClass(ClassTypes.Mage);
 
-            SavePlayer(); // Right now the player gets saved multiple times in PlayerData. Same fix as SaveUnlockedClass!!
+            SaveRunData();
+        }
+
+        public static void SaveRunData()
+        {
+            SaveFileData saveFileData = DBSaveFile.LoadSaveFileData(SaveFileManager.CurrentSaveID);
+            RunData runData = DBRunData.RunDataWithSaveFileData(saveFileData);
+            PlayerData playerData = DBRunData.SavePlayer(runData);
+
+            SpawnPlayer(runData, playerData);
+        }
+
+        private static void SpawnPlayer(RunData runData, PlayerData playerData)
+        {
+            //Scene scene = scene array. [0]
+            Scene currentScene = GameWorld.Instance.CurrentScene;
+
+            GameObject playerGo = PlayerFactory.Create(playerData.Class_Type, playerData.Weapon_Type);
+            
+            // Sets the saved data to the player
+            Player player = playerGo.GetComponent<Player>();
+            player.CurrentHealth = playerData.Health;
+            player.ItemInInventory = ItemFactory.Create(playerGo).GetComponent<PickupableItem>();
+            player.ItemInInventory.Name = playerData.Potion_Name;
+
+            Point spawnPos = currentScene.PlayerSpawnPos;
+
+            playerGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[spawnPos].Transform.Position;
+            playerGo.Transform.GridPosition = spawnPos;
+            GameWorld.Instance.WorldCam.position = playerGo.Transform.Position;
+            
+            GameWorld.Instance.Instantiate(playerGo);
         }
 
         public static void DeleteSave(int saveID)
@@ -49,34 +81,29 @@ namespace FørsteÅrsEksamen.RepositoryPattern
             using var fileHasRunDataLinkDB = new DataBase(CollectionName.SaveFileHasRunData);
             using var runDataDB = new DataBase(CollectionName.RunData);
 
+            // Find the rundata for the 
             SaveFileHasRunData existingLink = fileHasRunDataLinkDB.GetCollection<SaveFileHasRunData>()
                                                       .FindOne(link => link.Save_ID == data.Save_ID);
 
-            //RunData runData = runDataDB.GetCollection<RunData>()
-            //                                        .FindOne(data => data.Run_ID == existingLink.Run_ID);
+            // If there is no link, we can just delete the savefile and quit out of the method
+            if (existingLink == null)
+            {
+                //Delete SaveFile.
+                saveFileDB.Delete<SaveFileData>(data.Save_ID);
+                return;
+            }
+            
+            RunData runData = runDataDB.GetCollection<RunData>()
+                                                    .FindOne(data => data.Run_ID == existingLink.Run_ID);
 
-            //DBRunData.DeleteRunData()
+            using var runDataHasPlayerLinkDB = new DataBase(CollectionName.RunDataHasPlayerData);
+            using var playerDB = new DataBase(CollectionName.PlayerData);
+            DBRunData.DeletePlayer(runData, runDataHasPlayerLinkDB, playerDB);
 
-            //using var runDataHasPlayerLinkDB = new DataBase(CollectionName.RunDataHasPlayerData);
-            //using var playerDB = new DataBase(CollectionName.PlayerData);
-            //DBRunData.DeletePlayer()
+            // Delete run data. Need to be last, since it needs to be used to get and delete the Player.
+            DBRunData.DeleteRunData(data, fileHasRunDataLinkDB, runDataDB);
         }
 
-        public static void SavePlayer()
-        {
-            SaveFileData saveFileData = DBSaveFile.LoadSaveFileData(SaveFileManager.CurrentSaveID);
-            RunData runData = DBRunData.RunDataWithSaveFileData(saveFileData);
-            PlayerData playerData = DBRunData.SavePlayer(runData);
-
-            // Add player. Also set other variables so this player go becomes the "real player"
-
-            //GameObject playerGo = PlayerFactory.Create(playerData.Class_Type, playerData.Weapon_Type);
-            //Player player = playerGo.GetComponent<Player>();
-            //player.CurrentHealth = playerData.Health;
-            //player.ItemInInventory = ItemFactory.Create(playerGo).GetComponent<PickupableItem>();
-            //player.ItemInInventory.Name = playerData.Potion_Name;
-            //GameWorld.Instance.Instantiate(playerGo);
-        }
 
         public static void UnlockClass(ClassTypes classType)
         {

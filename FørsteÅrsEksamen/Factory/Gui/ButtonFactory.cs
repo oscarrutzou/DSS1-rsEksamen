@@ -6,14 +6,14 @@ namespace FørsteÅrsEksamen.Factory.Gui
 {
     public static class ButtonFactory
     {
-        public static GameObject Create(string text, Action onClick)
+        public static GameObject Create(string text, bool invokeActionOnFullScale, Action onClick)
         {
             GameObject roomBtn = new();
             roomBtn.Transform.Scale = new(8, 4);
             roomBtn.Type = GameObjectTypes.Gui;
             roomBtn.AddComponent<SpriteRenderer>().SetSprite(GameManagement.TextureNames.Cell);
             roomBtn.AddComponent<Collider>();
-            roomBtn.AddComponent<Button>(text, onClick);
+            roomBtn.AddComponent<Button>(text, invokeActionOnFullScale, onClick);
 
             return roomBtn;
         }

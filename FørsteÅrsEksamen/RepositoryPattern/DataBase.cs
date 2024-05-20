@@ -24,8 +24,6 @@ namespace FørsteÅrsEksamen.RepositoryPattern
 
     public class DataBase: IDisposable
     {
-
-
         private readonly LiteDatabase db;
 
         private readonly CollectionName currentCollection;
@@ -35,8 +33,6 @@ namespace FørsteÅrsEksamen.RepositoryPattern
             currentCollection = connectionString;
             db = new LiteDatabase(GetConnectionString(currentCollection));
         }
-
-
 
         public ILiteCollection<T> GetCollection<T>()
         {

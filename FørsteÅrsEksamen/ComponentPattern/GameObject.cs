@@ -32,6 +32,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
         public Transform Transform { get; private set; } = new Transform();
 
         public GameObjectTypes Type { get; set; } = GameObjectTypes.Default;
+        public bool IsEnabled { get; set; } = true;
 
         /// <summary>
         /// Adds a component to the GameObject, with a empty contructer.
