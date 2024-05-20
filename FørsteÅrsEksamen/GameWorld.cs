@@ -1,10 +1,8 @@
 ﻿using FørsteÅrsEksamen.CommandPattern;
 using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.GameManagement.Scenes;
 using FørsteÅrsEksamen.GameManagement.Scenes.Menus;
 using FørsteÅrsEksamen.GameManagement.Scenes.Rooms;
-using FørsteÅrsEksamen.RepositoryPattern;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -27,6 +25,7 @@ namespace FørsteÅrsEksamen.GameManagement
         public GraphicsDeviceManager GfxManager { get; private set; }
         private SpriteBatch _spriteBatch;
         private ScenesNames? nextScene = null;
+
         public GameWorld()
         {
             GfxManager = new GraphicsDeviceManager(this);
@@ -144,7 +143,6 @@ namespace FørsteÅrsEksamen.GameManagement
         /// <param name="go"></param>
         public void Destroy(GameObject go) => CurrentScene.Destroy(go);
 
-
         public void ChangeScene(ScenesNames sceneName) => nextScene = sceneName;
 
         /// <summary>
@@ -172,6 +170,5 @@ namespace FørsteÅrsEksamen.GameManagement
             CurrentScene = Rooms[roomReached];
             CurrentScene.Initialize();
         }
-
     }
 }

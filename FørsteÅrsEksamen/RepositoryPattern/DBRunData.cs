@@ -69,7 +69,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
                 Run_ID = runData.Run_ID,
                 Player_ID = playerData.Player_ID,
             };
-            
+
             runDataHasPlayerLinkDB.SaveSingle(newLink);
 
             return playerData;
@@ -97,7 +97,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
 
         private static PlayerData MakePlayer(DataBase playerDB)
         {
-            string potionName = SaveFileManager.Player.ItemInInventory == null ? string.Empty: SaveFileManager.Player.ItemInInventory.Name;
+            string potionName = SaveFileManager.Player.ItemInInventory == null ? string.Empty : SaveFileManager.Player.ItemInInventory.Name;
 
             PlayerData playerData = new()
             {
@@ -114,4 +114,3 @@ namespace FørsteÅrsEksamen.RepositoryPattern
         }
     }
 }
-          

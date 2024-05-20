@@ -1,10 +1,7 @@
 ﻿using FørsteÅrsEksamen.CommandPattern;
 using FørsteÅrsEksamen.CommandPattern.Commands;
 using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.Factory.Gui;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 
 namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
 {
@@ -27,8 +24,5 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
         {
             InputHandler.Instance.AddMouseUpdateCommand(MouseCmdState.Left, new CheckButtonCmd());
         }
-
-
-
     }
 }

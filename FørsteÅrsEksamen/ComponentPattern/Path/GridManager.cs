@@ -4,9 +4,7 @@ using FørsteÅrsEksamen.GameManagement;
 using FørsteÅrsEksamen.ObserverPattern;
 using FørsteÅrsEksamen.RepositoryPattern;
 using Microsoft.Xna.Framework;
-using SharpDX.Direct3D11;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 namespace FørsteÅrsEksamen.ComponentPattern.Path
 {
@@ -31,8 +29,9 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
                     currentGrid = value;
                     Notify();
                 }
-            } 
+            }
         }
+
         public Grid SelectedGrid { get; private set; }
 
         private bool showGrid = true;
@@ -63,6 +62,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
         public void ChangeRoomNrIndex(int addToCurrentRoomNr) => RoomNrIndex += addToCurrentRoomNr;
 
         #region SaveLoad
+
         public void SaveGrid(Grid grid)
         {
             CurrentGrid = grid;
@@ -93,12 +93,14 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             }
 
             CurrentGrid = go.GetComponent<Grid>();
-            
+
             //ShouldDrawCells();
         }
-        #endregion
+
+        #endregion SaveLoad
 
         #region Draw and Remove Current Grid
+
         public void DrawOnCells()
         {
             if (GuiMethods.IsMouseOverUI()) return;
@@ -144,9 +146,11 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             GameWorld.Instance.Destroy(CurrentGrid.GameObject);
             CurrentGrid = null;
         }
-        #endregion
+
+        #endregion Draw and Remove Current Grid
 
         #region Return Methods
+
         public GameObject GetCellAtPos(Vector2 pos)
         {
             if (CurrentGrid == null) return null;
@@ -190,11 +194,12 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
                 Cell cell = go.GetComponent<Cell>();
                 cell.ChangeCellWalkalbeType(cell.CellWalkableType); // Only draw the ones that have a room.
             }
-        } 
+        }
 
-        #endregion
+        #endregion Return Methods
 
         #region Observer Pattern
+
         public void Attach(IObserver observer)
         {
             gridChangeObservers.Add(observer);
@@ -212,6 +217,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
                 item.UpdateObserver();
             }
         }
-        #endregion
+
+        #endregion Observer Pattern
     }
 }

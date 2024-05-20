@@ -1,6 +1,5 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern;
 using FørsteÅrsEksamen.ComponentPattern.GUI;
-using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.GameManagement;
 
 namespace FørsteÅrsEksamen.CommandPattern.Commands
@@ -14,7 +13,7 @@ namespace FørsteÅrsEksamen.CommandPattern.Commands
                 if (gameObject.IsEnabled == false) return;
 
                 Button button = gameObject.GetComponent<Button>();
-                
+
                 if (button == null
                     || !button.IsMouseOver()) continue;
 

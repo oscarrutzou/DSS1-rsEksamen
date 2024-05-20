@@ -1,19 +1,17 @@
-﻿using LiteDB;
-using Microsoft.Xna.Framework;
-using System;
-using System.Linq;
-using System.Collections.Generic;
+﻿using FørsteÅrsEksamen.ComponentPattern;
+using FørsteÅrsEksamen.ComponentPattern.Classes;
+using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.Factory;
 using FørsteÅrsEksamen.GameManagement;
-using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.Path;
-using FørsteÅrsEksamen.ComponentPattern.Classes;
+using LiteDB;
+using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace FørsteÅrsEksamen.RepositoryPattern
 {
     public static class DBMethods
     {
-        private readonly static List<CollectionName> deleteRunCollections = new() {
+        private static readonly List<CollectionName> deleteRunCollections = new() {
             CollectionName.RunData,
             CollectionName.SaveFileHasRunData,
             CollectionName.PlayerData,
@@ -54,7 +52,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
             Scene currentScene = GameWorld.Instance.CurrentScene;
 
             GameObject playerGo = PlayerFactory.Create(playerData.Class_Type, playerData.Weapon_Type);
-            
+
             // Sets the saved data to the player
             Player player = playerGo.GetComponent<Player>();
             player.CurrentHealth = playerData.Health;
@@ -66,7 +64,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
             playerGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[spawnPos].Transform.Position;
             playerGo.Transform.GridPosition = spawnPos;
             GameWorld.Instance.WorldCam.position = playerGo.Transform.Position;
-            
+
             GameWorld.Instance.Instantiate(playerGo);
         }
 
@@ -81,7 +79,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
             using var fileHasRunDataLinkDB = new DataBase(CollectionName.SaveFileHasRunData);
             using var runDataDB = new DataBase(CollectionName.RunData);
 
-            // Find the rundata for the 
+            // Find the rundata for the
             SaveFileHasRunData existingLink = fileHasRunDataLinkDB.GetCollection<SaveFileHasRunData>()
                                                       .FindOne(link => link.Save_ID == data.Save_ID);
 
@@ -92,7 +90,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
                 saveFileDB.Delete<SaveFileData>(data.Save_ID);
                 return;
             }
-            
+
             RunData runData = runDataDB.GetCollection<RunData>()
                                                     .FindOne(data => data.Run_ID == existingLink.Run_ID);
 
@@ -103,7 +101,6 @@ namespace FørsteÅrsEksamen.RepositoryPattern
             // Delete run data. Need to be last, since it needs to be used to get and delete the Player.
             DBRunData.DeleteRunData(data, fileHasRunDataLinkDB, runDataDB);
         }
-
 
         public static void UnlockClass(ClassTypes classType)
         {
@@ -144,7 +141,6 @@ namespace FørsteÅrsEksamen.RepositoryPattern
 
         public static void RegularSave()
         {
-
         }
 
         /// <summary>
@@ -162,7 +158,6 @@ namespace FørsteÅrsEksamen.RepositoryPattern
             }
         }
 
-
         /*
          * Methods
          * update potion on player
@@ -170,10 +165,5 @@ namespace FørsteÅrsEksamen.RepositoryPattern
          * Delete ids
          * How to get the save id?
          */
-
-
-
-
-
     }
 }

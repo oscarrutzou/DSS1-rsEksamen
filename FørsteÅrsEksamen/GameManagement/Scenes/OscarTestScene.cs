@@ -5,13 +5,11 @@ using FørsteÅrsEksamen.ComponentPattern.Classes;
 using FørsteÅrsEksamen.ComponentPattern.Enemies.MeleeEnemies;
 using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.Factory;
-using FørsteÅrsEksamen.Factory.Gui;
 using FørsteÅrsEksamen.ObserverPattern;
 using FørsteÅrsEksamen.RepositoryPattern;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 using System.Collections.Generic;
 
 namespace FørsteÅrsEksamen.GameManagement.Scenes
@@ -78,11 +76,11 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             GameObject itemGo = ItemFactory.Create(PlayerGo);
             GameWorld.Instance.Instantiate(itemGo);
 
-            itemGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[new Point(3,3)].Transform.Position;
+            itemGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[new Point(3, 3)].Transform.Position;
         }
 
         private void MakePlayer()
-        {   
+        {
             PlayerGo = PlayerFactory.Create(ClassTypes.Warrior, WeaponTypes.Sword);
             PlayerGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[PlayerSpawnPos].Transform.Position;
             PlayerGo.Transform.GridPosition = PlayerSpawnPos;
@@ -105,7 +103,6 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Tab, new CustomCmd(() => { GridManager.Instance.ShowHideGrid(); }));
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, new CustomCmd(Attack));
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DBGrid.SaveGrid(GridManager.Instance.CurrentGrid); }));
-
         }
 
         public override void OnPlayerChanged()
@@ -156,16 +153,15 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             if (GridManager.Instance.CurrentGrid != null)
             {
                 //spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], GridManager.Instance.GetCornerPositionOfCell(new Point(3, 1)), null, Color.DarkRed, 0f, Vector2.Zero, 10, SpriteEffects.None, 1);
-
             }
 
             base.DrawInWorld(spriteBatch);
         }
 
         private List<GameObject> list; //For test
+
         public override void DrawOnScreen(SpriteBatch spriteBatch)
         {
-
             spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], GameWorld.Instance.UiCam.TopLeft, null, Color.WhiteSmoke, 0f, Vector2.Zero, new Vector2(350, 150), SpriteEffects.None, 0f);
 
             Vector2 mousePos = InputHandler.Instance.MouseOnUI;

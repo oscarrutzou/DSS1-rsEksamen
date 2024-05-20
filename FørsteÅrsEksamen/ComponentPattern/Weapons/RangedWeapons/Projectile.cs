@@ -2,17 +2,10 @@
 using FørsteÅrsEksamen.ComponentPattern.Enemies;
 using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
-using SharpDX.Direct3D9;
-using SharpDX.XAudio2;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
 {
-
     // Erik
     internal class Projectile : Component
     {
@@ -22,7 +15,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
         private Vector2 startPos;
         private Vector2 lerpTo;
         private Vector2 targetPos;
-
 
         public Projectile(GameObject gameObject) : base(gameObject)
         {
@@ -35,16 +27,14 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
             sr.SetLayerDepth(LAYERDEPTH.Player);
 
             sr.SetSprite(TextureNames.WoodSword);
-
         }
-        
 
         public void SetValues(float rotation)
         {
             range = 200f;
             GameObject.Transform.Rotation = rotation;
             startPos = GameObject.Transform.Position;
-            
+
             lerpTo = Rotate(startPos + new Vector2(0, range), rotation);
             SetDirection();
         }
@@ -83,23 +73,18 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
 
             float angle = (float)Math.Atan2(direction.Y, direction.X);
             GameObject.Transform.Rotation = angle;
-            
-
-
         }
 
-       
         public override void Update(GameTime gameTime)
         {
             Move(gameTime);
         }
-        
+
         private void Move(GameTime gameTime)
         {
             //if (targetPos == Vector2.Zero) return;
 
             //GameObject.Transform.Position = Vector2.Lerp(startPos, targetPos, GameWorld.DeltaTime * speed);
-
 
             //if (Math.Abs(GameObject.Transform.Position.X - targetPos.X) < 0.01f &&
             //    Math.Abs(GameObject.Transform.Position.Y - targetPos.Y) < 0.01f)
@@ -113,11 +98,9 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
 
             GameObject.Transform.Position += step;
 
-
-
             // skal rettes fra skærm til gridsize
             //Vector2 screenPosition = Vector2.Transform(GameObject.Transform.Position, GameWorld.Instance.WorldCam.GetMatrix());
-            //if (screenPosition.X<0 
+            //if (screenPosition.X<0
             //    || screenPosition.Y <0
             //    || screenPosition.X > GameWorld.Instance.GfxManager.PreferredBackBufferWidth
             //    || screenPosition.Y > GameWorld.Instance.GfxManager.PreferredBackBufferHeight)
@@ -127,30 +110,23 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
         }
 
         private bool colCalled;
+
         public override void OnCollisionEnter(Collider collider)
         {
             //if (colCalled) return;
-            if (collider.GameObject.GetComponent<Enemy>() !=null)
+            if (collider.GameObject.GetComponent<Enemy>() != null)
             {
                 GameWorld.Instance.Destroy(GameObject);
                 //colCalled = true;
             }
-            
-
-
-
         }
 
         public void DestroyRange()
         {
-            
         }
 
         public void Attack()
         {
-
         }
-
-
     }
 }

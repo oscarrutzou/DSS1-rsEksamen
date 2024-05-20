@@ -1,6 +1,5 @@
-﻿using FørsteÅrsEksamen.GameManagement;
-using FørsteÅrsEksamen.ObserverPattern;
-using FørsteÅrsEksamen.ComponentPattern.Path;
+﻿using FørsteÅrsEksamen.ComponentPattern.Path;
+using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -12,10 +11,10 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
     public abstract class Enemy : Character
     {
         #region Properties
+
         private Grid grid;
         private Astar astar;
         private GameObject playerGo;
-
 
         private List<GameObject> path;
         private Vector2 nextTarget;
@@ -26,6 +25,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 
         private bool inRange = false;
         private float range;
+
         #endregion Properties
 
         public Enemy(GameObject gameObject) : base(gameObject)
@@ -65,7 +65,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 
         public override void Update(GameTime gameTime)
         {
-            if (GameObject.Transform.Position.Y <playerGo.Transform.Position.Y)
+            if (GameObject.Transform.Position.Y < playerGo.Transform.Position.Y)
             {
                 spriteRenderer.SetLayerDepth(LAYERDEPTH.EnemyUnderPlayer);
             }
@@ -74,7 +74,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
                 spriteRenderer.SetLayerDepth(LAYERDEPTH.EnemyOverPlayer);
             }
 
-            // Also needs to check if 
+            // Also needs to check if
 
             // Checks if the playerGo.Transform.GridPostion is the same, if false, we know that the player has moved -
             // so we make a new path towards that point.
@@ -103,8 +103,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
         }
 
         // Kig hvad jeg har i starten af update, husk at have de checks med og sætte targetPoint til playerGo GridPosition.
-
-
 
         #region PathFinding
 
@@ -173,7 +171,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 
         private void OnGoalReached()
         {
-            
             SetState(CharacterState.Attacking);
 
             spriteRenderer.SpriteEffects = SpriteEffects.None;
@@ -200,12 +197,13 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
         {
             nextTarget = cellGo.Transform.Position + new Vector2(0, -Cell.dimension * Cell.Scale / 2);
         }
+
         #endregion PathFinding
 
         private void Attack()
         {
             attackTimer -= GameWorld.DeltaTime;
-                SetState(CharacterState.Idle);
+            SetState(CharacterState.Idle);
 
             if (attackTimer < 0)
             {
@@ -214,7 +212,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             }
         }
 
-        internal virtual void AttackAction() { }
+        internal virtual void AttackAction()
+        { }
 
         internal override void SetState(CharacterState newState)
         {
@@ -236,7 +235,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
                     spriteRenderer.OriginOffSet = largeSpriteOffSet;
                     break;
 
-                case CharacterState.Attacking: 
+                case CharacterState.Attacking:
                     animator.PlayAnimation(characterStateAnimations[CharacterState.Idle]); // Just uses the Idle since we have no attacking animation
 
                     spriteRenderer.OriginOffSet = idlespriteOffset;

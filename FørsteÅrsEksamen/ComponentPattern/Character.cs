@@ -1,14 +1,9 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern.Enemies;
 using FørsteÅrsEksamen.ComponentPattern.Weapons;
 using FørsteÅrsEksamen.GameManagement;
-using FørsteÅrsEksamen.ObjectPoolPattern;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FørsteÅrsEksamen.ComponentPattern
 {
@@ -30,6 +25,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
     public abstract class Character : Component
     {
         #region Properties
+
         internal SpriteRenderer spriteRenderer;
         internal Animator animator;
         internal Collider collider;
@@ -42,7 +38,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
         internal Vector2 largeSpriteOffSet = new(0, -96); // Move the animation up more since its a 64x64 insted of 32x32 canvans, for the Run and Death.
 
         internal Vector2 direction;
-        internal CharacterState State = CharacterState.Moving; // We use the method SetState, to we can change the animations and other variables. 
+        internal CharacterState State = CharacterState.Moving; // We use the method SetState, to we can change the animations and other variables.
         internal AnimationDirectionState directionState = AnimationDirectionState.Right;
 
         internal float attackTimer;
@@ -52,7 +48,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
         public int CurrentHealth = 100;
         public int MaxHealth = 100;
 
-        #endregion
+        #endregion Properties
 
         public Character(GameObject gameObject) : base(gameObject)
         {
@@ -71,7 +67,8 @@ namespace FørsteÅrsEksamen.ComponentPattern
         /// A method to set the new state and change the animation drawn.
         /// </summary>
         /// <param name="newState"></param>
-        internal virtual void SetState(CharacterState newState) { }
+        internal virtual void SetState(CharacterState newState)
+        { }
 
         /// <summary>
         /// Updates the direction of which way the sprite should draw. Remember to set the direction!
@@ -111,10 +108,10 @@ namespace FørsteÅrsEksamen.ComponentPattern
             Enemy enemy = GameObject.GetComponent<Enemy>();
             if (enemy != null)
             {
-            //    EnemyPool.Instance.ReleaseObject(GameObject);
-            //}
-            //else
-            //{
+                //    EnemyPool.Instance.ReleaseObject(GameObject);
+                //}
+                //else
+                //{
                 GameWorld.Instance.Destroy(GameObject);
             }
         }

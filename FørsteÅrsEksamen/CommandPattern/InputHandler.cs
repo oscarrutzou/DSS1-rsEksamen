@@ -5,7 +5,6 @@ using FørsteÅrsEksamen.RepositoryPattern;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace FørsteÅrsEksamen.CommandPattern
 {
@@ -54,7 +53,6 @@ namespace FørsteÅrsEksamen.CommandPattern
             AddKeyButtonDownCommand(Keys.Q, new CustomCmd(() => { GridManager.Instance.ChangeRoomNrIndex(-1); }));
             AddKeyButtonDownCommand(Keys.E, new CustomCmd(() => { GridManager.Instance.ChangeRoomNrIndex(1); }));
             AddKeyButtonDownCommand(Keys.T, new CustomCmd(() => { DBMethods.DeleteSave(SaveFileManager.CurrentSaveID); }));
-
         }
 
         #region Command
@@ -264,7 +262,6 @@ namespace FørsteÅrsEksamen.CommandPattern
 
             previousMouseState = mouseState;
         }
-
 
         #endregion Command
 

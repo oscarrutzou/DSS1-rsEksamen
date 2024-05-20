@@ -2,8 +2,8 @@
 using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Diagnostics;
 
 namespace FørsteÅrsEksamen.ComponentPattern.GUI
@@ -11,15 +11,16 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
     public class Button : Component
     {
         #region Properties
+
         public Action OnClick;
         private string text;
         private SpriteFont font;
 
         private SpriteRenderer spriteRenderer;
         private Collider collider;
-        
+
         public Color TextColor = Color.Black;
-        
+
         private Color baseColor;
         public Color OnHoverColor = Color.Cyan;
         public Color OnMouseDownColor = Color.DarkCyan;
@@ -32,7 +33,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
 
         private Vector2 scaleUpAmount;
         private float scaleDownOnClickAmount = 0.95f;
-        #endregion
+
+        #endregion Properties
 
         public Button(GameObject gameObject) : base(gameObject)
         {
@@ -87,7 +89,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
 
             // Scales up too fast
             GameObject.Transform.Scale = new Vector2(
-                Math.Min(maxScale.X, scale.X + scaleUpAmount.X), 
+                Math.Min(maxScale.X, scale.X + scaleUpAmount.X),
                 Math.Min(maxScale.Y, scale.Y + scaleUpAmount.Y));
 
             if (!GameObject.IsEnabled

@@ -14,10 +14,11 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
     {
         private GameObject weapon;
         private GameObject projectile;
-        
+
         private bool canShoot = true;
         private float lastShot = 0;
         private float shootTimer = 1;
+
         public override void Initialize()
         {
             //MakeWeapon();
@@ -40,7 +41,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         private void MakeWeapon()
         {
             weapon = WeaponFactory.Create(WeaponTypes.Sword);
-            
+
             GameWorld.Instance.Instantiate(weapon);
         }
 
@@ -56,21 +57,19 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             weapon.GetComponent<Weapon>().Attack();
             //projectile.GetComponent<MagicStaff>().Attack();
         }
-       private void AttackCommand()
+
+        private void AttackCommand()
         {
-            InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, 
+            InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space,
                 new CustomCmd(Attack));
 
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.B,
                 new CustomCmd(Shoot));
-
-
         }
 
-        private void Shoot() { 
-        
+        private void Shoot()
+        {
             projectile.GetComponent<Projectile>().SetValues(MathHelper.Pi);
-
         }
 
         //private void Shoot()
@@ -83,8 +82,6 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         //    }
 
         //}
-
-
 
         public override void DrawInWorld(SpriteBatch spriteBatch)
         {

@@ -1,12 +1,11 @@
-﻿using FørsteÅrsEksamen.CommandPattern.Commands;
-using FørsteÅrsEksamen.CommandPattern;
+﻿using FørsteÅrsEksamen.CommandPattern;
+using FørsteÅrsEksamen.CommandPattern.Commands;
 using FørsteÅrsEksamen.ComponentPattern;
+using FørsteÅrsEksamen.ComponentPattern.Classes;
 using FørsteÅrsEksamen.ComponentPattern.Weapons;
 using FørsteÅrsEksamen.Factory;
-using Microsoft.Xna.Framework.Input;
-using FørsteÅrsEksamen.ComponentPattern.Classes;
-using FørsteÅrsEksamen.ComponentPattern.Path;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace FørsteÅrsEksamen.GameManagement.Scenes
 {
@@ -18,6 +17,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
             SetCommands();
         }
+
         private void Attack()
         {
             Player player = playerGo.GetComponent<Player>();
@@ -25,7 +25,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             weapon.Attack();
         }
 
-        GameObject playerGo;
+        private GameObject playerGo;
 
         private void MakePlayer()
         {
@@ -45,13 +45,11 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             InputHandler.Instance.AddKeyUpdateCommand(Keys.S, new MoveCmd(player, new Vector2(0, 1)));
 
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, new CustomCmd(Attack));
-
         }
 
         private void TestRemoveComm()
         {
             InputHandler.Instance.RemoveKeyUpdateCommand(Keys.S);
         }
-
     }
 }

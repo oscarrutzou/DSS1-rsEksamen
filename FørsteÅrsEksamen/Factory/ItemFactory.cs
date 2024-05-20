@@ -1,7 +1,6 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern;
-using System.Numerics;
 using FørsteÅrsEksamen.GameManagement;
-using FørsteÅrsEksamen.ComponentPattern.Classes;
+using System.Numerics;
 
 namespace FørsteÅrsEksamen.Factory
 {
