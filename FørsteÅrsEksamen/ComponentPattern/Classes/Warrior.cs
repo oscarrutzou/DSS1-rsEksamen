@@ -21,6 +21,5 @@ namespace FørsteÅrsEksamen.ComponentPattern
             characterStateAnimations.Add(CharacterState.Moving, AnimNames.KnightRun);
             characterStateAnimations.Add(CharacterState.Dead, AnimNames.KnightDeath);
         }
-
     }
 }

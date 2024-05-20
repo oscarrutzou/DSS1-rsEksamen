@@ -135,6 +135,5 @@ namespace FørsteÅrsEksamen.ComponentPattern
             isLooping = false; // Stop animation from looping
             CurrentAnimation.OnAnimationDone += () => { CurrentIndex = MaxFrames - 1; }; ; // The action that gets called when the animation is done
         }
-
     }
 }

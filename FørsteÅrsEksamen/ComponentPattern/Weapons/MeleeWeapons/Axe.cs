@@ -1,7 +1,4 @@
-﻿using FørsteÅrsEksamen.GameManagement;
-using Microsoft.Xna.Framework;
-
-namespace FørsteÅrsEksamen.ComponentPattern.Weapons.MeleeWeapons
+﻿namespace FørsteÅrsEksamen.ComponentPattern.Weapons.MeleeWeapons
 {
     internal class Axe : MeleeWeapon
     {

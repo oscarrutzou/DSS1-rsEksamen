@@ -2,11 +2,8 @@
 {
     internal abstract class RangedWeapon : Weapon
     {
-          
         protected RangedWeapon(GameObject gameObject) : base(gameObject)
         {
         }
-
-      
     }
 }

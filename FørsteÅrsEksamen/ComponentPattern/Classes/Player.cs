@@ -9,13 +9,13 @@ using System.Collections.Generic;
 
 namespace FørsteÅrsEksamen.ComponentPattern.Classes
 {
-
     public enum ClassTypes
     {
-        Archer, 
-        Warrior, 
+        Archer,
+        Warrior,
         Mage,
     }
+
     // Oscar
     public abstract class Player : Character, ISubject
     {
@@ -52,12 +52,12 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
         {
             base.Awake();
             movementCollider = movementColliderGo.GetComponent<Collider>();
-            
+
             if (WeaponGo != null)
             {
                 weapon = WeaponGo.GetComponent<Weapon>();
             }
-            
+
             collider.SetCollisionBox(15, 24, new Vector2(0, 30));
         }
 
@@ -65,9 +65,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
         {
             spriteRenderer.SetLayerDepth(LAYERDEPTH.Player);
             SetState(CharacterState.Idle);
-
         }
-
 
         public void AddInput(Vector2 input)
         {
@@ -93,7 +91,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
             {
                 targetVelocity = Vector2.Zero;
             }
-
 
             velocity = Vector2.Lerp(velocity, targetVelocity, turnSpeed * GameWorld.DeltaTime);
             direction = velocity;
@@ -155,7 +152,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
                 GameObject gridCell = GridManager.Instance.GetCellAtPos(corner);
                 if (gridCell == null || gridCell.GetComponent<Cell>().CellWalkableType == CellWalkableType.NotValid)
                 {
-                    // If any corner is in an invalid cell, revert the movement on both player and 
+                    // If any corner is in an invalid cell, revert the movement on both player and
                     SetMovement(previousPosition);
                     return false;
                 }
@@ -200,21 +197,22 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
             else
             {
                 SetState(CharacterState.Idle);
-
             }
 
             switch (State)
             {
                 case CharacterState.Idle:
                     break;
+
                 case CharacterState.Moving:
                     Move(totalMovementInput);
                     break;
+
                 case CharacterState.Attacking:
                     break;
+
                 case CharacterState.Dead:
                     break;
-
             }
 
             totalMovementInput = Vector2.Zero;
@@ -226,7 +224,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
             {
                 directionState = AnimationDirectionState.Right;
                 spriteRenderer.SpriteEffects = SpriteEffects.None;
-                
             }
             else if (direction.X < 0)
             {
@@ -277,6 +274,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
         {
             ItemInInventory = item.GetComponent<PickupableItem>();
         }
+
         public void UseItem()
         {
             if (ItemInInventory == null) return;
@@ -285,6 +283,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
         }
 
         #region Observer Pattern
+
         public void Attach(IObserver observer)
         {
             observers.Add(observer);
@@ -303,7 +302,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
             }
         }
 
-
-        #endregion
+        #endregion Observer Pattern
     }
 }
