@@ -20,37 +20,32 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         private float shootTimer = 1;
         public override void Initialize()
         {
-            //MakeWeapon();
+            MakeWeapon();
             GameWorld.Instance.WorldCam.position = Vector2.Zero;
-            MakeProjectile();
+            //MakeProjectile();
             AttackCommand();
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            //lastShot += GameWorld.DeltaTime;
+            lastShot += GameWorld.DeltaTime;
 
-            //if (lastShot > shootTimer)
-            //{
-            //    canShoot = true;
-            //}
+            if (lastShot > shootTimer)
+            {
+                canShoot = true;
+            }
         }
 
         private void MakeWeapon()
         {
             weapon = WeaponFactory.Create(WeaponTypes.Sword);
             
+            
             GameWorld.Instance.Instantiate(weapon);
         }
 
-        private void MakeProjectile()
-        {
-            ProjectileFactory projectileFactory = new ProjectileFactory();
-            projectile = projectileFactory.Create();
-
-            GameWorld.Instance.Instantiate(projectile);
-        }
+       
 
         private void Attack()
         {
@@ -68,23 +63,19 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
         }
 
-        private void Shoot() { 
-        
+        public void Shoot()
+        {
+
             projectile.GetComponent<Projectile>().SetValues(MathHelper.Pi);
 
+            if (canShoot)
+            {
+                canShoot = false;
+                lastShot = 0;
+
+            }
+
         }
-
-        //private void Shoot()
-        //{
-        //    if (canShoot)
-        //    {
-        //        canShoot = false;
-        //        lastShot = 0;
-
-        //    }
-
-        //}
-
 
 
         public override void DrawInWorld(SpriteBatch spriteBatch)

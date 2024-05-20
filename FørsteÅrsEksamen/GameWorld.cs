@@ -47,7 +47,7 @@ namespace FørsteÅrsEksamen.GameManagement
             GlobalAnimations.LoadContent();
 
             GenerateScenes();
-            ChangeScene(ScenesNames.OscarTestScene);
+            ChangeScene(ScenesNames.ErikTestScene);
 
             base.Initialize();
         }
