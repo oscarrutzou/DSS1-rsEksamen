@@ -38,9 +38,28 @@ namespace FørsteÅrsEksamen.RepositoryPattern
             SavePlayer(); // Right now the player gets saved multiple times in PlayerData. Same fix as SaveUnlockedClass!!
         }
 
-        public static void DeleteSave()
+        public static void DeleteSave(int saveID)
         {
+            using var saveFileDB = new DataBase(CollectionName.SaveFile);
+            SaveFileData data = saveFileDB.FindOne<SaveFileData>(x => x.Save_ID == saveID);
 
+            DBSaveFile.DeleteWeapon(data);
+            DBSaveFile.DeleteClass(data);
+
+            using var fileHasRunDataLinkDB = new DataBase(CollectionName.SaveFileHasRunData);
+            using var runDataDB = new DataBase(CollectionName.RunData);
+
+            SaveFileHasRunData existingLink = fileHasRunDataLinkDB.GetCollection<SaveFileHasRunData>()
+                                                      .FindOne(link => link.Save_ID == data.Save_ID);
+
+            //RunData runData = runDataDB.GetCollection<RunData>()
+            //                                        .FindOne(data => data.Run_ID == existingLink.Run_ID);
+
+            //DBRunData.DeleteRunData()
+
+            //using var runDataHasPlayerLinkDB = new DataBase(CollectionName.RunDataHasPlayerData);
+            //using var playerDB = new DataBase(CollectionName.PlayerData);
+            //DBRunData.DeletePlayer()
         }
 
         public static void SavePlayer()

@@ -13,7 +13,6 @@ namespace FørsteÅrsEksamen.RepositoryPattern
     /// </summary>
     public static class DBSaveFile
     {
-
         public static SaveFileData LoadSaveFileData(int currentSaveID)
         {
             using var db = new DataBase(CollectionName.SaveFile);
