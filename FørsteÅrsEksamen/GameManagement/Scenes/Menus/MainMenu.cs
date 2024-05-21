@@ -16,10 +16,22 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
         private List<GameObject> startMenuObjects = new();
         private List<GameObject> pauseMenuObjects = new();
 
+        private SpriteFont font;
+        private Vector2 textPos;
+
         public override void Initialize()
         {
+            GlobalSounds.InMenu = true;
+
+            font = GlobalTextures.DefaultFont;
+            textPos = GameWorld.Instance.UiCam.Center + new Vector2(0, -200);
+            
+            //Draw background
+
             InitStartMenu();
             InitPauseMenu();
+
+
         }
 
         private void InitStartMenu()
@@ -36,7 +48,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
                  () => { GameWorld.Instance.Exit(); });
             startMenuObjects.Add(quitBtn);
 
-            GuiMethods.PlaceButtons(startMenuObjects, Vector2.Zero, 25);
+            GuiMethods.PlaceButtons(startMenuObjects, textPos + new Vector2(0, 75), 25);
         }
 
         private void InitPauseMenu()
@@ -51,7 +63,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
 
             ShowHideGameObjects(pauseMenuObjects, false);
 
-            GuiMethods.PlaceButtons(pauseMenuObjects, Vector2.Zero, 25);
+            GuiMethods.PlaceButtons(pauseMenuObjects, textPos + new Vector2(0, 75), 25);
         }
 
         private void Settings()
@@ -81,7 +93,21 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
         {
             base.DrawOnScreen(spriteBatch);
 
+            if (showSettings)
+            {
+                DrawMenuText(spriteBatch, "Settings", textPos);
+            }
+            else
+            {
+                DrawMenuText(spriteBatch, "Doctor's Dunguon", textPos);
+            }
+
             spriteBatch.DrawString(GlobalTextures.DefaultFont, $"{SceneData.GameObjectLists[GameObjectTypes.Gui].Count}", GameWorld.Instance.UiCam.TopLeft, Color.Black);
+        }
+
+        private void DrawMenuText(SpriteBatch spriteBatch, string text, Vector2 position)
+        {
+            GuiMethods.DrawTextCentered(spriteBatch, font, position, text, Color.Black);
         }
 
 

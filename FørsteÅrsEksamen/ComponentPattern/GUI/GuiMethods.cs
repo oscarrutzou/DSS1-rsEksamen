@@ -14,15 +14,11 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
         public static void PlaceButtons(List<GameObject> buttonList, Vector2 startPos, int spaceBetweenBtns)
         {
             int buttonHeight = buttonList[0].GetComponent<SpriteRenderer>().Sprite.Height * (int)buttonList[0].Transform.Scale.Y;
-            int totalHeight = (buttonList.Count - 1) * (buttonHeight + spaceBetweenBtns);
-
-            // Start from the position of the second button and move up half the total height
-            Vector2 position = startPos + new Vector2(0, -totalHeight / 2);
 
             for (int i = 0; i < buttonList.Count; i++)
             {
                 GameObject btn = buttonList[i];
-                int newPosY = (int)position.Y + i * (buttonHeight + spaceBetweenBtns);
+                int newPosY = (int)startPos.Y + i * (buttonHeight + spaceBetweenBtns);
                 btn.Transform.Position = new Vector2(startPos.X, newPosY);
 
                 GameWorld.Instance.Instantiate(btn);
@@ -32,7 +28,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
         /// <summary>
         /// <para>Can take and divide the text and center each part of the text.</para>
         /// </summary>
-        public static void DrawTextCentered(SpriteBatch spriteBatch, SpriteFont font, float zoom, Vector2 position, string text, Color textColor)
+        public static void DrawTextCentered(SpriteBatch spriteBatch, SpriteFont font, Vector2 position, string text, Color textColor)
         {
             if (string.IsNullOrEmpty(text)) return;
 
@@ -41,7 +37,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
 
             if (lines.Length == 1) // Only one line so can make a easier and fast way to draw it, if we have another method for 1 line
             {
-                DrawSingleLineCentered(spriteBatch, font, zoom, position, text, textColor);
+                DrawSingleLineCentered(spriteBatch, font, position, text, textColor);
                 return;
             }
 
@@ -76,13 +72,13 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
                                        textColor,
                                        0,
                                        Vector2.Zero,
-                                       zoom,
+                                       1f,
                                        SpriteEffects.None,
                                        1);
             }
         }
 
-        private static void DrawSingleLineCentered(SpriteBatch spriteBatch, SpriteFont font, float zoom, Vector2 position, string text, Color textColor)
+        private static void DrawSingleLineCentered(SpriteBatch spriteBatch, SpriteFont font, Vector2 position, string text, Color textColor)
         {
             Vector2 lineSize = font.MeasureString(text);
 
@@ -95,7 +91,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
                        textColor,
                        0,
                        Vector2.Zero,
-                       zoom,
+                       1f,
                        SpriteEffects.None,
                        1);
         }

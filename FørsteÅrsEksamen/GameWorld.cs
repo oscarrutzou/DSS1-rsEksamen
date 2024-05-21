@@ -46,17 +46,19 @@ namespace FørsteÅrsEksamen.GameManagement
             UiCam = new Camera(false);
 
             GlobalTextures.LoadContent();
+            GlobalSounds.LoadContent();
             GlobalAnimations.LoadContent();
 
             GenerateScenes();
             SetRoomScenes();
 
-            CurrentScene = Scenes[ScenesNames.OscarTestScene];
+            CurrentScene = Scenes[ScenesNames.MainMenu];
             CurrentScene.Initialize();
 
+            // Start Input Handler Thread
             Thread cmdThread = new(() => { InputHandler.Instance.StartInputThead(); })
             {
-                IsBackground = true
+                IsBackground = true // Stops the thread abruptly
             };
             cmdThread.Start();
 
@@ -72,7 +74,8 @@ namespace FørsteÅrsEksamen.GameManagement
         {
             DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            //InputHandler.Instance.Update(); //Updates our input, so its not each scene that have to handle the call.
+            GlobalSounds.MusicUpdate(); // Maybe run on own thread?
+
             CurrentScene.Update(gameTime);
 
             HandleSceneChange();
@@ -174,6 +177,7 @@ namespace FørsteÅrsEksamen.GameManagement
 
         public void ChangeRoomReached(int roomReached)
         {
+            GlobalSounds.InMenu = false;
             SceneData.DeleteAllGameObjects();
             CurrentScene = Rooms[roomReached];
             CurrentScene.Initialize();

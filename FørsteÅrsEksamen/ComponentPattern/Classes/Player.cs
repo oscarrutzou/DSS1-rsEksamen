@@ -20,7 +20,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
     public abstract class Player : Character, ISubject
     {
         internal GameObject handsGo;
-        internal Weapon weapon;
+        //internal Weapon weapon;
         private GameObject movementColliderGo;
 
         private Vector2 totalMovementInput, velocity, targetVelocity, previousPosition;

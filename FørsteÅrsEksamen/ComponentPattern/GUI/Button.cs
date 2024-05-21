@@ -134,9 +134,9 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
         public override void Draw(SpriteBatch spriteBatch)
         {
             // If the text is not visible or null, we don't need to do anything
-            if (string.IsNullOrEmpty(text) || !GameObject.GetComponent<SpriteRenderer>().ShouldDraw) return;
+            if (string.IsNullOrEmpty(text)) return;
 
-            GuiMethods.DrawTextCentered(spriteBatch, font, GameWorld.Instance.UiCam.zoom, GameObject.Transform.Position, text, TextColor);
+            GuiMethods.DrawTextCentered(spriteBatch, font, GameObject.Transform.Position, text, TextColor);
         }
     }
 }

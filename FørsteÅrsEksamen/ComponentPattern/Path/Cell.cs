@@ -102,7 +102,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
         {
             if (spriteRenderer == null || !spriteRenderer.ShouldDraw) return;
 
-            GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, GameWorld.Instance.WorldCam.zoom, GameObject.Transform.Position, RoomNr.ToString(), Color.HotPink);
+            GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, GameObject.Transform.Position, RoomNr.ToString(), Color.HotPink);
         }
 
         public void ChangeCellWalkalbeType(CellWalkableType cellWalkableType)

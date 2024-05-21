@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FørsteÅrsEksamen.ComponentPattern.Weapons
 {
@@ -40,6 +41,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
         private float totalElapsedTime = 0.0f;
         private bool isRotatingBack = false;
         private List<CollisionRectangle> weaponColliders = new();
+
+        internal SoundNames[] AttackSoundNames;
 
         protected Weapon(GameObject gameObject) : base(gameObject)
         {
@@ -104,7 +107,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
 
         internal Rectangle MakeRec(Vector2 pos, int width, int height, Vector2 scale) => new Rectangle((int)pos.X, (int)pos.Y, width * (int)scale.X, (int)scale.Y * height);
 
-        public void Attack()
+        public virtual void Attack()
         {
             if (attacking) return;
 
@@ -144,7 +147,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
             }
         }
 
-        //startAnimationAngle = angleToMouse;
+        private bool playingSound = false;
 
         public override void Update(GameTime gameTime)
         {
@@ -157,20 +160,26 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
 
             if (attacking)
             {
+                PlayAttackSound();
+
                 //Move a lot to attack method.
                 totalElapsedTime += GameWorld.DeltaTime * attackSpeed; // To change the speed of the animation, change the attackspeed.
                 AttackAnimation();
+
             }
 
             UpdateCollisionBoxesPos(GameObject.Transform.Rotation);
         }
 
-        public void MoveWeapon(Vector2 movePos)
+        private void PlayAttackSound()
         {
-            GameObject.Transform.Position = movePos;
+            if (playingSound || AttackSoundNames == null || AttackSoundNames.Length == 0) return;
 
-            //move the weapon colliders start pos.
+            GlobalSounds.PlayRandomizedSound(AttackSoundNames, 1, 1f, true);
+            playingSound = true;
         }
+
+        public void MoveWeapon(Vector2 movePos) => GameObject.Transform.Position = movePos;
 
         private void AttackAnimation()
         {
@@ -200,6 +209,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
             {
                 isRotatingBack = false;
                 attacking = false;
+                playingSound = false;
             }
         }
 
@@ -219,6 +229,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
             }
         }
 
+        #region Basic Math Calculations
         private Vector2 Rotate(Vector2 position, float rotation)
         {
             float cos = (float)Math.Cos(rotation);
@@ -266,6 +277,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
         {
             return x == 1 ? 1 : 1 - (float)Math.Pow(2, -10 * x);
         }
+        #endregion
 
         public override void Draw(SpriteBatch spriteBatch)
         {
