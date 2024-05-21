@@ -19,6 +19,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
         public Projectile(GameObject gameObject) : base(gameObject)
         {
             this.speed = 100;
+            this.range = 200;
         }
 
         public override void Start()
@@ -31,7 +32,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
 
         public void SetValues(float rotation)
         {
-            range = 200f;
+            
             GameObject.Transform.Rotation = rotation;
             startPos = GameObject.Transform.Position;
 
@@ -51,22 +52,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
         }
 
         public void SetDirection()
-        {
-            //direction = (InputHandler.Instance.MouseOnUI) - GameObject.Transform.Position;
-            //if (direction != Vector2.Zero) direction.Normalize();
-
-            ////regner punktet ud mellem x og y aksen
-            //float angle = (float)Math.Atan2(direction.X, direction.Y);
-
-            //// tilføjer π/2 til vinklen så den kan roteres 90 grader med uret
-            //angle += MathHelper.PiOver2;
-
-            //// sikre at vinklen er mellem 0 til 2π
-            //if (angle < 0) angle += MathHelper.TwoPi;
-            //else if (angle > MathHelper.TwoPi) angle -= MathHelper.TwoPi;
-
-            //GameObject.Transform.Rotation = angle;
-
+        {            
             targetPos = InputHandler.Instance.MouseOnUI;
 
             direction = Vector2.Normalize(targetPos - GameObject.Transform.Position);
@@ -98,15 +84,11 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
 
             GameObject.Transform.Position += step;
 
-            // skal rettes fra skærm til gridsize
-            //Vector2 screenPosition = Vector2.Transform(GameObject.Transform.Position, GameWorld.Instance.WorldCam.GetMatrix());
-            //if (screenPosition.X<0
-            //    || screenPosition.Y <0
-            //    || screenPosition.X > GameWorld.Instance.GfxManager.PreferredBackBufferWidth
-            //    || screenPosition.Y > GameWorld.Instance.GfxManager.PreferredBackBufferHeight)
-            //{
-            //    GameWorld.Instance.Destroy(GameObject);
-            //}5
+            if (Vector2.Distance(startPos, GameObject.Transform.Position)>=range)
+            {
+                GameWorld.Instance.Destroy(GameObject);
+            }
+                        
         }
 
         private bool colCalled;
