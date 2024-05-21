@@ -49,7 +49,7 @@ namespace FørsteÅrsEksamen.GameManagement
             GenerateScenes();
             SetRoomScenes();
 
-            CurrentScene = Scenes[ScenesNames.MainMenu];
+            CurrentScene = Scenes[ScenesNames.ErikTestScene];
             CurrentScene.Initialize();
 
             base.Initialize();

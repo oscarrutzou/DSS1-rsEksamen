@@ -9,7 +9,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
         private GameObject projectile;        
         private bool canShoot = true;
         private float lastShot = 0;
-        private float shootTimer = 1;
+        private float shootTimer = 0.5f;
 
         protected RangedWeapon(GameObject gameObject) : base(gameObject)
         {
@@ -46,7 +46,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
             {
                 canShoot = false;
                 lastShot = 0;
-
+                MakeProjectile();
             }
 
         }

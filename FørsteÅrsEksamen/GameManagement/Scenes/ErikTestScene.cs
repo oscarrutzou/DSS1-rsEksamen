@@ -14,7 +14,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
     public class ErikTestScene : Scene
     {
         private GameObject weapon;
-        private GameObject projectile;
+        private GameObject bow;
 
         private bool canShoot = true;
         private float lastShot = 0;
@@ -42,11 +42,11 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         private void MakeWeapon()
         {
             weapon = WeaponFactory.Create(WeaponTypes.Sword);
-            projectile = WeaponFactory.Create(WeaponTypes.Bow);
+            bow = WeaponFactory.Create(WeaponTypes.Bow);
             
             
             GameWorld.Instance.Instantiate(weapon);
-            GameWorld.Instance.Instantiate(projectile);
+            GameWorld.Instance.Instantiate(bow);
         }
 
        
@@ -69,7 +69,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
         public void Shoot()
         {
-           var rangedWeapon = projectile.GetComponent<RangedWeapon>();  
+           var rangedWeapon = bow.GetComponent<RangedWeapon>();  
 
             //projectile.GetComponent<Projectile>().SetValues(MathHelper.Pi);
 
