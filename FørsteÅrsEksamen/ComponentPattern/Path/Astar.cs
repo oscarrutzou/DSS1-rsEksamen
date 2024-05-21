@@ -6,7 +6,7 @@ using System.Linq;
 namespace FørsteÅrsEksamen.ComponentPattern.Path
 {
     // Oscar
-    public class Astar : Component
+    public class Astar
     {
         private Dictionary<Point, GameObject> cells;
         private Grid grid;
@@ -14,13 +14,9 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
         private HashSet<GameObject> open;
         private HashSet<GameObject> closed;
 
-        public Astar(GameObject gameObject) : base(gameObject)
-        {
-            gridDem = Cell.dimension * Cell.Scale;
-        }
-
         public List<GameObject> FindPath(Point start, Point goal)
         {
+            gridDem = Cell.dimension * Cell.Scale;
             grid = GridManager.Instance.CurrentGrid;
             cells = grid.Cells; // Assign existing grid
 
