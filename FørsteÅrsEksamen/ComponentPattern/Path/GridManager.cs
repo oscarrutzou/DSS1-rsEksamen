@@ -2,7 +2,7 @@
 using FørsteÅrsEksamen.ComponentPattern.GUI;
 using FørsteÅrsEksamen.GameManagement;
 using FørsteÅrsEksamen.ObserverPattern;
-using FørsteÅrsEksamen.RepositoryPattern;
+using FørsteÅrsEksamen.DB;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 

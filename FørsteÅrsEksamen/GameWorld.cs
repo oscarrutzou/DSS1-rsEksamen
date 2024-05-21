@@ -5,8 +5,10 @@ using FørsteÅrsEksamen.GameManagement.Scenes.Menus;
 using FørsteÅrsEksamen.GameManagement.Scenes.Rooms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace FørsteÅrsEksamen.GameManagement
 {
@@ -49,8 +51,14 @@ namespace FørsteÅrsEksamen.GameManagement
             GenerateScenes();
             SetRoomScenes();
 
-            CurrentScene = Scenes[ScenesNames.MainMenu];
+            CurrentScene = Scenes[ScenesNames.OscarTestScene];
             CurrentScene.Initialize();
+
+            Thread cmdThread = new(() => { InputHandler.Instance.StartInputThead(); })
+            {
+                IsBackground = true
+            };
+            cmdThread.Start();
 
             base.Initialize();
         }
@@ -64,7 +72,7 @@ namespace FørsteÅrsEksamen.GameManagement
         {
             DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            InputHandler.Instance.Update(); //Updates our input, so its not each scene that have to handle the call.
+            //InputHandler.Instance.Update(); //Updates our input, so its not each scene that have to handle the call.
             CurrentScene.Update(gameTime);
 
             HandleSceneChange();

@@ -10,7 +10,7 @@ namespace FørsteÅrsEksamen.CommandPattern.Commands
         {
             foreach (GameObject gameObject in SceneData.GameObjectLists[GameObjectTypes.Gui])
             {
-                if (gameObject.IsEnabled == false) return;
+                if (gameObject.IsEnabled == false) continue;
 
                 Button button = gameObject.GetComponent<Button>();
 

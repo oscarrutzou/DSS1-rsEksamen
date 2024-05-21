@@ -73,11 +73,14 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
             {
                 totalMovementInput = Vector2.Zero;
             }
+
             totalMovementInput += input;
         }
 
         public void Move(Vector2 input)
         {
+            targetVelocity = Vector2.Zero;
+
             // Save the previous position
             previousPosition = GameObject.Transform.Position;
 
@@ -85,11 +88,11 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
             if (input != Vector2.Zero)
             {
                 targetVelocity += input.Length() > 0 ? Vector2.Normalize(input) : input;
-                targetVelocity = targetVelocity.Length() > 0 ? Vector2.Normalize(targetVelocity) : targetVelocity;
-            }
-            else
-            {
-                targetVelocity = Vector2.Zero;
+
+                if (targetVelocity != Vector2.Zero)
+                {
+                    targetVelocity = targetVelocity.Length() > 0 ? Vector2.Normalize(targetVelocity) : targetVelocity;
+                }
             }
 
             velocity = Vector2.Lerp(velocity, targetVelocity, turnSpeed * GameWorld.DeltaTime);

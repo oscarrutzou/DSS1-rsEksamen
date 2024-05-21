@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FørsteÅrsEksamen.RepositoryPattern
+namespace FørsteÅrsEksamen.DB
 {
     public static class DBGrid
     {

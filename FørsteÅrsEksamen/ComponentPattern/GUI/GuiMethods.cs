@@ -2,6 +2,7 @@
 using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace FørsteÅrsEksamen.ComponentPattern.GUI
@@ -9,6 +10,25 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
     // Oscar
     public static class GuiMethods
     {
+
+        public static void PlaceButtons(List<GameObject> buttonList, Vector2 startPos, int spaceBetweenBtns)
+        {
+            int buttonHeight = buttonList[0].GetComponent<SpriteRenderer>().Sprite.Height * (int)buttonList[0].Transform.Scale.Y;
+            int totalHeight = (buttonList.Count - 1) * (buttonHeight + spaceBetweenBtns);
+
+            // Start from the position of the second button and move up half the total height
+            Vector2 position = startPos + new Vector2(0, -totalHeight / 2);
+
+            for (int i = 0; i < buttonList.Count; i++)
+            {
+                GameObject btn = buttonList[i];
+                int newPosY = (int)position.Y + i * (buttonHeight + spaceBetweenBtns);
+                btn.Transform.Position = new Vector2(startPos.X, newPosY);
+
+                GameWorld.Instance.Instantiate(btn);
+            }
+        }
+        
         /// <summary>
         /// <para>Can take and divide the text and center each part of the text.</para>
         /// </summary>

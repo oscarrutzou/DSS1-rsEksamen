@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FørsteÅrsEksamen.RepositoryPattern
+namespace FørsteÅrsEksamen.DB
 {
     /// <summary>
     /// Dont use this class other that in the method that saves the game!

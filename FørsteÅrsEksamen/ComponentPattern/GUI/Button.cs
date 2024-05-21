@@ -71,13 +71,14 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
                 timeSinceLastClick += GameWorld.DeltaTime;
             }
 
-            if (InputHandler.Instance.MouseState.LeftButton != ButtonState.Released)
+            if (IsMouseOver())
             {
-                spriteRenderer.Color = OnMouseDownColor;
-                return;
-            }
-            else if (IsMouseOver())
-            {
+                if (InputHandler.Instance.MouseState.LeftButton != ButtonState.Released)
+                {
+                    spriteRenderer.Color = OnMouseDownColor;
+                    return;
+                }
+
                 spriteRenderer.Color = OnHoverColor;
             }
             else

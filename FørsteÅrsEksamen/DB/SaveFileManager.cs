@@ -2,7 +2,7 @@
 using FørsteÅrsEksamen.Factory;
 using System.Collections.Generic;
 
-namespace FørsteÅrsEksamen.RepositoryPattern
+namespace FørsteÅrsEksamen.DB
 {
     public static class SaveFileManager
     {

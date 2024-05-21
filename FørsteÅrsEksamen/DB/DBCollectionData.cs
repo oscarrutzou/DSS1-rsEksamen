@@ -4,7 +4,7 @@ using FørsteÅrsEksamen.Factory;
 using LiteDB;
 using System;
 
-namespace FørsteÅrsEksamen.RepositoryPattern
+namespace FørsteÅrsEksamen.DB
 {
     public class SaveFileData
     {

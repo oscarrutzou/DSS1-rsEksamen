@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FørsteÅrsEksamen.RepositoryPattern
+namespace FørsteÅrsEksamen.DB
 {
     public static class DBRunData
     {

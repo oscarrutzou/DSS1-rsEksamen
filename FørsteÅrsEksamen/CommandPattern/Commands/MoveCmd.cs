@@ -16,6 +16,8 @@ namespace FørsteÅrsEksamen.CommandPattern.Commands
 
         public void Execute()
         {
+            // Inputs maybe gets set weird if there is 3 or more velocities.
+            // Maybe has something if the there is a lot. It gets set to Vector zero and adds.
             player.AddInput(velocity);
         }
     }

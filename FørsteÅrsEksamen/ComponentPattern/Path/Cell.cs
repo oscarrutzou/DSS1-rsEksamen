@@ -100,14 +100,14 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (!spriteRenderer.ShouldDraw) return;
+            if (spriteRenderer == null || !spriteRenderer.ShouldDraw) return;
 
             GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, GameWorld.Instance.WorldCam.zoom, GameObject.Transform.Position, RoomNr.ToString(), Color.HotPink);
         }
 
         public void ChangeCellWalkalbeType(CellWalkableType cellWalkableType)
         {
-            if (!spriteRenderer.ShouldDraw) return;
+            if (spriteRenderer == null || !spriteRenderer.ShouldDraw) return;
 
             if (RoomNr == -1) spriteRenderer.ShouldDraw = false;
             else spriteRenderer.ShouldDraw = true;

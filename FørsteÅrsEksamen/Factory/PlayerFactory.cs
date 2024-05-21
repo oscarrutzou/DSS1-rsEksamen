@@ -1,7 +1,7 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern;
 using FørsteÅrsEksamen.ComponentPattern.Classes;
 using FørsteÅrsEksamen.GameManagement;
-using FørsteÅrsEksamen.RepositoryPattern;
+using FørsteÅrsEksamen.DB;
 using Microsoft.Xna.Framework;
 
 namespace FørsteÅrsEksamen.Factory

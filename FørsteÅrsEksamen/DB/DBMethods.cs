@@ -7,7 +7,7 @@ using LiteDB;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
-namespace FørsteÅrsEksamen.RepositoryPattern
+namespace FørsteÅrsEksamen.DB
 {
     public static class DBMethods
     {
