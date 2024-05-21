@@ -26,11 +26,14 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
             }
         }
 
+       
+
         public void MakeProjectile()
         {
             //ProjectileFactory projectileFactory = new ProjectileFactory();
             projectile = ProjectileFactory.Create();
             projectile.GetComponent<Projectile>().SetValues(GameObject.Transform.Rotation);
+            
             projectile.Transform.Position = GameObject.Transform.Position;
 
             GameWorld.Instance.Instantiate(projectile);

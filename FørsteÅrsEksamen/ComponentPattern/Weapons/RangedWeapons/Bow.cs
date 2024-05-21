@@ -5,5 +5,7 @@
         public Bow(GameObject gameObject) : base(gameObject)
         {
         }
+
+       
     }
 }

@@ -13,6 +13,8 @@ namespace FørsteÅrsEksamen.Factory
         MagicStaffFire,
         Bow,
         BowFire,
+        WoodArrow,
+        Arrow,
     }
 
     internal static class WeaponFactory

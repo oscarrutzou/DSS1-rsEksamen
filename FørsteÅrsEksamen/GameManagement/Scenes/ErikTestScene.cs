@@ -15,6 +15,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
     {
         private GameObject weapon;
         private GameObject bow;
+        private GameObject arrow;
 
         private bool canShoot = true;
         private float lastShot = 0;
@@ -24,7 +25,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         {
             MakeWeapon();
             GameWorld.Instance.WorldCam.position = Vector2.Zero;
-            //MakeProjectile();
+            
             AttackCommand();
         }
 
@@ -42,6 +43,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         private void MakeWeapon()
         {
             weapon = WeaponFactory.Create(WeaponTypes.Sword);
+            
             bow = WeaponFactory.Create(WeaponTypes.Bow);
             
             
@@ -77,6 +79,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             {
 
                 rangedWeapon.Shoot();
+                
 
             }
 
