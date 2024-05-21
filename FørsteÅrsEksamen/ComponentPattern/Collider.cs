@@ -1,7 +1,6 @@
 ﻿using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 
 namespace FørsteÅrsEksamen.ComponentPattern
 {
@@ -13,7 +12,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
         private Texture2D texture;
         private int collisionWidth, collisionHeight; //If not set, use the sprite width and height
         private Vector2 offset;
-        
+
         public Color DebugColor = Color.Red;
 
         public Rectangle CollisionBox

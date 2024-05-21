@@ -1,5 +1,4 @@
 ﻿//using FørsteÅrsEksamen.ComponentPattern.Characters;
-using FørsteÅrsEksamen.ComponentPattern.Enemies.Skeleton;
 using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
 
@@ -29,8 +28,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies.MeleeEnemies
 
         internal override void AttackAction()
         {
-           
         }
-
     }
 }

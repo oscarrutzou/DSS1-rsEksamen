@@ -15,10 +15,11 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
     {
         private GameObject weapon;
         private GameObject projectile;
-        
+
         private bool canShoot = true;
         private float lastShot = 0;
         private float shootTimer = 1;
+
         public override void Initialize()
         {
             MakeWeapon();
@@ -56,15 +57,14 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             
             //projectile.GetComponent<MagicStaff>().Attack();
         }
-       private void AttackCommand()
+
+        private void AttackCommand()
         {
-            InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, 
+            InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space,
                 new CustomCmd(Attack));
 
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.B,
                 new CustomCmd(Shoot));
-
-
         }
 
         public void Shoot()

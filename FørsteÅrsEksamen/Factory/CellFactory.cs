@@ -2,7 +2,6 @@
 using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
-using System;
 
 namespace FørsteÅrsEksamen.Factory
 {

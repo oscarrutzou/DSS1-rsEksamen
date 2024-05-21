@@ -65,7 +65,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
         {
             if (Sprite == null || !ShouldDraw) return;
 
-            Origin = IsCentered ? new Vector2(Sprite.Width / 2, Sprite.Height / 2) : OriginOffSet; 
+            Origin = IsCentered ? new Vector2(Sprite.Width / 2, Sprite.Height / 2) : OriginOffSet;
 
             drawPos = GameObject.Transform.Position;
 

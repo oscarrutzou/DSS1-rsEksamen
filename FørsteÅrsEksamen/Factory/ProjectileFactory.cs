@@ -16,7 +16,6 @@ namespace FørsteÅrsEksamen.Factory
             arrow.AddComponent<RangedWeapon>();
             //arrow.AddComponent<Collider>().SetCollisionBox(30, 30);
 
-
             return arrow;
         }
     }

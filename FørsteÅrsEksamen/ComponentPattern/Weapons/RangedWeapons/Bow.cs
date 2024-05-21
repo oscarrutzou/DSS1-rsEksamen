@@ -1,7 +1,4 @@
-﻿using FørsteÅrsEksamen.GameManagement;
-using Microsoft.Xna.Framework;
-
-namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
+﻿namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
 {
     internal class Bow : RangedWeapon
     {

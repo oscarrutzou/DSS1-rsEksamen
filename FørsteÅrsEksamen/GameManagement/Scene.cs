@@ -1,5 +1,4 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.Enemies;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -8,10 +7,11 @@ namespace FørsteÅrsEksamen.GameManagement
 {
     public enum ScenesNames
     {
-        //MainMenu,
+        MainMenu,
+
         //LoadingScreen,
-        GameScene,
         WeaponTestScene,
+
         OscarTestScene,
         StefanTestScene,
         ErikTestScene,
@@ -23,6 +23,9 @@ namespace FørsteÅrsEksamen.GameManagement
     public abstract class Scene
     {
         public bool isPaused;
+
+        public GameObject PlayerGo;
+        public Point PlayerSpawnPos;
 
         private List<GameObject> newGameObjects = new List<GameObject>();
         private List<GameObject> destoroyedGameObjects = new List<GameObject>();
@@ -56,6 +59,9 @@ namespace FørsteÅrsEksamen.GameManagement
         {
             destoroyedGameObjects.Add(go);
         }
+
+        public virtual void OnPlayerChanged()
+        { }
 
         /// <summary>
         /// <para>The method adds the newGameobjects to different lists, and calls the Awake and Start on the Objects, so the objects starts properly.</para>
@@ -135,30 +141,5 @@ namespace FørsteÅrsEksamen.GameManagement
         {
             GameWorld.Instance.GraphicsDevice.Clear(Color.Beige);
         }
-
-        //public void CheckCollision()
-        //{
-        //    foreach (GameObject go1 in SceneData.GameObjects)
-        //    {
-        //        foreach (GameObject go2 in SceneData.GameObjects)
-        //        {
-        //            if (go1 == go2) continue;
-        //            //Dosent check between enemies
-        //            Enemy enemy1 = go1.GetComponent<Enemy>();
-        //            Enemy enemy2 = go2.GetComponent<Enemy>();
-        //            if (enemy1 != null && enemy2 != null) continue; //Shouldnt make collisions between 2 enemies.
-
-        //            Collider col1 = go1.GetComponent<Collider>();
-        //            Collider col2 = go2.GetComponent<Collider>();
-
-        //            //Check base collisionbox
-        //            if (col1 != null && col2 != null && col1.CollisionBox.Intersects(col2.CollisionBox))
-        //            {
-        //                go1.OnCollisionEnter(col2);
-        //                go2.OnCollisionEnter(col1);
-        //            }
-        //        }
-        //    }
-        //}
     }
 }

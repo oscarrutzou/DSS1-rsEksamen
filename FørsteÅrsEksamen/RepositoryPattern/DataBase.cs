@@ -22,10 +22,8 @@ namespace FørsteÅrsEksamen.RepositoryPattern
         GridHasCells,
     }
 
-    public class DataBase: IDisposable
+    public class DataBase : IDisposable
     {
-
-
         private readonly LiteDatabase db;
 
         private readonly CollectionName currentCollection;
@@ -36,12 +34,11 @@ namespace FørsteÅrsEksamen.RepositoryPattern
             db = new LiteDatabase(GetConnectionString(currentCollection));
         }
 
-
-
         public ILiteCollection<T> GetCollection<T>()
         {
             return db.GetCollection<T>(currentCollection.ToString());
         }
+
         /// <summary>
         /// Save a single data into the db
         /// </summary>
@@ -62,7 +59,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="input"></param>

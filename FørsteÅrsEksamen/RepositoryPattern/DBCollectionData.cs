@@ -10,8 +10,10 @@ namespace FørsteÅrsEksamen.RepositoryPattern
     {
         [BsonId]
         public int Save_ID { get; set; }
+
         public int Currency { get; set; }
         public DateTime Last_Login { get; set; }
+
         public SaveFileData()
         {
             Last_Login = DateTime.Now;
@@ -22,6 +24,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
     {
         [BsonId]
         public Guid Class_ID { get; set; }
+
         public ClassTypes Class_Type { get; set; }
     }
 
@@ -29,6 +32,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
     {
         [BsonId]
         public Guid Class_ID { get; set; }
+
         public int Save_ID { get; set; }
     }
 
@@ -36,6 +40,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
     {
         [BsonId]
         public Guid Weapon_ID { get; set; }
+
         public WeaponTypes Weapon_Type { get; set; }
     }
 
@@ -43,6 +48,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
     {
         [BsonId]
         public Guid Weapon_ID { get; set; }
+
         public int Save_ID { get; set; }
     }
 
@@ -50,6 +56,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
     {
         [BsonId]
         public int Save_ID { get; set; }
+
         public int Run_ID { get; set; }
     }
 
@@ -57,6 +64,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
     {
         [BsonId]
         public int Run_ID { get; set; }
+
         public int Room_Reached { get; set; }
         public float Time_Left { get; set; }
     }
@@ -65,6 +73,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
     {
         [BsonId]
         public int Run_ID { get; set; }
+
         public Guid Player_ID { get; set; }
     }
 
@@ -72,6 +81,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
     {
         [BsonId]
         public Guid Player_ID { get; set; }
+
         public int Health { get; set; }
         public string Potion_Name { get; set; }
         public ClassTypes Class_Type { get; set; }
@@ -82,6 +92,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
     {
         [BsonId]
         public string Grid_Name { get; set; }
+
         public float PositionX { get; set; }
         public float PositionY { get; set; }
         public int Start_Width { get; set; }
@@ -91,6 +102,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
     public class GridHasCells
     {
         public string Grid_Name { get; set; }
+
         [BsonId]
         public Guid Cell_ID { get; set; }
     }
@@ -99,6 +111,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
     {
         [BsonId]
         public Guid Cell_ID { get; set; }
+
         public int PointPositionX { get; set; }
         public int PointPositionY { get; set; }
         public int Room_Nr { get; set; }

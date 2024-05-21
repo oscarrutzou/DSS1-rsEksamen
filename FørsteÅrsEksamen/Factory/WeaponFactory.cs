@@ -1,16 +1,7 @@
-﻿using FørsteÅrsEksamen.CommandPattern;
-using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.Classes;
-using FørsteÅrsEksamen.ComponentPattern.Weapons;
+﻿using FørsteÅrsEksamen.ComponentPattern;
 using FørsteÅrsEksamen.ComponentPattern.Weapons.MeleeWeapons;
 using FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons;
-using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FørsteÅrsEksamen.Factory
 {
@@ -43,18 +34,23 @@ namespace FørsteÅrsEksamen.Factory
                 case WeaponTypes.Sword:
                     weaponGo.AddComponent<Sword>();
                     break;
+
                 case WeaponTypes.Axe:
                     weaponGo.AddComponent<Axe>();
                     break;
+
                 case WeaponTypes.MagicStaff:
                     weaponGo.AddComponent<MagicStaff>();
                     break;
+
                 case WeaponTypes.MagicStaffFire:
                     weaponGo.AddComponent<MagicStaff>();
                     break;
+
                 case WeaponTypes.Bow:
                     weaponGo.AddComponent<Bow>();
                     break;
+
                 case WeaponTypes.BowFire:
                     weaponGo.AddComponent<MagicStaff>();
                     break;
@@ -62,6 +58,5 @@ namespace FørsteÅrsEksamen.Factory
 
             return weaponGo;
         }
-
     }
 }

@@ -16,11 +16,11 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
         public Vector2 StartRelativePos;
     }
 
-    // Only happen on attack. Also add hands. Remove it from the player and use 2 hands. 
-    // The hands should be given and made before making the weapon, as a part of which hands we should use. 
-    // Use the clenched hand for the one for the weapon and relaxed hand for the other. 
-    // Make it easy to set how much it should lerp to and from. 
-    // Make it wait for some time (need to be able to be set) before roating back. 
+    // Only happen on attack. Also add hands. Remove it from the player and use 2 hands.
+    // The hands should be given and made before making the weapon, as a part of which hands we should use.
+    // Use the clenched hand for the one for the weapon and relaxed hand for the other.
+    // Make it easy to set how much it should lerp to and from.
+    // Make it wait for some time (need to be able to be set) before roating back.
 
     // Maybe as a nice to have, look into how to make one of the less smooth path. So it e.g is fast in the beginning and slow at the end.
     // A really nice to have to so make a trail behind the weapon when it swings:D Would be fun to make
@@ -43,9 +43,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
 
         protected Weapon(GameObject gameObject) : base(gameObject)
         {
-            attackSpeed = 1.7f; 
+            attackSpeed = 1.7f;
         }
-        
 
         public override void Awake()
         {
@@ -89,7 +88,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
             Vector2 scale = GameObject.Transform.Scale;
 
             pos += new Vector2(0, -heightFromOriginToHandle * scale.Y); // Adds the height from origin to handle
-            
+
             // Adds the weapon colliders
             for (int i = 0; i < amountOfColliders; i++)
             {
@@ -104,8 +103,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
         }
 
         internal Rectangle MakeRec(Vector2 pos, int width, int height, Vector2 scale) => new Rectangle((int)pos.X, (int)pos.Y, width * (int)scale.X, (int)scale.Y * height);
-
-
 
         public void Attack()
         {
@@ -137,7 +134,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
                 if (mouseInUI.Y > 0f) // Down
                 {
                     //start angle
-                    totalLerp = - (MathHelper.Pi + MathHelper.PiOver2);
+                    totalLerp = -(MathHelper.Pi + MathHelper.PiOver2);
                 }
                 else // Up
                 {
@@ -145,11 +142,9 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
                     totalLerp = -lerpFromTo;
                 }
             }
-
         }
 
         //startAnimationAngle = angleToMouse;
-        
 
         public override void Update(GameTime gameTime)
         {
@@ -165,7 +160,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
                 //Move a lot to attack method.
                 totalElapsedTime += GameWorld.DeltaTime * attackSpeed; // To change the speed of the animation, change the attackspeed.
                 AttackAnimation();
-            } 
+            }
 
             UpdateCollisionBoxesPos(GameObject.Transform.Rotation);
         }
@@ -186,7 +181,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
             }
 
             // Play with some other methods, for different weapons, to make them feel slow or fast https://easings.net/
-            float easedTime; // maybe switch between them. 
+            float easedTime; // maybe switch between them.
 
             if (!isRotatingBack)
             {
@@ -206,8 +201,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
                 isRotatingBack = false;
                 attacking = false;
             }
-
-
         }
 
         private void UpdateCollisionBoxesPos(float rotation)
@@ -226,7 +219,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
             }
         }
 
-
         private Vector2 Rotate(Vector2 position, float rotation)
         {
             float cos = (float)Math.Cos(rotation);
@@ -237,7 +229,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
 
             return new Vector2(newX, newY);
         }
-
 
         /// <summary>
         /// <para>A easing method that backs up a little them rams forward.</para>
@@ -275,7 +266,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
         {
             return x == 1 ? 1 : 1 - (float)Math.Pow(2, -10 * x);
         }
-
 
         public override void Draw(SpriteBatch spriteBatch)
         {

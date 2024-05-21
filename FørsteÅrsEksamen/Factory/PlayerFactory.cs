@@ -4,7 +4,6 @@ using FørsteÅrsEksamen.GameManagement;
 using FørsteÅrsEksamen.RepositoryPattern;
 using Microsoft.Xna.Framework;
 
-
 namespace FørsteÅrsEksamen.Factory
 {
     public static class PlayerFactory
@@ -26,7 +25,7 @@ namespace FørsteÅrsEksamen.Factory
 
             // remove the hands from the constructer
             playerGo = AddClassComponent(playerGo, hands, movementCollider, playerClass);
-            
+
             //Weapon
             GameObject weapon = WeaponFactory.Create(weaponType);
             GameWorld.Instance.Instantiate(weapon);
@@ -50,9 +49,11 @@ namespace FørsteÅrsEksamen.Factory
                 case ClassTypes.Warrior:
                     playerGo.AddComponent<Warrior>(handsGo, movementColliderGo);
                     break;
+
                 case ClassTypes.Archer:
                     playerGo.AddComponent<Archer>(handsGo, movementColliderGo);
                     break;
+
                 case ClassTypes.Mage:
                     playerGo.AddComponent<Mage>(handsGo, movementColliderGo);
                     break;
@@ -82,6 +83,5 @@ namespace FørsteÅrsEksamen.Factory
 
             return go;
         }
-
     }
 }

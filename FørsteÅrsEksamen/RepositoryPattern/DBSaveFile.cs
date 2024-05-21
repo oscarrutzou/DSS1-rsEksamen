@@ -1,10 +1,8 @@
-﻿
-
-using FørsteÅrsEksamen.ComponentPattern.Classes;
+﻿using FørsteÅrsEksamen.ComponentPattern.Classes;
 using FørsteÅrsEksamen.Factory;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System;
 
 namespace FørsteÅrsEksamen.RepositoryPattern
 {
@@ -13,7 +11,6 @@ namespace FørsteÅrsEksamen.RepositoryPattern
     /// </summary>
     public static class DBSaveFile
     {
-
         public static SaveFileData LoadSaveFileData(int currentSaveID)
         {
             using var db = new DataBase(CollectionName.SaveFile);
@@ -51,6 +48,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
         }
 
         #region Weapon
+
         public static List<WeaponTypes> LoadSaveWeaponType(SaveFileData saveFileData, bool overrideSave)
         {
             List<WeaponTypes> weaponTypes = new();
@@ -95,7 +93,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
             foreach (SaveFileHasUnlockedWeapon link in currentLinkedWeapons)
             {
                 UnlockedWeaponData weaponData = weaponDB.FindOne<UnlockedWeaponData>(x => x.Weapon_ID == link.Weapon_ID);
-                
+
                 // Get the weapon data
                 weaponTypes.Add(weaponData.Weapon_Type);
             }
@@ -106,7 +104,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
                 if (weaponTypes.Contains(weaponType)) continue;
 
                 weaponTypes.Add(weaponType);
-                
+
                 //Add a new weapon type and a link
                 var newWeaponData = new UnlockedWeaponData()
                 {
@@ -142,9 +140,10 @@ namespace FørsteÅrsEksamen.RepositoryPattern
             }
         }
 
-        #endregion
+        #endregion Weapon
 
         #region Class
+
         public static List<ClassTypes> LoadSaveClassType(SaveFileData saveFileData, bool overrideSave)
         {
             List<ClassTypes> classTypes = new();
@@ -236,7 +235,7 @@ namespace FørsteÅrsEksamen.RepositoryPattern
                 classLinkDB.Delete<SaveFileHasUnlockedClass>(linkedClass.Class_ID);
             }
         }
-        #endregion
 
+        #endregion Class
     }
 }

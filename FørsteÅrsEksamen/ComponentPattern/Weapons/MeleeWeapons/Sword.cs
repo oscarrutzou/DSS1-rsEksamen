@@ -14,6 +14,5 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.MeleeWeapons
             spriteRenderer.SetSprite(TextureNames.WoodSword);
             SetStartColliders(new Vector2(7.5f, 38), 5, 5, 6, 4); // Gets set in each of the weapons insted of here.
         }
-
     }
 }

@@ -1,12 +1,12 @@
-﻿using FørsteÅrsEksamen.ComponentPattern.Path;
-using FørsteÅrsEksamen.ComponentPattern;
+﻿using FørsteÅrsEksamen.ComponentPattern;
+using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.Factory;
 using FørsteÅrsEksamen.GameManagement;
 using LiteDB;
+using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System;
-using Microsoft.Xna.Framework;
 
 namespace FørsteÅrsEksamen.RepositoryPattern
 {
@@ -170,7 +170,5 @@ namespace FørsteÅrsEksamen.RepositoryPattern
 
             return gridGo;
         }
-
-
     }
 }

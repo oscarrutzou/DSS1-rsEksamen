@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 
 namespace FørsteÅrsEksamen.ComponentPattern
@@ -32,6 +31,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
         public Transform Transform { get; private set; } = new Transform();
 
         public GameObjectTypes Type { get; set; } = GameObjectTypes.Default;
+        public bool IsEnabled { get; set; } = true;
 
         /// <summary>
         /// Adds a component to the GameObject, with a empty contructer.
@@ -150,7 +150,6 @@ namespace FørsteÅrsEksamen.ComponentPattern
             }
         }
 
-
         public void OnCollisionEnter(Collider collider)
         {
             foreach (var component in components.Values)
@@ -170,7 +169,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
         /// </summary>
         /// <param name="gameobjectType"></param>
         /// <returns></returns>
-        public bool CollidesWithGameObject(GameObjectTypes gameobjectType) 
+        public bool CollidesWithGameObject(GameObjectTypes gameobjectType)
         {
             Collider thisGoCollider = GetComponent<Collider>() ?? throw new Exception("This Gameobject need a collider to check for collision");
 

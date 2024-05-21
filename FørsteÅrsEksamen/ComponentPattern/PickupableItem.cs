@@ -1,14 +1,7 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern.Classes;
-using FørsteÅrsEksamen.ComponentPattern.GUI;
 using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FørsteÅrsEksamen.ComponentPattern
 {
@@ -18,7 +11,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
         internal SpriteRenderer spriteRenderer;
         internal Collider collider, playerCollider;
         internal Player player;
-        
+
         private GameObject playerGo;
 
         public string Name = "Health Potion";
@@ -44,26 +37,23 @@ namespace FørsteÅrsEksamen.ComponentPattern
 
         public override void Update(GameTime gameTime)
         {
-            
         }
 
         public override void OnCollisionEnter(Collider collider)
         {
-
             // Skal kun fjerne item ved player position, ikke alle items.
             if (collider.CollisionBox.Intersects(playerCollider.CollisionBox))
             {
                 player.PickUpItem(GameObject);
                 GameWorld.Instance.Destroy(GameObject);
             }
-            
         }
 
         public void Use()
         {
             if (player.CurrentHealth < player.MaxHealth)
             {
-            player.CurrentHealth += 50;
+                player.CurrentHealth += 50;
                 if (player.CurrentHealth > player.MaxHealth)
                 {
                     player.CurrentHealth = 100;
@@ -74,7 +64,5 @@ namespace FørsteÅrsEksamen.ComponentPattern
                 throw new Exception("I already have full health, it would be a waste to drink this now");
             }
         }
-
-     
     }
 }
