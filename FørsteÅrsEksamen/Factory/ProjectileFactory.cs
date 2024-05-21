@@ -13,6 +13,7 @@ namespace FørsteÅrsEksamen.Factory
             arrow.Transform.Scale = new Vector2(4, 4f);
             arrow.AddComponent<SpriteRenderer>();
             arrow.AddComponent<Projectile>();
+            arrow.AddComponent<RangedWeapon>();
             //arrow.AddComponent<Collider>().SetCollisionBox(30, 30);
 
 
