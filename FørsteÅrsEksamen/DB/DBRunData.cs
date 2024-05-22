@@ -4,7 +4,7 @@ namespace FørsteÅrsEksamen.DB
 {
     public static class DBRunData
     {
-        public static RunData RunDataWithSaveFileData(SaveFileData saveFileData)
+        public static RunData SaveLoadRunData(SaveFileData saveFileData)
         {
             using var fileHasRunDataLinkDB = new DataBase(CollectionName.SaveFileHasRunData);
             using var runDataDB = new DataBase(CollectionName.RunData);
@@ -44,9 +44,9 @@ namespace FørsteÅrsEksamen.DB
         {
             RunData runData = new()
             {
-                Run_ID = SaveFileManager.CurrentSaveID,
-                Room_Reached = SaveFileManager.Room_Reached,
-                Time_Left = SaveFileManager.Time_Left,
+                Run_ID = SaveData.CurrentSaveID,
+                Room_Reached = SaveData.Room_Reached,
+                Time_Left = SaveData.Time_Left,
             };
 
             runDataDB.SaveOverrideSingle(runData, runData.Run_ID, x => x.Run_ID == runData.Run_ID);
@@ -97,15 +97,15 @@ namespace FørsteÅrsEksamen.DB
 
         private static PlayerData MakePlayer(DataBase playerDB)
         {
-            string potionName = SaveFileManager.Player.ItemInInventory == null ? string.Empty : SaveFileManager.Player.ItemInInventory.Name;
+            string potionName = SaveData.Player.ItemInInventory == null ? string.Empty : SaveData.Player.ItemInInventory.Name;
 
             PlayerData playerData = new()
             {
                 Player_ID = Guid.NewGuid(),
-                Health = SaveFileManager.Player.CurrentHealth,
+                Health = SaveData.Player.CurrentHealth,
                 Potion_Name = potionName,
-                Class_Type = SaveFileManager.Player.ClassType,
-                Weapon_Type = SaveFileManager.Player.WeaponType,
+                Class_Type = SaveData.Player.ClassType,
+                Weapon_Type = SaveData.Player.WeaponType,
             };
 
             playerDB.SaveSingle(playerData);

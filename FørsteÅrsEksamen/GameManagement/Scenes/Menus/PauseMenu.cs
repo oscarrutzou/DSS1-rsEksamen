@@ -1,7 +1,5 @@
 ﻿using FørsteÅrsEksamen.Factory.Gui;
-using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using FørsteÅrsEksamen.ComponentPattern;
 using FørsteÅrsEksamen.ComponentPattern.GUI;
@@ -26,12 +24,12 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
             StartMenuObjects.Add(quitBtn);
 
             GameObject mainMenu = ButtonFactory.Create("Main Menu", true,
-                () => { GameWorld.Instance.ChangeScene(ScenesNames.MainMenu); });
+                () => { GameWorld.Instance.ChangeScene(SceneNames.MainMenu); });
             StartMenuObjects.Add(mainMenu);
 
             ShowHideGameObjects(StartMenuObjects, false);
 
-            GuiMethods.PlaceButtons(StartMenuObjects, TextPos + new Vector2(0, 75), 25);
+            GuiMethods.PlaceGameObjectsVertical(StartMenuObjects, TextPos + new Vector2(0, 75), 25);
         }
 
         protected override void InitSettingsMenu()
@@ -53,7 +51,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
 
             ShowHideGameObjects(PauseMenuObjects, false);
 
-            GuiMethods.PlaceButtons(PauseMenuObjects, TextPos + new Vector2(0, 75), 25);
+            GuiMethods.PlaceGameObjectsVertical(PauseMenuObjects, TextPos + new Vector2(0, 75), 25);
         }
 
         public void TogglePauseMenu()

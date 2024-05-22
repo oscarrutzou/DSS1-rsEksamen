@@ -20,27 +20,30 @@ namespace FørsteÅrsEksamen.DB
 
         public static void SaveGame()
         {
-            SaveFileData saveFileData = DBSaveFile.LoadSaveFileData(SaveFileManager.CurrentSaveID);
+            SaveFileData saveFileData = DBSaveFile.LoadSaveFileData(SaveData.CurrentSaveID, false);
 
-            SaveFileManager.UnlockedWeapons = DBSaveFile.LoadSaveWeaponType(saveFileData, false);
-            SaveFileManager.UnlockedClasses = DBSaveFile.LoadSaveClassType(saveFileData, false);
+            SaveData.UnlockedWeapons = DBSaveFile.LoadSaveWeaponType(saveFileData, false);
+            SaveData.UnlockedClasses = DBSaveFile.LoadSaveClassType(saveFileData, false);
 
             // In buy menu.
-            UnlockWeapon(WeaponTypes.Axe);
-            UnlockWeapon(WeaponTypes.MagicStaffFire);
-            UnlockWeapon(WeaponTypes.Bow);
+            //UnlockWeapon(WeaponTypes.Axe);
+            //UnlockWeapon(WeaponTypes.MagicStaffFire);
+            //UnlockWeapon(WeaponTypes.Bow);
 
-            UnlockClass(ClassTypes.Archer);
-            UnlockClass(ClassTypes.Warrior);
-            UnlockClass(ClassTypes.Mage);
+            //UnlockClass(ClassTypes.Archer);
+            //UnlockClass(ClassTypes.Warrior);
+            //UnlockClass(ClassTypes.Mage);
 
             SaveRunData();
         }
 
         public static void SaveRunData()
         {
-            SaveFileData saveFileData = DBSaveFile.LoadSaveFileData(SaveFileManager.CurrentSaveID);
-            RunData runData = DBRunData.RunDataWithSaveFileData(saveFileData);
+            SaveFileData saveFileData = DBSaveFile.LoadFileData(SaveData.CurrentSaveID); // Load Save File
+            RunData runData = DBRunData.SaveLoadRunData(saveFileData); // Save Run File
+            
+            if (SaveData.Player == null) return;
+            
             PlayerData playerData = DBRunData.SavePlayer(runData);
 
             SpawnPlayer(runData, playerData);
@@ -49,7 +52,7 @@ namespace FørsteÅrsEksamen.DB
         private static void SpawnPlayer(RunData runData, PlayerData playerData)
         {
             //Scene scene = scene array. [0]
-            Scene currentScene = GameWorld.Instance.CurrentScene;
+            Scene currentScene = GameWorld.Instance.CurrentScene; // Where to take the spawn position.
 
             GameObject playerGo = PlayerFactory.Create(playerData.Class_Type, playerData.Weapon_Type);
 
@@ -72,6 +75,8 @@ namespace FørsteÅrsEksamen.DB
         {
             using var saveFileDB = new DataBase(CollectionName.SaveFile);
             SaveFileData data = saveFileDB.FindOne<SaveFileData>(x => x.Save_ID == saveID);
+
+            if (data == null) return; // Has deleted data
 
             DBSaveFile.DeleteWeapon(data);
             DBSaveFile.DeleteClass(data);
@@ -104,43 +109,67 @@ namespace FørsteÅrsEksamen.DB
 
         public static void UnlockClass(ClassTypes classType)
         {
-            if (SaveFileManager.UnlockedClasses.Contains(classType)) return;
+            if (SaveData.UnlockedClasses.Contains(classType)) return;
 
-            SaveFileManager.UnlockedClasses.Add(classType);
+            SaveData.UnlockedClasses.Add(classType);
 
-            SaveFileData saveFileData = DBSaveFile.LoadSaveFileData(SaveFileManager.CurrentSaveID);
+            SaveFileData saveFileData = DBSaveFile.LoadFileData(SaveData.CurrentSaveID);
 
-            SaveFileManager.UnlockedClasses = DBSaveFile.LoadSaveClassType(saveFileData, true);
+            SaveData.UnlockedClasses = DBSaveFile.LoadSaveClassType(saveFileData, true);
         }
 
         public static void UnlockWeapon(WeaponTypes unlockedWeapon)
         {
             // Only add the weapon if it's not already in the list
-            if (SaveFileManager.UnlockedWeapons.Contains(unlockedWeapon)) return;
+            if (SaveData.UnlockedWeapons.Contains(unlockedWeapon)) return;
 
-            SaveFileManager.UnlockedWeapons.Add(unlockedWeapon);
+            SaveData.UnlockedWeapons.Add(unlockedWeapon);
 
-            SaveFileData saveFileData = DBSaveFile.LoadSaveFileData(SaveFileManager.CurrentSaveID);
+            SaveFileData saveFileData = DBSaveFile.LoadFileData(SaveData.CurrentSaveID);
 
-            SaveFileManager.UnlockedWeapons = DBSaveFile.LoadSaveWeaponType(saveFileData, true);
+            SaveData.UnlockedWeapons = DBSaveFile.LoadSaveWeaponType(saveFileData, true);
         }
 
         public static void AddCurrency(int amount)
         {
-            // Get current amount
-            // add it with the amount
-            // Update value
+            SaveData.Currency += amount;
+
+            DBSaveFile.LoadSaveFileData(SaveData.CurrentSaveID, true); // Override current data
         }
 
-        public static void AddRemove(int amount)
+        /// <summary>
+        /// Overrides the data if the player has enough currency
+        /// </summary>
+        /// <param name="amount"></param>
+        /// <returns>To check if you can remove that much</returns>
+        public static bool AddRemove(int amount)
         {
-            // Get current amount
-            // remove it with the amount
-            // Update value
+            if (SaveData.Currency - amount < 0)
+            {
+                return false;
+            }
+            SaveData.Currency -= amount;
+         
+            DBSaveFile.LoadSaveFileData(SaveData.CurrentSaveID, true); // Override current data
+            return true;
         }
 
+        /// <summary>
+        /// This should be called after changing stuff like, room reached.
+        /// </summary>
         public static void RegularSave()
         {
+            // Override current data
+            SaveFileData saveFileData = DBSaveFile.LoadSaveFileData(SaveData.CurrentSaveID, true); 
+
+            DBSaveFile.LoadSaveWeaponType(saveFileData, true);
+            DBSaveFile.LoadSaveClassType(saveFileData, true);
+
+            RunData runData = DBRunData.SaveLoadRunData(saveFileData); // Save Run File
+
+            if (SaveData.Player == null) return;
+
+            DBRunData.SavePlayer(runData);
         }
 
         /// <summary>

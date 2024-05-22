@@ -11,7 +11,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
         protected bool ShowSettings;
 
         protected List<GameObject> StartMenuObjects;
-        internal List<GameObject> PauseMenuObjects;
+        protected List<GameObject> PauseMenuObjects;
 
         protected SpriteFont Font;
         protected Vector2 TextPos;

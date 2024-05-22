@@ -37,7 +37,7 @@ namespace FørsteÅrsEksamen.Factory
             player.ClassType = playerClass;
 
             // Set the data that will be downloaded to this player
-            SaveFileManager.Player = player;
+            SaveData.Player = player;
 
             return playerGo;
         }

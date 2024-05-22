@@ -11,13 +11,37 @@ namespace FørsteÅrsEksamen.DB
     /// </summary>
     public static class DBSaveFile
     {
-        public static SaveFileData LoadSaveFileData(int currentSaveID)
+
+        public static List<SaveFileData> LoadSaveFiles()
+        {
+            List<SaveFileData> saveFiles = new();
+            using var db = new DataBase(CollectionName.SaveFile);
+
+            for (int i = 1; i <= SaveData.MaxSaveID; i++)
+            {
+                SaveFileData data = db.FindOne<SaveFileData>(x => x.Save_ID == i);
+                if (data == null) continue;
+                saveFiles.Add(data);
+            }
+            return saveFiles;
+        }
+
+        public static SaveFileData LoadFileData(int currentSaveID)
+        {
+            using var db = new DataBase(CollectionName.SaveFile);
+            
+            SaveFileData data = db.FindOne<SaveFileData>(x => x.Save_ID == currentSaveID);
+            
+            return data;
+        }
+
+        public static SaveFileData LoadSaveFileData(int currentSaveID, bool overrideData = false)
         {
             using var db = new DataBase(CollectionName.SaveFile);
 
             SaveFileData data = db.FindOne<SaveFileData>(x => x.Save_ID == currentSaveID);
 
-            if (data == null) // If dosent exit make a new
+            if (data == null || overrideData) // If dosent exit make a new
             {
                 return OverrideSaveFileData(db);
             }
@@ -29,8 +53,8 @@ namespace FørsteÅrsEksamen.DB
         {
             SaveFileData fileData = new()
             {
-                Save_ID = SaveFileManager.CurrentSaveID,
-                Currency = SaveFileManager.Currency,
+                Save_ID = SaveData.CurrentSaveID,
+                Currency = SaveData.Currency,
             };
 
             saveFileDB.SaveOverrideSingle(fileData, fileData.Save_ID, x => x.Save_ID == fileData.Save_ID);
@@ -49,7 +73,7 @@ namespace FørsteÅrsEksamen.DB
 
         #region Weapon
 
-        public static List<WeaponTypes> LoadSaveWeaponType(SaveFileData saveFileData, bool overrideSave)
+        public static List<WeaponTypes> LoadSaveWeaponType(SaveFileData saveFileData, bool overrideSave = false)
         {
             List<WeaponTypes> weaponTypes = new();
 
@@ -99,7 +123,7 @@ namespace FørsteÅrsEksamen.DB
             }
 
             // Adds if there are any weapon types that are missing
-            foreach (WeaponTypes weaponType in SaveFileManager.UnlockedWeapons)
+            foreach (WeaponTypes weaponType in SaveData.UnlockedWeapons)
             {
                 if (weaponTypes.Contains(weaponType)) continue;
 
@@ -194,7 +218,7 @@ namespace FørsteÅrsEksamen.DB
             }
 
             // Adds if there are any class types that are missing
-            foreach (ClassTypes classType in SaveFileManager.UnlockedClasses)
+            foreach (ClassTypes classType in SaveData.UnlockedClasses)
             {
                 if (classTypes.Contains(classType)) continue;
 

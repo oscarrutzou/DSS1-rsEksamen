@@ -19,8 +19,9 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
 
         protected override void InitStartMenu()
         {
-            GameObject startBtn = ButtonFactory.Create("Start Game", true,
-                            () => { GameWorld.Instance.ChangeRoom(0); });
+            GameObject startBtn = ButtonFactory.Create("Save Files", true,
+                            () => { GameWorld.Instance.ChangeScene(SceneNames.SaveFileMenu); });
+                            //() => { GameWorld.Instance.ChangeDungounScene(SceneNames.DungounRoom, 1); });
             //() => { GameWorld.Instance.ChangeScene(ScenesNames.OscarTestScene); });
             StartMenuObjects.Add(startBtn);
 
@@ -30,7 +31,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
             GameObject quitBtn = ButtonFactory.Create("Quit", true, GameWorld.Instance.Exit);
             StartMenuObjects.Add(quitBtn);
 
-            GuiMethods.PlaceButtons(StartMenuObjects, TextPos + new Vector2(0, 75), 25);
+            GuiMethods.PlaceGameObjectsVertical(StartMenuObjects, TextPos + new Vector2(0, 75), 25);
         }
 
         protected override void InitSettingsMenu()
@@ -52,7 +53,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
 
             ShowHideGameObjects(PauseMenuObjects, false);
 
-            GuiMethods.PlaceButtons(PauseMenuObjects, TextPos + new Vector2(0, 75), 25);
+            GuiMethods.PlaceGameObjectsVertical(PauseMenuObjects, TextPos + new Vector2(0, 75), 25);
         }
 
         public override void DrawOnScreen(SpriteBatch spriteBatch)

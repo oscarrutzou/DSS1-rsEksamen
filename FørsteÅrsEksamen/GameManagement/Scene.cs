@@ -5,13 +5,20 @@ using System.Collections.Generic;
 
 namespace FørsteÅrsEksamen.GameManagement
 {
-    public enum ScenesNames
+    public enum SceneNames
     {
         MainMenu,
         SaveFileMenu,
         CharacterSelectorMenu,
         LoadingScreen,
         EndMenu,
+
+        DungounRoom, // BASE, NO SCRIPT HERE
+        DungounRoom1,
+        DungounRoom2,
+        DungounRoom3,
+        DungounRoom15,
+        DungounBossRoom1,
 
         WeaponTestScene,
 

@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using FørsteÅrsEksamen.Factory.Gui;
 
 namespace FørsteÅrsEksamen.GameManagement.Scenes
 {
@@ -131,16 +132,16 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
         private void MakeButtons()
         {
-            //Camera uiCam = GameWorld.Instance.UiCam;
+            Camera uiCam = GameWorld.Instance.UiCam;
 
-            //drawRoomBtn = ButtonFactory.Create("Draw Room", () => { });
-            //drawRoomBtn.Transform.Translate(uiCam.TopRight + new Vector2(-100, 50));
+            drawRoomBtn = ButtonFactory.Create("Draw Room", true, () => { });
+            drawRoomBtn.Transform.Translate(uiCam.TopRight + new Vector2(-100, 50));
 
-            //GameWorld.Instance.Instantiate(drawRoomBtn);
+            GameWorld.Instance.Instantiate(drawRoomBtn);
 
-            //drawAstarPathBtn = ButtonFactory.Create("Draw Valid Path", () => { });
-            //drawAstarPathBtn.Transform.Translate(uiCam.TopRight + new Vector2(-100, 120));
-            //GameWorld.Instance.Instantiate(drawAstarPathBtn);
+            drawAstarPathBtn = ButtonFactory.Create("Draw Valid Path", true, () => { });
+            drawAstarPathBtn.Transform.Translate(uiCam.TopRight + new Vector2(-100, 120));
+            GameWorld.Instance.Instantiate(drawAstarPathBtn);
         }
 
         public override void Update(GameTime gameTime)
@@ -152,7 +153,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         {
             if (GridManager.Instance.CurrentGrid != null)
             {
-                //spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], GridManager.Instance.GetCornerPositionOfCell(new Point(3, 1)), null, Color.DarkRed, 0f, Vector2.Zero, 10, SpriteEffects.None, 1);
+                spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], GridManager.Instance.GetCornerPositionOfCell(new Point(3, 1)), null, Color.DarkRed, 0f, Vector2.Zero, 10, SpriteEffects.None, 1);
             }
 
             base.DrawInWorld(spriteBatch);

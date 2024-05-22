@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace FørsteÅrsEksamen.DB
 {
-    public static class SaveFileManager
+    public static class SaveData
     {
         public static int CurrentSaveID = 1; //Gets set by player and determins loaded data
         public static int MaxSaveID = 3;
@@ -18,7 +18,13 @@ namespace FørsteÅrsEksamen.DB
         public static int Room_Reached = 1;
         public static float Time_Left = 300f;
 
-        public static WeaponTypes SelectedWeapon;
+        // For when we load or select each weapon, to make the player.
+        
+        // We also need to save the player with the next scene int just before they go into the new scene 
+        // This is so we keep our Health and other stuff.
+        // Should happend in a loading screen.
+       
+        public static WeaponTypes SelectedWeapon; 
         public static ClassTypes SelectedClass;
         public static Player Player;
     }

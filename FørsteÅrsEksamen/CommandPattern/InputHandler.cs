@@ -61,7 +61,8 @@ namespace FørsteÅrsEksamen.CommandPattern
 
             AddKeyButtonDownCommand(Keys.Q, new CustomCmd(() => { GridManager.Instance.ChangeRoomNrIndex(-1); }));
             AddKeyButtonDownCommand(Keys.E, new CustomCmd(() => { GridManager.Instance.ChangeRoomNrIndex(1); }));
-            AddKeyButtonDownCommand(Keys.T, new CustomCmd(() => { DBMethods.DeleteSave(SaveFileManager.CurrentSaveID); }));
+
+            AddKeyButtonDownCommand(Keys.T, new CustomCmd(() => { DBMethods.DeleteSave(SaveData.CurrentSaveID); }));
         }
 
         #region Command
