@@ -45,15 +45,15 @@ namespace FørsteÅrsEksamen.Other
         public void SpawnEnemy()
         {
             int spawnLocation = 0;
-            for (int i = 0; i < totalEnemyAmount; i++)
-            {
-                if (spawnLocation == spawnLocation.Count) spawnLocation = 0;
+            //for (int i = 0; i < totalEnemyAmount; i++)
+            //{
+            //    if (spawnLocation == spawnLocation.Count) spawnLocation = 0;
 
-                GameObject go = EnemyFactory.Create();
-                if (go != null) GameWorld.Instance.Instantiate(go);
+            //    GameObject go = EnemyFactory.Create();
+            //    if (go != null) GameWorld.Instance.Instantiate(go);
 
-                spawnLocation++;
-            }
+            //    spawnLocation++;
+            //}
         }
     }
 }
