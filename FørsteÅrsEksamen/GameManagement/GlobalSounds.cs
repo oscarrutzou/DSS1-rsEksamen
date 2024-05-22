@@ -16,6 +16,7 @@ namespace FørsteÅrsEksamen.GameManagement
 
     public static class GlobalSounds
     {
+        #region Properties
         //Sound effects
         public static Dictionary<SoundNames, SoundEffect> Sounds {  get; private set; }
         private static Dictionary<SoundNames, List<SoundEffectInstance>> soundInstancesPool;
@@ -30,14 +31,19 @@ namespace FørsteÅrsEksamen.GameManagement
         private static SoundEffectInstance instanceMenuMusic;
         private static SoundEffectInstance instanceGameMusic;
 
-        public static float MusicVolume = 0f;
-        public static float SfxVolume = 1f;
         private static int musicVolDivide = 4; //Makes the song less loud by dividing the real volume
-
         private static Random rnd = new();
+        public static float MusicVolume = 0f;
+        public static float SfxVolume = 0.75f;
+        private static bool musicCountDown;
+        private static bool sfxCountDown;
+        #endregion
 
         public static void LoadContent()
         {
+            musicCountDown = MusicVolume != 0;
+            sfxCountDown = SfxVolume != 0;
+
             ContentManager content = GameWorld.Instance.Content;
 
             soundInstancesPool = new Dictionary<SoundNames, List<SoundEffectInstance>>();
@@ -96,6 +102,18 @@ namespace FørsteÅrsEksamen.GameManagement
             {
                 instanceGameMusic.Play();
             }
+        }
+
+        public static void ChangeMusicVolume()
+        {
+            MusicVolume = musicCountDown ? Math.Max(0, MusicVolume - 0.25f) : Math.Min(1, MusicVolume + 0.25f);
+            if (MusicVolume == 0 || MusicVolume == 1) musicCountDown = !musicCountDown;
+        }
+
+        public static void ChangeSfxVolume()
+        {
+            SfxVolume = sfxCountDown ? Math.Max(0, SfxVolume - 0.25f) : Math.Min(1, SfxVolume + 0.25f);
+            if (SfxVolume == 0 || SfxVolume == 1) sfxCountDown = !sfxCountDown;
         }
 
         public static bool IsAnySoundPlaying(SoundNames[] soundArray)

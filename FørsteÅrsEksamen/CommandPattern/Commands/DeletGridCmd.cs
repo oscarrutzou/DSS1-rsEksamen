@@ -2,7 +2,7 @@
 
 namespace FørsteÅrsEksamen.CommandPattern.Commands
 {
-    internal class QuitCmd : ICommand
+    internal class DeletGridCmd : ICommand
     {
         private bool test;
 
@@ -18,7 +18,6 @@ namespace FørsteÅrsEksamen.CommandPattern.Commands
             {
                 GridManager.Instance.LoadGrid("Test1");
             }
-            //GameWorld.Instance.Exit();
         }
     }
 }

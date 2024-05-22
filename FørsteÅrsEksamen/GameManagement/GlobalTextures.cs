@@ -21,7 +21,7 @@ namespace FørsteÅrsEksamen.GameManagement
     {
         public static Dictionary<TextureNames, Texture2D> Textures { get; private set; }
         public static SpriteFont DefaultFont { get; private set; }
-        //public static SpriteFont defaultFontBigger { get; private set; }
+        public static SpriteFont BigFont { get; private set; }
 
         public static void LoadContent()
         {
@@ -37,7 +37,7 @@ namespace FørsteÅrsEksamen.GameManagement
 
             // Load all fonts
             DefaultFont = content.Load<SpriteFont>("Fonts\\SmallFont");
-            //defaultFontBigger = content.Load<SpriteFont>("Fonts\\FontBigger");
+            BigFont = content.Load<SpriteFont>("Fonts\\BigFont");
         }
     }
 }

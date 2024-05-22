@@ -113,6 +113,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             path = null; // We cant use the previous path
 
             // Waits in the Idle or Attack state until we find a path.
+            // asyncon afvilking. 
             path = await Task.Run(() =>
             {
                 return astar.FindPath(GameObject.Transform.GridPosition, targetPoint);

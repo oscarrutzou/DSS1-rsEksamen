@@ -27,7 +27,8 @@ namespace FørsteÅrsEksamen.GameManagement
         public GraphicsDeviceManager GfxManager { get; private set; }
         private SpriteBatch _spriteBatch;
         private ScenesNames? nextScene = null;
-
+        private int nextRoom;
+        private bool changedSceneRoom;
         public GameWorld()
         {
             GfxManager = new GraphicsDeviceManager(this);
@@ -50,9 +51,8 @@ namespace FørsteÅrsEksamen.GameManagement
             GlobalAnimations.LoadContent();
 
             GenerateScenes();
-            SetRoomScenes();
 
-            CurrentScene = Scenes[ScenesNames.MainMenu];
+            CurrentScene = Scenes[ScenesNames.OscarTestScene];
             CurrentScene.Initialize();
 
             // Start Input Handler Thread
@@ -64,6 +64,8 @@ namespace FørsteÅrsEksamen.GameManagement
 
             base.Initialize();
         }
+
+        // Simpel lås verision for at ikke åbne 2 versioner af spillet, brug mutex
 
         protected override void LoadContent()
         {
@@ -79,6 +81,7 @@ namespace FørsteÅrsEksamen.GameManagement
             CurrentScene.Update(gameTime);
 
             HandleSceneChange();
+            HandleRoomChange();
 
             base.Update(gameTime);
         }
@@ -111,6 +114,9 @@ namespace FørsteÅrsEksamen.GameManagement
         /// </summary>
         private void GenerateScenes()
         {
+            Rooms = new Scene[3];
+            Rooms[0] = new Room1Scene();
+
             Scenes = new Dictionary<ScenesNames, Scene>();
             Scenes[ScenesNames.MainMenu] = new MainMenu();
 
@@ -156,6 +162,7 @@ namespace FørsteÅrsEksamen.GameManagement
 
         public void ChangeScene(ScenesNames sceneName) => nextScene = sceneName;
 
+
         /// <summary>
         /// A method to prevent changing in the GameObject lists while its still inside the Update
         /// </summary>
@@ -169,17 +176,20 @@ namespace FørsteÅrsEksamen.GameManagement
             nextScene = null;
         }
 
-        private void SetRoomScenes()
+        public void ChangeRoom(int roomReached)
         {
-            Rooms = new Scene[3];
-            Rooms.Append(new Room1Scene());
+            nextRoom = roomReached;
+            changedSceneRoom = true;
         }
 
-        public void ChangeRoomReached(int roomReached)
+        private void HandleRoomChange()
         {
+            if (!changedSceneRoom) return;
+
+            changedSceneRoom = false;
             GlobalSounds.InMenu = false;
             SceneData.DeleteAllGameObjects();
-            CurrentScene = Rooms[roomReached];
+            CurrentScene = Rooms[nextRoom];
             CurrentScene.Initialize();
         }
     }

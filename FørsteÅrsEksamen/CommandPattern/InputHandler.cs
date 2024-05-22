@@ -54,8 +54,7 @@ namespace FørsteÅrsEksamen.CommandPattern
 
         private void SetBaseKeys()
         {
-            AddKeyButtonDownCommand(Keys.Escape, new QuitCmd());
-            AddMouseUpdateCommand(MouseCmdState.Right, new CheckButtonCmd());
+            AddMouseUpdateCommand(MouseCmdState.Left, new CheckButtonCmd());
 
             AddMouseUpdateCommand(MouseCmdState.Left, new CustomCmd(() => { GridManager.Instance.DrawOnCells(); }));
             AddMouseUpdateCommand(MouseCmdState.Right, new CustomCmd(() => { GridManager.Instance.SetDefaultOnCell(); }));

@@ -1,36 +1,31 @@
-﻿using FørsteÅrsEksamen.CommandPattern;
-using FørsteÅrsEksamen.CommandPattern.Commands;
-using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.GUI;
-using FørsteÅrsEksamen.Factory.Gui;
-using Microsoft.Xna.Framework;
+﻿using FørsteÅrsEksamen.Factory.Gui;
+using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
-namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
+namespace FørsteÅrsEksamen.ComponentPattern.GUI
 {
-    public class MainMenu : Scene
+    public class PauseMenu
     {
         private bool showSettings;
+        private enum MenuState { StartMenu, SettingsMenu }
+        private MenuState currentMenuState = MenuState.StartMenu;
 
-        private List<GameObject> startMenuObjects;
-        private List<GameObject> pauseMenuObjects;
+        private List<GameObject> startMenuObjects = new();
+        private List<GameObject> settingsMenuObjects = new();
 
         private SpriteFont font;
         private Vector2 textPos;
         private Button musicBtn, sfxBtn;
-        
-        public override void Initialize()
-        {
-            startMenuObjects = new();
-            pauseMenuObjects = new();
-            showSettings = false;
 
+        public void Initialize()
+        {
             GlobalSounds.InMenu = true;
 
             font = GlobalTextures.BigFont;
             textPos = GameWorld.Instance.UiCam.Center + new Vector2(0, -200);
-            
+
             //Draw background
 
             InitStartMenu();
@@ -39,18 +34,23 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
 
         private void InitStartMenu()
         {
-            GameObject startBtn = ButtonFactory.Create("Start Game", true,
-                () => { GameWorld.Instance.ChangeRoom(0); });
-                //() => { GameWorld.Instance.ChangeScene(ScenesNames.OscarTestScene); });
+            GameObject startBtn = ButtonFactory.Create("Pause", true,
+                () => { ShowHideGameObjects(startMenuObjects, false); ; });
             startMenuObjects.Add(startBtn);
 
             GameObject settingsBtn = ButtonFactory.Create("Settings", true,
                  () => { Settings(); });
             startMenuObjects.Add(settingsBtn);
-            
+
             GameObject quitBtn = ButtonFactory.Create("Quit", true,
                  () => { GameWorld.Instance.Exit(); });
             startMenuObjects.Add(quitBtn);
+
+            GameObject mainMenu = ButtonFactory.Create("Main Menu", true,
+                () => { GameWorld.Instance.ChangeScene(ScenesNames.MainMenu); });
+            startMenuObjects.Add(mainMenu);
+
+            ShowHideGameObjects(startMenuObjects, false);
 
             GuiMethods.PlaceButtons(startMenuObjects, textPos + new Vector2(0, 75), 25);
         }
@@ -61,20 +61,20 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
             musicBtn = musicVolGo.GetComponent<Button>();
             musicBtn.ChangeScale(new Vector2(14, 4));
             musicBtn.Text = $"Music Volume {GlobalSounds.MusicVolume * 100}%";
-            pauseMenuObjects.Add(musicVolGo);
+            settingsMenuObjects.Add(musicVolGo);
 
             GameObject sfxVolGo = ButtonFactory.Create("", true, () => { ChangeSfx(); });
             sfxBtn = sfxVolGo.GetComponent<Button>();
             sfxBtn.ChangeScale(new Vector2(14, 4));
             sfxBtn.Text = $"SFX Volume {GlobalSounds.SfxVolume * 100}%";
-            pauseMenuObjects.Add(sfxVolGo);
+            settingsMenuObjects.Add(sfxVolGo);
 
             GameObject quitBtn = ButtonFactory.Create("Back", true, () => { Settings(); });
-            pauseMenuObjects.Add(quitBtn);
+            settingsMenuObjects.Add(quitBtn);
 
-            ShowHideGameObjects(pauseMenuObjects, false);
+            ShowHideGameObjects(settingsMenuObjects, false);
 
-            GuiMethods.PlaceButtons(pauseMenuObjects, textPos + new Vector2(0, 75), 25);
+            GuiMethods.PlaceButtons(settingsMenuObjects, textPos + new Vector2(0, 75), 25);
         }
 
         private void ChangeMusic()
@@ -89,21 +89,39 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
             sfxBtn.Text = $"SFX Volume {GlobalSounds.SfxVolume * 100}%";
         }
 
-        private void Settings()
+        public void ShowMenu()
         {
-            showSettings = !showSettings;
-
-            if (showSettings) {
-                ShowHideGameObjects(startMenuObjects, false);
-                ShowHideGameObjects(pauseMenuObjects, true);
+            if (currentMenuState == MenuState.StartMenu)
+            {
+                ShowHideGameObjects(startMenuObjects, true);
+                ShowHideGameObjects(settingsMenuObjects, false);
             }
             else
             {
-                ShowHideGameObjects(startMenuObjects, true);
-                ShowHideGameObjects(pauseMenuObjects, false);
+                ShowHideGameObjects(startMenuObjects, false);
+                ShowHideGameObjects(settingsMenuObjects, true);
             }
         }
 
+        public void HideMenu()
+        {
+            currentMenuState = MenuState.StartMenu;
+            ShowHideGameObjects(startMenuObjects, false);
+            ShowHideGameObjects(settingsMenuObjects, false);
+        }
+
+        private void Settings()
+        {
+            if (currentMenuState == MenuState.StartMenu)
+            {
+                currentMenuState = MenuState.SettingsMenu;
+            }
+            else
+            {
+                currentMenuState = MenuState.StartMenu;
+            }
+            ShowMenu();
+        }
         private void ShowHideGameObjects(List<GameObject> gameObjects, bool isEnabled)
         {
             foreach (GameObject item in gameObjects)
@@ -112,17 +130,15 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
             }
         }
 
-        public override void DrawOnScreen(SpriteBatch spriteBatch)
+        public void DrawOnScreen(SpriteBatch spriteBatch)
         {
-            base.DrawOnScreen(spriteBatch);
-
             if (showSettings)
             {
                 DrawMenuText(spriteBatch, "Settings", textPos);
             }
             else
             {
-                DrawMenuText(spriteBatch, "Doctor's Dunguon", textPos);
+                DrawMenuText(spriteBatch, "Pause Menu", textPos);
             }
         }
 
