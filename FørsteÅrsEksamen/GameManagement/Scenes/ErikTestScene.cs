@@ -8,12 +8,14 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+
 namespace FørsteÅrsEksamen.GameManagement.Scenes
 {
     public class ErikTestScene : Scene
     {
         private GameObject weapon;
-        private GameObject projectile;
+        private GameObject bow;
+        private GameObject arrow;
 
         private bool canShoot = true;
         private float lastShot = 0;
@@ -23,26 +25,30 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         {
             MakeWeapon();
             GameWorld.Instance.WorldCam.position = Vector2.Zero;
-            //MakeProjectile();
+            
             AttackCommand();
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            lastShot += GameWorld.DeltaTime;
+            //lastShot += GameWorld.DeltaTime;
 
-            if (lastShot > shootTimer)
-            {
-                canShoot = true;
-            }
+            //if (lastShot > shootTimer)
+            //{
+            //    canShoot = true;
+            //}
         }
 
         private void MakeWeapon()
         {
             weapon = WeaponFactory.Create(WeaponTypes.Sword);
-
+            
+            bow = WeaponFactory.Create(WeaponTypes.Bow);
+            
+            
             GameWorld.Instance.Instantiate(weapon);
+            GameWorld.Instance.Instantiate(bow);
         }
 
        
@@ -50,6 +56,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         private void Attack()
         {
             weapon.GetComponent<Weapon>().Attack();
+            
             //projectile.GetComponent<MagicStaff>().Attack();
         }
 
@@ -64,13 +71,15 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
         public void Shoot()
         {
+           var rangedWeapon = bow.GetComponent<RangedWeapon>();  
 
-            projectile.GetComponent<Projectile>().SetValues(MathHelper.Pi);
+            //projectile.GetComponent<Projectile>().SetValues(MathHelper.Pi);
 
-            if (canShoot)
+            if (rangedWeapon != null)
             {
-                canShoot = false;
-                lastShot = 0;
+
+                rangedWeapon.Shoot();
+                
 
             }
 

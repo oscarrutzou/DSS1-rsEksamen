@@ -165,6 +165,18 @@
 /processorParam:TextureFormat=Color
 /build:Test/Weapons_0010_Capa-8.png
 
+#begin Test/WoodArrow.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Test/WoodArrow.png
+
 #begin World/16x16White.png
 /importer:TextureImporter
 /processor:TextureProcessor

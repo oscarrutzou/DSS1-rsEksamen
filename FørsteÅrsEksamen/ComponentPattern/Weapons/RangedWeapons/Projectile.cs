@@ -2,6 +2,7 @@
 using FørsteÅrsEksamen.ComponentPattern.Enemies;
 using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
+using Npgsql.Replication.PgOutput.Messages;
 using System;
 
 namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
@@ -27,7 +28,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
             SpriteRenderer sr = GameObject.GetComponent<SpriteRenderer>();
             sr.SetLayerDepth(LAYERDEPTH.Player);
 
-            sr.SetSprite(TextureNames.WoodSword);
+            sr.SetSprite(TextureNames.WoodArrow);
+            
         }
 
         public void SetValues(float rotation)
@@ -103,9 +105,9 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
             }
         }
 
-        public void DestroyRange()
-        {
-        }
+       
+
+       
 
         public void Attack()
         {

@@ -12,7 +12,10 @@ namespace FørsteÅrsEksamen.Factory
             GameObject arrow = new GameObject();
             arrow.Transform.Scale = new Vector2(4, 4f);
             arrow.AddComponent<SpriteRenderer>();
+            
             arrow.AddComponent<Projectile>();
+            
+            
             //arrow.AddComponent<Collider>().SetCollisionBox(30, 30);
 
             return arrow;
