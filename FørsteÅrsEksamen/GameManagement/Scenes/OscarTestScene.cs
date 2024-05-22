@@ -44,7 +44,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
             OnPlayerChanged();
 
-            DBMethods.SaveGame();
+            //DBMethods.SaveGame();
         }
 
         private void SetLevelBG()

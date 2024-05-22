@@ -21,7 +21,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
         }
         private string newSaveFile = "New Save File";
 
-        protected override void InitStartMenu()
+        protected override void InitFirstMenu()
         {
             // Should check first for any save files. Then take their id, and the currency and add it to the button text.
             // If there is none it will just be "New Save File"
@@ -36,22 +36,22 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
             foreach (Button button in saveFileButtons.Values)
             {
                 button.ChangeScale(new Vector2(14, 5));
-                StartMenuObjects.Add(button.GameObject);
+                FirstMenuObjects.Add(button.GameObject);
             }
 
             GameObject backBtn = ButtonFactory.Create("Back", true, () =>
             {
                 GameWorld.Instance.ChangeScene(SceneNames.MainMenu);
             });
-            StartMenuObjects.Add(backBtn);
+            FirstMenuObjects.Add(backBtn);
 
             ChangeButtonText();
-            GuiMethods.PlaceGameObjectsVertical(StartMenuObjects, TextPos + new Vector2(0, 75), 25);
+            GuiMethods.PlaceGameObjectsVertical(FirstMenuObjects, TextPos + new Vector2(0, 75), 25);
         }
 
         private void MakeNewSaveFile(int id)
         {
-            SaveData.CurrentSaveID = id;
+            Data.CurrentSaveID = id;
 
             // Dont override save files
             List<SaveFileData> saveFiles = DBSaveFile.LoadSaveFiles();
@@ -60,19 +60,28 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
             {
                 if (saveFile.Save_ID == id)
                 {
-                    SaveData.Currency = saveFile.Currency;
+                    Data.Currency = saveFile.Currency;
                     // maybe take player and current weapon and other stuff.
                     break;
                 }
             }
 
-            DBMethods.SaveGame();
+            DBSaveFile.LoadSaveFileData(Data.CurrentSaveID, false);
 
-            DBMethods.AddCurrency(100);
 
-            ChangeButtonText(); // Dont need to be here if we go out of this scene.
+            RunData runData = DBRunData.LoadRunData(Data.CurrentSaveID);
 
-            //Either load the run or go into the character creator menu.
+            if (runData == null)
+            {
+                // Make a new run after the characterSelector
+                GameWorld.Instance.ChangeScene(SceneNames.CharacterSelectorMenu);
+            }
+            else
+            {
+                // Load run
+                // Load the rundata into the game by making a player in the new scene.
+                GameWorld.Instance.ChangeDungounScene(SceneNames.DungounRoom, runData.Room_Reached);
+            }
         }
 
         /// <summary>

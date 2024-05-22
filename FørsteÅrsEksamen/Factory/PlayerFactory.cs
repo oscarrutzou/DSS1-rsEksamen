@@ -6,6 +6,13 @@ using Microsoft.Xna.Framework;
 
 namespace FørsteÅrsEksamen.Factory
 {
+    public enum ClassTypes
+    {
+        Archer,
+        Warrior,
+        Mage,
+    }
+
     public static class PlayerFactory
     {
         public static GameObject Create(ClassTypes playerClass, WeaponTypes weaponType)
@@ -37,7 +44,7 @@ namespace FørsteÅrsEksamen.Factory
             player.ClassType = playerClass;
 
             // Set the data that will be downloaded to this player
-            SaveData.Player = player;
+            Data.Player = player;
 
             return playerGo;
         }

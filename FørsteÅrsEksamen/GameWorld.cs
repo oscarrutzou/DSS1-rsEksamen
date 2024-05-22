@@ -149,6 +149,7 @@ namespace FørsteÅrsEksamen.GameManagement
             {
                 [SceneNames.MainMenu] = new MainMenu(),
                 [SceneNames.SaveFileMenu] = new SaveFileMenu(),
+                [SceneNames.CharacterSelectorMenu] = new CharacterSelectorMenu(),
                 //Scenes[ScenesNames.LoadingScreen] = new ();
                 //Scenes[ScenesNames.EndMenu] = new();
                 [SceneNames.DungounRoom1] = new Room1Scene(),

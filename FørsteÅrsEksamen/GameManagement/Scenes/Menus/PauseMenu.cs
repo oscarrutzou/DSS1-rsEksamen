@@ -12,46 +12,46 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
         private enum MenuState { StartMenu, SettingsMenu }
         private MenuState currentMenuState = MenuState.StartMenu;
 
-        protected override void InitStartMenu()
+        protected override void InitFirstMenu()
         {
             GameObject startBtn = ButtonFactory.Create("Pause", true, TogglePauseMenu);
-            StartMenuObjects.Add(startBtn);
+            FirstMenuObjects.Add(startBtn);
 
-            GameObject settingsBtn = ButtonFactory.Create("Settings", true, Settings);
-            StartMenuObjects.Add(settingsBtn);
+            GameObject settingsBtn = ButtonFactory.Create("Settings", true, ShowHideSecondMenu);
+            FirstMenuObjects.Add(settingsBtn);
 
             GameObject quitBtn = ButtonFactory.Create("Quit", true, GameWorld.Instance.Exit);
-            StartMenuObjects.Add(quitBtn);
+            FirstMenuObjects.Add(quitBtn);
 
             GameObject mainMenu = ButtonFactory.Create("Main Menu", true,
                 () => { GameWorld.Instance.ChangeScene(SceneNames.MainMenu); });
-            StartMenuObjects.Add(mainMenu);
+            FirstMenuObjects.Add(mainMenu);
 
-            ShowHideGameObjects(StartMenuObjects, false);
+            ShowHideGameObjects(FirstMenuObjects, false);
 
-            GuiMethods.PlaceGameObjectsVertical(StartMenuObjects, TextPos + new Vector2(0, 75), 25);
+            GuiMethods.PlaceGameObjectsVertical(FirstMenuObjects, TextPos + new Vector2(0, 75), 25);
         }
 
-        protected override void InitSettingsMenu()
+        protected override void InitSecondMenu()
         {
             GameObject musicVolGo = ButtonFactory.Create("", true, ChangeMusic);
             MusicBtn = musicVolGo.GetComponent<Button>();
             MusicBtn.ChangeScale(new Vector2(14, 4));
             MusicBtn.Text = $"Music Volume {GlobalSounds.MusicVolume * 100}%";
-            PauseMenuObjects.Add(musicVolGo);
+            SecondMenuObjects.Add(musicVolGo);
 
             GameObject sfxVolGo = ButtonFactory.Create("", true, ChangeSfx);
             SfxBtn = sfxVolGo.GetComponent<Button>();
             SfxBtn.ChangeScale(new Vector2(14, 4));
             SfxBtn.Text = $"SFX Volume {GlobalSounds.SfxVolume * 100}%";
-            PauseMenuObjects.Add(sfxVolGo);
+            SecondMenuObjects.Add(sfxVolGo);
 
-            GameObject quitBtn = ButtonFactory.Create("Back", true, Settings);
-            PauseMenuObjects.Add(quitBtn);
+            GameObject quitBtn = ButtonFactory.Create("Back", true, ShowHideSecondMenu);
+            SecondMenuObjects.Add(quitBtn);
 
-            ShowHideGameObjects(PauseMenuObjects, false);
+            ShowHideGameObjects(SecondMenuObjects, false);
 
-            GuiMethods.PlaceGameObjectsVertical(PauseMenuObjects, TextPos + new Vector2(0, 75), 25);
+            GuiMethods.PlaceGameObjectsVertical(SecondMenuObjects, TextPos + new Vector2(0, 75), 25);
         }
 
         public void TogglePauseMenu()
@@ -71,24 +71,24 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
         {
             if (currentMenuState == MenuState.StartMenu)
             {
-                ShowHideGameObjects(StartMenuObjects, true);
-                ShowHideGameObjects(PauseMenuObjects, false);
+                ShowHideGameObjects(FirstMenuObjects, true);
+                ShowHideGameObjects(SecondMenuObjects, false);
             }
             else
             {
-                ShowHideGameObjects(StartMenuObjects, false);
-                ShowHideGameObjects(PauseMenuObjects, true);
+                ShowHideGameObjects(FirstMenuObjects, false);
+                ShowHideGameObjects(SecondMenuObjects, true);
             }
         }
 
         private void HideMenu()
         {
             currentMenuState = MenuState.StartMenu;
-            ShowHideGameObjects(StartMenuObjects, false);
-            ShowHideGameObjects(PauseMenuObjects, false);
+            ShowHideGameObjects(FirstMenuObjects, false);
+            ShowHideGameObjects(SecondMenuObjects, false);
         }
 
-        protected override void Settings()
+        protected override void ShowHideSecondMenu()
         {
             if (currentMenuState == MenuState.StartMenu)
             {
@@ -118,7 +118,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
 
         private bool IsMenuVisible()
         {
-            return StartMenuObjects[0].IsEnabled || PauseMenuObjects[0].IsEnabled;
+            return FirstMenuObjects[0].IsEnabled || SecondMenuObjects[0].IsEnabled;
         }
     }
 }

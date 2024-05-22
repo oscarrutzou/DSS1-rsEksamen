@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace FørsteÅrsEksamen.DB
 {
-    public static class SaveData
+    public static class Data
     {
         public static int CurrentSaveID = 1; //Gets set by player and determins loaded data
         public static int MaxSaveID = 3;

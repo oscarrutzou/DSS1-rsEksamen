@@ -8,10 +8,10 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
 {
     public abstract class MenuScene : Scene
     {
-        protected bool ShowSettings;
+        protected bool ShowSecondMenu;
 
-        protected List<GameObject> StartMenuObjects;
-        protected List<GameObject> PauseMenuObjects;
+        protected List<GameObject> FirstMenuObjects;
+        protected List<GameObject> SecondMenuObjects;
 
         protected SpriteFont Font;
         protected Vector2 TextPos;
@@ -19,33 +19,33 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
 
         public override void Initialize()
         {
-            StartMenuObjects = new();
-            PauseMenuObjects = new();
-            ShowSettings = false;
+            FirstMenuObjects = new();
+            SecondMenuObjects = new();
+            ShowSecondMenu = false;
 
             GlobalSounds.InMenu = true;
 
             Font = GlobalTextures.BigFont;
             TextPos = GameWorld.Instance.UiCam.Center + new Vector2(0, -200);
 
-            InitStartMenu();
-            InitSettingsMenu();
+            InitFirstMenu();
+            InitSecondMenu();
         }
-        protected virtual void InitStartMenu() { }
-        protected virtual void InitSettingsMenu() { }
-        protected virtual void Settings()
+        protected virtual void InitFirstMenu() { }
+        protected virtual void InitSecondMenu() { }
+        protected virtual void ShowHideSecondMenu()
         {
-            ShowSettings = !ShowSettings;
+            ShowSecondMenu = !ShowSecondMenu;
 
-            if (ShowSettings)
+            if (ShowSecondMenu)
             {
-                ShowHideGameObjects(StartMenuObjects, false);
-                ShowHideGameObjects(PauseMenuObjects, true);
+                ShowHideGameObjects(FirstMenuObjects, false);
+                ShowHideGameObjects(SecondMenuObjects, true);
             }
             else
             {
-                ShowHideGameObjects(StartMenuObjects, true);
-                ShowHideGameObjects(PauseMenuObjects, false);
+                ShowHideGameObjects(FirstMenuObjects, true);
+                ShowHideGameObjects(SecondMenuObjects, false);
             }
         }
         protected void ShowHideGameObjects(List<GameObject> gameObjects, bool isEnabled)

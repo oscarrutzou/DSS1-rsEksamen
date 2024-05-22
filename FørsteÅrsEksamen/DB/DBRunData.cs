@@ -40,13 +40,30 @@ namespace FørsteÅrsEksamen.DB
             }
         }
 
+        public static RunData LoadRunData(int saveID)
+        {
+            using var fileHasRunDataLinkDB = new DataBase(CollectionName.SaveFileHasRunData);
+            using var runDataDB = new DataBase(CollectionName.RunData);
+
+            SaveFileData saveData = DBSaveFile.LoadFileData(saveID);
+
+            if (saveData == null) return null;
+
+            SaveFileHasRunData existingLink = fileHasRunDataLinkDB.GetCollection<SaveFileHasRunData>()
+                                                      .FindOne(link => link.Save_ID == saveData.Save_ID);
+
+            if (existingLink == null) return null;
+
+            return runDataDB.GetCollection<RunData>().FindOne(data => data.Run_ID == existingLink.Run_ID);
+        }
+
         private static RunData SaveRunData(DataBase runDataDB)
         {
             RunData runData = new()
             {
-                Run_ID = SaveData.CurrentSaveID,
-                Room_Reached = SaveData.Room_Reached,
-                Time_Left = SaveData.Time_Left,
+                Run_ID = Data.CurrentSaveID,
+                Room_Reached = Data.Room_Reached,
+                Time_Left = Data.Time_Left,
             };
 
             runDataDB.SaveOverrideSingle(runData, runData.Run_ID, x => x.Run_ID == runData.Run_ID);
@@ -97,15 +114,15 @@ namespace FørsteÅrsEksamen.DB
 
         private static PlayerData MakePlayer(DataBase playerDB)
         {
-            string potionName = SaveData.Player.ItemInInventory == null ? string.Empty : SaveData.Player.ItemInInventory.Name;
+            string potionName = Data.Player.ItemInInventory == null ? string.Empty : Data.Player.ItemInInventory.Name;
 
             PlayerData playerData = new()
             {
                 Player_ID = Guid.NewGuid(),
-                Health = SaveData.Player.CurrentHealth,
+                Health = Data.Player.CurrentHealth,
                 Potion_Name = potionName,
-                Class_Type = SaveData.Player.ClassType,
-                Weapon_Type = SaveData.Player.WeaponType,
+                Class_Type = Data.Player.ClassType,
+                Weapon_Type = Data.Player.WeaponType,
             };
 
             playerDB.SaveSingle(playerData);

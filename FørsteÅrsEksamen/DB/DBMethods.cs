@@ -18,31 +18,31 @@ namespace FørsteÅrsEksamen.DB
             CollectionName.RunDataHasPlayerData,
         };
 
-        public static void SaveGame()
-        {
-            SaveFileData saveFileData = DBSaveFile.LoadSaveFileData(SaveData.CurrentSaveID, false);
+        //public static void SaveGame()
+        //{
+        //    SaveFileData saveFileData = DBSaveFile.LoadSaveFileData(Data.CurrentSaveID, false);
 
-            SaveData.UnlockedWeapons = DBSaveFile.LoadSaveWeaponType(saveFileData, false);
-            SaveData.UnlockedClasses = DBSaveFile.LoadSaveClassType(saveFileData, false);
+        //    Data.UnlockedWeapons = DBSaveFile.LoadSaveWeaponType(saveFileData, false);
+        //    Data.UnlockedClasses = DBSaveFile.LoadSaveClassType(saveFileData, false);
 
-            // In buy menu.
-            //UnlockWeapon(WeaponTypes.Axe);
-            //UnlockWeapon(WeaponTypes.MagicStaffFire);
-            //UnlockWeapon(WeaponTypes.Bow);
+        //    // In buy menu.
+        //    //UnlockWeapon(WeaponTypes.Axe);
+        //    //UnlockWeapon(WeaponTypes.MagicStaffFire);
+        //    //UnlockWeapon(WeaponTypes.Bow);
 
-            //UnlockClass(ClassTypes.Archer);
-            //UnlockClass(ClassTypes.Warrior);
-            //UnlockClass(ClassTypes.Mage);
+        //    //UnlockClass(ClassTypes.Archer);
+        //    //UnlockClass(ClassTypes.Warrior);
+        //    //UnlockClass(ClassTypes.Mage);
 
-            SaveRunData();
-        }
+        //    SaveRunData();
+        //}
 
         public static void SaveRunData()
         {
-            SaveFileData saveFileData = DBSaveFile.LoadFileData(SaveData.CurrentSaveID); // Load Save File
+            SaveFileData saveFileData = DBSaveFile.LoadFileData(Data.CurrentSaveID); // Load Save File
             RunData runData = DBRunData.SaveLoadRunData(saveFileData); // Save Run File
             
-            if (SaveData.Player == null) return;
+            if (Data.Player == null) return;
             
             PlayerData playerData = DBRunData.SavePlayer(runData);
 
@@ -109,32 +109,32 @@ namespace FørsteÅrsEksamen.DB
 
         public static void UnlockClass(ClassTypes classType)
         {
-            if (SaveData.UnlockedClasses.Contains(classType)) return;
+            if (Data.UnlockedClasses.Contains(classType)) return;
 
-            SaveData.UnlockedClasses.Add(classType);
+            Data.UnlockedClasses.Add(classType);
 
-            SaveFileData saveFileData = DBSaveFile.LoadFileData(SaveData.CurrentSaveID);
+            SaveFileData saveFileData = DBSaveFile.LoadFileData(Data.CurrentSaveID);
 
-            SaveData.UnlockedClasses = DBSaveFile.LoadSaveClassType(saveFileData, true);
+            Data.UnlockedClasses = DBSaveFile.LoadSaveClassType(saveFileData, true);
         }
 
         public static void UnlockWeapon(WeaponTypes unlockedWeapon)
         {
             // Only add the weapon if it's not already in the list
-            if (SaveData.UnlockedWeapons.Contains(unlockedWeapon)) return;
+            if (Data.UnlockedWeapons.Contains(unlockedWeapon)) return;
 
-            SaveData.UnlockedWeapons.Add(unlockedWeapon);
+            Data.UnlockedWeapons.Add(unlockedWeapon);
 
-            SaveFileData saveFileData = DBSaveFile.LoadFileData(SaveData.CurrentSaveID);
+            SaveFileData saveFileData = DBSaveFile.LoadFileData(Data.CurrentSaveID);
 
-            SaveData.UnlockedWeapons = DBSaveFile.LoadSaveWeaponType(saveFileData, true);
+            Data.UnlockedWeapons = DBSaveFile.LoadSaveWeaponType(saveFileData, true);
         }
 
         public static void AddCurrency(int amount)
         {
-            SaveData.Currency += amount;
+            Data.Currency += amount;
 
-            DBSaveFile.LoadSaveFileData(SaveData.CurrentSaveID, true); // Override current data
+            DBSaveFile.LoadSaveFileData(Data.CurrentSaveID, true); // Override current data
         }
 
         /// <summary>
@@ -144,13 +144,13 @@ namespace FørsteÅrsEksamen.DB
         /// <returns>To check if you can remove that much</returns>
         public static bool AddRemove(int amount)
         {
-            if (SaveData.Currency - amount < 0)
+            if (Data.Currency - amount < 0)
             {
                 return false;
             }
-            SaveData.Currency -= amount;
+            Data.Currency -= amount;
          
-            DBSaveFile.LoadSaveFileData(SaveData.CurrentSaveID, true); // Override current data
+            DBSaveFile.LoadSaveFileData(Data.CurrentSaveID, true); // Override current data
             return true;
         }
 
@@ -160,14 +160,14 @@ namespace FørsteÅrsEksamen.DB
         public static void RegularSave()
         {
             // Override current data
-            SaveFileData saveFileData = DBSaveFile.LoadSaveFileData(SaveData.CurrentSaveID, true); 
+            SaveFileData saveFileData = DBSaveFile.LoadSaveFileData(Data.CurrentSaveID, true); 
 
             DBSaveFile.LoadSaveWeaponType(saveFileData, true);
             DBSaveFile.LoadSaveClassType(saveFileData, true);
 
             RunData runData = DBRunData.SaveLoadRunData(saveFileData); // Save Run File
 
-            if (SaveData.Player == null) return;
+            if (Data.Player == null) return;
 
             DBRunData.SavePlayer(runData);
         }

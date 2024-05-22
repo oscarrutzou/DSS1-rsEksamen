@@ -9,13 +9,6 @@ using System.Collections.Generic;
 
 namespace FørsteÅrsEksamen.ComponentPattern.Classes
 {
-    public enum ClassTypes
-    {
-        Archer,
-        Warrior,
-        Mage,
-    }
-
     // Oscar
     public abstract class Player : Character, ISubject
     {
