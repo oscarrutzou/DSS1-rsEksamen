@@ -52,7 +52,7 @@ namespace FørsteÅrsEksamen.GameManagement
 
             GenerateScenes();
 
-            CurrentScene = Scenes[ScenesNames.OscarTestScene];
+            CurrentScene = Scenes[ScenesNames.MainMenu];
             CurrentScene.Initialize();
 
             // Start Input Handler Thread

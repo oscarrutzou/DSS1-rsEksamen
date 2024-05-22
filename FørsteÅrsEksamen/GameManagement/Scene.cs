@@ -8,15 +8,17 @@ namespace FørsteÅrsEksamen.GameManagement
     public enum ScenesNames
     {
         MainMenu,
+        SaveFileMenu,
+        CharacterSelectorMenu,
+        LoadingScreen,
+        EndMenu,
 
-        //LoadingScreen,
         WeaponTestScene,
 
         OscarTestScene,
         StefanTestScene,
         ErikTestScene,
         AsserTestScene,
-        //EndMenu,
     }
 
     // Oscar

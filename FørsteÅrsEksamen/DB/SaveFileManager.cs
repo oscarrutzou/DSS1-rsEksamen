@@ -18,6 +18,8 @@ namespace FørsteÅrsEksamen.DB
         public static int Room_Reached = 1;
         public static float Time_Left = 300f;
 
+        public static WeaponTypes SelectedWeapon;
+        public static ClassTypes SelectedClass;
         public static Player Player;
     }
 }
