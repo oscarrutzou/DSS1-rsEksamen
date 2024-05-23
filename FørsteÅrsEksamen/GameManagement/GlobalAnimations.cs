@@ -9,13 +9,51 @@ namespace FørsteÅrsEksamen.GameManagement
     {
         TestWizardRightIndividualFrames,
 
+        // Player Classes
         KnightDeath,
         KnightIdle,
         KnightRun,
 
-        OrcDeath,
-        OrcIdle,
-        OrcRun,
+        ArcherDeath,
+        ArcherIdle,
+        ArcherRun, 
+
+        MageDeath,
+        MageIdle,
+        MageRun,
+
+        // Enemy Classes
+        OrcBaseDeath,
+        OrcBaseIdle,
+        OrcBaseRun,
+
+        OrcWarriorDeath,
+        OrcWarriorIdle,
+        OrcWarriorRun,
+
+        OrcArcherDeath,
+        OrcArcherIdle,
+        OrcArcherRun, 
+
+        OrcShamanDeath,
+        OrcShamanIdle,
+        OrcShamanRun,
+
+        SkeletonBaseDeath,
+        SkeletonBaseIdle,
+        SkeletonBaseRun,
+
+        SkeletonWarriorDeath,
+        SkeletonWarriorIdle,
+        SkeletonWarriorRun,
+
+        SkeletonArcherDeath,
+        SkeletonArcherIdle,
+        SkeletonArcherRun,
+
+        SkeletonMageDeath,
+        SkeletonMageIdle,
+        SkeletonMageRun,
     }
 
     // Oscar
@@ -37,15 +75,64 @@ namespace FørsteÅrsEksamen.GameManagement
             Animations = new Dictionary<AnimNames, Animation>();
 
             //Can upload sprite sheets
-            // The Name of the Animation, the path, the FPS (how many times we change the frame per second, and the dimension of each sprite
+            //// The Name of the Animation, the path, the FPS (how many times we change the frame per second, and the 
+
+            // Load animations for Knight
             LoadSpriteSheet(AnimNames.KnightIdle, "World\\Classes\\Knight\\Idle-Sheet", 5, 32);
             LoadSpriteSheet(AnimNames.KnightRun, "World\\Classes\\Knight\\Run-Sheet", 10, 64);
             LoadSpriteSheet(AnimNames.KnightDeath, "World\\Classes\\Knight\\Death-Sheet", 6, 64);
 
-            LoadSpriteSheet(AnimNames.OrcIdle, "World\\Enemies\\Orc\\Orc - Base\\Idle-Sheet", 4, 32);
-            LoadSpriteSheet(AnimNames.OrcRun, "World\\Enemies\\Orc\\Orc - Base\\Run-Sheet", 10, 64);
-            LoadSpriteSheet(AnimNames.OrcDeath, "World\\Enemies\\Orc\\Orc - Base\\Death-Sheet", 6, 64);
-     
+            // Load animations for Archer
+            LoadSpriteSheet(AnimNames.ArcherIdle, "World\\Classes\\Rogue\\Idle-Sheet", 5, 32);
+            LoadSpriteSheet(AnimNames.ArcherRun, "World\\Classes\\Rogue\\Run-Sheet", 10, 64);
+            LoadSpriteSheet(AnimNames.ArcherDeath, "World\\Classes\\Rogue\\Death-Sheet", 6, 64);
+
+            // Load animations for Mage
+            LoadSpriteSheet(AnimNames.MageIdle, "World\\Classes\\Wizard\\Idle-Sheet", 5, 32);
+            LoadSpriteSheet(AnimNames.MageRun, "World\\Classes\\Wizard\\Run-Sheet", 10, 64);
+            LoadSpriteSheet(AnimNames.MageDeath, "World\\Classes\\Wizard\\Death-Sheet", 6, 64);
+
+            // Load animations for Orc Base
+            LoadSpriteSheet(AnimNames.OrcBaseIdle, "World\\Enemies\\Orc\\Orc - Base\\Idle-Sheet", 4, 32);
+            LoadSpriteSheet(AnimNames.OrcBaseRun, "World\\Enemies\\Orc\\Orc - Base\\Run-Sheet", 10, 64);
+            LoadSpriteSheet(AnimNames.OrcBaseDeath, "World\\Enemies\\Orc\\Orc - Base\\Death-Sheet", 6, 64);
+
+            // Load animations for Orc Warrior
+            LoadSpriteSheet(AnimNames.OrcWarriorIdle, "World\\Enemies\\Orc\\Orc - Warrior\\Idle-Sheet", 4, 32);
+            LoadSpriteSheet(AnimNames.OrcWarriorRun, "World\\Enemies\\Orc\\Orc - Warrior\\Run-Sheet", 10, 64);
+            LoadSpriteSheet(AnimNames.OrcWarriorDeath, "World\\Enemies\\Orc\\Orc - Warrior\\Death-Sheet", 6, 64);
+
+            // Load animations for Orc Archer
+            LoadSpriteSheet(AnimNames.OrcArcherIdle, "World\\Enemies\\Orc\\Orc - Rogue\\Idle-Sheet", 4, 32);
+            LoadSpriteSheet(AnimNames.OrcArcherRun, "World\\Enemies\\Orc\\Orc - Rogue\\Run-Sheet", 10, 64);
+            LoadSpriteSheet(AnimNames.OrcArcherDeath, "World\\Enemies\\Orc\\Orc - Rogue\\Death-Sheet", 6, 64);
+
+            // Load animations for Orc Shaman
+            LoadSpriteSheet(AnimNames.OrcShamanIdle, "World\\Enemies\\Orc\\Orc - Shaman\\Idle-Sheet", 4, 32);
+            LoadSpriteSheet(AnimNames.OrcShamanRun, "World\\Enemies\\Orc\\Orc - Shaman\\Run-Sheet", 10, 64);
+            LoadSpriteSheet(AnimNames.OrcShamanDeath, "World\\Enemies\\Orc\\Orc - Shaman\\Death-Sheet", 6, 64);
+
+            //// Load animations for Skeleton Base
+            LoadSpriteSheet(AnimNames.SkeletonBaseIdle, "World\\Enemies\\Skeleton\\Skeleton - Base\\Idle-Sheet", 4, 32);
+            LoadSpriteSheet(AnimNames.SkeletonBaseRun, "World\\Enemies\\Skeleton\\Skeleton - Base\\Run-Sheet", 10, 64);
+            LoadSpriteSheet(AnimNames.SkeletonBaseDeath, "World\\Enemies\\Skeleton\\Skeleton - Base\\Death-Sheet", 6, 64);
+
+            //// Load animations for Skeleton Warrior
+            LoadSpriteSheet(AnimNames.SkeletonWarriorIdle, "World\\Enemies\\Skeleton\\Skeleton - Warrior\\Idle-Sheet", 4, 32);
+            LoadSpriteSheet(AnimNames.SkeletonWarriorRun, "World\\Enemies\\Skeleton\\Skeleton - Warrior\\Run-Sheet", 10, 64);
+            LoadSpriteSheet(AnimNames.SkeletonWarriorDeath, "World\\Enemies\\Skeleton\\Skeleton - Warrior\\Death-Sheet", 6, 64);
+
+            //// Load animations for Skeleton Archer
+            LoadSpriteSheet(AnimNames.SkeletonArcherIdle, "World\\Enemies\\Skeleton\\Skeleton - Rogue\\Idle-Sheet", 4, 32);
+            LoadSpriteSheet(AnimNames.SkeletonArcherRun, "World\\Enemies\\Skeleton\\Skeleton - Rogue\\Run-Sheet", 10, 64);
+            LoadSpriteSheet(AnimNames.SkeletonArcherDeath, "World\\Enemies\\Skeleton\\Skeleton - Rogue\\Death-Sheet", 6, 64);
+
+            //// Load animations for Skeleton Shaman
+            LoadSpriteSheet(AnimNames.SkeletonMageIdle, "World\\Enemies\\Skeleton\\Skeleton - Mage\\Idle-Sheet", 4, 32);
+            LoadSpriteSheet(AnimNames.SkeletonMageRun, "World\\Enemies\\Skeleton\\Skeleton - Mage\\Run-Sheet", 10, 64);
+            LoadSpriteSheet(AnimNames.SkeletonMageDeath, "World\\Enemies\\Skeleton\\Skeleton - Mage\\Death-Sheet", 6, 64);
+
+
             #region How to Upload Individual Frame Animation
 
             // Here can you upload animation that is are individual frames.

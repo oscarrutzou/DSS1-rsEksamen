@@ -15,9 +15,9 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies.MeleeEnemies
         {
             base.Awake();
 
-            CharacterStateAnimations.Add(CharacterState.Idle, AnimNames.OrcIdle);
-            CharacterStateAnimations.Add(CharacterState.Moving, AnimNames.OrcRun);
-            CharacterStateAnimations.Add(CharacterState.Dead, AnimNames.OrcDeath);
+            CharacterStateAnimations.Add(CharacterState.Idle, AnimNames.OrcBaseIdle);
+            CharacterStateAnimations.Add(CharacterState.Moving, AnimNames.OrcBaseRun);
+            CharacterStateAnimations.Add(CharacterState.Dead, AnimNames.OrcBaseDeath);
         }
 
     }
