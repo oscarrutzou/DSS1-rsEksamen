@@ -16,6 +16,9 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.MeleeWeapons
 
         public override void Start()
         {
+            AttackSpeed = 1.7f;
+            Damage = 50;
+
             AttackSoundNames = new SoundNames[]
             {
                 SoundNames.SwipeSlow1,

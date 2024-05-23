@@ -1,6 +1,7 @@
 ﻿using FørsteÅrsEksamen.CommandPattern;
 using FørsteÅrsEksamen.ComponentPattern.Enemies;
 using FørsteÅrsEksamen.GameManagement;
+using FørsteÅrsEksamen.Other;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.MeleeWeapons
 {
     public abstract class MeleeWeapon : Weapon
     {
+        private List<GameObject> hitGameObjects = new();
 
         protected MeleeWeapon(GameObject gameObject) : base(gameObject)
         {
@@ -28,13 +30,17 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.MeleeWeapons
 
         public override void Update(GameTime gameTime)
         {
-            base.Update(gameTime);
-
             if (Attacking)
             {
-                StartAttack();
+                PlayAttackSound();
+
+                TotalElapsedTime += GameWorld.DeltaTime * AttackSpeed; // To change the speed of the animation, change the attackspeed.
+                AttackAnimation();
+
                 CheckCollisionAndDmg();
             }
+
+            UpdateCollisionBoxesPos(GameObject.Transform.Rotation);
         }
 
         // Attack direction
@@ -43,6 +49,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.MeleeWeapons
         //float angleToMouse = (float)Math.Atan2(mouseInUI.Y, mouseInUI.X) + MathHelper.PiOver2;
         //startAnimationAngle = angleToMouse;
         // should lerp to the correct angle before attacking. Use a bool to see if the angle has been set
+
+        // Need to set a bool or something to the hit objects so we stop the bug where it kills it in 10 update
 
         public void CheckCollisionAndDmg()
         {
@@ -54,7 +62,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.MeleeWeapons
 
             foreach (GameObject otherGo in SceneData.GameObjectLists[type])
             {
-                if (!otherGo.IsEnabled) continue;
+                if (!otherGo.IsEnabled || hitGameObjects.Contains(otherGo)) continue;
 
                 Collider otherCollider = otherGo.GetComponent<Collider>();
 
@@ -64,6 +72,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.MeleeWeapons
                     if (weaponRectangle.Rectangle.Intersects(otherCollider.CollisionBox))
                     {
                         DealDamage(otherGo);
+                        hitGameObjects.Add(otherGo);
                         break;
                     }
                 }
@@ -71,6 +80,55 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.MeleeWeapons
         }
 
         #region Weapon Colliders
+        private void AttackAnimation()
+        {
+            if (TotalElapsedTime >= 1f)
+            {
+                TotalElapsedTime = 0f; // Reset totalElapsedTime
+                IsRotatingBack = true;
+            }
+
+            // Play with some other methods, for different weapons, to make them feel slow or fast https://easings.net/
+            float easedTime; // maybe switch between them.
+
+            if (!IsRotatingBack)
+            {
+                // Down attack
+                easedTime = BaseMath.EaseInOutBack(TotalElapsedTime);
+                GameObject.Transform.Rotation = MathHelper.Lerp(StartAnimationAngle, TotalLerp, easedTime);
+            }
+            else
+            {
+                //Up attack
+                easedTime = BaseMath.EaseInOutBack(TotalElapsedTime);
+                //easedTime = EaseInOutBack(totalElapsedTime); // Feels heavy
+                GameObject.Transform.Rotation = MathHelper.Lerp(TotalLerp, StartAnimationAngle, easedTime);
+            }
+            if (Math.Abs(GameObject.Transform.Rotation - StartAnimationAngle) < 0.01f && IsRotatingBack)
+            {
+                IsRotatingBack = false;
+                Attacking = false;
+                PlayingSound = false;
+                hitGameObjects = new();
+            }
+        }
+
+        private void UpdateCollisionBoxesPos(float rotation)
+        {
+            foreach (CollisionRectangle collisionRectangle in WeaponColliders)
+            {
+                // Calculate the position relative to the center of the weapon
+                Vector2 relativePos = collisionRectangle.StartRelativePos;
+
+                // Rotate the relative position
+                Vector2 newPos = BaseMath.Rotate(relativePos, rotation);
+
+                // Set the collision rectangle position based on the rotated relative position
+                collisionRectangle.Rectangle.X = (int)(GameObject.Transform.Position.X + newPos.X) - collisionRectangle.Rectangle.Width / 2;
+                collisionRectangle.Rectangle.Y = (int)(GameObject.Transform.Position.Y + newPos.Y) - collisionRectangle.Rectangle.Height / 2;
+            }
+        }
+
         /// <summary>
         /// To make colliders for the weapon.
         /// </summary>

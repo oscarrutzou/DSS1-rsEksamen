@@ -1,4 +1,5 @@
-﻿using FørsteÅrsEksamen.ComponentPattern;
+﻿using FørsteÅrsEksamen.CommandPattern;
+using FørsteÅrsEksamen.ComponentPattern;
 using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.Factory;
 using FørsteÅrsEksamen.GameManagement;
@@ -169,6 +170,7 @@ namespace FørsteÅrsEksamen.DB
                 Point gridPos = new Point(cellData.PointPositionX, cellData.PointPositionY); // Grid position
                 GameObject cellGo = CellFactory.Create(grid, gridPos, cellData.Cell_Type, cellData.Room_Nr); // Create the cell object
                 grid.Cells.Add(gridPos, cellGo); // Adds to Cell Dict so we can use it later.
+                cellGo.IsEnabled = InputHandler.Instance.DebugMode;
                 GameWorld.Instance.Instantiate(cellGo); //Spawn it into the world.
             }
 

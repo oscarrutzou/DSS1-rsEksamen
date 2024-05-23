@@ -1,4 +1,8 @@
-﻿using FørsteÅrsEksamen.DB;
+﻿using FørsteÅrsEksamen.ComponentPattern;
+using FørsteÅrsEksamen.ComponentPattern.Classes;
+using FørsteÅrsEksamen.ComponentPattern.Enemies;
+using FørsteÅrsEksamen.DB;
+using FørsteÅrsEksamen.Factory;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -19,6 +23,10 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
             Data.Room_Reached = 2;
             //DBGrid.DeleteGrid(GridName);
             base.Initialize();
+
+            GameObject enemyGo = EnemyFactory.Create();
+            enemyGo.GetComponent<Enemy>().SetStartPosition(PlayerGo, new Point(5, 5));
+            GameWorld.Instance.Instantiate(enemyGo);
         }
 
         public override void DrawOnScreen(SpriteBatch spriteBatch)

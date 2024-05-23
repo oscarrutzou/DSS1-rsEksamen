@@ -74,8 +74,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
                 SpriteRenderer.SetLayerDepth(LAYERDEPTH.EnemyOverPlayer);
             }
 
-            // Also needs to check if
-
             // Checks if the playerGo.Transform.GridPostion is the same, if false, we know that the player has moved -
             // so we make a new path towards that point.
             if (playerGo.Transform.GridPosition != targetPoint && State != CharacterState.Dead)
@@ -102,10 +100,22 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             }
         }
 
+        //AttackTimer -= GameWorld.DeltaTime;
+        //SetState(CharacterState.Idle);
+
+        //if (AttackTimer < 0)
+        //{
+        //    AttackTimer = AttackCooldown;
+        //    //GameObject.GetComponent<Character>().DealDamage(playerGo);
+        //}
+
+        protected virtual void AttackAction()
+        { }
+
+
         // Kig hvad jeg har i starten af update, husk at have de checks med og sætte targetPoint til playerGo GridPosition.
 
         #region PathFinding
-
         private async void SetPath()
         {
             ResetPathColor();
@@ -205,51 +215,5 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 
         #endregion PathFinding
 
-        //AttackTimer -= GameWorld.DeltaTime;
-        //SetState(CharacterState.Idle);
-
-        //if (AttackTimer < 0)
-        //{
-        //    AttackTimer = AttackCooldown;
-        //    //GameObject.GetComponent<Character>().DealDamage(playerGo);
-        //}
-
-        protected  virtual void AttackAction()
-        { }
-
-        protected override void SetState(CharacterState newState)
-        {
-            if (State == newState) return; // Dont change the state to the same and reset the animation
-            State = newState;
-
-            // Something happens with the idle, it disappears for like a frame
-            switch (State)
-            {
-                case CharacterState.Idle:
-                    Animator.PlayAnimation(CharacterStateAnimations[State]);
-
-                    SpriteRenderer.OriginOffSet = IdlespriteOffset;
-                    break;
-
-                case CharacterState.Moving:
-                    Animator.PlayAnimation(CharacterStateAnimations[State]);
-
-                    SpriteRenderer.OriginOffSet = LargeSpriteOffSet;
-                    break;
-
-                case CharacterState.Attacking:
-                    Animator.PlayAnimation(CharacterStateAnimations[CharacterState.Idle]); // Just uses the Idle since we have no attacking animation
-
-                    SpriteRenderer.OriginOffSet = IdlespriteOffset;
-                    break;
-
-                case CharacterState.Dead:
-                    Animator.PlayAnimation(CharacterStateAnimations[State]);
-
-                    SpriteRenderer.OriginOffSet = LargeSpriteOffSet;
-                    Animator.StopCurrentAnimationAtLastSprite();
-                    break;
-            }
-        }
     }
 }

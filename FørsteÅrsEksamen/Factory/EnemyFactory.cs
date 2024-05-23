@@ -11,6 +11,7 @@ namespace FørsteÅrsEksamen.Factory
         public static GameObject Create()
         {
             GameObject enemyGo = new GameObject();
+            enemyGo.Type = GameObjectTypes.Enemy;
             enemyGo.Transform.Scale = new Vector2(4, 4);
             enemyGo.AddComponent<SpriteRenderer>();
             enemyGo.AddComponent<Animator>();

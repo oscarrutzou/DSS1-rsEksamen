@@ -41,6 +41,7 @@ namespace FørsteÅrsEksamen.Factory
         public static GameObject Create(WeaponTypes type, bool enemyWeapon)
         {
             GameObject weaponGo = new GameObject();
+            weaponGo.Type = GameObjectTypes.Weapon;
             weaponGo.Transform.Scale = new Vector2(4, 4);
             weaponGo.AddComponent<SpriteRenderer>();
             AddClassComponent(weaponGo, type, enemyWeapon);

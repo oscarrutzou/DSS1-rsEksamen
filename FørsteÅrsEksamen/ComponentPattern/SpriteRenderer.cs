@@ -12,6 +12,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
         WorldBackground,
         EnemyUnderPlayer,
         Player,
+        PlayerWeapon,
         EnemyOverPlayer,
         WorldForeground,
         UI,

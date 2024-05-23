@@ -1,4 +1,5 @@
-﻿using FørsteÅrsEksamen.ComponentPattern.Enemies;
+﻿using FørsteÅrsEksamen.CommandPattern;
+using FørsteÅrsEksamen.ComponentPattern.Enemies;
 using FørsteÅrsEksamen.ComponentPattern.Weapons;
 using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
@@ -72,7 +73,42 @@ namespace FørsteÅrsEksamen.ComponentPattern
         /// </summary>
         /// <param name="newState"></param>
         protected virtual void SetState(CharacterState newState)
-        { }
+        {
+            if (State == newState) return; // Dont change the state to the same and reset the animation
+            State = newState;
+
+            // Something happens with the idle, it disappears for like a frame
+            switch (State)
+            {
+                case CharacterState.Idle:
+                    // Hands are stuck a little over the normal sprite
+                    Animator.PlayAnimation(CharacterStateAnimations[State]);
+
+                    SpriteRenderer.OriginOffSet = IdlespriteOffset;
+                    break;
+
+                case CharacterState.Moving:
+                    // Hands are stuck a little over the normal sprite
+                    Animator.PlayAnimation(CharacterStateAnimations[State]);
+
+                    SpriteRenderer.OriginOffSet = LargeSpriteOffSet;
+                    break;
+
+                case CharacterState.Attacking:
+                    // Is going to animate hands too.
+                    Animator.PlayAnimation(CharacterStateAnimations[CharacterState.Idle]); // Just uses the Idle since we have no attacking animation
+
+                    SpriteRenderer.OriginOffSet = IdlespriteOffset;
+                    break;
+
+                case CharacterState.Dead:
+                    Animator.PlayAnimation(CharacterStateAnimations[State]);
+
+                    SpriteRenderer.OriginOffSet = LargeSpriteOffSet;
+                    Animator.StopCurrentAnimationAtLastSprite();
+                    break;
+            }
+        }
 
         /// <summary>
         /// Updates the direction of which way the sprite should draw. Remember to set the direction!
@@ -110,22 +146,21 @@ namespace FørsteÅrsEksamen.ComponentPattern
             if (newHealth < 0) CurrentHealth = 0;
             else CurrentHealth = newHealth;
 
-            //Delete or add to pool.
             if (CurrentHealth > 0) return;
 
-            Enemy enemy = GameObject.GetComponent<Enemy>();
-            if (enemy != null)
-            {
-                //    EnemyPool.Instance.ReleaseObject(GameObject);
-                //}
-                //else
-                //{
-                GameWorld.Instance.Destroy(GameObject);
-            }
+            Die();
+        }
+
+        public virtual void Die()
+        {
+            SetState(CharacterState.Dead);
+            // Remove weapon
+            SpriteRenderer.Color = Color.LightPink;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            if (!InputHandler.Instance.DebugMode) return;
             Vector2 center = GameObject.Transform.Position - new Vector2(5, 5);
             spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], center, null, Color.DarkRed, 0f, Vector2.Zero, 10, SpriteEffects.None, 1);
         }

@@ -35,7 +35,7 @@ namespace FørsteÅrsEksamen.CommandPattern
         private Dictionary<ScrollWheelState, List<ICommand>> scrollWheelCommands = new();
 
         public Vector2 MouseInWorld, MouseOnUI;
-        public bool MouseOutOfBounds, DebugMode = true;
+        public bool MouseOutOfBounds, DebugMode;
 
         #endregion Properties
 

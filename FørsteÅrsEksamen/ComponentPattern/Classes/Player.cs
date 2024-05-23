@@ -53,6 +53,59 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
             SetState(CharacterState.Idle);
         }
 
+        public override void Die()
+        {
+            SetState(CharacterState.Dead);
+            // Remove weapon
+            SpriteRenderer.Color = Color.LightPink;
+        }
+
+ 
+        public override void Update(GameTime gameTime)
+        {
+            if (totalMovementInput != Vector2.Zero)
+            {
+                totalMovementInput = Vector2.Normalize(totalMovementInput);
+                SetState(CharacterState.Moving);
+            }
+            else
+            {
+                SetState(CharacterState.Idle);
+            }
+
+            switch (State)
+            {
+                case CharacterState.Idle:
+                    break;
+
+                case CharacterState.Moving:
+                    Move(totalMovementInput);
+                    break;
+
+                case CharacterState.Attacking:
+                    break;
+
+                case CharacterState.Dead:
+                    break;
+            }
+
+            totalMovementInput = Vector2.Zero;
+        }
+
+        protected override void UpdateDirection()
+        {
+            if (Direction.X >= 0)
+            {
+                DirectionState = AnimationDirectionState.Right;
+                SpriteRenderer.SpriteEffects = SpriteEffects.None;
+            }
+            else if (Direction.X < 0)
+            {
+                DirectionState = AnimationDirectionState.Left;
+                SpriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
+            }
+        }
+
         #region Movement
         public void AddInput(Vector2 input)
         {
@@ -79,7 +132,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
                 targetVelocity = input * speed * GameWorld.DeltaTime;
 
                 // To fix the error that if all buttons have been pressed, that it sometimes sets the velocity to Nan/Nan
-                if (float.IsNaN(velocity.X)) 
+                if (float.IsNaN(velocity.X))
                 {
                     velocity = Vector2.Zero;
                 }
@@ -183,89 +236,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
             GameWorld.Instance.WorldCam.position = GameObject.Transform.Position; //Sets the new position of the world cam
         }
         #endregion
-
-        public override void Update(GameTime gameTime)
-        {
-            if (totalMovementInput != Vector2.Zero)
-            {
-                totalMovementInput = Vector2.Normalize(totalMovementInput);
-                SetState(CharacterState.Moving);
-            }
-            else
-            {
-                SetState(CharacterState.Idle);
-            }
-
-            switch (State)
-            {
-                case CharacterState.Idle:
-                    break;
-
-                case CharacterState.Moving:
-                    Move(totalMovementInput);
-                    break;
-
-                case CharacterState.Attacking:
-                    break;
-
-                case CharacterState.Dead:
-                    break;
-            }
-
-            totalMovementInput = Vector2.Zero;
-        }
-
-        protected override void UpdateDirection()
-        {
-            if (Direction.X >= 0)
-            {
-                DirectionState = AnimationDirectionState.Right;
-                SpriteRenderer.SpriteEffects = SpriteEffects.None;
-            }
-            else if (Direction.X < 0)
-            {
-                DirectionState = AnimationDirectionState.Left;
-                SpriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
-            }
-        }
-
-        protected override void SetState(CharacterState newState)
-        {
-            if (State == newState) return; // Dont change the state to the same and reset the animation
-            State = newState;
-
-            // Something happens with the idle, it disappears for like a frame
-            switch (State)
-            {
-                case CharacterState.Idle:
-                    // Hands are stuck a little over the normal sprite
-                    Animator.PlayAnimation(CharacterStateAnimations[State]);
-
-                    SpriteRenderer.OriginOffSet = IdlespriteOffset;
-                    break;
-
-                case CharacterState.Moving:
-                    // Hands are stuck a little over the normal sprite
-                    Animator.PlayAnimation(CharacterStateAnimations[State]);
-
-                    SpriteRenderer.OriginOffSet = LargeSpriteOffSet;
-                    break;
-
-                case CharacterState.Attacking:
-                    // Is going to animate hands too.
-                    Animator.PlayAnimation(CharacterStateAnimations[CharacterState.Idle]); // Just uses the Idle since we have no attacking animation
-
-                    SpriteRenderer.OriginOffSet = IdlespriteOffset;
-                    break;
-
-                case CharacterState.Dead:
-                    Animator.PlayAnimation(CharacterStateAnimations[State]);
-
-                    SpriteRenderer.OriginOffSet = LargeSpriteOffSet;
-                    Animator.StopCurrentAnimationAtLastSprite();
-                    break;
-            }
-        }
 
         #region Item
         public void PickUpItem(GameObject item)
