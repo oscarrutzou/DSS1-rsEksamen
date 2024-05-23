@@ -5,5 +5,10 @@
         public BowFire(GameObject gameObject) : base(gameObject)
         {
         }
+
+        public BowFire(GameObject gameObject, bool enemyWeapon) : base(gameObject)
+        {
+            this.enemyWeapon = enemyWeapon;
+        }
     }
 }

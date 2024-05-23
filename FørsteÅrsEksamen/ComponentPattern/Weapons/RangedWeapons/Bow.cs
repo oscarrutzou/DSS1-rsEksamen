@@ -6,6 +6,11 @@
         {
         }
 
-       
+        public Bow(GameObject gameObject, bool enemyWeapon) : base(gameObject)
+        {
+            this.enemyWeapon = enemyWeapon;
+        }
+
+
     }
 }

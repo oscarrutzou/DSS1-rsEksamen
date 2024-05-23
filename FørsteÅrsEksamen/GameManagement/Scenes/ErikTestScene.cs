@@ -42,9 +42,9 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
         private void MakeWeapon()
         {
-            weapon = WeaponFactory.Create(WeaponTypes.Sword);
+            weapon = WeaponFactory.Create(WeaponTypes.Sword,false);
             
-            bow = WeaponFactory.Create(WeaponTypes.Bow);
+            bow = WeaponFactory.Create(WeaponTypes.Bow,false);
             
             
             GameWorld.Instance.Instantiate(weapon);

@@ -38,42 +38,42 @@ namespace FørsteÅrsEksamen.Factory
             }},
         };
 
-        public static GameObject Create(WeaponTypes type)
+        public static GameObject Create(WeaponTypes type, bool enemyWeapon)
         {
             GameObject weaponGo = new GameObject();
             weaponGo.Transform.Scale = new Vector2(4, 4);
             weaponGo.AddComponent<SpriteRenderer>();
-            AddClassComponent(weaponGo, type);
+            AddClassComponent(weaponGo, type, enemyWeapon);
 
             return weaponGo;
         }
 
-        private static GameObject AddClassComponent(GameObject weaponGo, WeaponTypes type)
+        private static GameObject AddClassComponent(GameObject weaponGo, WeaponTypes type, bool enemyWeapon)
         {
             switch (type)
             {
                 case WeaponTypes.Sword:
-                    weaponGo.AddComponent<Sword>();
+                    weaponGo.AddComponent<Sword>(enemyWeapon);
                     break;
 
                 case WeaponTypes.Axe:
-                    weaponGo.AddComponent<Axe>();
+                    weaponGo.AddComponent<Axe>(enemyWeapon);
                     break;
 
                 case WeaponTypes.MagicStaff:
-                    weaponGo.AddComponent<MagicStaff>();
+                    weaponGo.AddComponent<MagicStaff>(enemyWeapon);
                     break;
 
                 case WeaponTypes.MagicStaffFire:
-                    weaponGo.AddComponent<MagicStaff>();
+                    weaponGo.AddComponent<MagicStaff>(enemyWeapon);
                     break;
 
                 case WeaponTypes.Bow:
-                    weaponGo.AddComponent<Bow>();
+                    weaponGo.AddComponent<Bow>(enemyWeapon);
                     break;
 
                 case WeaponTypes.BowFire:
-                    weaponGo.AddComponent<MagicStaff>();
+                    weaponGo.AddComponent<MagicStaff>(enemyWeapon);
                     break;
             }
 

@@ -11,6 +11,7 @@ namespace FørsteÅrsEksamen.GameManagement
         TestLevel,
         WoodSword,
         WoodArrow,
+        HealthPotion,
     }
 
     // Oscar
@@ -34,7 +35,8 @@ namespace FørsteÅrsEksamen.GameManagement
                 {TextureNames.Pixel, content.Load<Texture2D>("World\\Pixel") },
                 {TextureNames.TestLevel, content.Load<Texture2D>("World\\Levels\\TestLevel") },
                 {TextureNames.WoodSword, content.Load<Texture2D>("World\\Classes\\Weapons\\WoodSword") },
-                {TextureNames.WoodArrow, content.Load<Texture2D>("Test\\WoodArrow") }
+                {TextureNames.WoodArrow, content.Load<Texture2D>("Test\\WoodArrow") },
+                {TextureNames.HealthPotion, content.Load<Texture2D>("World\\MediumPotion") }
             };
 
             // Load all fonts
