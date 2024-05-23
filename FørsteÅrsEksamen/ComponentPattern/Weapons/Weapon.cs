@@ -35,12 +35,13 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
         internal float lerpFromTo = MathHelper.Pi;
         private float totalLerp;
 
-        private bool attacking = false;
+        protected bool enemyWeapon;
+        protected bool attacking = false;
         private float startAnimationAngle;
 
         private float totalElapsedTime = 0.0f;
         private bool isRotatingBack = false;
-        private List<CollisionRectangle> weaponColliders = new();
+        protected List<CollisionRectangle> weaponColliders = new();
 
         internal SoundNames[] AttackSoundNames;
 

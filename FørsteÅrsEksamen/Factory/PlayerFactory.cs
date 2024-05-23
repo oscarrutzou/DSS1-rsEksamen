@@ -34,7 +34,7 @@ namespace FørsteÅrsEksamen.Factory
             playerGo = AddClassComponent(playerGo, hands, movementCollider, playerClass);
 
             //Weapon
-            GameObject weapon = WeaponFactory.Create(weaponType);
+            GameObject weapon = WeaponFactory.Create(weaponType,false);
             GameWorld.Instance.Instantiate(weapon);
 
             // Add weapon to player

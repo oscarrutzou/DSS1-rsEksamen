@@ -95,7 +95,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
             damageGoHealth.TakeDamage(weapon.damage);
         }
 
-        private void TakeDamage(int damage)
+        public void TakeDamage(int damage)
         {
             int newHealth = CurrentHealth - damage;
 
