@@ -5,9 +5,10 @@ using FørsteÅrsEksamen.ComponentPattern.Classes;
 using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.ComponentPattern.Weapons;
 using FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons;
+using FørsteÅrsEksamen.DB;
 using FørsteÅrsEksamen.Factory;
 using FørsteÅrsEksamen.Other;
-using FørsteÅrsEksamen.RepositoryPattern;
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -35,12 +36,12 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             
             OnPlayerChanged();
 
-            InitSpawner();
-            
+            //InitSpawner();
+
 
             MakeWeapon();
             GameWorld.Instance.WorldCam.position = Vector2.Zero;
-            
+
             AttackCommand();
             //spawner = new Spawner(new GameObject(), player);
             //GameWorld.Instance.Instantiate(spawner.GameObject);

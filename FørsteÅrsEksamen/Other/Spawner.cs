@@ -78,12 +78,16 @@ namespace FørsteÅrsEksamen.Other
 
                 
                 Point spawnPoint = spawnLocationEnem[i];
-                GameObject enemyGo = EnemyFactory.Create(grid, spawnPoint); 
+                GameObject enemyGo = EnemyFactory.Create(); 
                                 
                 //SkeletonWarrior enemy = enemyGo.GetComponent<SkeletonWarrior>();                          
                 GameWorld.Instance.Instantiate(enemyGo);
-                
-                
+                if (GridManager.Instance.CurrentGrid != null)
+                {
+                    SkeletonWarrior enemy = enemyGo.GetComponent<SkeletonWarrior>();
+                    enemy.SetStartPosition(playerGo, spawnPoint);
+                }
+
 
                 //spawnLocation++;
             }
