@@ -26,6 +26,7 @@ namespace FørsteÅrsEksamen.DB
        
         public static WeaponTypes SelectedWeapon; 
         public static ClassTypes SelectedClass {  get; set; }
+        //public static PlayerData PlayerData { get; set; }
         public static Player Player;
     }
 }

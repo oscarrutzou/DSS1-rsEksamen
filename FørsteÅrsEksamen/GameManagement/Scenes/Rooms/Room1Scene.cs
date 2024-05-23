@@ -1,33 +1,23 @@
-﻿using FørsteÅrsEksamen.CommandPattern;
-using FørsteÅrsEksamen.CommandPattern.Commands;
-using FørsteÅrsEksamen.GameManagement.Scenes.Menus;
+﻿using FørsteÅrsEksamen.DB;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
 {
-    public class Room1Scene : Scene
+    public class Room1Scene : RoomBase
     {
-        private PauseMenu pauseMenu;
-
         public Room1Scene()
         {
             PlayerSpawnPos = new Point(5, 5);
+            GridName = "Test1";
+            GridWidth = 24;
+            GridHeight = 18;
         }
 
         public override void Initialize()
         {
-            pauseMenu = new PauseMenu();
-            pauseMenu.Initialize();
-            InputHandler.Instance.AddKeyButtonDownCommand(Keys.Escape, new CustomCmd(pauseMenu.TogglePauseMenu));
-        }
+            Data.Room_Reached = 1;
 
-        public override void DrawOnScreen(SpriteBatch spriteBatch)
-        {
-            base.DrawOnScreen(spriteBatch);
-
-            pauseMenu.DrawOnScreen(spriteBatch);
+            base.Initialize();
         }
     }
 }

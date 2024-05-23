@@ -153,6 +153,7 @@ namespace FørsteÅrsEksamen.GameManagement
                 //Scenes[ScenesNames.LoadingScreen] = new ();
                 //Scenes[ScenesNames.EndMenu] = new();
                 [SceneNames.DungounRoom1] = new Room1Scene(),
+                [SceneNames.DungounRoom2] = new Room2Scene(),
 
                 // Test scenes
                 [SceneNames.WeaponTestScene] = new WeaponTestScene(),
@@ -203,7 +204,7 @@ namespace FørsteÅrsEksamen.GameManagement
         /// </summary>
         private void HandleSceneChange()
         {
-            if (nextScene == null) return;
+            if (nextScene == null || Scenes[nextScene.Value] == null) return;
 
             CurrentScene.OnSceneChange(); // Removes stuff like commands
             SceneData.DeleteAllGameObjects(); // Removes every object

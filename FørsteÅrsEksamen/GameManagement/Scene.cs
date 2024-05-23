@@ -32,10 +32,7 @@ namespace FørsteÅrsEksamen.GameManagement
     // Oscar
     public abstract class Scene
     {
-        public bool isPaused;
-
-        public GameObject PlayerGo;
-        public Point PlayerSpawnPos;
+        public bool IsPaused;
 
         private List<GameObject> newGameObjects = new List<GameObject>();
         private List<GameObject> destoroyedGameObjects = new List<GameObject>();
@@ -49,7 +46,7 @@ namespace FørsteÅrsEksamen.GameManagement
         {
             CleanUp();
 
-            if (isPaused) return;
+            if (IsPaused) return;
 
             foreach (GameObjectTypes type in SceneData.GameObjectLists.Keys)
             {

@@ -18,10 +18,13 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
             if (center)
             {
                 // Adjust the starting position to account for the total width of all buttons and spaces
+                //startPos -= new Vector2(
+                //    0,
+                //    (buttonHeight / 2 * (list.Count - 1)) +
+                //    (spaceBetween * (list.Count - 2)));
                 startPos -= new Vector2(
                     0,
-                    (buttonHeight / 2 * (list.Count - 1)) +
-                    (spaceBetween * (list.Count - 2)));
+                    (buttonHeight / 2 * (list.Count - 1)) + (spaceBetween * (list.Count - 1)) / 2);
             }
 
 
@@ -44,9 +47,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
             {
                 // Adjust the starting position to account for the total width of all buttons and spaces
                 startPos -= new Vector2(
-                    (buttonWidth / 2 * (list.Count - 1)) +
-                    (spaceBetween * (list.Count - 2))
-                    , 0);
+                        (buttonWidth / 2 * (list.Count - 1)) + (spaceBetween * (list.Count - 1)) / 2
+                        , 0);
             }
 
             // Position each GameObject and instantiate it in the game world
@@ -137,6 +139,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
 
             foreach (GameObject gui in SceneData.GameObjectLists[GameObjectTypes.Gui])
             {
+                if (!gui.IsEnabled) continue; // So we only check GameObjects that are enabled
+
                 Collider collider = gui.GetComponent<Collider>();
 
                 if (collider == null) continue;

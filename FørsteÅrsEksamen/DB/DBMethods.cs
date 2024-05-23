@@ -44,16 +44,16 @@ namespace FørsteÅrsEksamen.DB
             
             if (Data.Player == null) return;
             
-            PlayerData playerData = DBRunData.SavePlayer(runData);
-
-            SpawnPlayer(runData, playerData);
+            DBRunData.SavePlayer(runData);
         }
 
-        private static void SpawnPlayer(RunData runData, PlayerData playerData)
+        /// <summary>
+        /// Needs to be called in the Initialize after spawning a grid
+        /// </summary>
+        /// <param name="playerData"></param>
+        public static GameObject SpawnPlayer(PlayerData playerData, Point spawnPos)
         {
-            //Scene scene = scene array. [0]
-            Scene currentScene = GameWorld.Instance.CurrentScene; // Where to take the spawn position.
-
+            // Makes a new Player
             GameObject playerGo = PlayerFactory.Create(playerData.Class_Type, playerData.Weapon_Type);
 
             // Sets the saved data to the player
@@ -62,13 +62,12 @@ namespace FørsteÅrsEksamen.DB
             player.ItemInInventory = ItemFactory.Create(playerGo).GetComponent<PickupableItem>();
             player.ItemInInventory.Name = playerData.Potion_Name;
 
-            Point spawnPos = currentScene.PlayerSpawnPos;
+            return playerGo;
+        }
 
-            playerGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[spawnPos].Transform.Position;
-            playerGo.Transform.GridPosition = spawnPos;
-            GameWorld.Instance.WorldCam.position = playerGo.Transform.Position;
+        private static void MakePlayer()
+        {
 
-            GameWorld.Instance.Instantiate(playerGo);
         }
 
         public static void DeleteSave(int saveID)

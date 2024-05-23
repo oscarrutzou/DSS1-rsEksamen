@@ -59,7 +59,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
                     Point point = new(x, y);
                     GameObject cellGo = CellFactory.Create(this, point);
                     Cells.Add(point, cellGo);
-                    GameWorld.Instance.Instantiate(cellGo);
                 }
             }
         }

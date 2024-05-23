@@ -20,10 +20,13 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         private GameObject drawRoomBtn, drawAstarPathBtn;
 
         private Vector2 playerPos;
+        private Point PlayerSpawnPos;
+        private GameObject PlayerGo;
 
         public OscarTestScene()
         {
             PlayerSpawnPos = new Point(6, 6);
+
         }
 
         public override void Initialize()

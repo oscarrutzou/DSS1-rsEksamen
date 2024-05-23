@@ -34,6 +34,12 @@ namespace FørsteÅrsEksamen.DB
             db = new LiteDatabase(GetConnectionString(currentCollection));
         }
 
+        public DataBase(CollectionName connectionString, string extraPath)
+        {
+            currentCollection = connectionString;
+            db = new LiteDatabase(GetConnectionString(currentCollection, extraPath));
+        }
+
         public ILiteCollection<T> GetCollection<T>()
         {
             return db.GetCollection<T>(currentCollection.ToString());
@@ -162,6 +168,15 @@ namespace FørsteÅrsEksamen.DB
         {
             string pathAppData = AppDomain.CurrentDomain.BaseDirectory;
             var path = Path.Combine(pathAppData, "data");
+            Directory.CreateDirectory(path);
+
+            return Path.Combine(path, $"{collectionName}.db");
+        }
+
+        public static string GetConnectionString(CollectionName collectionName, string extraPath)
+        {
+            string pathAppData = AppDomain.CurrentDomain.BaseDirectory;
+            var path = Path.Combine(pathAppData, $"data\\{extraPath}");
             Directory.CreateDirectory(path);
 
             return Path.Combine(path, $"{collectionName}.db");

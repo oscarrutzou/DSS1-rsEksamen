@@ -70,20 +70,23 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             if (DBGrid.DoesGridExits(CurrentGrid.Name))
             {
                 // Load grid
-                LoadGrid(grid.Name);
+                LoadGrid(CurrentGrid.Name);
             }
             else
             {
                 // Save Grid
                 DBGrid.SaveGrid(CurrentGrid);
+
+                // Draw Grid
+                foreach (GameObject cellGo in CurrentGrid.Cells.Values)
+                {
+                    GameWorld.Instance.Instantiate(cellGo);
+                }
             }
         }
 
         public void LoadGrid(string gridName)
         {
-            // A little dumb that it first gets made and then deleted? Fix, if u have time
-            DeleteDrawnGrid();
-            //GameObject go = repository.GetGrid(gridName);
             GameObject go = DBGrid.GetGrid(gridName);
 
             if (go == null)
@@ -93,8 +96,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             }
 
             CurrentGrid = go.GetComponent<Grid>();
-
-            //ShouldDrawCells();
         }
 
         #endregion SaveLoad
@@ -104,7 +105,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
         public void DrawOnCells()
         {
             if (GuiMethods.IsMouseOverUI()) return;
-
+            
             GameObject cellGo = GetCellAtPos(InputHandler.Instance.MouseInWorld);
             if (cellGo == null) return;
 

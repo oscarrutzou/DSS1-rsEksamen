@@ -66,10 +66,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
                 }
             }
 
-            DBSaveFile.LoadSaveFileData(Data.CurrentSaveID, false);
-
-
-            RunData runData = DBRunData.LoadRunData(Data.CurrentSaveID);
+            RunData runData = DBRunData.LoadRunData(Data.CurrentSaveID); 
 
             if (runData == null)
             {
@@ -78,11 +75,13 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
             }
             else
             {
-                // Load run
-                // Load the rundata into the game by making a player in the new scene.
+                // Loads run
                 GameWorld.Instance.ChangeDungounScene(SceneNames.DungounRoom, runData.Room_Reached);
             }
         }
+
+        // Maybe delete with a small button the right top of the save file
+        // Need a way to create these stuff that are buttons but with some overlay
 
         /// <summary>
         /// Updates the Button text

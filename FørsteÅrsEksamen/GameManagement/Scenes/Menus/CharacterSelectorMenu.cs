@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using FørsteÅrsEksamen.CommandPattern.Commands;
+using FørsteÅrsEksamen.ComponentPattern.Classes;
 
 namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
 {
@@ -16,13 +17,17 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
     {
 
         private Dictionary<ClassTypes, List<GameObject>> classWeaponButton;
-        private Vector2 buttonScale = new Vector2(9f, 15f);
+        private Vector2 buttonScale = new(9f, 15f);
+        private int spaceBetween = 30;
+
         public override void Initialize()
         {
             classWeaponButton = new();
-            BackCommand();
+            InputHandler.Instance.AddKeyButtonDownCommand(Keys.Escape, new CustomCmd(Back));
 
             base.Initialize();
+
+            InitBackButton();
         }
 
         protected override void InitFirstMenu()
@@ -34,7 +39,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
                 FirstMenuObjects.Add(btn);
             }
 
-            GuiMethods.PlaceGameObjectsHorizontal(FirstMenuObjects, Vector2.Zero, 30, true);
+            GuiMethods.PlaceGameObjectsHorizontal(FirstMenuObjects, Vector2.Zero, spaceBetween, true);
         }
 
         private void SelectClass(ClassTypes type)
@@ -64,25 +69,50 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
             foreach (List<GameObject> goList in classWeaponButton.Values)
             {
                 ShowHideGameObjects(goList, false);
-                GuiMethods.PlaceGameObjectsHorizontal(goList, Vector2.Zero, 30, true);
+                GuiMethods.PlaceGameObjectsHorizontal(goList, Vector2.Zero, spaceBetween, true);
             }
         }
+
+        private void InitBackButton()
+        {
+            GameObject backBtn = ButtonFactory.Create("Back", true, Back);
+            
+            backBtn.Transform.Position += new Vector2(0, 200 + FirstMenuObjects[0].Transform.Position.Y);
+            GameWorld.Instance.Instantiate(backBtn);
+        }
+
+        
 
         private void SeletectWeapon(WeaponTypes weapon)
         {
             Data.SelectedWeapon = weapon;
-            // Go into the new scene with a new player.
+
+            NextScene();
         }
 
-        private void BackCommand()
+        private void NextScene()
         {
-            InputHandler.Instance.AddKeyButtonDownCommand(Keys.Escape, new CustomCmd(() =>
+            SaveFileData saveFileData = DBSaveFile.LoadSaveFileData(Data.CurrentSaveID, true);
+
+            DBSaveFile.LoadSaveWeaponType(saveFileData, true);
+            DBSaveFile.LoadSaveClassType(saveFileData, true);
+
+            DBRunData.SaveLoadRunData(saveFileData); // Save Run File
+
+            // Go into the new scene with a new player.
+            GameWorld.Instance.ChangeDungounScene(SceneNames.DungounRoom, 1);
+        }
+
+        private void Back()
+        {
+            if (!FirstMenuObjects[0].IsEnabled)
             {
-                if (!FirstMenuObjects[0].IsEnabled)
-                {
-                    ShowHideClassMenu();
-                }
-            }));
+                ShowHideClassMenu();
+            }
+            else
+            {
+                GameWorld.Instance.ChangeScene(SceneNames.SaveFileMenu);
+            }
         }
 
         private void ShowHideClassMenu()

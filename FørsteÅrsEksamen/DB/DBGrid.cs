@@ -12,11 +12,24 @@ namespace FørsteÅrsEksamen.DB
 {
     public static class DBGrid
     {
+        private const string gridFolder = "grids";
+
         public static bool DoesGridExits(string name)
         {
-            using var db = new DataBase(CollectionName.Grids);
+            using var db = new DataBase(CollectionName.Grids, gridFolder);
             var gridExits = db.FindOne<GridData>(x => x.Grid_Name == name);
             return gridExits != null;
+        }
+
+        public static void DeleteGrid(string name)
+        {
+            using var gridDB = new DataBase(CollectionName.Grids, gridFolder);
+            GridData data = gridDB.GetCollection<GridData>().FindOne(x => x.Grid_Name == name);
+
+            if (data == null) return; // No grid to delete
+
+            DeletesCells(data); // Deltes cell and the connection collection
+            gridDB.Delete<GridData>(new BsonValue(data.Grid_Name)); // Deletes the grid
         }
 
         /// <summary>
@@ -27,9 +40,6 @@ namespace FørsteÅrsEksamen.DB
         {
             if (grid == null) return;
 
-            // Open a new Database with the Grids connection.
-            using var gridDB = new DataBase(CollectionName.Grids);
-
             // The grid data we want to store
             GridData gridData = new()
             {
@@ -39,27 +49,21 @@ namespace FørsteÅrsEksamen.DB
                 Start_Width = grid.Width,
                 Start_Height = grid.Height,
             };
+            
+            DeleteGrid(grid.Name);
+
+            // Open a new Database with the Grids connection.
+            using var gridDB = new DataBase(CollectionName.Grids, gridFolder);
 
             // Checks if there already is a grid
             var gridCollection = gridDB.GetCollection<GridData>();
-
-            var gridExits = gridCollection.FindOne(x => x.Grid_Name == gridData.Grid_Name);
-
-            // If there is a grid, we delete the grid and all connections to the grid.
-            if (gridExits != null)
-            {
-                //Delete current grid and its cells.
-                DeletesCells(gridData);
-                // Delete the grid
-                gridDB.Delete<GridData>(new BsonValue(gridData.Grid_Name));
-            }
 
             // We save the new grid
             gridDB.SaveSingle(gridData, x => x.Grid_Name == gridData.Grid_Name);
 
             // Open two new Database
-            using var cellsDB = new DataBase(CollectionName.Cells);
-            using var gridHasCellsDB = new DataBase(CollectionName.GridHasCells);
+            using var cellsDB = new DataBase(CollectionName.Cells, gridFolder);
+            using var gridHasCellsDB = new DataBase(CollectionName.GridHasCells, gridFolder);
 
             // Saves cells
             for (int y = 0; y < grid.Height; y++)
@@ -104,8 +108,8 @@ namespace FørsteÅrsEksamen.DB
         private static void DeletesCells(GridData gridData)
         {
             // Makes two connections to each collection.
-            using var cellsDB = new DataBase(CollectionName.Cells);
-            using var gridHasCellsDB = new DataBase(CollectionName.GridHasCells);
+            using var cellsDB = new DataBase(CollectionName.Cells, gridFolder);
+            using var gridHasCellsDB = new DataBase(CollectionName.GridHasCells, gridFolder);
 
             // Get all the GridHasCells where the Grid_Name is the same as the Grid_Name in gridData
             var gridHasCells = gridHasCellsDB.GetCollection<GridHasCells>()
@@ -132,9 +136,9 @@ namespace FørsteÅrsEksamen.DB
         /// <returns>Grid GameObject</returns>
         public static GameObject GetGrid(string gridName)
         {
-            using var gridDB = new DataBase(CollectionName.Grids);
-            using var cellsDB = new DataBase(CollectionName.Cells);
-            using var gridHasCellsDB = new DataBase(CollectionName.GridHasCells);
+            using var gridDB = new DataBase(CollectionName.Grids, gridFolder);
+            using var cellsDB = new DataBase(CollectionName.Cells, gridFolder);
+            using var gridHasCellsDB = new DataBase(CollectionName.GridHasCells, gridFolder);
 
             GameObject gridGo = new();
 

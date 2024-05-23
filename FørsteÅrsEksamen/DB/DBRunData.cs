@@ -4,6 +4,11 @@ namespace FørsteÅrsEksamen.DB
 {
     public static class DBRunData
     {
+        /// <summary>
+        /// Make this method to use the override stuff like the others
+        /// </summary>
+        /// <param name="saveFileData"></param>
+        /// <returns></returns>
         public static RunData SaveLoadRunData(SaveFileData saveFileData)
         {
             using var fileHasRunDataLinkDB = new DataBase(CollectionName.SaveFileHasRunData);
@@ -57,6 +62,8 @@ namespace FørsteÅrsEksamen.DB
             return runDataDB.GetCollection<RunData>().FindOne(data => data.Run_ID == existingLink.Run_ID);
         }
 
+
+
         private static RunData SaveRunData(DataBase runDataDB)
         {
             RunData runData = new()
@@ -88,6 +95,29 @@ namespace FørsteÅrsEksamen.DB
             };
 
             runDataHasPlayerLinkDB.SaveSingle(newLink);
+
+            return playerData;
+        }
+
+        /// <summary>
+        /// Should only be called when we know that there is rundata
+        /// </summary>
+        /// <param name="sceneID"></param>
+        /// <returns></returns>
+        public static PlayerData LoadPlayerData(int sceneID)
+        {
+            RunData runData = LoadRunData(sceneID);
+
+            using var runDataHasPlayerLinkDB = new DataBase(CollectionName.RunDataHasPlayerData);
+            using var playerDB = new DataBase(CollectionName.PlayerData);
+            
+            RunDataHasPlayerData existingLink = runDataHasPlayerLinkDB.GetCollection<RunDataHasPlayerData>()
+                                                                  .FindOne(link => link.Run_ID == runData.Run_ID);
+
+            // Check for runplayer
+            if (existingLink == null) return null;
+
+            PlayerData playerData = playerDB.GetCollection<PlayerData>().FindOne(data => data.Player_ID == existingLink.Player_ID);
 
             return playerData;
         }
