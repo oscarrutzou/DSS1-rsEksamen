@@ -11,48 +11,81 @@ using FørsteÅrsEksamen.ComponentPattern.Classes;
 using FørsteÅrsEksamen.ComponentPattern.Enemies.MeleeEnemies;
 using FørsteÅrsEksamen.Factory;
 using Microsoft.Xna.Framework;
+using FørsteÅrsEksamen.ComponentPattern.Enemies;
 
 namespace FørsteÅrsEksamen.Other
 {
-    internal class Spawner
+    // Erik
+    internal class Spawner: Component
     {
-        private int totalEnemyAmount;
-        private GameObject PlayerGo;
+        private int totalEnemyAmount = 5;
+        private GameObject playerGo;
+        private Grid grid;
+        
+        private Player player;
 
-
-        // spawnwave metode fra tideliger 
-        // se oscar testscen for spawn metode
-        // sæt grid position. (klar til at få sat 4 ekstra kordinater ind)
-        // 
-
-        private void MakeEnemy()
+        private List<Point> spawnLocationEnem = new List<Point>()
         {
-            GameObject enemGo = EnemyFactory.Create();
-            GameWorld.Instance.Instantiate(enemGo);
+            new Point(5,3),
+            new Point(6,3), 
+            new Point(7,12), 
+            new Point(7,11), 
+            new Point(7,13), 
+        };
 
-            if (GridManager.Instance.CurrentGrid != null)
-            {
-                SkeletonWarrior enemy = enemGo.GetComponent<SkeletonWarrior>();
-                enemy.SetStartPosition(PlayerGo, new Point(7, 13));
-                enemy.SetStartPosition(PlayerGo, new Point());
-                enemy.SetStartPosition(PlayerGo, new Point());
-                enemy.SetStartPosition(PlayerGo, new Point());
-                enemy.SetStartPosition(PlayerGo, new Point());
-
-            }
+        public Spawner(GameObject gameObject) : base(gameObject)
+        {
+               
         }
+
+        public void InitializeSpawner(GameObject player, Grid grid) 
+        {
+            
+            playerGo = player;
+            this.grid = grid;
+            SpawnEnemy();
+        }
+
+        public override void Start()
+        {
+            //SpawnEnemy();
+        }
+
+        //public void MakeEnemy()
+        //{
+        //    GameObject enemGo = EnemyFactory.Create(grid, spawnLocationEnem[0]);
+        //    GameWorld.Instance.Instantiate(enemGo);
+
+        //    if (GridManager.Instance.CurrentGrid != null)
+        //    {
+        //        SkeletonWarrior enemy = enemGo.GetComponent<SkeletonWarrior>();
+        //        enemy.SetStartPosition(playerGo, new Point(7, 13));
+        //        enemy.SetStartPosition(playerGo, new Point(5, 5));
+        //        enemy.SetStartPosition(playerGo, new Point());
+        //        enemy.SetStartPosition(playerGo, new Point());
+        //        enemy.SetStartPosition(playerGo, new Point());
+
+        //    }
+        //}
 
         public void SpawnEnemy()
         {
-            int spawnLocation = 0;
+            
             for (int i = 0; i < totalEnemyAmount; i++)
             {
-                if (spawnLocation == spawnLocation.Count) spawnLocation = 0;
+                
+                // skal laves om :  i klassen sættes i start metoden loop igennem liste lav enemy på position
 
-                GameObject go = EnemyFactory.Create();
-                if (go != null) GameWorld.Instance.Instantiate(go);
+                
+                Point spawnPoint = spawnLocationEnem[i];
+                GameObject enemyGo = EnemyFactory.Create(grid, spawnPoint); 
+                                
+                //SkeletonWarrior enemy = enemyGo.GetComponent<SkeletonWarrior>();                          
+                GameWorld.Instance.Instantiate(enemyGo);
+                
+                
 
-                spawnLocation++;
+                //spawnLocation++;
             }
         }
     }
