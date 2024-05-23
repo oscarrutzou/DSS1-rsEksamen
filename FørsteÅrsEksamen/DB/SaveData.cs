@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace FørsteÅrsEksamen.DB
 {
-    public static class Data
+    public static class SaveData
     {
         public static int CurrentSaveID = 1; //Gets set by player and determins loaded data
         public static int MaxSaveID = 3;
@@ -26,7 +26,6 @@ namespace FørsteÅrsEksamen.DB
        
         public static WeaponTypes SelectedWeapon; 
         public static ClassTypes SelectedClass {  get; set; }
-        //public static PlayerData PlayerData { get; set; }
-        public static Player Player;
+        public static Player Player { get; set; }
     }
 }

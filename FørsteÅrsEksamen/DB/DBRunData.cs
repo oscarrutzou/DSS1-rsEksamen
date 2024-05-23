@@ -68,9 +68,9 @@ namespace FørsteÅrsEksamen.DB
         {
             RunData runData = new()
             {
-                Run_ID = Data.CurrentSaveID,
-                Room_Reached = Data.Room_Reached,
-                Time_Left = Data.Time_Left,
+                Run_ID = SaveData.CurrentSaveID,
+                Room_Reached = SaveData.Room_Reached,
+                Time_Left = SaveData.Time_Left,
             };
 
             runDataDB.SaveOverrideSingle(runData, runData.Run_ID, x => x.Run_ID == runData.Run_ID);
@@ -144,15 +144,15 @@ namespace FørsteÅrsEksamen.DB
 
         private static PlayerData MakePlayer(DataBase playerDB)
         {
-            string potionName = Data.Player.ItemInInventory == null ? string.Empty : Data.Player.ItemInInventory.Name;
+            string potionName = SaveData.Player.ItemInInventory == null ? string.Empty : SaveData.Player.ItemInInventory.Name;
 
             PlayerData playerData = new()
             {
                 Player_ID = Guid.NewGuid(),
-                Health = Data.Player.CurrentHealth,
+                Health = SaveData.Player.CurrentHealth,
                 Potion_Name = potionName,
-                Class_Type = Data.Player.ClassType,
-                Weapon_Type = Data.Player.WeaponType,
+                Class_Type = SaveData.Player.ClassType,
+                Weapon_Type = SaveData.Player.WeaponType,
             };
 
             playerDB.SaveSingle(playerData);

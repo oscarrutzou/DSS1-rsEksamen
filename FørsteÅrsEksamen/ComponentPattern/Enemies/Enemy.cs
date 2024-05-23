@@ -1,4 +1,5 @@
-﻿using FørsteÅrsEksamen.ComponentPattern.Path;
+﻿using FørsteÅrsEksamen.ComponentPattern.Classes;
+using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -16,6 +17,9 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
         private Grid grid;
         private Astar astar;
         private GameObject playerGo;
+        private Player player;
+        private SpriteRenderer weaponSpriteRenderer;
+
 
         private List<GameObject> path;
         private Vector2 nextTarget;
@@ -34,29 +38,38 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             astar = new Astar();
         }
 
-        public void SetStartPosition(GameObject player, Point gridPos)
+        public override void Awake()
         {
-            playerGo = player;
+            base.Awake();
+
+            if (WeaponGo != null)
+            {
+                weaponSpriteRenderer = WeaponGo.GetComponent<SpriteRenderer>();
+            }
+
+            Collider.SetCollisionBox(15, 27, new Vector2(0, 15)); // Players collider for taking damage
+        }
+        public void SetStartPosition(GameObject playerGo, Point gridPos)
+        {
+            this.playerGo = playerGo;
+            player = playerGo.GetComponent<Player>();
+
             targetPoint = playerGo.Transform.GridPosition;
             grid = GridManager.Instance.CurrentGrid;
             GameObject.Transform.GridPosition = gridPos;
         }
 
-        public override void Awake()
-        {
-            base.Awake();
-
-            Collider.SetCollisionBox(15, 27, new Vector2(0, 15)); // Players collider for taking damage
-        }
 
         public override void Start()
         {
-            SpriteRenderer.SetLayerDepth(LAYERDEPTH.EnemyUnderPlayer);
+            SpriteRenderer.SetLayerDepth(LayerDepth.EnemyUnder);
 
             SetState(CharacterState.Idle);
 
             // Sets start position
             GameObject.Transform.Position = grid.GetCellGameObjectFromPoint(GameObject.Transform.GridPosition).Transform.Position;
+
+            Weapon.MoveWeapon(GameObject.Transform.Position);
 
             SetPath(); // We know that the player the targetPoint has been set
 
@@ -65,21 +78,13 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 
         public override void Update(GameTime gameTime)
         {
-            if (GameObject.Transform.Position.Y < playerGo.Transform.Position.Y)
-            {
-                SpriteRenderer.SetLayerDepth(LAYERDEPTH.EnemyUnderPlayer);
-            }
-            else
-            {
-                SpriteRenderer.SetLayerDepth(LAYERDEPTH.EnemyOverPlayer);
-            }
+            CheckLayerDepth();
 
-            // Checks if the playerGo.Transform.GridPostion is the same, if false, we know that the player has moved -
-            // so we make a new path towards that point.
+            //To make a new path towards the player, if they have moved.
             if (playerGo.Transform.GridPosition != targetPoint && State != CharacterState.Dead)
             {
                 targetPoint = playerGo.Transform.GridPosition;
-                SetPath(); //To make a new path towards the player, if they have moved.
+                SetPath(); 
             }
 
             switch (State)
@@ -92,6 +97,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
                     break;
 
                 case CharacterState.Attacking:
+                    // Do nothing if the player has died.
+                    if (player.State == CharacterState.Dead) return;
                     Attack();
                     break;
 
@@ -100,18 +107,23 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             }
         }
 
-        //AttackTimer -= GameWorld.DeltaTime;
-        //SetState(CharacterState.Idle);
+        private void CheckLayerDepth()
+        {
+            if (GameObject.Transform.Position.Y < playerGo.Transform.Position.Y)
+            {
+                SpriteRenderer.SetLayerDepth(LayerDepth.EnemyUnder);
 
-        //if (AttackTimer < 0)
-        //{
-        //    AttackTimer = AttackCooldown;
-        //    //GameObject.GetComponent<Character>().DealDamage(playerGo);
-        //}
+                if (weaponSpriteRenderer == null) return;
+                weaponSpriteRenderer.SetLayerDepth(LayerDepth.EnemyUnderWeapon);
+            }
+            else
+            {
+                SpriteRenderer.SetLayerDepth(LayerDepth.EnemyOver);
 
-        protected virtual void AttackAction()
-        { }
-
+                if (weaponSpriteRenderer == null) return;
+                weaponSpriteRenderer.SetLayerDepth(LayerDepth.EnemyOverWeapon);
+            }
+        }
 
         // Kig hvad jeg har i starten af update, husk at have de checks med og sætte targetPoint til playerGo GridPosition.
 
@@ -172,6 +184,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             Direction = Vector2.Normalize(nextTarget - position);
 
             GameObject.Transform.Translate(Direction * speed * (float)gameTime.ElapsedGameTime.TotalSeconds);
+            Weapon.MoveWeapon(GameObject.Transform.Position);
 
             if (path.Count == 1 && Vector2.Distance(position, nextTarget) < threshold)
             {

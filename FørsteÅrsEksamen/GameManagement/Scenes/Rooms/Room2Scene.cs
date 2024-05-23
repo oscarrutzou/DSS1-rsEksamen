@@ -20,7 +20,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
 
         public override void Initialize()
         {
-            Data.Room_Reached = 2;
+            SaveData.Room_Reached = 2;
             //DBGrid.DeleteGrid(GridName);
             base.Initialize();
 

@@ -217,7 +217,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
         /// </summary>
         /// <param name="layerDepth"></param>
         /// <exception cref="Exception"></exception>
-        public void SetLayerDepth(LAYERDEPTH layerDepth)
+        public void SetLayerDepth(LayerDepth layerDepth)
         {
             SpriteRenderer sr = GetComponent<SpriteRenderer>();
             if (sr != null)

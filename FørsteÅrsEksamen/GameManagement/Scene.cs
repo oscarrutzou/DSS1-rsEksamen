@@ -35,7 +35,7 @@ namespace FørsteÅrsEksamen.GameManagement
         public bool IsPaused;
 
         private List<GameObject> newGameObjects = new List<GameObject>();
-        private List<GameObject> destoroyedGameObjects = new List<GameObject>();
+        private List<GameObject> destroyedGameObjects = new List<GameObject>();
 
         public abstract void Initialize();
 
@@ -64,7 +64,7 @@ namespace FørsteÅrsEksamen.GameManagement
 
         public void Destroy(GameObject go)
         {
-            destoroyedGameObjects.Add(go);
+            destroyedGameObjects.Add(go);
         }
 
         public virtual void OnPlayerChanged()
@@ -81,7 +81,7 @@ namespace FørsteÅrsEksamen.GameManagement
         /// </summary>
         private void CleanUp()
         {
-            if (newGameObjects.Count == 0 && destoroyedGameObjects.Count == 0) return; //Shouldnt run since there is no new changes
+            if (newGameObjects.Count == 0 && destroyedGameObjects.Count == 0) return; //Shouldnt run since there is no new changes
 
             for (int i = 0; i < newGameObjects.Count; i++)
             {
@@ -89,13 +89,13 @@ namespace FørsteÅrsEksamen.GameManagement
                 newGameObjects[i].Awake();
                 newGameObjects[i].Start();
             }
-            for (int i = 0; i < destoroyedGameObjects.Count; i++)
+            for (int i = 0; i < destroyedGameObjects.Count; i++)
             {
-                RemoveFromCategory(destoroyedGameObjects[i]);
+                RemoveFromCategory(destroyedGameObjects[i]);
             }
 
             newGameObjects.Clear();
-            destoroyedGameObjects.Clear();
+            destroyedGameObjects.Clear();
         }
 
         /// <summary>

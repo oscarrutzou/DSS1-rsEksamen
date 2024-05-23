@@ -20,7 +20,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
         private Player player;
 
         protected TextureNames BackGroundTexture = TextureNames.TestLevelBG;
-        protected TextureNames ForeGroundTexture;
+        protected TextureNames ForeGroundTexture = TextureNames.TestLevelFG;
         protected string GridName;
         protected int GridWidth, GridHeight;
         
@@ -35,8 +35,8 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
             pauseMenu = new PauseMenu();
             pauseMenu.Initialize();
 
-            SpawnTexture(BackGroundTexture);
-            //SpawnTexture(ForeGroundTexture);
+            SpawnTexture(BackGroundTexture, LayerDepth.WorldBackground);
+            SpawnTexture(ForeGroundTexture, LayerDepth.WorldForeground);
             SpawnGrid();
             SpawnPlayer();
             SetCommands();
@@ -46,11 +46,11 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
 
         private void ChangeScene()
         {
-            int newRoomNr = Data.Room_Reached + 1;
+            int newRoomNr = SaveData.Room_Reached + 1;
             GameWorld.Instance.ChangeDungounScene(SceneNames.DungounRoom, newRoomNr);
         }
 
-        private void SpawnTexture(TextureNames textureName)
+        private void SpawnTexture(TextureNames textureName, LayerDepth layerDepth)
         {
             GameObject backgroundGo = new()
             {
@@ -60,6 +60,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
 
             SpriteRenderer spriteRenderer = backgroundGo.AddComponent<SpriteRenderer>();
             spriteRenderer.SetSprite(textureName);
+            spriteRenderer.SetLayerDepth(layerDepth);
             spriteRenderer.IsCentered = false;
 
             GameWorld.Instance.Instantiate(backgroundGo);
@@ -75,7 +76,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
 
         private void SpawnPlayer()
         {
-            PlayerData playerData = DBRunData.LoadPlayerData(Data.CurrentSaveID);
+            PlayerData playerData = DBRunData.LoadPlayerData(SaveData.CurrentSaveID);
 
             if (playerData != null)
             {
@@ -86,7 +87,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
                 // We already know a exploit here.
                 // If the user deletes the playerdata in the middle of a run, they will get a new Player with full stats
                 // and therefore not load the old saved one. We estimate it will take too long to fix this, so we place it on the back burner for now.
-                PlayerGo = PlayerFactory.Create(Data.SelectedClass, Data.SelectedWeapon);
+                PlayerGo = PlayerFactory.Create(SaveData.SelectedClass, SaveData.SelectedWeapon);
             }
 
             PlayerGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[PlayerSpawnPos].Transform.Position;
@@ -138,7 +139,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
 
             spriteBatch.DrawString(GlobalTextures.DefaultFont, $"RoomNr {GridManager.Instance.RoomNrIndex}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 120), Color.Black);
 
-            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Current Room Reached {Data.Room_Reached}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 150), Color.Black);
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Current Room Reached {SaveData.Room_Reached}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 150), Color.Black);
         }
 
         private void DrawCellPos(SpriteBatch spriteBatch)

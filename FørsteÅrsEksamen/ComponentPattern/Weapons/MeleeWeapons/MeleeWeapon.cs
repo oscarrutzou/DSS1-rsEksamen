@@ -27,7 +27,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.MeleeWeapons
             damageGoHealth.TakeDamage(Damage);
         }
 
-
         public override void Update(GameTime gameTime)
         {
             if (Attacking)

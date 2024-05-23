@@ -6,15 +6,22 @@ using System;
 namespace FørsteÅrsEksamen.ComponentPattern
 {
     // Remember with GUI text it dosen't use these layerdepth to draw the text and just uses 1.
-    public enum LAYERDEPTH
+    public enum LayerDepth
     {
         Default,
         WorldBackground,
-        EnemyUnderPlayer,
+        
+        EnemyUnder,
+        EnemyUnderWeapon,
+        
         Player,
         PlayerWeapon,
-        EnemyOverPlayer,
+
+        EnemyOver,
+        EnemyOverWeapon,
+        
         WorldForeground,
+        
         UI,
         Button,
         Text,
@@ -34,7 +41,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
         public Vector2 OriginOffSet { get; set; }
         public Vector2 DrawPosOffSet { get; set; }
         public bool IsCentered = true;
-        public LAYERDEPTH LayerName { get; private set; } = LAYERDEPTH.Default;
+        public LayerDepth LayerName { get; private set; } = ComponentPattern.LayerDepth.Default;
         public SpriteEffects SpriteEffects { get; set; } = SpriteEffects.None;
         private float LayerDepth;
         private Vector2 drawPos;
@@ -56,10 +63,10 @@ namespace FørsteÅrsEksamen.ComponentPattern
             animator = GameObject.GetComponent<Animator>();
         }
 
-        public void SetLayerDepth(LAYERDEPTH layerName)
+        public void SetLayerDepth(LayerDepth layerName)
         {
             LayerName = layerName;
-            LayerDepth = (float)LayerName / (Enum.GetNames(typeof(LAYERDEPTH)).Length - 1);
+            LayerDepth = (float)LayerName / (Enum.GetNames(typeof(LayerDepth)).Length - 1);
         }
 
         public override void Draw(SpriteBatch spriteBatch)

@@ -17,7 +17,7 @@ namespace FørsteÅrsEksamen.Factory
             cellGo.AddComponent<Cell>(grid, gridPos);
 
             SpriteRenderer sr = cellGo.AddComponent<SpriteRenderer>();
-            sr.SetLayerDepth(LAYERDEPTH.WorldBackground);
+            sr.SetLayerDepth(LayerDepth.WorldBackground);
             sr.SetSprite(TextureNames.Cell);
 
             return cellGo;
@@ -33,7 +33,7 @@ namespace FørsteÅrsEksamen.Factory
             cellGo.AddComponent<Cell>(grid, gridPos, cellType, roomNr);
 
             SpriteRenderer sr = cellGo.AddComponent<SpriteRenderer>();
-            sr.SetLayerDepth(LAYERDEPTH.WorldBackground);
+            sr.SetLayerDepth(LayerDepth.WorldBackground);
             sr.SetSprite(TextureNames.Cell);
 
             return cellGo;

@@ -5,6 +5,7 @@ using FørsteÅrsEksamen.DB;
 using Microsoft.Xna.Framework;
 using FørsteÅrsEksamen.ComponentPattern.Classes.RangedClasses;
 using FørsteÅrsEksamen.ComponentPattern.Classes.MeleeClasses;
+using FørsteÅrsEksamen.ComponentPattern.Weapons;
 
 namespace FørsteÅrsEksamen.Factory
 {
@@ -47,6 +48,7 @@ namespace FørsteÅrsEksamen.Factory
 
             //Weapon
             GameObject weaponGo = WeaponFactory.Create(weaponType,false);
+            weaponGo.GetComponent<Weapon>().WeaponUser = player;
             GameWorld.Instance.Instantiate(weaponGo);
 
             // Add weapon to player
@@ -55,7 +57,7 @@ namespace FørsteÅrsEksamen.Factory
             player.ClassType = playerClass;
 
             // Set the reference to this player.
-            Data.Player = player;
+            SaveData.Player = player;
 
             return playerGo;
         }
@@ -93,7 +95,7 @@ namespace FørsteÅrsEksamen.Factory
         {
             GameObject go = new();
             go.Transform.Scale = new(4, 4);
-            go.AddComponent<SpriteRenderer>().SetLayerDepth(LAYERDEPTH.Player);
+            go.AddComponent<SpriteRenderer>().SetLayerDepth(LayerDepth.Player);
             Collider collider = go.AddComponent<Collider>();
 
             collider.SetCollisionBox(13, 15);

@@ -44,7 +44,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
 
         private void SelectClass(ClassTypes type)
         {
-            Data.SelectedClass = type;
+            SaveData.SelectedClass = type;
             ShowHideClassMenu();
         }
 
@@ -85,14 +85,14 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
 
         private void SeletectWeapon(WeaponTypes weapon)
         {
-            Data.SelectedWeapon = weapon;
+            SaveData.SelectedWeapon = weapon;
 
             NextScene();
         }
 
         private void NextScene()
         {
-            SaveFileData saveFileData = DBSaveFile.LoadSaveFileData(Data.CurrentSaveID, true);
+            SaveFileData saveFileData = DBSaveFile.LoadSaveFileData(SaveData.CurrentSaveID, true);
 
             DBSaveFile.LoadSaveWeaponType(saveFileData, true);
             DBSaveFile.LoadSaveClassType(saveFileData, true);
@@ -117,7 +117,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
 
         private void ShowHideClassMenu()
         {
-            ClassTypes classType = Data.SelectedClass;
+            ClassTypes classType = SaveData.SelectedClass;
             ShowSecondMenu = !ShowSecondMenu;
 
             if (ShowSecondMenu)

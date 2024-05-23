@@ -25,8 +25,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
 
         private Collider movementCollider;
 
-        public WeaponTypes WeaponType = WeaponTypes.Sword;
-        public ClassTypes ClassType = ClassTypes.Warrior;
+        public WeaponTypes WeaponType;
+        public ClassTypes ClassType;
 
         public Player(GameObject gameObject) : base(gameObject)
         {
@@ -49,28 +49,21 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
 
         public override void Start()
         {
-            SpriteRenderer.SetLayerDepth(LAYERDEPTH.Player);
+            SpriteRenderer.SetLayerDepth(LayerDepth.Player);
             SetState(CharacterState.Idle);
         }
 
         public override void Die()
         {
-            SetState(CharacterState.Dead);
-            // Remove weapon
-            SpriteRenderer.Color = Color.LightPink;
+            base.Die();
+            // Start a timer after some time to change the scene
         }
 
- 
         public override void Update(GameTime gameTime)
         {
-            if (totalMovementInput != Vector2.Zero)
+            if (State != CharacterState.Dead)
             {
-                totalMovementInput = Vector2.Normalize(totalMovementInput);
-                SetState(CharacterState.Moving);
-            }
-            else
-            {
-                SetState(CharacterState.Idle);
+                CheckForMovement();
             }
 
             switch (State)
@@ -90,6 +83,19 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
             }
 
             totalMovementInput = Vector2.Zero;
+        }
+
+        private void CheckForMovement()
+        {
+            if (totalMovementInput != Vector2.Zero)
+            {
+                totalMovementInput = Vector2.Normalize(totalMovementInput);
+                SetState(CharacterState.Moving);
+            }
+            else
+            {
+                SetState(CharacterState.Idle);
+            }
         }
 
         protected override void UpdateDirection()

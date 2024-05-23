@@ -51,7 +51,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
 
         private void MakeNewSaveFile(int id)
         {
-            Data.CurrentSaveID = id;
+            SaveData.CurrentSaveID = id;
 
             // Dont override save files
             List<SaveFileData> saveFiles = DBSaveFile.LoadSaveFiles();
@@ -60,13 +60,13 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
             {
                 if (saveFile.Save_ID == id)
                 {
-                    Data.Currency = saveFile.Currency;
+                    SaveData.Currency = saveFile.Currency;
                     // maybe take player and current weapon and other stuff.
                     break;
                 }
             }
 
-            RunData runData = DBRunData.LoadRunData(Data.CurrentSaveID); 
+            RunData runData = DBRunData.LoadRunData(SaveData.CurrentSaveID); 
 
             if (runData == null)
             {

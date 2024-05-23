@@ -1,4 +1,5 @@
 ﻿using FørsteÅrsEksamen.CommandPattern;
+using FørsteÅrsEksamen.ComponentPattern.Classes;
 using FørsteÅrsEksamen.ComponentPattern.Enemies;
 using FørsteÅrsEksamen.ComponentPattern.Weapons;
 using FørsteÅrsEksamen.GameManagement;
@@ -34,10 +35,10 @@ namespace FørsteÅrsEksamen.ComponentPattern
         protected Weapon Weapon;
 
         protected Dictionary<CharacterState, AnimNames> CharacterStateAnimations = new();
-        protected Vector2 IdlespriteOffset = new(0, -32); // Move the animation up a bit so it looks like it walks correctly.
+        protected Vector2 SmallSpriteOffset = new(0, -32); // Move the animation up a bit so it looks like it walks correctly.
         protected Vector2 LargeSpriteOffSet = new(0, -96); // Move the animation up more since its a 64x64 insted of 32x32 canvans, for the Run and Death.
 
-        protected CharacterState State = CharacterState.Moving; // We use the method SetState, to we can change the animations and other variables.
+        public CharacterState State { get; protected set; } = CharacterState.Moving; // We use the method SetState, to we can change the animations and other variables.
         protected Vector2 Direction;
         protected AnimationDirectionState DirectionState = AnimationDirectionState.Right;
 
@@ -77,28 +78,24 @@ namespace FørsteÅrsEksamen.ComponentPattern
             if (State == newState) return; // Dont change the state to the same and reset the animation
             State = newState;
 
-            // Something happens with the idle, it disappears for like a frame
             switch (State)
             {
                 case CharacterState.Idle:
-                    // Hands are stuck a little over the normal sprite
                     Animator.PlayAnimation(CharacterStateAnimations[State]);
 
-                    SpriteRenderer.OriginOffSet = IdlespriteOffset;
+                    SpriteRenderer.OriginOffSet = SmallSpriteOffset;
                     break;
 
                 case CharacterState.Moving:
-                    // Hands are stuck a little over the normal sprite
                     Animator.PlayAnimation(CharacterStateAnimations[State]);
 
                     SpriteRenderer.OriginOffSet = LargeSpriteOffSet;
                     break;
 
                 case CharacterState.Attacking:
-                    // Is going to animate hands too.
                     Animator.PlayAnimation(CharacterStateAnimations[CharacterState.Idle]); // Just uses the Idle since we have no attacking animation
 
-                    SpriteRenderer.OriginOffSet = IdlespriteOffset;
+                    SpriteRenderer.OriginOffSet = SmallSpriteOffset;
                     break;
 
                 case CharacterState.Dead:
@@ -133,12 +130,6 @@ namespace FørsteÅrsEksamen.ComponentPattern
             Weapon.StartAttack();
         }
 
-        public void DealDamage(GameObject damageGo)
-        {
-            Character damageGoHealth = damageGo.GetComponent<Character>();
-            damageGoHealth.TakeDamage(Weapon.Damage);
-        }
-
         public void TakeDamage(int damage)
         {
             int newHealth = CurrentHealth - damage;
@@ -154,7 +145,8 @@ namespace FørsteÅrsEksamen.ComponentPattern
         public virtual void Die()
         {
             SetState(CharacterState.Dead);
-            // Remove weapon
+            GameWorld.Instance.Destroy(WeaponGo);
+            // Remove hands
             SpriteRenderer.Color = Color.LightPink;
         }
 

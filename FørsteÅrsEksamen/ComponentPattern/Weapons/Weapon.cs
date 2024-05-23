@@ -29,6 +29,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
     public abstract class Weapon : Component
     {
         public int Damage = 10;
+        public Character WeaponUser;
 
         protected float AttackSpeed;
 
@@ -59,13 +60,29 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
         public override void Awake()
         {
             spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
-            spriteRenderer.SetLayerDepth(LAYERDEPTH.PlayerWeapon);
+            spriteRenderer.SetLayerDepth(LayerDepth.PlayerWeapon);
             spriteRenderer.IsCentered = false;
         }       
 
+        public void StartAttack() 
+        {
+            if (Attacking) return;
 
+            Attacking = true;
+            TotalElapsedTime = 0f;
 
-        public virtual void StartAttack() { }
+            if (EnemyWeapon)
+            {
+                EnemyStartAttack();
+            }
+            else
+            {
+                PlayerStartAttack();
+            }
+        }
+
+        protected virtual void PlayerStartAttack() {}
+        protected virtual void EnemyStartAttack() { }
 
         protected void PlayAttackSound()
         {

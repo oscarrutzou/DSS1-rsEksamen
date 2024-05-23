@@ -17,7 +17,7 @@ namespace FørsteÅrsEksamen.DB
             List<SaveFileData> saveFiles = new();
             using var db = new DataBase(CollectionName.SaveFile);
 
-            for (int i = 1; i <= Data.MaxSaveID; i++)
+            for (int i = 1; i <= SaveData.MaxSaveID; i++)
             {
                 SaveFileData data = db.FindOne<SaveFileData>(x => x.Save_ID == i);
                 if (data == null) continue;
@@ -53,8 +53,8 @@ namespace FørsteÅrsEksamen.DB
         {
             SaveFileData fileData = new()
             {
-                Save_ID = Data.CurrentSaveID,
-                Currency = Data.Currency,
+                Save_ID = SaveData.CurrentSaveID,
+                Currency = SaveData.Currency,
             };
 
             saveFileDB.SaveOverrideSingle(fileData, fileData.Save_ID, x => x.Save_ID == fileData.Save_ID);
@@ -123,7 +123,7 @@ namespace FørsteÅrsEksamen.DB
             }
 
             // Adds if there are any weapon types that are missing
-            foreach (WeaponTypes weaponType in Data.UnlockedWeapons)
+            foreach (WeaponTypes weaponType in SaveData.UnlockedWeapons)
             {
                 if (weaponTypes.Contains(weaponType)) continue;
 
@@ -218,7 +218,7 @@ namespace FørsteÅrsEksamen.DB
             }
 
             // Adds if there are any class types that are missing
-            foreach (ClassTypes classType in Data.UnlockedClasses)
+            foreach (ClassTypes classType in SaveData.UnlockedClasses)
             {
                 if (classTypes.Contains(classType)) continue;
 

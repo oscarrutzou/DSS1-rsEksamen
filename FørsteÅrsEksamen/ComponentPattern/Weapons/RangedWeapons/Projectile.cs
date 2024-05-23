@@ -27,7 +27,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
         public override void Start()
         {
             SpriteRenderer sr = GameObject.GetComponent<SpriteRenderer>();
-            sr.SetLayerDepth(LAYERDEPTH.Player);
+            sr.SetLayerDepth(LayerDepth.Player);
 
             sr.SetSprite(TextureNames.WoodArrow);
             
