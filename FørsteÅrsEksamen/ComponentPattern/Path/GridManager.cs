@@ -34,8 +34,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
 
         public Grid SelectedGrid { get; private set; }
 
-        private bool showGrid = true;
-
         private int roomNrIndex = 1;
 
         /// <summary>
@@ -59,11 +57,14 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
 
         #endregion Parameters
 
-        public void ChangeRoomNrIndex(int addToCurrentRoomNr) => RoomNrIndex += addToCurrentRoomNr;
+        public void ChangeRoomNrIndex(int addToCurrentRoomNr)
+        {
+            if (!InputHandler.Instance.DebugMode) return;
+            RoomNrIndex += addToCurrentRoomNr;
+        }
+    #region SaveLoad
 
-        #region SaveLoad
-
-        public void SaveGrid(Grid grid)
+    public void SaveGrid(Grid grid)
         {
             CurrentGrid = grid;
 
@@ -104,6 +105,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
 
         public void DrawOnCells()
         {
+            if (!InputHandler.Instance.DebugMode) return;
+
             if (GuiMethods.IsMouseOverUI()) return;
             
             GameObject cellGo = GetCellAtPos(InputHandler.Instance.MouseInWorld);
@@ -115,6 +118,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
 
         public void SetDefaultOnCell()
         {
+            if (!InputHandler.Instance.DebugMode) return;
+
             if (GuiMethods.IsMouseOverUI()) return;
 
             GameObject cellGo = GetCellAtPos(InputHandler.Instance.MouseInWorld);
@@ -126,7 +131,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
 
         private void SetCellProperties(Cell cell, CellWalkableType walkableType, int roomNr)
         {
-            if (!showGrid) return; // You cant draw on the grid when its not set
+            if (!InputHandler.Instance.DebugMode) return; // You cant draw if the debug is false
 
             cell.GameObject.GetComponent<SpriteRenderer>().ShouldDraw = true; // Need to be true, so its wlakabletype gets set proberly.
             cell.RoomNr = roomNr;
@@ -178,7 +183,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
 
         public void ShowHideGrid()
         {
-            showGrid = !showGrid;
+            InputHandler.Instance.DebugMode = !InputHandler.Instance.DebugMode;
 
             ShouldDrawCells();
         }
@@ -190,7 +195,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             foreach (GameObject go in CurrentGrid.Cells.Values)
             {
                 // Set all to getting draw if the bool is true.
-                go.GetComponent<SpriteRenderer>().ShouldDraw = showGrid;
+                go.GetComponent<SpriteRenderer>().ShouldDraw = InputHandler.Instance.DebugMode;
 
                 Cell cell = go.GetComponent<Cell>();
                 cell.ChangeCellWalkalbeType(cell.CellWalkableType); // Only draw the ones that have a room.

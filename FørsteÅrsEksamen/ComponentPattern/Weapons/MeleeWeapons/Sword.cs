@@ -13,6 +13,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.MeleeWeapons
         public Sword(GameObject gameObject, bool enemyWeapon) : base(gameObject, enemyWeapon)
         {
         }
+
         public override void Start()
         {
             AttackSoundNames = new SoundNames[]

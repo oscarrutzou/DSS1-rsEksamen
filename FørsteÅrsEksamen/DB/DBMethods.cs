@@ -1,4 +1,5 @@
-﻿using FørsteÅrsEksamen.ComponentPattern;
+﻿using FørsteÅrsEksamen.CommandPattern;
+using FørsteÅrsEksamen.ComponentPattern;
 using FørsteÅrsEksamen.ComponentPattern.Classes;
 using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.Factory;
@@ -72,6 +73,8 @@ namespace FørsteÅrsEksamen.DB
 
         public static void DeleteSave(int saveID)
         {
+            if (!InputHandler.Instance.DebugMode) return;
+
             using var saveFileDB = new DataBase(CollectionName.SaveFile);
             SaveFileData data = saveFileDB.FindOne<SaveFileData>(x => x.Save_ID == saveID);
 

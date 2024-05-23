@@ -32,6 +32,9 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
             // There needs to have been set some stuff before this base.Initialize (Look at Room1 for reference)
             PlayerGo = null; //Remove this from normal Scene and make another scene that sets all up.
 
+            pauseMenu = new PauseMenu();
+            pauseMenu.Initialize();
+
             SpawnTexture(BackGroundTexture);
             //SpawnTexture(ForeGroundTexture);
             SpawnGrid();
@@ -39,11 +42,6 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
             SetCommands();
 
             DBMethods.RegularSave();
-
-            pauseMenu = new PauseMenu();
-            pauseMenu.Initialize();
-            InputHandler.Instance.AddKeyButtonDownCommand(Keys.Escape, new CustomCmd(pauseMenu.TogglePauseMenu));
-            InputHandler.Instance.AddKeyButtonDownCommand(Keys.Enter, new CustomCmd(ChangeScene));
         }
 
         private void ChangeScene()
@@ -105,7 +103,14 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
             InputHandler.Instance.AddKeyUpdateCommand(Keys.W, new MoveCmd(player, new Vector2(0, -1)));
             InputHandler.Instance.AddKeyUpdateCommand(Keys.S, new MoveCmd(player, new Vector2(0, 1)));
 
-            InputHandler.Instance.AddKeyButtonDownCommand(Keys.Tab, new CustomCmd(() => { GridManager.Instance.ShowHideGrid(); }));
+
+            InputHandler.Instance.AddMouseUpdateCommand(MouseCmdState.Left, new CustomCmd(player.Attack));
+
+            InputHandler.Instance.AddKeyButtonDownCommand(Keys.Escape, new CustomCmd(pauseMenu.TogglePauseMenu));
+
+            // For debugging
+            InputHandler.Instance.AddKeyButtonDownCommand(Keys.Enter, new CustomCmd(ChangeScene));
+            InputHandler.Instance.AddKeyButtonDownCommand(Keys.I, new CustomCmd(() => { GridManager.Instance.ShowHideGrid(); }));
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DBGrid.SaveGrid(GridManager.Instance.CurrentGrid); }));
         }
 
