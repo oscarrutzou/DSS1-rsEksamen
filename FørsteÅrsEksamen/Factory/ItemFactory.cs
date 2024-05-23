@@ -12,7 +12,7 @@ namespace FørsteÅrsEksamen.Factory
             GameObject itemGo = new GameObject();
             itemGo.Transform.Scale = new Vector2(4, 4);
             SpriteRenderer sr = itemGo.AddComponent<SpriteRenderer>();
-            sr.SetSprite(TextureNames.WoodSword);
+            sr.SetSprite(TextureNames.HealthPotion);
             sr.SetLayerDepth(LAYERDEPTH.WorldForeground);
             itemGo.AddComponent<Collider>();
             itemGo.AddComponent<PickupableItem>(playerGo);
