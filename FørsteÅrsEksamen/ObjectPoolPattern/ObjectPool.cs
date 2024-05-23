@@ -4,7 +4,8 @@ using LiteDB;
 using System.Collections.Generic;
 
 namespace FørsteÅrsEksamen.ObjectPoolPattern
-{ //Stefan
+{ 
+    //Stefan
     public abstract class ObjectPool
     {
         

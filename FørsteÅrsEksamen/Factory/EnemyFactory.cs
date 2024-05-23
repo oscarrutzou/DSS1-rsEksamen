@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 namespace FørsteÅrsEksamen.Factory
 {
     //Asser
-    internal static class EnemyFactory
+    public static class EnemyFactory
     {
         public static GameObject Create()
         {

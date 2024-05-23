@@ -15,25 +15,25 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
 {
     public abstract class RoomBase : Scene
     {
-        protected GameObject PlayerGo;
         public Point PlayerSpawnPos;
-
-        private PauseMenu pauseMenu;
+        protected GameObject PlayerGo;
         private Player player;
 
-        protected TextureNames BackGroundTexture = TextureNames.TestLevel;
-        protected string GridName = "Test1";
-        protected int GridWidth = 24, GridHeight = 18;
+        protected TextureNames BackGroundTexture = TextureNames.TestLevelBG;
+        protected TextureNames ForeGroundTexture;
+        protected string GridName;
+        protected int GridWidth, GridHeight;
+        
+        private List<GameObject> cells = new(); // For debug
+        private PauseMenu pauseMenu;
 
         public override void Initialize()
         {
+            // There needs to have been set some stuff before this base.Initialize (Look at Room1 for reference)
             PlayerGo = null; //Remove this from normal Scene and make another scene that sets all up.
 
-            // Need to save the Rundata first
-
-            // Then the player
-
-            SpawnGridBG(); // Pull out all data that should be set and set it in initialize in a Dungoun Scene
+            SpawnTexture(BackGroundTexture);
+            //SpawnTexture(ForeGroundTexture);
             SpawnGrid();
             SpawnPlayer();
             SetCommands();
@@ -52,17 +52,19 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
             GameWorld.Instance.ChangeDungounScene(SceneNames.DungounRoom, newRoomNr);
         }
 
-        private void SpawnGridBG()
+        private void SpawnTexture(TextureNames textureName)
         {
-            GameObject go = new();
-            go.Type = GameObjectTypes.Background;
-            go.Transform.Scale = new(4, 4);
+            GameObject backgroundGo = new()
+            {
+                Type = GameObjectTypes.Background
+            };
+            backgroundGo.Transform.Scale = new(4, 4);
 
-            SpriteRenderer spriteRenderer = go.AddComponent<SpriteRenderer>();
-            spriteRenderer.SetSprite(BackGroundTexture);
+            SpriteRenderer spriteRenderer = backgroundGo.AddComponent<SpriteRenderer>();
+            spriteRenderer.SetSprite(textureName);
             spriteRenderer.IsCentered = false;
 
-            GameWorld.Instance.Instantiate(go);
+            GameWorld.Instance.Instantiate(backgroundGo);
         }
 
         private void SpawnGrid()
@@ -107,13 +109,13 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DBGrid.SaveGrid(GridManager.Instance.CurrentGrid); }));
         }
 
-
-        private List<GameObject> cells = new();
         public override void DrawOnScreen(SpriteBatch spriteBatch)
         {
             base.DrawOnScreen(spriteBatch);
 
             pauseMenu.DrawOnScreen(spriteBatch);
+
+            if (!InputHandler.Instance.DebugMode) return;
 
             spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], GameWorld.Instance.UiCam.TopLeft, null, Color.WhiteSmoke, 0f, Vector2.Zero, new Vector2(350, 180), SpriteEffects.None, 0f);
 
@@ -143,6 +145,5 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
             Point cellGridPos = cellGo.Transform.GridPosition;
             spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Cell Point from MousePos: {cellGridPos}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 30), Color.Black);
         }
-
     }
 }

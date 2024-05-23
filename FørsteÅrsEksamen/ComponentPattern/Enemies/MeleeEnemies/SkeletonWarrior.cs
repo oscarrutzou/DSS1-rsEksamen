@@ -6,9 +6,9 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies.MeleeEnemies
 {
     //Asser
 
-    internal class SkeletonWarrior : Melee
+    public class SkeletonWarrior : Melee
     {
-        internal Collider playerCollider;
+        protected Collider playerCollider;
         private float range = 1.5f;
         private Vector2 position;
         private bool inRange = false;
@@ -21,13 +21,10 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies.MeleeEnemies
         {
             base.Awake();
 
-            characterStateAnimations.Add(CharacterState.Idle, AnimNames.OrcIdle);
-            characterStateAnimations.Add(CharacterState.Moving, AnimNames.OrcRun);
-            characterStateAnimations.Add(CharacterState.Dead, AnimNames.OrcDeath);
+            CharacterStateAnimations.Add(CharacterState.Idle, AnimNames.OrcIdle);
+            CharacterStateAnimations.Add(CharacterState.Moving, AnimNames.OrcRun);
+            CharacterStateAnimations.Add(CharacterState.Dead, AnimNames.OrcDeath);
         }
 
-        internal override void AttackAction()
-        {
-        }
     }
 }

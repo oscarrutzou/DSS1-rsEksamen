@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 
 namespace FørsteÅrsEksamen.CommandPattern.Commands
 {
-    internal class MoveCmd : ICommand
+    public class MoveCmd : ICommand
     {
         private Player player;
         private Vector2 velocity;

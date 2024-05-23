@@ -19,7 +19,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 
         private List<GameObject> path;
         private Vector2 nextTarget;
-        internal Point targetPoint;
+        private Point targetPoint;
         private readonly float threshold = 10f;
 
         public Action onGoalReached;
@@ -46,12 +46,12 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
         {
             base.Awake();
 
-            collider.SetCollisionBox(15, 27, new Vector2(0, 15)); // Players collider for taking damage
+            Collider.SetCollisionBox(15, 27, new Vector2(0, 15)); // Players collider for taking damage
         }
 
         public override void Start()
         {
-            spriteRenderer.SetLayerDepth(LAYERDEPTH.EnemyUnderPlayer);
+            SpriteRenderer.SetLayerDepth(LAYERDEPTH.EnemyUnderPlayer);
 
             SetState(CharacterState.Idle);
 
@@ -67,11 +67,11 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
         {
             if (GameObject.Transform.Position.Y < playerGo.Transform.Position.Y)
             {
-                spriteRenderer.SetLayerDepth(LAYERDEPTH.EnemyUnderPlayer);
+                SpriteRenderer.SetLayerDepth(LAYERDEPTH.EnemyUnderPlayer);
             }
             else
             {
-                spriteRenderer.SetLayerDepth(LAYERDEPTH.EnemyOverPlayer);
+                SpriteRenderer.SetLayerDepth(LAYERDEPTH.EnemyOverPlayer);
             }
 
             // Also needs to check if
@@ -159,9 +159,9 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
                 }
             }
 
-            direction = Vector2.Normalize(nextTarget - position);
+            Direction = Vector2.Normalize(nextTarget - position);
 
-            GameObject.Transform.Translate(direction * speed * (float)gameTime.ElapsedGameTime.TotalSeconds);
+            GameObject.Transform.Translate(Direction * speed * (float)gameTime.ElapsedGameTime.TotalSeconds);
 
             if (path.Count == 1 && Vector2.Distance(position, nextTarget) < threshold)
             {
@@ -178,7 +178,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
         {
             SetState(CharacterState.Attacking);
 
-            spriteRenderer.SpriteEffects = SpriteEffects.None;
+            SpriteRenderer.SpriteEffects = SpriteEffects.None;
         }
 
         private void ResetPathColor()
@@ -205,22 +205,19 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 
         #endregion PathFinding
 
-        private void Attack()
-        {
-            attackTimer -= GameWorld.DeltaTime;
-            SetState(CharacterState.Idle);
+        //AttackTimer -= GameWorld.DeltaTime;
+        //SetState(CharacterState.Idle);
 
-            if (attackTimer < 0)
-            {
-                attackTimer = attackCooldown;
-                //GameObject.GetComponent<Character>().DealDamage(playerGo);
-            }
-        }
+        //if (AttackTimer < 0)
+        //{
+        //    AttackTimer = AttackCooldown;
+        //    //GameObject.GetComponent<Character>().DealDamage(playerGo);
+        //}
 
-        internal virtual void AttackAction()
+        protected  virtual void AttackAction()
         { }
 
-        internal override void SetState(CharacterState newState)
+        protected override void SetState(CharacterState newState)
         {
             if (State == newState) return; // Dont change the state to the same and reset the animation
             State = newState;
@@ -229,28 +226,28 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             switch (State)
             {
                 case CharacterState.Idle:
-                    animator.PlayAnimation(characterStateAnimations[State]);
+                    Animator.PlayAnimation(CharacterStateAnimations[State]);
 
-                    spriteRenderer.OriginOffSet = idlespriteOffset;
+                    SpriteRenderer.OriginOffSet = IdlespriteOffset;
                     break;
 
                 case CharacterState.Moving:
-                    animator.PlayAnimation(characterStateAnimations[State]);
+                    Animator.PlayAnimation(CharacterStateAnimations[State]);
 
-                    spriteRenderer.OriginOffSet = largeSpriteOffSet;
+                    SpriteRenderer.OriginOffSet = LargeSpriteOffSet;
                     break;
 
                 case CharacterState.Attacking:
-                    animator.PlayAnimation(characterStateAnimations[CharacterState.Idle]); // Just uses the Idle since we have no attacking animation
+                    Animator.PlayAnimation(CharacterStateAnimations[CharacterState.Idle]); // Just uses the Idle since we have no attacking animation
 
-                    spriteRenderer.OriginOffSet = idlespriteOffset;
+                    SpriteRenderer.OriginOffSet = IdlespriteOffset;
                     break;
 
                 case CharacterState.Dead:
-                    animator.PlayAnimation(characterStateAnimations[State]);
+                    Animator.PlayAnimation(CharacterStateAnimations[State]);
 
-                    spriteRenderer.OriginOffSet = largeSpriteOffSet;
-                    animator.StopCurrentAnimationAtLastSprite();
+                    SpriteRenderer.OriginOffSet = LargeSpriteOffSet;
+                    Animator.StopCurrentAnimationAtLastSprite();
                     break;
             }
         }

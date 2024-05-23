@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
 {
-    internal class LoadingScreen
+    public class LoadingScreen
     {
     }
 }

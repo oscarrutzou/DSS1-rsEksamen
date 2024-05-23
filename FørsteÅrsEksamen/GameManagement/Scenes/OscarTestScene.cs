@@ -57,7 +57,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             go.Transform.Scale = new(4, 4);
 
             SpriteRenderer spriteRenderer = go.AddComponent<SpriteRenderer>();
-            spriteRenderer.SetSprite(TextureNames.TestLevel);
+            spriteRenderer.SetSprite(TextureNames.TestLevelBG);
             spriteRenderer.IsCentered = false;
 
             GameWorld.Instance.Instantiate(go);
@@ -117,7 +117,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
         private void Attack()
         {
-            player.weapon.Attack();
+            //player.weapon.Attack();
         }
 
         private void TestRemoveComm()

@@ -1,5 +1,6 @@
 ﻿using FørsteÅrsEksamen.CommandPattern;
 using FørsteÅrsEksamen.GameManagement;
+using FørsteÅrsEksamen.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -11,7 +12,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
     /// <summary>
     /// A class used to generate a collider that moves a rotation around its startPos
     /// </summary>
-    internal class CollisionRectangle
+    public class CollisionRectangle
     {
         public Rectangle Rectangle;
         public Vector2 StartRelativePos;
@@ -25,29 +26,35 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
 
     // Maybe as a nice to have, look into how to make one of the less smooth path. So it e.g is fast in the beginning and slow at the end.
     // A really nice to have to so make a trail behind the weapon when it swings:D Would be fun to make
-    internal abstract class Weapon : Component
+    public abstract class Weapon : Component
     {
-        public int damage;
+        public int Damage = 10;
 
-        internal float attackSpeed;
+        protected float AttackSpeed;
 
-        internal SpriteRenderer spriteRenderer;
-        internal float lerpFromTo = MathHelper.Pi;
-        private float totalLerp;
+        protected SpriteRenderer spriteRenderer;
+        protected float LerpFromTo = MathHelper.Pi;
+        protected float TotalLerp;
 
-        protected bool enemyWeapon;
-        protected bool attacking = false;
-        private float startAnimationAngle;
+        protected bool EnemyWeapon;
+        protected bool Attacking;
+        protected float StartAnimationAngle;
 
-        private float totalElapsedTime = 0.0f;
-        private bool isRotatingBack = false;
-        protected List<CollisionRectangle> weaponColliders = new();
+        protected float TotalElapsedTime;
+        protected bool IsRotatingBack;
+        protected List<CollisionRectangle> WeaponColliders = new();
 
-        internal SoundNames[] AttackSoundNames;
+        protected SoundNames[] AttackSoundNames;
 
         protected Weapon(GameObject gameObject) : base(gameObject)
         {
-            attackSpeed = 1.7f;
+            AttackSpeed = 1.7f;
+        }
+
+        protected Weapon(GameObject gameObject, bool enemyWeapon) : base(gameObject)
+        {
+            AttackSpeed = 1.7f;
+            this.EnemyWeapon = enemyWeapon;
         }
 
         public override void Awake()
@@ -55,116 +62,20 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
             spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
             spriteRenderer.SetLayerDepth(LAYERDEPTH.Player);
             spriteRenderer.IsCentered = false;
-        }
+        }       
 
-        public override void Start()
-        {
-            //Gets overriden
-            spriteRenderer.SetSprite(TextureNames.WoodSword);
-            SetStartColliders(new Vector2(7.5f, 38), 5, 5, 6, 4); // Gets set in each of the weapons insted of here.
-        }
-
-        /// <summary>
-        /// To make colliders for the weapon.
-        /// </summary>
-        /// <param name="origin">How far the origin is from the top left corner. Should have a -0.5f in X to make it centered.</param>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
-        /// <param name="heightFromOriginToHandle">Height from the origin on the sprite to the end of the handle</param>
-        /// <param name="amountOfColliders"></param>
-        internal void SetStartColliders(Vector2 origin, int width, int height, int heightFromOriginToHandle, int amountOfColliders)
-        {
-            spriteRenderer.OriginOffSet = origin;
-            spriteRenderer.DrawPosOffSet = -origin;
-            AddWeaponColliders(width, height, heightFromOriginToHandle, amountOfColliders);
-        }
-
-        /// <summary>
-        /// The colliders on our weapon, used for collision between characters
-        /// </summary>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
-        /// <param name="heightFromOriginToHandle">Height from the origin on the sprite to the end of the handle</param>
-        /// <param name="amountOfColliders"></param>
-        private void AddWeaponColliders(int width, int height, int heightFromOriginToHandle, int amountOfColliders)
-        {
-            Vector2 pos = GameObject.Transform.Position;
-            Vector2 scale = GameObject.Transform.Scale;
-
-            pos += new Vector2(0, -heightFromOriginToHandle * scale.Y); // Adds the height from origin to handle
-
-            // Adds the weapon colliders
-            for (int i = 0; i < amountOfColliders; i++)
-            {
-                pos += new Vector2(0, -height * scale.Y);
-
-                weaponColliders.Add(new CollisionRectangle()
-                {
-                    Rectangle = MakeRec(pos, width, height, scale),
-                    StartRelativePos = pos
-                });
-            }
-        }
-
-        internal Rectangle MakeRec(Vector2 pos, int width, int height, Vector2 scale) => new Rectangle((int)pos.X, (int)pos.Y, width * (int)scale.X, (int)scale.Y * height);
-
-        public virtual void Attack()
-        {
-            if (attacking) return;
-
-            attacking = true;
-            totalElapsedTime = 0f;
-
-            Vector2 mouseInUI = InputHandler.Instance.MouseOnUI;
-
-            if (mouseInUI.X > 0f) // Right
-            {
-                // -Y op
-                // +Y ned
-                if (mouseInUI.Y > 0f) // Down
-                {
-                    //start angle
-                    totalLerp = MathHelper.Pi + MathHelper.PiOver2;
-                }
-                else // Up
-                {
-                    //start angle
-                    totalLerp = MathHelper.Pi;
-                }
-            }
-            else
-            {
-                // Y > 0f
-                if (mouseInUI.Y > 0f) // Down
-                {
-                    //start angle
-                    totalLerp = -(MathHelper.Pi + MathHelper.PiOver2);
-                }
-                else // Up
-                {
-                    //start angle
-                    totalLerp = -lerpFromTo;
-                }
-            }
-        }
+        public virtual void StartAttack() { }
 
         private bool playingSound = false;
 
         public override void Update(GameTime gameTime)
         {
-            // Attack direction
-            //startAnimationAngle = GameObject.Transform.Rotation;
-            //Vector2 mouseInUI = InputHandler.Instance.MouseOnUI;
-            //float angleToMouse = (float)Math.Atan2(mouseInUI.Y, mouseInUI.X) + MathHelper.PiOver2;
-            //startAnimationAngle = angleToMouse;
-            // should lerp to the correct angle before attacking. Use a bool to see if the angle has been set
-
-            if (attacking)
+            if (Attacking)
             {
                 PlayAttackSound();
 
                 //Move a lot to attack method.
-                totalElapsedTime += GameWorld.DeltaTime * attackSpeed; // To change the speed of the animation, change the attackspeed.
+                TotalElapsedTime += GameWorld.DeltaTime * AttackSpeed; // To change the speed of the animation, change the attackspeed.
                 AttackAnimation();
 
             }
@@ -184,45 +95,45 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
 
         private void AttackAnimation()
         {
-            if (totalElapsedTime >= 1f)
+            if (TotalElapsedTime >= 1f)
             {
-                totalElapsedTime = 0f; // Reset totalElapsedTime
-                isRotatingBack = true;
+                TotalElapsedTime = 0f; // Reset totalElapsedTime
+                IsRotatingBack = true;
             }
 
             // Play with some other methods, for different weapons, to make them feel slow or fast https://easings.net/
             float easedTime; // maybe switch between them.
 
-            if (!isRotatingBack)
+            if (!IsRotatingBack)
             {
                 // Down attack
-                easedTime = EaseInOutBack(totalElapsedTime);
-                GameObject.Transform.Rotation = MathHelper.Lerp(startAnimationAngle, totalLerp, easedTime);
+                easedTime = BaseMath.EaseInOutBack(TotalElapsedTime);
+                GameObject.Transform.Rotation = MathHelper.Lerp(StartAnimationAngle, TotalLerp, easedTime);
             }
             else
             {
                 //Up attack
-                easedTime = EaseInOutBack(totalElapsedTime);
+                easedTime = BaseMath.EaseInOutBack(TotalElapsedTime);
                 //easedTime = EaseInOutBack(totalElapsedTime); // Feels heavy
-                GameObject.Transform.Rotation = MathHelper.Lerp(totalLerp, startAnimationAngle, easedTime);
+                GameObject.Transform.Rotation = MathHelper.Lerp(TotalLerp, StartAnimationAngle, easedTime);
             }
-            if (Math.Abs(GameObject.Transform.Rotation - startAnimationAngle) < 0.01f && isRotatingBack)
+            if (Math.Abs(GameObject.Transform.Rotation - StartAnimationAngle) < 0.01f && IsRotatingBack)
             {
-                isRotatingBack = false;
-                attacking = false;
+                IsRotatingBack = false;
+                Attacking = false;
                 playingSound = false;
             }
         }
 
         private void UpdateCollisionBoxesPos(float rotation)
         {
-            foreach (CollisionRectangle collisionRectangle in weaponColliders)
+            foreach (CollisionRectangle collisionRectangle in WeaponColliders)
             {
                 // Calculate the position relative to the center of the weapon
                 Vector2 relativePos = collisionRectangle.StartRelativePos;
 
                 // Rotate the relative position
-                Vector2 newPos = Rotate(relativePos, rotation);
+                Vector2 newPos = BaseMath.Rotate(relativePos, rotation);
 
                 // Set the collision rectangle position based on the rotated relative position
                 collisionRectangle.Rectangle.X = (int)(GameObject.Transform.Position.X + newPos.X) - collisionRectangle.Rectangle.Width / 2;
@@ -230,59 +141,12 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
             }
         }
 
-        #region Basic Math Calculations
-        private Vector2 Rotate(Vector2 position, float rotation)
-        {
-            float cos = (float)Math.Cos(rotation);
-            float sin = (float)Math.Sin(rotation);
-
-            float newX = position.X * cos - position.Y * sin;
-            float newY = position.X * sin + position.Y * cos;
-
-            return new Vector2(newX, newY);
-        }
-
-        /// <summary>
-        /// <para>A easing method that backs up a little them rams forward.</para>
-        /// <para>From https://easings.net/</para>
-        /// </summary>
-        /// <param name="x"></param>
-        /// <returns></returns>
-        public float EaseInBack(float x)
-        {
-            const float c1 = 1.7f; // Amount of time spent in the starting "backing up" part.
-            const float c2 = c1 + 1;
-
-            return c2 * x * x * x - c1 * x * x;
-        }
-
-        public float EaseInOutBack(float x)
-        {
-            const float c1 = 1.7f;
-            const float c2 = c1 * 1.525f;
-
-            return x < 0.5f
-                ? (float)(Math.Pow(2 * x, 2) * ((c2 + 1) * 2 * x - c2)) / 2
-                : (float)(Math.Pow(2 * x - 2, 2) * ((c2 + 1) * (x * 2 - 2) + c2) + 2) / 2;
-        }
-
-        public float EaseOutBack(float x)
-        {
-            const float c1 = 1.7f;
-            const float c3 = c1 + 1;
-
-            return 1 + c3 * (float)Math.Pow(x - 1, 3) + c1 * (float)Math.Pow(x - 1, 2);
-        }
-
-        public float EaseOutExpo(float x)
-        {
-            return x == 1 ? 1 : 1 - (float)Math.Pow(2, -10 * x);
-        }
-        #endregion
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            foreach (CollisionRectangle collisionRectangle in weaponColliders)
+            if (!InputHandler.Instance.DebugMode) return;
+
+            foreach (CollisionRectangle collisionRectangle in WeaponColliders)
             {
                 Collider.DrawRectangleNoSprite(collisionRectangle.Rectangle, Color.Black, spriteBatch);
             }

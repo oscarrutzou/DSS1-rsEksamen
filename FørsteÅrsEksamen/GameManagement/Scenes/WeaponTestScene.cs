@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace FørsteÅrsEksamen.GameManagement.Scenes
 {
-    internal class WeaponTestScene : Scene
+    public class WeaponTestScene : Scene
     {
         public override void Initialize()
         {
@@ -22,7 +22,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         {
             Player player = playerGo.GetComponent<Player>();
             Weapon weapon = player.WeaponGo.GetComponent<Weapon>();
-            weapon.Attack();
+            weapon.StartAttack();
         }
 
         private GameObject playerGo;

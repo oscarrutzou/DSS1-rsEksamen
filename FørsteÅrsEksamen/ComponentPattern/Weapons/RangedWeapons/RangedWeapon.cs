@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
 {
-    internal abstract class RangedWeapon : Weapon
+    public abstract class RangedWeapon : Weapon
     {
         private GameObject projectile;        
         private bool canShoot = true;
@@ -12,6 +12,10 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
         private float shootTimer = 0.5f;
 
         protected RangedWeapon(GameObject gameObject) : base(gameObject)
+        {
+        }
+
+        protected RangedWeapon(GameObject gameObject, bool enemyWeapon) : base(gameObject, enemyWeapon)
         {
         }
 
@@ -25,8 +29,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
                 canShoot = true;
             }
         }
-
-       
 
         public void MakeProjectile()
         {

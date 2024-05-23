@@ -25,26 +25,25 @@ namespace FørsteÅrsEksamen.ComponentPattern
     public abstract class Character : Component
     {
         #region Properties
-
-        internal SpriteRenderer spriteRenderer;
-        internal Animator animator;
-        internal Collider collider;
-        internal Weapon weapon;
-
         public GameObject WeaponGo, HandLeft, HandRight;
 
-        internal Dictionary<CharacterState, AnimNames> characterStateAnimations = new();
-        internal Vector2 idlespriteOffset = new(0, -32); // Move the animation up a bit so it looks like it walks correctly.
-        internal Vector2 largeSpriteOffSet = new(0, -96); // Move the animation up more since its a 64x64 insted of 32x32 canvans, for the Run and Death.
+        protected SpriteRenderer SpriteRenderer;
+        protected Animator Animator;
+        protected Collider Collider;
+        protected Weapon Weapon;
 
-        internal Vector2 direction;
-        internal CharacterState State = CharacterState.Moving; // We use the method SetState, to we can change the animations and other variables.
-        internal AnimationDirectionState directionState = AnimationDirectionState.Right;
+        protected Dictionary<CharacterState, AnimNames> CharacterStateAnimations = new();
+        protected Vector2 IdlespriteOffset = new(0, -32); // Move the animation up a bit so it looks like it walks correctly.
+        protected Vector2 LargeSpriteOffSet = new(0, -96); // Move the animation up more since its a 64x64 insted of 32x32 canvans, for the Run and Death.
 
-        internal float attackTimer;
-        internal float attackCooldown = 2f;
+        protected CharacterState State = CharacterState.Moving; // We use the method SetState, to we can change the animations and other variables.
+        protected Vector2 Direction;
+        protected AnimationDirectionState DirectionState = AnimationDirectionState.Right;
 
-        internal int speed = 200;
+        protected float AttackTimer;
+        protected float AttackCooldown = 2f;
+
+        protected int speed = 200;
         public int CurrentHealth = 100;
         public int MaxHealth = 100;
 
@@ -56,10 +55,15 @@ namespace FørsteÅrsEksamen.ComponentPattern
 
         public override void Awake()
         {
-            spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
-            animator = GameObject.GetComponent<Animator>();
-            collider = GameObject.GetComponent<Collider>();
-            weapon = GameObject.GetComponent<Weapon>();
+            SpriteRenderer = GameObject.GetComponent<SpriteRenderer>();
+            Animator = GameObject.GetComponent<Animator>();
+            Collider = GameObject.GetComponent<Collider>();
+
+            if (WeaponGo != null)
+            {
+                Weapon = WeaponGo.GetComponent<Weapon>();
+                Weapon.MoveWeapon(GameObject.Transform.Position);
+            }
         }
 
         // This is not a abstract method since we only need to set it in the Player and Enemy class, and not in its subclasses
@@ -67,32 +71,36 @@ namespace FørsteÅrsEksamen.ComponentPattern
         /// A method to set the new state and change the animation drawn.
         /// </summary>
         /// <param name="newState"></param>
-        internal virtual void SetState(CharacterState newState)
+        protected virtual void SetState(CharacterState newState)
         { }
 
         /// <summary>
         /// Updates the direction of which way the sprite should draw. Remember to set the direction!
         /// </summary>
-        internal virtual void UpdateDirection()
+        protected virtual void UpdateDirection()
         {
-            if (direction.X >= 0)
+            if (Direction.X >= 0)
             {
-                directionState = AnimationDirectionState.Right;
-                spriteRenderer.SpriteEffects = SpriteEffects.None;
+                DirectionState = AnimationDirectionState.Right;
+                SpriteRenderer.SpriteEffects = SpriteEffects.None;
             }
-            else if (direction.X < 0)
+            else if (Direction.X < 0)
             {
-                directionState = AnimationDirectionState.Left;
-                spriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
+                DirectionState = AnimationDirectionState.Left;
+                SpriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
             }
         }
 
-        // WIP
+        public void Attack()
+        {
+            if (Weapon == null) return;
+            Weapon.StartAttack();
+        }
 
         public void DealDamage(GameObject damageGo)
         {
             Character damageGoHealth = damageGo.GetComponent<Character>();
-            damageGoHealth.TakeDamage(weapon.damage);
+            damageGoHealth.TakeDamage(Weapon.Damage);
         }
 
         public void TakeDamage(int damage)

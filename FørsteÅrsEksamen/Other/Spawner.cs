@@ -16,7 +16,7 @@ using FørsteÅrsEksamen.ComponentPattern.Enemies;
 namespace FørsteÅrsEksamen.Other
 {
     // Erik
-    internal class Spawner: Component
+    public class Spawner: Component
     {
         private int totalEnemyAmount = 5;
         private GameObject playerGo;

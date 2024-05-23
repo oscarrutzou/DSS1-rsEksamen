@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
 {
-    internal class Arrow : Projectile
+    public class Arrow : Projectile
     {
         private Weapon weapon;
         public Arrow(GameObject gameObject) : base(gameObject)

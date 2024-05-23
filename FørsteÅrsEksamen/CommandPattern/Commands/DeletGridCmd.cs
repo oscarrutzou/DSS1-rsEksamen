@@ -2,7 +2,7 @@
 
 namespace FørsteÅrsEksamen.CommandPattern.Commands
 {
-    internal class DeletGridCmd : ICommand
+    public class DeletGridCmd : ICommand
     {
         private bool test;
 

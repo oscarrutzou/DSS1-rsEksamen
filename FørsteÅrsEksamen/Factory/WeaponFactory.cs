@@ -18,7 +18,7 @@ namespace FørsteÅrsEksamen.Factory
         WoodArrow,
     }
 
-    internal static class WeaponFactory
+    public static class WeaponFactory
     {
         public static Dictionary<ClassTypes, List<WeaponTypes>> ClassHasWeapons = new()
         {

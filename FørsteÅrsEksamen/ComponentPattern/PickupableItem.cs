@@ -8,9 +8,9 @@ namespace FørsteÅrsEksamen.ComponentPattern
     //Asser
     public class PickupableItem : Component
     {
-        internal SpriteRenderer spriteRenderer;
-        internal Collider collider, playerCollider;
-        internal Player player;
+        protected SpriteRenderer SpriteRenderer;
+        protected Collider Collider, PlayerCollider;
+        protected Player Player;
 
         private GameObject playerGo;
 
@@ -28,11 +28,11 @@ namespace FørsteÅrsEksamen.ComponentPattern
         public override void Awake()
         {
             base.Awake();
-            collider = GameObject.GetComponent<Collider>();
-            collider.SetCollisionBox(12, 19, new Vector2(2, 2));
-            spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
-            playerCollider = playerGo.GetComponent<Collider>();
-            player = playerGo.GetComponent<Player>();
+            Collider = GameObject.GetComponent<Collider>();
+            Collider.SetCollisionBox(12, 19, new Vector2(2, 2));
+            SpriteRenderer = GameObject.GetComponent<SpriteRenderer>();
+            PlayerCollider = playerGo.GetComponent<Collider>();
+            Player = playerGo.GetComponent<Player>();
         }
 
         public override void Update(GameTime gameTime)
@@ -42,24 +42,24 @@ namespace FørsteÅrsEksamen.ComponentPattern
         public override void OnCollisionEnter(Collider collider)
         {
             // Skal kun fjerne item ved player position, ikke alle items.
-            if (collider.CollisionBox.Intersects(playerCollider.CollisionBox))
+            if (collider.CollisionBox.Intersects(PlayerCollider.CollisionBox))
             {
-                player.PickUpItem(GameObject);
+                Player.PickUpItem(GameObject);
                 GameWorld.Instance.Destroy(GameObject);
             }
         }
 
         public void Use()
         {
-            if (player.CurrentHealth < player.MaxHealth)
+            if (Player.CurrentHealth < Player.MaxHealth)
             {
-                player.CurrentHealth += 50;
-                if (player.CurrentHealth > player.MaxHealth)
+                Player.CurrentHealth += 50;
+                if (Player.CurrentHealth > Player.MaxHealth)
                 {
-                    player.CurrentHealth = 100;
+                    Player.CurrentHealth = 100;
                 }
             }
-            else if (player.CurrentHealth == player.MaxHealth)
+            else if (Player.CurrentHealth == Player.MaxHealth)
             {
                 throw new Exception("I already have full health, it would be a waste to drink this now");
             }

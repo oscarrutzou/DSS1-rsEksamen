@@ -5,7 +5,7 @@ using System.Numerics;
 namespace FørsteÅrsEksamen.Factory
 {
     //Asser
-    internal static class ItemFactory
+    public static class ItemFactory
     {
         public static GameObject Create(GameObject playerGo)
         {

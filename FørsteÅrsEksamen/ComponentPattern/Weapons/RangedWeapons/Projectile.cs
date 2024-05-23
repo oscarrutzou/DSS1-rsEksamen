@@ -1,6 +1,7 @@
 ﻿using FørsteÅrsEksamen.CommandPattern;
 using FørsteÅrsEksamen.ComponentPattern.Enemies;
 using FørsteÅrsEksamen.GameManagement;
+using FørsteÅrsEksamen.Other;
 using Microsoft.Xna.Framework;
 using Npgsql.Replication.PgOutput.Messages;
 using System;
@@ -8,7 +9,7 @@ using System;
 namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
 {
     // Erik
-    internal class Projectile : Component
+    public class Projectile : Component
     {
         private float speed;
         private Vector2 direction;
@@ -38,19 +39,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
             GameObject.Transform.Rotation = rotation;
             startPos = GameObject.Transform.Position;
 
-            lerpTo = Rotate(startPos + new Vector2(0, range), rotation);
+            lerpTo = BaseMath.Rotate(startPos + new Vector2(0, range), rotation);
             SetDirection();
-        }
-
-        private Vector2 Rotate(Vector2 position, float rotation)
-        {
-            float cos = (float)Math.Cos(rotation);
-            float sin = (float)Math.Sin(rotation);
-
-            float newX = position.X * cos - position.Y * sin;
-            float newY = position.X * sin + position.Y * cos;
-
-            return new Vector2(newX, newY);
         }
 
         public void SetDirection()

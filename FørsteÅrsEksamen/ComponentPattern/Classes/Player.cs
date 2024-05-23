@@ -12,15 +12,14 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
     // Oscar
     public abstract class Player : Character, ISubject
     {
-        internal GameObject handsGo;
-        //internal Weapon weapon;
-        private GameObject movementColliderGo;
+        public GameObject HandsGo;
+        public GameObject MovementColliderGo;
 
         private Vector2 totalMovementInput, velocity, targetVelocity, previousPosition;
 
         private readonly float turnSpeed = 40f; // Adjust as needed
 
-        internal List<IObserver> observers = new();
+        protected List<IObserver> observers = new();
 
         public PickupableItem ItemInInventory;
 
@@ -37,29 +36,24 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
         public Player(GameObject gameObject, GameObject handsGo, GameObject movementColliderGo) : base(gameObject)
         {
             speed = 150;
-            this.handsGo = handsGo;
-            this.movementColliderGo = movementColliderGo;
+            this.HandsGo = handsGo;
+            this.MovementColliderGo = movementColliderGo;
         }
 
         public override void Awake()
         {
             base.Awake();
-            movementCollider = movementColliderGo.GetComponent<Collider>();
-
-            if (WeaponGo != null)
-            {
-                weapon = WeaponGo.GetComponent<Weapon>();
-            }
-
-            collider.SetCollisionBox(15, 24, new Vector2(0, 30));
+            movementCollider = MovementColliderGo.GetComponent<Collider>();
+            Collider.SetCollisionBox(15, 24, new Vector2(0, 30));
         }
 
         public override void Start()
         {
-            spriteRenderer.SetLayerDepth(LAYERDEPTH.Player);
+            SpriteRenderer.SetLayerDepth(LAYERDEPTH.Player);
             SetState(CharacterState.Idle);
         }
 
+        #region Movement
         public void AddInput(Vector2 input)
         {
             if (input != Vector2.Zero)
@@ -92,7 +86,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
 
                 // Interpolate the velocity
                 velocity = Vector2.Lerp(velocity, targetVelocity, turnSpeed * GameWorld.DeltaTime);
-                direction = velocity;
+                Direction = velocity;
             }
 
             UpdateDirection();
@@ -168,26 +162,27 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
         /// Adds the movement to the gameobject
         /// </summary>
         /// <param name="movement"></param>
-        internal void TranslateMovement(Vector2 movement)
+        protected void TranslateMovement(Vector2 movement)
         {
             GameObject.Transform.Translate(movement);
-            movementColliderGo.Transform.Position = GameObject.Transform.Position;
-            handsGo.Transform.Position = GameObject.Transform.Position;
-            weapon.MoveWeapon(GameObject.Transform.Position);
+            MovementColliderGo.Transform.Position = GameObject.Transform.Position;
+            HandsGo.Transform.Position = GameObject.Transform.Position;
+            Weapon.MoveWeapon(GameObject.Transform.Position);
         }
 
         /// <summary>
         /// Sets the position of the object to the position.
         /// </summary>
         /// <param name="position"></param>
-        internal void SetMovement(Vector2 position)
+        protected void SetMovement(Vector2 position)
         {
             GameObject.Transform.Position = position;
-            movementColliderGo.Transform.Position = GameObject.Transform.Position;
-            handsGo.Transform.Position = GameObject.Transform.Position;
-            weapon.MoveWeapon(GameObject.Transform.Position);
+            MovementColliderGo.Transform.Position = GameObject.Transform.Position;
+            HandsGo.Transform.Position = GameObject.Transform.Position;
+            Weapon.MoveWeapon(GameObject.Transform.Position);
             GameWorld.Instance.WorldCam.position = GameObject.Transform.Position; //Sets the new position of the world cam
         }
+        #endregion
 
         public override void Update(GameTime gameTime)
         {
@@ -220,21 +215,21 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
             totalMovementInput = Vector2.Zero;
         }
 
-        internal override void UpdateDirection()
+        protected override void UpdateDirection()
         {
-            if (direction.X >= 0)
+            if (Direction.X >= 0)
             {
-                directionState = AnimationDirectionState.Right;
-                spriteRenderer.SpriteEffects = SpriteEffects.None;
+                DirectionState = AnimationDirectionState.Right;
+                SpriteRenderer.SpriteEffects = SpriteEffects.None;
             }
-            else if (direction.X < 0)
+            else if (Direction.X < 0)
             {
-                directionState = AnimationDirectionState.Left;
-                spriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
+                DirectionState = AnimationDirectionState.Left;
+                SpriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
             }
         }
 
-        internal override void SetState(CharacterState newState)
+        protected override void SetState(CharacterState newState)
         {
             if (State == newState) return; // Dont change the state to the same and reset the animation
             State = newState;
@@ -244,34 +239,35 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
             {
                 case CharacterState.Idle:
                     // Hands are stuck a little over the normal sprite
-                    animator.PlayAnimation(characterStateAnimations[State]);
+                    Animator.PlayAnimation(CharacterStateAnimations[State]);
 
-                    spriteRenderer.OriginOffSet = idlespriteOffset;
+                    SpriteRenderer.OriginOffSet = IdlespriteOffset;
                     break;
 
                 case CharacterState.Moving:
                     // Hands are stuck a little over the normal sprite
-                    animator.PlayAnimation(characterStateAnimations[State]);
+                    Animator.PlayAnimation(CharacterStateAnimations[State]);
 
-                    spriteRenderer.OriginOffSet = largeSpriteOffSet;
+                    SpriteRenderer.OriginOffSet = LargeSpriteOffSet;
                     break;
 
                 case CharacterState.Attacking:
                     // Is going to animate hands too.
-                    animator.PlayAnimation(characterStateAnimations[CharacterState.Idle]); // Just uses the Idle since we have no attacking animation
+                    Animator.PlayAnimation(CharacterStateAnimations[CharacterState.Idle]); // Just uses the Idle since we have no attacking animation
 
-                    spriteRenderer.OriginOffSet = idlespriteOffset;
+                    SpriteRenderer.OriginOffSet = IdlespriteOffset;
                     break;
 
                 case CharacterState.Dead:
-                    animator.PlayAnimation(characterStateAnimations[State]);
+                    Animator.PlayAnimation(CharacterStateAnimations[State]);
 
-                    spriteRenderer.OriginOffSet = largeSpriteOffSet;
-                    animator.StopCurrentAnimationAtLastSprite();
+                    SpriteRenderer.OriginOffSet = LargeSpriteOffSet;
+                    Animator.StopCurrentAnimationAtLastSprite();
                     break;
             }
         }
 
+        #region Item
         public void PickUpItem(GameObject item)
         {
             ItemInInventory = item.GetComponent<PickupableItem>();
@@ -283,6 +279,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
 
             ItemInInventory.Use();
         }
+        #endregion
 
         #region Observer Pattern
 

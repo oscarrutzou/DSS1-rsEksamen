@@ -1,4 +1,5 @@
-﻿using FørsteÅrsEksamen.GameManagement;
+﻿using FørsteÅrsEksamen.CommandPattern;
+using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -55,6 +56,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            if (!InputHandler.Instance.DebugMode) return;
             DrawRectangle(CollisionBox, DebugColor, spriteBatch);
         }
 

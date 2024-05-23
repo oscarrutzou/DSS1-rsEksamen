@@ -2,8 +2,9 @@
 using FørsteÅrsEksamen.Factory;
 
 namespace FørsteÅrsEksamen.ObjectPoolPattern
-{//Stefan
-    internal class ProjectilePool : ObjectPool
+{
+    //Stefan
+    public class ProjectilePool : ObjectPool
     {
         
         private static ProjectilePool instance;

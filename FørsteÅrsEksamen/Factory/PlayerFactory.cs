@@ -3,6 +3,8 @@ using FørsteÅrsEksamen.ComponentPattern.Classes;
 using FørsteÅrsEksamen.GameManagement;
 using FørsteÅrsEksamen.DB;
 using Microsoft.Xna.Framework;
+using FørsteÅrsEksamen.ComponentPattern.Classes.RangedClasses;
+using FørsteÅrsEksamen.ComponentPattern.Classes.MeleeClasses;
 
 namespace FørsteÅrsEksamen.Factory
 {
@@ -18,51 +20,60 @@ namespace FørsteÅrsEksamen.Factory
         public static GameObject Create(ClassTypes playerClass, WeaponTypes weaponType)
         {
             GameObject playerGo = new GameObject();
+
             playerGo.Transform.Scale = new Vector2(4, 4);
+
             playerGo.Type = GameObjectTypes.Player;
+
             playerGo.AddComponent<SpriteRenderer>();
             playerGo.AddComponent<Animator>();
             playerGo.AddComponent<Collider>();
 
+
             GameObject hands = CreateHands();
             GameWorld.Instance.Instantiate(hands); // Makes hands
 
-            GameObject movementCollider = CreatePlayerMovementCollider();
-            GameWorld.Instance.Instantiate(movementCollider); // Makes the collider
+            GameObject movementColliderGo = CreatePlayerMovementCollider();
+            GameWorld.Instance.Instantiate(movementColliderGo); // Makes the collider
+
 
             // remove the hands from the constructer
-            playerGo = AddClassComponent(playerGo, hands, movementCollider, playerClass);
+            playerGo = AddClassComponent(playerGo, playerClass);
+
+            Player player = playerGo.GetComponent<Player>();
+            // Adds hands and the collider
+            player.HandsGo = hands;
+            player.MovementColliderGo = movementColliderGo;
 
             //Weapon
-            GameObject weapon = WeaponFactory.Create(weaponType,false);
-            GameWorld.Instance.Instantiate(weapon);
+            GameObject weaponGo = WeaponFactory.Create(weaponType,false);
+            GameWorld.Instance.Instantiate(weaponGo);
 
             // Add weapon to player
-            Player player = playerGo.GetComponent<Player>();
-            player.WeaponGo = weapon;
+            player.WeaponGo = weaponGo;
             player.WeaponType = weaponType;
             player.ClassType = playerClass;
 
-            // Set the data that will be downloaded to this player
+            // Set the reference to this player.
             Data.Player = player;
 
             return playerGo;
         }
 
-        private static GameObject AddClassComponent(GameObject playerGo, GameObject handsGo, GameObject movementColliderGo, ClassTypes playerClass)
+        private static GameObject AddClassComponent(GameObject playerGo, ClassTypes playerClass)
         {
             switch (playerClass)
             {
                 case ClassTypes.Warrior:
-                    playerGo.AddComponent<Warrior>(handsGo, movementColliderGo);
+                    playerGo.AddComponent<Warrior>();
                     break;
 
                 case ClassTypes.Archer:
-                    playerGo.AddComponent<Archer>(handsGo, movementColliderGo);
+                    playerGo.AddComponent<Archer>();
                     break;
 
                 case ClassTypes.Mage:
-                    playerGo.AddComponent<Mage>(handsGo, movementColliderGo);
+                    playerGo.AddComponent<Mage>();
                     break;
             }
 

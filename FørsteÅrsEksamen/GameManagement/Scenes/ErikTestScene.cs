@@ -18,13 +18,9 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 {
     public class ErikTestScene : Scene
     {
-        private GameObject weapon;
-        private GameObject bow;
-        private Spawner spawner;
+        private GameObject weapon, bow, PlayerGo, spawnerGameObject;
+        private Point PlayerSpawnPos;
         private Player player;
-        private GameObject spawnerGameObject;
-        private Grid grid;
-        
 
         public override void Initialize()
         {
@@ -68,7 +64,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             go.Transform.Scale = new(4, 4);
 
             SpriteRenderer spriteRenderer = go.AddComponent<SpriteRenderer>();
-            spriteRenderer.SetSprite(TextureNames.TestLevel);
+            spriteRenderer.SetSprite(TextureNames.TestLevelBG);
             spriteRenderer.IsCentered = false;
 
             GameWorld.Instance.Instantiate(go);
@@ -127,7 +123,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
         private void Attack()
         {
-            weapon.GetComponent<Weapon>().Attack();
+            weapon.GetComponent<Weapon>().StartAttack();
             
             //projectile.GetComponent<MagicStaff>().Attack();
         }

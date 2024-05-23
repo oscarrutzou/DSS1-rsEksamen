@@ -4,7 +4,7 @@ using FørsteÅrsEksamen.GameManagement;
 
 namespace FørsteÅrsEksamen.CommandPattern.Commands
 {
-    internal class CheckButtonCmd : ICommand
+    public class CheckButtonCmd : ICommand
     {
         public void Execute()
         {
