@@ -1,11 +1,18 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern;
 using FørsteÅrsEksamen.ComponentPattern.Classes;
 using FørsteÅrsEksamen.GameManagement;
-using FørsteÅrsEksamen.RepositoryPattern;
+using FørsteÅrsEksamen.DB;
 using Microsoft.Xna.Framework;
 
 namespace FørsteÅrsEksamen.Factory
 {
+    public enum ClassTypes
+    {
+        Archer,
+        Warrior,
+        Mage,
+    }
+
     public static class PlayerFactory
     {
         public static GameObject Create(ClassTypes playerClass, WeaponTypes weaponType)
@@ -37,7 +44,7 @@ namespace FørsteÅrsEksamen.Factory
             player.ClassType = playerClass;
 
             // Set the data that will be downloaded to this player
-            SaveFileManager.Player = player;
+            Data.Player = player;
 
             return playerGo;
         }

@@ -136,6 +136,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
 
         public void Update(GameTime gameTime)
         {
+            if (!IsEnabled) return;
             foreach (var component in components.Values)
             {
                 component.Update(gameTime);
@@ -144,6 +145,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            if (!IsEnabled) return;
             foreach (var component in components.Values)
             {
                 component.Draw(spriteBatch);
@@ -152,6 +154,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
 
         public void OnCollisionEnter(Collider collider)
         {
+            if (!IsEnabled) return;
             foreach (var component in components.Values)
             {
                 component.OnCollisionEnter(collider);
@@ -171,11 +174,16 @@ namespace FørsteÅrsEksamen.ComponentPattern
         /// <returns></returns>
         public bool CollidesWithGameObject(GameObjectTypes gameobjectType)
         {
+            if (!IsEnabled) throw new Exception("The current gameobject should be enabled");
+
             Collider thisGoCollider = GetComponent<Collider>() ?? throw new Exception("This Gameobject need a collider to check for collision");
 
             foreach (GameObject otherGo in SceneData.GameObjectLists[gameobjectType])
             {
+                if (!otherGo.IsEnabled) continue;
+
                 Collider otherCollider = otherGo.GetComponent<Collider>();
+
                 if (otherCollider == null) continue;
 
                 if (thisGoCollider.CollisionBox.Intersects(otherCollider.CollisionBox))

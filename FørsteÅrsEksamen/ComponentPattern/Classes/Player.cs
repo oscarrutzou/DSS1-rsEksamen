@@ -9,18 +9,11 @@ using System.Collections.Generic;
 
 namespace FørsteÅrsEksamen.ComponentPattern.Classes
 {
-    public enum ClassTypes
-    {
-        Archer,
-        Warrior,
-        Mage,
-    }
-
     // Oscar
     public abstract class Player : Character, ISubject
     {
         internal GameObject handsGo;
-        internal Weapon weapon;
+        //internal Weapon weapon;
         private GameObject movementColliderGo;
 
         private Vector2 totalMovementInput, velocity, targetVelocity, previousPosition;
@@ -38,12 +31,12 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
 
         public Player(GameObject gameObject) : base(gameObject)
         {
-            speed = 300;
+            speed = 150;
         }
 
         public Player(GameObject gameObject, GameObject handsGo, GameObject movementColliderGo) : base(gameObject)
         {
-            speed = 300;
+            speed = 150;
             this.handsGo = handsGo;
             this.movementColliderGo = movementColliderGo;
         }
@@ -69,31 +62,39 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
 
         public void AddInput(Vector2 input)
         {
-            if (float.IsNaN(input.X))
+            if (input != Vector2.Zero)
             {
-                totalMovementInput = Vector2.Zero;
+                // Ensure the input vector is not a zero vector
+                input.Normalize();
+
+                // Add the normalized input to the total movement
+                totalMovementInput += input;
             }
-            totalMovementInput += input;
         }
 
         public void Move(Vector2 input)
         {
-            // Save the previous position
+            targetVelocity = Vector2.Zero;
+
             previousPosition = GameObject.Transform.Position;
 
-            // Add the additionalVelocity to the current targetVelocity
             if (input != Vector2.Zero)
             {
-                targetVelocity += input.Length() > 0 ? Vector2.Normalize(input) : input;
-                targetVelocity = targetVelocity.Length() > 0 ? Vector2.Normalize(targetVelocity) : targetVelocity;
-            }
-            else
-            {
-                targetVelocity = Vector2.Zero;
+                input.Normalize();
+
+                targetVelocity = input * speed * GameWorld.DeltaTime;
+
+                // To fix the error that if all buttons have been pressed, that it sometimes sets the velocity to Nan/Nan
+                if (float.IsNaN(velocity.X)) 
+                {
+                    velocity = Vector2.Zero;
+                }
+
+                // Interpolate the velocity
+                velocity = Vector2.Lerp(velocity, targetVelocity, turnSpeed * GameWorld.DeltaTime);
+                direction = velocity;
             }
 
-            velocity = Vector2.Lerp(velocity, targetVelocity, turnSpeed * GameWorld.DeltaTime);
-            direction = velocity;
             UpdateDirection();
 
             if (GridManager.Instance.CurrentGrid == null) return; // Player cant walk if there is no grid.
@@ -150,6 +151,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
             foreach (Vector2 corner in corners)
             {
                 GameObject gridCell = GridManager.Instance.GetCellAtPos(corner);
+
                 if (gridCell == null || gridCell.GetComponent<Cell>().CellWalkableType == CellWalkableType.NotValid)
                 {
                     // If any corner is in an invalid cell, revert the movement on both player and

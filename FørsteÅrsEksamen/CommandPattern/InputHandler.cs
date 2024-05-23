@@ -1,7 +1,7 @@
 ﻿using FørsteÅrsEksamen.CommandPattern.Commands;
 using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.GameManagement;
-using FørsteÅrsEksamen.RepositoryPattern;
+using FørsteÅrsEksamen.DB;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
@@ -44,15 +44,25 @@ namespace FørsteÅrsEksamen.CommandPattern
             SetBaseKeys();
         }
 
-        public void SetBaseKeys()
+        public void StartInputThead()
         {
-            AddKeyButtonDownCommand(Keys.Escape, new QuitCmd());
+            while (true) // The update for input should always run.
+            {
+                Update();
+            }
+        }
+
+        private void SetBaseKeys()
+        {
+            AddMouseUpdateCommand(MouseCmdState.Left, new CheckButtonCmd());
+
             AddMouseUpdateCommand(MouseCmdState.Left, new CustomCmd(() => { GridManager.Instance.DrawOnCells(); }));
             AddMouseUpdateCommand(MouseCmdState.Right, new CustomCmd(() => { GridManager.Instance.SetDefaultOnCell(); }));
 
             AddKeyButtonDownCommand(Keys.Q, new CustomCmd(() => { GridManager.Instance.ChangeRoomNrIndex(-1); }));
             AddKeyButtonDownCommand(Keys.E, new CustomCmd(() => { GridManager.Instance.ChangeRoomNrIndex(1); }));
-            AddKeyButtonDownCommand(Keys.T, new CustomCmd(() => { DBMethods.DeleteSave(SaveFileManager.CurrentSaveID); }));
+
+            AddKeyButtonDownCommand(Keys.T, new CustomCmd(() => { DBMethods.DeleteSave(Data.CurrentSaveID); }));
         }
 
         #region Command
@@ -165,7 +175,7 @@ namespace FørsteÅrsEksamen.CommandPattern
         private KeyboardState previousKeyState;
         private MouseState previousMouseState;
 
-        public void Update()
+        private void Update()
         {
             KeyState = Keyboard.GetState();
             MouseState = Mouse.GetState();

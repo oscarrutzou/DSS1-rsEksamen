@@ -1,7 +1,9 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern;
+using FørsteÅrsEksamen.ComponentPattern.Classes;
 using FørsteÅrsEksamen.ComponentPattern.Weapons.MeleeWeapons;
 using FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace FørsteÅrsEksamen.Factory
 {
@@ -14,11 +16,28 @@ namespace FørsteÅrsEksamen.Factory
         Bow,
         BowFire,
         WoodArrow,
-        Arrow,
     }
 
     internal static class WeaponFactory
     {
+        public static Dictionary<ClassTypes, List<WeaponTypes>> ClassHasWeapons = new()
+        {
+            { ClassTypes.Archer, new List<WeaponTypes>(){
+                WeaponTypes.Bow,
+                WeaponTypes.BowFire,
+            }},
+
+            { ClassTypes.Mage, new List<WeaponTypes>(){
+                WeaponTypes.MagicStaff,
+                WeaponTypes.MagicStaffFire,
+            }},
+
+            { ClassTypes.Warrior, new List<WeaponTypes>(){
+                WeaponTypes.Sword,
+                WeaponTypes.Axe,
+            }},
+        };
+
         public static GameObject Create(WeaponTypes type)
         {
             GameObject weaponGo = new GameObject();

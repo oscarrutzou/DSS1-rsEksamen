@@ -1,22 +1,32 @@
-﻿using FørsteÅrsEksamen.ComponentPattern;
+﻿using FørsteÅrsEksamen.CommandPattern;
+using FørsteÅrsEksamen.ComponentPattern;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 namespace FørsteÅrsEksamen.GameManagement
 {
-    public enum ScenesNames
+    public enum SceneNames
     {
         MainMenu,
+        SaveFileMenu,
+        CharacterSelectorMenu,
+        LoadingScreen,
+        EndMenu,
 
-        //LoadingScreen,
+        DungounRoom, // BASE, NO SCRIPT HERE
+        DungounRoom1,
+        DungounRoom2,
+        DungounRoom3,
+        DungounRoom15,
+        DungounBossRoom1,
+
         WeaponTestScene,
 
         OscarTestScene,
         StefanTestScene,
         ErikTestScene,
         AsserTestScene,
-        //EndMenu,
     }
 
     // Oscar
@@ -62,6 +72,11 @@ namespace FørsteÅrsEksamen.GameManagement
 
         public virtual void OnPlayerChanged()
         { }
+
+        public virtual void OnSceneChange()
+        {
+            InputHandler.Instance.RemoveAllExeptBaseCommands();
+        }
 
         /// <summary>
         /// <para>The method adds the newGameobjects to different lists, and calls the Awake and Start on the Objects, so the objects starts properly.</para>

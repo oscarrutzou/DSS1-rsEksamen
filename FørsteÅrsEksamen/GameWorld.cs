@@ -5,8 +5,10 @@ using FørsteÅrsEksamen.GameManagement.Scenes.Menus;
 using FørsteÅrsEksamen.GameManagement.Scenes.Rooms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace FørsteÅrsEksamen.GameManagement
 {
@@ -15,8 +17,7 @@ namespace FørsteÅrsEksamen.GameManagement
     {
         public static GameWorld Instance;
 
-        public Dictionary<ScenesNames, Scene> Scenes { get; private set; }
-        public Scene[] Rooms { get; private set; }
+        public Dictionary<SceneNames, Scene> Scenes { get; private set; }
 
         public Scene CurrentScene;
         public Camera WorldCam { get; private set; }
@@ -24,7 +25,7 @@ namespace FørsteÅrsEksamen.GameManagement
         public static float DeltaTime { get; private set; }
         public GraphicsDeviceManager GfxManager { get; private set; }
         private SpriteBatch _spriteBatch;
-        private ScenesNames? nextScene = null;
+        private SceneNames? nextScene = null;
 
         public GameWorld()
         {
@@ -44,16 +45,25 @@ namespace FørsteÅrsEksamen.GameManagement
             UiCam = new Camera(false);
 
             GlobalTextures.LoadContent();
+            GlobalSounds.LoadContent();
             GlobalAnimations.LoadContent();
 
             GenerateScenes();
-            SetRoomScenes();
 
-            CurrentScene = Scenes[ScenesNames.ErikTestScene];
+            CurrentScene = Scenes[SceneNames.SaveFileMenu];
             CurrentScene.Initialize();
+
+            // Start Input Handler Thread
+            Thread cmdThread = new(() => { InputHandler.Instance.StartInputThead(); })
+            {
+                IsBackground = true // Stops the thread abruptly
+            };
+            cmdThread.Start();
 
             base.Initialize();
         }
+
+        // Simpel lås verision for at ikke åbne 2 versioner af spillet, brug mutex
 
         protected override void LoadContent()
         {
@@ -64,7 +74,8 @@ namespace FørsteÅrsEksamen.GameManagement
         {
             DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            InputHandler.Instance.Update(); //Updates our input, so its not each scene that have to handle the call.
+            GlobalSounds.MusicUpdate(); // Maybe run on own thread?
+
             CurrentScene.Update(gameTime);
 
             HandleSceneChange();
@@ -93,21 +104,6 @@ namespace FørsteÅrsEksamen.GameManagement
             _spriteBatch.End();
 
             base.Draw(gameTime);
-        }
-
-        /// <summary>
-        /// Generates the scenes that can be used in the project.
-        /// </summary>
-        private void GenerateScenes()
-        {
-            Scenes = new Dictionary<ScenesNames, Scene>();
-            Scenes[ScenesNames.MainMenu] = new MainMenu();
-
-            Scenes[ScenesNames.WeaponTestScene] = new WeaponTestScene();
-            Scenes[ScenesNames.OscarTestScene] = new OscarTestScene();
-            Scenes[ScenesNames.ErikTestScene] = new ErikTestScene();
-            Scenes[ScenesNames.StefanTestScene] = new StefanTestScene();
-            Scenes[ScenesNames.AsserTestScene] = new AsserTestScene();
         }
 
         public void ResolutionSize(int width, int height)
@@ -143,7 +139,64 @@ namespace FørsteÅrsEksamen.GameManagement
         /// <param name="go"></param>
         public void Destroy(GameObject go) => CurrentScene.Destroy(go);
 
-        public void ChangeScene(ScenesNames sceneName) => nextScene = sceneName;
+        #region Scene
+        /// <summary>
+        /// Generates the scenes that can be used in the project.
+        /// </summary>
+        private void GenerateScenes()
+        {
+            Scenes = new()
+            {
+                [SceneNames.MainMenu] = new MainMenu(),
+                [SceneNames.SaveFileMenu] = new SaveFileMenu(),
+                [SceneNames.CharacterSelectorMenu] = new CharacterSelectorMenu(),
+                //Scenes[ScenesNames.LoadingScreen] = new ();
+                //Scenes[ScenesNames.EndMenu] = new();
+                [SceneNames.DungounRoom1] = new Room1Scene(),
+
+                // Test scenes
+                [SceneNames.WeaponTestScene] = new WeaponTestScene(),
+                [SceneNames.OscarTestScene] = new OscarTestScene(),
+                [SceneNames.ErikTestScene] = new ErikTestScene(),
+                [SceneNames.StefanTestScene] = new StefanTestScene(),
+                [SceneNames.AsserTestScene] = new AsserTestScene()
+            };
+        }
+
+        public void ChangeScene(SceneNames sceneName)
+        {
+            // Is last char of enum a digit (^1 is the same as sceneString.Length - 1)
+            if (char.IsDigit(sceneName.ToString()[^1]))
+                throw new Exception("Dont try and use this method to change between Dungoun Rooms. " +
+                    "Summon the Wizard Oscar:)");
+
+            nextScene = sceneName;
+        }
+
+        public void ChangeDungounScene(SceneNames baseRoomType, int roomReached)
+        {
+            string sceneNameString = baseRoomType.ToString();
+
+            // Check if the scene name ends with a number
+            if (char.IsDigit(sceneNameString[^1]))
+            {
+                // Extract the base name
+                sceneNameString = string.Concat(sceneNameString.TakeWhile(c => !char.IsDigit(c)));
+            }
+
+            // Append the room number to the base name
+            string newSceneName = sceneNameString + roomReached;
+
+            // Try to parse the new scene name as a SceneNames enum value
+            if (Enum.TryParse(newSceneName, out SceneNames newScene))
+            {
+                nextScene = newScene;
+            }
+            else
+            {
+                throw new Exception($"No scene found with the name {newSceneName}.");
+            }
+        }
 
         /// <summary>
         /// A method to prevent changing in the GameObject lists while its still inside the Update
@@ -152,23 +205,14 @@ namespace FørsteÅrsEksamen.GameManagement
         {
             if (nextScene == null) return;
 
-            SceneData.DeleteAllGameObjects();
-            CurrentScene = Scenes[nextScene.Value];
+            CurrentScene.OnSceneChange(); // Removes stuff like commands
+            SceneData.DeleteAllGameObjects(); // Removes every object
+
+            CurrentScene = Scenes[nextScene.Value]; // Changes to new scene
             CurrentScene.Initialize();
             nextScene = null;
         }
 
-        private void SetRoomScenes()
-        {
-            Rooms = new Scene[3];
-            Rooms.Append(new Room1Scene());
-        }
-
-        public void ChangeRoomReached(int roomReached)
-        {
-            SceneData.DeleteAllGameObjects();
-            CurrentScene = Rooms[roomReached];
-            CurrentScene.Initialize();
-        }
+        #endregion
     }
 }

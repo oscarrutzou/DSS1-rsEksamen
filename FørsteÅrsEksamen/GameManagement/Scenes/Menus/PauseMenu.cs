@@ -1,0 +1,124 @@
+﻿using FørsteÅrsEksamen.Factory.Gui;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
+using FørsteÅrsEksamen.ComponentPattern;
+using FørsteÅrsEksamen.ComponentPattern.GUI;
+
+namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
+{
+    public class PauseMenu : MenuScene
+    {
+        private bool isMenuVisible;
+        private enum MenuState { StartMenu, SettingsMenu }
+        private MenuState currentMenuState = MenuState.StartMenu;
+
+        protected override void InitFirstMenu()
+        {
+            GameObject startBtn = ButtonFactory.Create("Pause", true, TogglePauseMenu);
+            FirstMenuObjects.Add(startBtn);
+
+            GameObject settingsBtn = ButtonFactory.Create("Settings", true, ShowHideSecondMenu);
+            FirstMenuObjects.Add(settingsBtn);
+
+            GameObject quitBtn = ButtonFactory.Create("Quit", true, GameWorld.Instance.Exit);
+            FirstMenuObjects.Add(quitBtn);
+
+            GameObject mainMenu = ButtonFactory.Create("Main Menu", true,
+                () => { GameWorld.Instance.ChangeScene(SceneNames.MainMenu); });
+            FirstMenuObjects.Add(mainMenu);
+
+            ShowHideGameObjects(FirstMenuObjects, false);
+
+            GuiMethods.PlaceGameObjectsVertical(FirstMenuObjects, TextPos + new Vector2(0, 75), 25);
+        }
+
+        protected override void InitSecondMenu()
+        {
+            GameObject musicVolGo = ButtonFactory.Create("", true, ChangeMusic);
+            MusicBtn = musicVolGo.GetComponent<Button>();
+            MusicBtn.ChangeScale(new Vector2(14, 4));
+            MusicBtn.Text = $"Music Volume {GlobalSounds.MusicVolume * 100}%";
+            SecondMenuObjects.Add(musicVolGo);
+
+            GameObject sfxVolGo = ButtonFactory.Create("", true, ChangeSfx);
+            SfxBtn = sfxVolGo.GetComponent<Button>();
+            SfxBtn.ChangeScale(new Vector2(14, 4));
+            SfxBtn.Text = $"SFX Volume {GlobalSounds.SfxVolume * 100}%";
+            SecondMenuObjects.Add(sfxVolGo);
+
+            GameObject quitBtn = ButtonFactory.Create("Back", true, ShowHideSecondMenu);
+            SecondMenuObjects.Add(quitBtn);
+
+            ShowHideGameObjects(SecondMenuObjects, false);
+
+            GuiMethods.PlaceGameObjectsVertical(SecondMenuObjects, TextPos + new Vector2(0, 75), 25);
+        }
+
+        public void TogglePauseMenu()
+        {
+            isMenuVisible = !isMenuVisible;
+            if (isMenuVisible)
+            {
+                ShowMenu();
+            }
+            else
+            {
+                HideMenu();
+            }
+        }
+
+        private void ShowMenu()
+        {
+            if (currentMenuState == MenuState.StartMenu)
+            {
+                ShowHideGameObjects(FirstMenuObjects, true);
+                ShowHideGameObjects(SecondMenuObjects, false);
+            }
+            else
+            {
+                ShowHideGameObjects(FirstMenuObjects, false);
+                ShowHideGameObjects(SecondMenuObjects, true);
+            }
+        }
+
+        private void HideMenu()
+        {
+            currentMenuState = MenuState.StartMenu;
+            ShowHideGameObjects(FirstMenuObjects, false);
+            ShowHideGameObjects(SecondMenuObjects, false);
+        }
+
+        protected override void ShowHideSecondMenu()
+        {
+            if (currentMenuState == MenuState.StartMenu)
+            {
+                currentMenuState = MenuState.SettingsMenu;
+            }
+            else
+            {
+                currentMenuState = MenuState.StartMenu;
+            }
+            ShowMenu();
+        }
+
+        public override void DrawOnScreen(SpriteBatch spriteBatch)
+        {
+            // Shouldnt update or draw as normal.
+            if (!IsMenuVisible()) return;
+
+            if (currentMenuState == MenuState.StartMenu)
+            {
+                DrawMenuText(spriteBatch, "Pause Menu", TextPos);
+            }
+            else
+            {
+                DrawMenuText(spriteBatch, "Settings", TextPos);
+            }
+        }
+
+        private bool IsMenuVisible()
+        {
+            return FirstMenuObjects[0].IsEnabled || SecondMenuObjects[0].IsEnabled;
+        }
+    }
+}

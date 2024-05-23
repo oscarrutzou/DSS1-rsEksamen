@@ -13,7 +13,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
         #region Properties
 
         public Action OnClick;
-        private string text;
+        public string Text;
         private SpriteFont font;
 
         private SpriteRenderer spriteRenderer;
@@ -51,7 +51,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
             scaleUpAmount = new Vector2(maxScale.X * 0.01f, maxScale.Y * 0.01f);
 
             font = GlobalTextures.DefaultFont;
-            this.text = text;
+            this.Text = text;
             this.invokeActionOnFullScale = invokeActionOnFullScale;
             this.OnClick = onClick;
             GameObject.Type = GameObjectTypes.Gui;
@@ -71,13 +71,14 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
                 timeSinceLastClick += GameWorld.DeltaTime;
             }
 
-            if (InputHandler.Instance.MouseState.LeftButton != ButtonState.Released)
+            if (IsMouseOver())
             {
-                spriteRenderer.Color = OnMouseDownColor;
-                return;
-            }
-            else if (IsMouseOver())
-            {
+                if (InputHandler.Instance.MouseState.LeftButton != ButtonState.Released)
+                {
+                    spriteRenderer.Color = OnMouseDownColor;
+                    return;
+                }
+
                 spriteRenderer.Color = OnHoverColor;
             }
             else
@@ -108,6 +109,13 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
             return collider.CollisionBox.Contains(InputHandler.Instance.MouseOnUI.ToPoint());
         }
 
+        public void ChangeScale(Vector2 scale)
+        {
+            GameObject.Transform.Scale = scale;
+            maxScale = scale;
+            scaleUpAmount = new Vector2(maxScale.X * 0.01f, maxScale.Y * 0.01f);
+        }
+
         public void OnClickButton()
         {
             if (!GameObject.IsEnabled) return;
@@ -133,9 +141,9 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
         public override void Draw(SpriteBatch spriteBatch)
         {
             // If the text is not visible or null, we don't need to do anything
-            if (string.IsNullOrEmpty(text) || !GameObject.GetComponent<SpriteRenderer>().ShouldDraw) return;
+            if (string.IsNullOrEmpty(Text)) return;
 
-            GuiMethods.DrawTextCentered(spriteBatch, font, GameWorld.Instance.UiCam.zoom, GameObject.Transform.Position, text, TextColor);
+            GuiMethods.DrawTextCentered(spriteBatch, font, GameObject.Transform.Position, Text, TextColor);
         }
     }
 }

@@ -2,6 +2,7 @@
 using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace FørsteÅrsEksamen.ComponentPattern.GUI
@@ -9,10 +10,60 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
     // Oscar
     public static class GuiMethods
     {
+
+        public static void PlaceGameObjectsVertical(List<GameObject> list, Vector2 startPos, int spaceBetween, bool center = false)
+        {
+            int buttonHeight = list[0].GetComponent<SpriteRenderer>().Sprite.Height * (int)list[0].Transform.Scale.Y;
+
+            if (center)
+            {
+                // Adjust the starting position to account for the total width of all buttons and spaces
+                startPos -= new Vector2(
+                    0,
+                    (buttonHeight / 2 * (list.Count - 1)) +
+                    (spaceBetween * (list.Count - 2)));
+            }
+
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                GameObject btn = list[i];
+                int newPosY = (int)startPos.Y + i * (buttonHeight + spaceBetween);
+                btn.Transform.Position = new Vector2(startPos.X, newPosY);
+
+                GameWorld.Instance.Instantiate(btn);
+            }
+        }
+
+        public static void PlaceGameObjectsHorizontal(List<GameObject> list, Vector2 startPos, int spaceBetween, bool center = true)
+        {
+            // Calculate the width of a button
+            int buttonWidth = list[0].GetComponent<SpriteRenderer>().Sprite.Width * (int)list[0].Transform.Scale.X;
+
+            if (center)
+            {
+                // Adjust the starting position to account for the total width of all buttons and spaces
+                startPos -= new Vector2(
+                    (buttonWidth / 2 * (list.Count - 1)) +
+                    (spaceBetween * (list.Count - 2))
+                    , 0);
+            }
+
+            // Position each GameObject and instantiate it in the game world
+            for (int i = 0; i < list.Count; i++)
+            {
+                GameObject btn = list[i];
+                int newPosX = (int)startPos.X + i * (buttonWidth + spaceBetween);
+                btn.Transform.Position = new Vector2(newPosX, startPos.Y);
+
+                GameWorld.Instance.Instantiate(btn);
+            }
+        }
+
         /// <summary>
         /// <para>Can take and divide the text and center each part of the text.</para>
         /// </summary>
-        public static void DrawTextCentered(SpriteBatch spriteBatch, SpriteFont font, float zoom, Vector2 position, string text, Color textColor)
+        public static void DrawTextCentered(SpriteBatch spriteBatch, SpriteFont font, Vector2 position, string text, Color textColor)
         {
             if (string.IsNullOrEmpty(text)) return;
 
@@ -21,7 +72,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
 
             if (lines.Length == 1) // Only one line so can make a easier and fast way to draw it, if we have another method for 1 line
             {
-                DrawSingleLineCentered(spriteBatch, font, zoom, position, text, textColor);
+                DrawSingleLineCentered(spriteBatch, font, position, text, textColor);
                 return;
             }
 
@@ -56,13 +107,13 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
                                        textColor,
                                        0,
                                        Vector2.Zero,
-                                       zoom,
+                                       1f,
                                        SpriteEffects.None,
                                        1);
             }
         }
 
-        private static void DrawSingleLineCentered(SpriteBatch spriteBatch, SpriteFont font, float zoom, Vector2 position, string text, Color textColor)
+        private static void DrawSingleLineCentered(SpriteBatch spriteBatch, SpriteFont font, Vector2 position, string text, Color textColor)
         {
             Vector2 lineSize = font.MeasureString(text);
 
@@ -75,7 +126,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
                        textColor,
                        0,
                        Vector2.Zero,
-                       zoom,
+                       1f,
                        SpriteEffects.None,
                        1);
         }

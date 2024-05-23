@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 {
@@ -30,6 +31,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 
         public Enemy(GameObject gameObject) : base(gameObject)
         {
+            astar = new Astar();
         }
 
         public void SetStartPosition(GameObject player, Point gridPos)
@@ -43,8 +45,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
         public override void Awake()
         {
             base.Awake();
-
-            astar = GameObject.GetComponent<Astar>();
 
             collider.SetCollisionBox(15, 27, new Vector2(0, 15)); // Players collider for taking damage
         }
@@ -106,13 +106,18 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 
         #region PathFinding
 
-        private void SetPath()
+        private async void SetPath()
         {
             ResetPathColor();
 
             path = null; // We cant use the previous path
 
-            path = astar.FindPath(GameObject.Transform.GridPosition, targetPoint);
+            // Waits in the Idle or Attack state until we find a path.
+            // asyncon afvilking. 
+            path = await Task.Run(() =>
+            {
+                return astar.FindPath(GameObject.Transform.GridPosition, targetPoint);
+            });
 
             if (path != null && path.Count > 0)
             {

@@ -15,7 +15,7 @@ namespace FørsteÅrsEksamen.Factory
             enemyGo.AddComponent<SpriteRenderer>();
             enemyGo.AddComponent<Animator>();
             enemyGo.AddComponent<Collider>();
-            enemyGo.AddComponent<Astar>();
+            //enemyGo.AddComponent<Astar>();
             enemyGo.AddComponent<SkeletonWarrior>();
             return enemyGo;
         }
