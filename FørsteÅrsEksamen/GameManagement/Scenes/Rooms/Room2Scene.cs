@@ -24,7 +24,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
             //DBGrid.DeleteGrid(GridName);
             base.Initialize();
 
-            GameObject enemyGo = EnemyFactory.Create();
+            GameObject enemyGo = EnemyFactory.Create(EnemyTypes.OrcWarrior);
             enemyGo.GetComponent<Enemy>().SetStartPosition(PlayerGo, new Point(5, 5));
             GameWorld.Instance.Instantiate(enemyGo);
         }

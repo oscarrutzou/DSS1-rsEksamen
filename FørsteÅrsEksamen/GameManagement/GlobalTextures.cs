@@ -34,7 +34,7 @@ namespace FørsteÅrsEksamen.GameManagement
                 {TextureNames.Cell, content.Load<Texture2D>("World\\16x16White") },
                 {TextureNames.Pixel, content.Load<Texture2D>("World\\Pixel") },
                 {TextureNames.TestLevelBG, content.Load<Texture2D>("World\\Levels\\TestLevel") },
-                {TextureNames.WoodSword, content.Load<Texture2D>("World\\Classes\\Weapons\\WoodSword") },
+                {TextureNames.WoodSword, content.Load<Texture2D>("World\\Weapons\\Melee Weapons\\WoodSword") },
                 {TextureNames.WoodArrow, content.Load<Texture2D>("Test\\WoodArrow") },
                 {TextureNames.HealthPotion, content.Load<Texture2D>("World\\MediumPotion") }
             };

@@ -1,14 +1,13 @@
-﻿//using FørsteÅrsEksamen.ComponentPattern.Characters;
-using FørsteÅrsEksamen.GameManagement;
+﻿using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
 
 namespace FørsteÅrsEksamen.ComponentPattern.Enemies.MeleeEnemies
 {
     //Asser
 
-    public class SkeletonWarrior : EnemyMelee
+    public class OrcWarrior : EnemyMelee
     {
-        public SkeletonWarrior(GameObject gameObject) : base(gameObject)
+        public OrcWarrior(GameObject gameObject) : base(gameObject)
         {
         }
 

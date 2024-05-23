@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using FørsteÅrsEksamen.Factory.Gui;
+using FørsteÅrsEksamen.ComponentPattern.Enemies.RangedEnemies;
 
 namespace FørsteÅrsEksamen.GameManagement.Scenes
 {
@@ -65,7 +66,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
         private void MakeEnemy()
         {
-            GameObject enemGo = EnemyFactory.Create();
+            GameObject enemGo = EnemyFactory.Create(EnemyTypes.OrcWarrior);
             GameWorld.Instance.Instantiate(enemGo);
 
             if (GridManager.Instance.CurrentGrid != null)

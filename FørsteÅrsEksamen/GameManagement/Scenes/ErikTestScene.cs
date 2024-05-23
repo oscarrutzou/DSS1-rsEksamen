@@ -12,6 +12,7 @@ using FørsteÅrsEksamen.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 
 namespace FørsteÅrsEksamen.GameManagement.Scenes
@@ -49,12 +50,18 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             
         }
 
+        private List<Point> spawnPoints = new()
+        {
+            new Point(5, 5),
+            new Point(7, 5),
+            new Point(7, 7),
+        };
+
         private void InitSpawner()
         {
             spawnerGameObject = new GameObject();
             Spawner spawner = spawnerGameObject.AddComponent<Spawner>();
-            spawner.InitializeSpawner(PlayerGo, GridManager.Instance.CurrentGrid);
-            GameWorld.Instance.Instantiate(spawnerGameObject);
+            spawner.SpawnEnemies(spawnPoints, PlayerGo);
         }
 
         private void SetLevelBG()
