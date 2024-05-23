@@ -25,7 +25,7 @@ namespace FørsteÅrsEksamen.DB
         // Should happend in a loading screen.
        
         public static WeaponTypes SelectedWeapon; 
-        public static ClassTypes SelectedClass;
+        public static ClassTypes SelectedClass {  get; set; }
         public static Player Player;
     }
 }

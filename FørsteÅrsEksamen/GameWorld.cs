@@ -205,8 +205,10 @@ namespace FørsteÅrsEksamen.GameManagement
         {
             if (nextScene == null) return;
 
-            SceneData.DeleteAllGameObjects();
-            CurrentScene = Scenes[nextScene.Value];
+            CurrentScene.OnSceneChange(); // Removes stuff like commands
+            SceneData.DeleteAllGameObjects(); // Removes every object
+
+            CurrentScene = Scenes[nextScene.Value]; // Changes to new scene
             CurrentScene.Initialize();
             nextScene = null;
         }

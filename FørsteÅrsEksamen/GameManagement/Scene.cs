@@ -1,4 +1,5 @@
-﻿using FørsteÅrsEksamen.ComponentPattern;
+﻿using FørsteÅrsEksamen.CommandPattern;
+using FørsteÅrsEksamen.ComponentPattern;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -71,6 +72,11 @@ namespace FørsteÅrsEksamen.GameManagement
 
         public virtual void OnPlayerChanged()
         { }
+
+        public virtual void OnSceneChange()
+        {
+            InputHandler.Instance.RemoveAllExeptBaseCommands();
+        }
 
         /// <summary>
         /// <para>The method adds the newGameobjects to different lists, and calls the Awake and Start on the Objects, so the objects starts properly.</para>
