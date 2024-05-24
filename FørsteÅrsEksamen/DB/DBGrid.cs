@@ -1,6 +1,7 @@
 ﻿using FørsteÅrsEksamen.CommandPattern;
 using FørsteÅrsEksamen.ComponentPattern;
 using FørsteÅrsEksamen.ComponentPattern.Path;
+using FørsteÅrsEksamen.DB.NewTestDB;
 using FørsteÅrsEksamen.Factory;
 using FørsteÅrsEksamen.GameManagement;
 using LiteDB;
@@ -45,10 +46,8 @@ namespace FørsteÅrsEksamen.DB
             GridData gridData = new()
             {
                 Grid_Name = grid.Name,
-                PositionX = grid.StartPostion.X,
-                PositionY = grid.StartPostion.Y,
-                Start_Width = grid.Width,
-                Start_Height = grid.Height,
+                Position = new float[] { grid.StartPostion.X, grid.StartPostion.Y},
+                Start_Size = new int[] { grid.Width, grid.Height },
             };
             
             DeleteGrid(grid.Name);
@@ -80,8 +79,7 @@ namespace FørsteÅrsEksamen.DB
                     CellData cellData = new()
                     {
                         Cell_ID = Guid.NewGuid(), // A unique key
-                        PointPositionX = gridpos.X,
-                        PointPositionY = gridpos.Y,
+                        PointPosition = new int[] { gridpos.X, gridpos.Y},
                         Room_Nr = cell.RoomNr,
                         Cell_Type = cell.CellWalkableType,
                     };
@@ -150,9 +148,9 @@ namespace FørsteÅrsEksamen.DB
 
             // Add the component with the correct data we found before.
             Grid grid = gridGo.AddComponent<Grid>(gridData.Grid_Name,
-                                                  new Vector2(gridData.PositionX, gridData.PositionY),
-                                                  gridData.Start_Width,
-                                                  gridData.Start_Height);
+                                                  new Vector2(gridData.Position[0], gridData.Position[1]),
+                                                  gridData.Start_Size[0],
+                                                  gridData.Start_Size[1]);
 
             // Find each GridHasCells datatype in the GridHasCells collection. Only if the Grid Name is the same as the grid we want to load.
             List<GridHasCells> gridHasCells = gridHasCellsDB.GetAll<GridHasCells>()
@@ -167,7 +165,7 @@ namespace FørsteÅrsEksamen.DB
             // Go though the cell data and add it to the world and grid object.
             foreach (CellData cellData in cellDataList)
             {
-                Point gridPos = new Point(cellData.PointPositionX, cellData.PointPositionY); // Grid position
+                Point gridPos = new Point(cellData.PointPosition[0], cellData.PointPosition[1]); // Grid position
                 GameObject cellGo = CellFactory.Create(grid, gridPos, cellData.Cell_Type, cellData.Room_Nr); // Create the cell object
                 grid.Cells.Add(gridPos, cellGo); // Adds to Cell Dict so we can use it later.
                 cellGo.IsEnabled = InputHandler.Instance.DebugMode;

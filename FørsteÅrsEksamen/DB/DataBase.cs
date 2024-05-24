@@ -20,6 +20,8 @@ namespace FørsteÅrsEksamen.DB
         Grids,
         Cells,
         GridHasCells,
+        GridTest,
+        CellsTest,
     }
 
     public class DataBase : IDisposable
