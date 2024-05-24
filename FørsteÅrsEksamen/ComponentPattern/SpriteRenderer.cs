@@ -34,7 +34,6 @@ namespace FørsteÅrsEksamen.ComponentPattern
         #region Properties
 
         public Texture2D Sprite { get; set; }
-        public bool ShouldDraw { get; set; } = true;
 
         public Color Color { get; set; } = Color.White;
         public Vector2 Origin { get; set; }
@@ -71,7 +70,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (Sprite == null || !ShouldDraw) return;
+            if (Sprite == null) return;
 
             Origin = IsCentered ? new Vector2(Sprite.Width / 2, Sprite.Height / 2) : OriginOffSet;
 

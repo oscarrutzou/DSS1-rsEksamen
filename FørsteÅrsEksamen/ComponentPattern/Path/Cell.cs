@@ -1,4 +1,5 @@
-﻿using FørsteÅrsEksamen.ComponentPattern.GUI;
+﻿using FørsteÅrsEksamen.CommandPattern;
+using FørsteÅrsEksamen.ComponentPattern.GUI;
 using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -100,17 +101,20 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (spriteRenderer == null || !spriteRenderer.ShouldDraw) return;
+            if (spriteRenderer == null) return;
 
             GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, GameObject.Transform.Position, RoomNr.ToString(), Color.HotPink);
         }
 
         public void ChangeCellWalkalbeType(CellWalkableType cellWalkableType)
         {
-            if (spriteRenderer == null || !spriteRenderer.ShouldDraw) return;
+            if (spriteRenderer == null) return;
 
-            if (RoomNr == -1) spriteRenderer.ShouldDraw = false;
-            else spriteRenderer.ShouldDraw = true;
+            if (InputHandler.Instance.DebugMode)
+            {
+                if (RoomNr == -1) GameObject.IsEnabled = false;
+                else GameObject.IsEnabled = true;
+            }
 
             CellWalkableType = cellWalkableType;
 

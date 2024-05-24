@@ -148,7 +148,6 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
             GameObject cellGo = GridManager.Instance.GetCellAtPos(InputHandler.Instance.MouseInWorld);
 
             if (cellGo == null) return;
-
             Point cellGridPos = cellGo.Transform.GridPosition;
             spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Cell Point from MousePos: {cellGridPos}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 30), Color.Black);
         }

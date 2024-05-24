@@ -62,9 +62,9 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             if (!InputHandler.Instance.DebugMode) return;
             RoomNrIndex += addToCurrentRoomNr;
         }
-    #region SaveLoad
+        #region SaveLoad
 
-    public void SaveGrid(Grid grid)
+        public void SaveGrid(Grid grid)
         {
             CurrentGrid = grid;
 
@@ -105,10 +105,9 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
 
         public void DrawOnCells()
         {
-            if (!InputHandler.Instance.DebugMode) return;
+            if (!InputHandler.Instance.DebugMode
+                || GuiMethods.IsMouseOverUI()) return;
 
-            if (GuiMethods.IsMouseOverUI()) return;
-            
             GameObject cellGo = GetCellAtPos(InputHandler.Instance.MouseInWorld);
             if (cellGo == null) return;
 
@@ -118,9 +117,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
 
         public void SetDefaultOnCell()
         {
-            if (!InputHandler.Instance.DebugMode) return;
-
-            if (GuiMethods.IsMouseOverUI()) return;
+            if (!InputHandler.Instance.DebugMode
+                || GuiMethods.IsMouseOverUI()) return;
 
             GameObject cellGo = GetCellAtPos(InputHandler.Instance.MouseInWorld);
             if (cellGo == null) return;
@@ -131,14 +129,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
 
         private void SetCellProperties(Cell cell, CellWalkableType walkableType, int roomNr)
         {
-            if (!InputHandler.Instance.DebugMode) return; // You cant draw if the debug is false
-
-            cell.GameObject.GetComponent<SpriteRenderer>().ShouldDraw = true; // Need to be true, so its wlakabletype gets set proberly.
             cell.RoomNr = roomNr;
             cell.ChangeCellWalkalbeType(walkableType);
-
-            // Add or remove fomr targetCells in current grid.
-            // When loading new grid, add all the cells that have CellWalkableType = FullValid
         }
 
         public void DeleteDrawnGrid()
@@ -185,6 +177,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
         {
             InputHandler.Instance.DebugMode = !InputHandler.Instance.DebugMode;
 
+            if (!InputHandler.Instance.DebugMode) return;
+
             ShouldDrawCells();
         }
 
@@ -195,8 +189,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             foreach (GameObject go in CurrentGrid.Cells.Values)
             {
                 // Set all to getting draw if the bool is true.
-                go.GetComponent<SpriteRenderer>().ShouldDraw = InputHandler.Instance.DebugMode;
-
+                //go.GetComponent<SpriteRenderer>().ShouldDraw = InputHandler.Instance.DebugMode;
+                go.IsEnabled = InputHandler.Instance.DebugMode;
                 Cell cell = go.GetComponent<Cell>();
                 cell.ChangeCellWalkalbeType(cell.CellWalkableType); // Only draw the ones that have a room.
             }
