@@ -1,5 +1,6 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.ComponentPattern.Weapons;
+using FørsteÅrsEksamen.ComponentPattern.WorldObjects;
 using FørsteÅrsEksamen.Factory;
 using FørsteÅrsEksamen.GameManagement;
 using FørsteÅrsEksamen.ObserverPattern;
@@ -21,7 +22,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
 
         protected List<IObserver> observers = new();
 
-        public PickupableItem ItemInInventory;
+        public Potion ItemInInventory;
 
         private Collider movementCollider;
 
@@ -226,7 +227,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
             GameObject.Transform.Translate(movement);
             MovementColliderGo.Transform.Position = GameObject.Transform.Position;
             HandsGo.Transform.Position = GameObject.Transform.Position;
-            Weapon.MoveWeapon(GameObject.Transform.Position);
+            Weapon.MoveWeapon();
         }
 
         /// <summary>
@@ -238,7 +239,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
             GameObject.Transform.Position = position;
             MovementColliderGo.Transform.Position = GameObject.Transform.Position;
             HandsGo.Transform.Position = GameObject.Transform.Position;
-            Weapon.MoveWeapon(GameObject.Transform.Position);
+            Weapon.MoveWeapon();
             GameWorld.Instance.WorldCam.position = GameObject.Transform.Position; //Sets the new position of the world cam
         }
         #endregion
@@ -246,7 +247,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
         #region Item
         public void PickUpItem(GameObject item)
         {
-            ItemInInventory = item.GetComponent<PickupableItem>();
+            ItemInInventory = item.GetComponent<Potion>();
         }
 
         public void UseItem()

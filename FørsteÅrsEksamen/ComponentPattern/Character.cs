@@ -39,7 +39,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
         protected Vector2 LargeSpriteOffSet = new(0, -96); // Move the animation up more since its a 64x64 insted of 32x32 canvans, for the Run and Death.
 
         public CharacterState State { get; protected set; } = CharacterState.Moving; // We use the method SetState, to we can change the animations and other variables.
-        protected Vector2 Direction;
+        public Vector2 Direction { get; protected set; }
         protected AnimationDirectionState DirectionState = AnimationDirectionState.Right;
 
         protected float AttackTimer;
@@ -64,7 +64,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
             if (WeaponGo != null)
             {
                 Weapon = WeaponGo.GetComponent<Weapon>();
-                Weapon.MoveWeapon(GameObject.Transform.Position);
+                Weapon.MoveWeapon();
             }
         }
 

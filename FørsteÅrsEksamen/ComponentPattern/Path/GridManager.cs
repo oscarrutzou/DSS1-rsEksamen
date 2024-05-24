@@ -32,7 +32,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             }
         }
 
-        public Grid SelectedGrid { get; private set; }
+        public bool DrawRoomNr { get; set; }
 
         private int roomNrIndex = 1;
 
@@ -111,8 +111,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             GameObject cellGo = GetCellAtPos(InputHandler.Instance.MouseInWorld);
             if (cellGo == null) return;
 
-            Cell cell = cellGo.GetComponent<Cell>();
-            SetCellProperties(cell, CellWalkableType.FullValid, RoomNrIndex); // Move the WalkableType out of this room
+            SetCellProperties(cellGo, CellWalkableType.FullValid, RoomNrIndex); // Move the is walkable out of this
         }
 
         public void SetDefaultOnCell()
@@ -123,12 +122,12 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             GameObject cellGo = GetCellAtPos(InputHandler.Instance.MouseInWorld);
             if (cellGo == null) return;
 
-            Cell cell = cellGo.GetComponent<Cell>();
-            SetCellProperties(cell, CellWalkableType.NotValid, -1);
+            SetCellProperties(cellGo, CellWalkableType.NotValid, -1);
         }
 
-        private void SetCellProperties(Cell cell, CellWalkableType walkableType, int roomNr)
+        private void SetCellProperties(GameObject cellGo, CellWalkableType walkableType, int roomNr)
         {
+            Cell cell = cellGo.GetComponent<Cell>();
             cell.RoomNr = roomNr;
             cell.ChangeCellWalkalbeType(walkableType);
         }

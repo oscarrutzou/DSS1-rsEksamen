@@ -1,4 +1,5 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern;
+using FørsteÅrsEksamen.ComponentPattern.WorldObjects;
 using FørsteÅrsEksamen.GameManagement;
 using System.Numerics;
 
@@ -15,7 +16,7 @@ namespace FørsteÅrsEksamen.Factory
             sr.SetSprite(TextureNames.HealthPotion);
             sr.SetLayerDepth(LayerDepth.WorldForeground);
             itemGo.AddComponent<Collider>();
-            itemGo.AddComponent<PickupableItem>(playerGo);
+            itemGo.AddComponent<Potion>(playerGo);
 
             return itemGo;
         }

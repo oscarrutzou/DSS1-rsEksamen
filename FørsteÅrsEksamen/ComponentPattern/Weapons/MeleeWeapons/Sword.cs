@@ -15,6 +15,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.MeleeWeapons
         {
             AttackSpeed = 1.7f;
             Damage = 50;
+            LerpFromTo = MathHelper.Pi;
         }
 
         public override void Start()
@@ -29,88 +30,48 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons.MeleeWeapons
 
         protected override void PlayerStartAttack()
         {
-            Vector2 mouseInUI = InputHandler.Instance.MouseOnUI;
-
-            // Set the direction of the animation. Change this part.
-            if (mouseInUI.X > 0f) // Right
+            if (WeaponUser.Direction.X >= 0)
             {
-                // -Y op
-                // +Y ned
-                if (mouseInUI.Y > 0f) // Down
-                {
-                    //start angle
-                    TotalLerp = MathHelper.Pi + MathHelper.PiOver2;
-                }
-                else // Up
-                {
-                    //start angle
-                    TotalLerp = MathHelper.Pi;
-                }
+                // Right
+                TotalLerp = LerpFromTo;
             }
-            else
+            else if (WeaponUser.Direction.X < 0)
             {
-                // Y > 0f
-                if (mouseInUI.Y > 0f) // Down
-                {
-                    //start angle
-                    TotalLerp = -(MathHelper.Pi + MathHelper.PiOver2);
-                }
-                else // Up
-                {
-                    //start angle
-                    TotalLerp = -LerpFromTo;
-                }
+                // Left
+                TotalLerp = -LerpFromTo;
             }
         }
 
         protected override void EnemyStartAttack()
         {
-            // Maybe input the Character to the weapon.
-            Vector2 playerPos = SaveData.Player.GameObject.Transform.Position;
-            
-            Vector2 relativeToPlayer = WeaponUser.GameObject.Transform.Position - playerPos;
+            if (WeaponUser.Direction.X >= 0)
+            {
+                // Right
+                TotalLerp = LerpFromTo;
+            }
+            else if (WeaponUser.Direction.X < 0)
+            {
+                // Left
+                TotalLerp = -LerpFromTo;
+            }
+            //// Maybe input the Character to the weapon.
+            //Vector2 playerPos = SaveData.Player.GameObject.Transform.Position;
+
+            //Vector2 relativeToPlayer = WeaponUser.GameObject.Transform.Position - playerPos;
 
             //if (relativeToPlayer.X < 0f)
             //{
             //    // Right
-            //    TotalLerp = MathHelper.Pi;
+            //    TotalLerp = LerpFromTo;
+            //    // Change position
             //}
             //else
             //{
             //    //Left
             //    TotalLerp = -LerpFromTo;
-            //}
+            //    // Change position
 
-            // Set the direction of the animation. Change this part.
-            if (relativeToPlayer.X < 0f) // 
-            {
-                // -Y op
-                // +Y ned
-                if (relativeToPlayer.Y < 0f) // 
-                {
-                    //start angle
-                    TotalLerp = MathHelper.Pi + MathHelper.PiOver2;
-                }
-                else // 
-                {
-                    //start angle
-                    TotalLerp = MathHelper.Pi;
-                }
-            }
-            else
-            {
-                // Y > 0f
-                if (relativeToPlayer.Y < 0f) // 
-                {
-                    //start angle
-                    TotalLerp = -(MathHelper.Pi + MathHelper.PiOver2);
-                }
-                else // 
-                {
-                    //start angle
-                    TotalLerp = -LerpFromTo;
-                }
-            }
+            //}
         }
     }
 }

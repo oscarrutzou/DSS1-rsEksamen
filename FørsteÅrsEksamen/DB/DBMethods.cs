@@ -2,6 +2,7 @@
 using FørsteÅrsEksamen.ComponentPattern;
 using FørsteÅrsEksamen.ComponentPattern.Classes;
 using FørsteÅrsEksamen.ComponentPattern.Path;
+using FørsteÅrsEksamen.ComponentPattern.WorldObjects;
 using FørsteÅrsEksamen.Factory;
 using FørsteÅrsEksamen.GameManagement;
 using LiteDB;
@@ -60,7 +61,7 @@ namespace FørsteÅrsEksamen.DB
             // Sets the saved data to the player
             Player player = playerGo.GetComponent<Player>();
             player.CurrentHealth = playerData.Health;
-            player.ItemInInventory = ItemFactory.Create(playerGo).GetComponent<PickupableItem>();
+            player.ItemInInventory = ItemFactory.Create(playerGo).GetComponent<Potion>();
             player.ItemInInventory.Name = playerData.Potion_Name;
 
             return playerGo;
@@ -69,6 +70,12 @@ namespace FørsteÅrsEksamen.DB
         private static void MakePlayer()
         {
 
+        }
+
+        public static void SavePlayer()
+        {
+            RunData runData = DBRunData.LoadRunData(SaveData.CurrentSaveID);
+            DBRunData.SavePlayer(runData);
         }
 
         public static void DeleteSave(int saveID)

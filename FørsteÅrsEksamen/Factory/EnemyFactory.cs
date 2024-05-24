@@ -25,7 +25,7 @@ namespace FørsteÅrsEksamen.Factory
     public static class EnemyFactory
     {
         private static Random random = new();
-        private static int EnemyDmgDivide = 2;
+        private static int EnemyDmgDivide = 10;
         public static GameObject CreateWithRandomType()
         {
             Array enemyValue = Enum.GetValues(typeof(EnemyTypes));

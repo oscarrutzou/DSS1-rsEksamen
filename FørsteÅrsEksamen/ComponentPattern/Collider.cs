@@ -21,7 +21,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
             get
             {
                 int width, height;
-
+                Vector2 pos = GameObject.Transform.Position;
                 if (animator != null)
                 {
                     width = collisionWidth > 0 ? collisionWidth : animator.CurrentAnimation.FrameDimensions;
@@ -33,12 +33,20 @@ namespace FørsteÅrsEksamen.ComponentPattern
                     height = collisionHeight > 0 ? collisionHeight : spriteRenderer.Sprite.Height;
                 }
 
+                width *= (int)GameObject.Transform.Scale.X;
+                height *= (int)GameObject.Transform.Scale.Y;
+
+                if (!spriteRenderer.IsCentered)
+                {
+                    pos += new Vector2(width / 2, height / 2);
+                }
+
                 return new Rectangle
                     (
-                        (int)((GameObject.Transform.Position.X - offset.X) - (width * GameObject.Transform.Scale.X * GameWorld.Instance.WorldCam.zoom) / 2),
-                        (int)((GameObject.Transform.Position.Y - offset.Y) - (height * GameObject.Transform.Scale.Y * GameWorld.Instance.WorldCam.zoom) / 2),
-                        (int)(width * GameObject.Transform.Scale.X * GameWorld.Instance.WorldCam.zoom),
-                        (int)(height * GameObject.Transform.Scale.Y * GameWorld.Instance.WorldCam.zoom)
+                        (int)((pos.X - offset.X) - (width) / 2),
+                        (int)((pos.Y - offset.Y) - (height) / 2),
+                        width,
+                        height
                     );
             }
         }

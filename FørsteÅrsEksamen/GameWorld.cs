@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace FørsteÅrsEksamen.GameManagement
 {
@@ -24,6 +25,8 @@ namespace FørsteÅrsEksamen.GameManagement
         public Camera UiCam { get; private set; } //Static on the ui
         public static float DeltaTime { get; private set; }
         public GraphicsDeviceManager GfxManager { get; private set; }
+        public SemaphoreSlim InputHandlerSemaphore = new SemaphoreSlim(1, 1);
+
         private SpriteBatch _spriteBatch;
         private SceneNames? nextScene = null;
 
@@ -39,8 +42,8 @@ namespace FørsteÅrsEksamen.GameManagement
         {
             SceneData.GenereateGameObjectDicionary();
 
-            ResolutionSize(1280, 720);
-            //Fullscreen();
+            //ResolutionSize(1280, 720);
+            Fullscreen();
             WorldCam = new Camera(true);
             UiCam = new Camera(false);
 
@@ -50,15 +53,14 @@ namespace FørsteÅrsEksamen.GameManagement
 
             GenerateScenes();
 
-            CurrentScene = Scenes[SceneNames.SaveFileMenu];
+            CurrentScene = Scenes[SceneNames.MainMenu];
             CurrentScene.Initialize();
 
-            // Start Input Handler Thread
-            Thread cmdThread = new(() => { InputHandler.Instance.StartInputThead(); })
+            Thread inputThread = new Thread(InputHandler.Instance.StartInputThread)
             {
                 IsBackground = true // Stops the thread abruptly
             };
-            cmdThread.Start();
+            inputThread.Start();
 
             base.Initialize();
         }
@@ -70,7 +72,7 @@ namespace FørsteÅrsEksamen.GameManagement
             _spriteBatch = new SpriteBatch(GraphicsDevice);
         }
 
-        protected override void Update(GameTime gameTime)
+        protected override async void Update(GameTime gameTime)
         {
             DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -78,7 +80,7 @@ namespace FørsteÅrsEksamen.GameManagement
 
             CurrentScene.Update(gameTime);
 
-            HandleSceneChange();
+            await HandleSceneChange();
 
             base.Update(gameTime);
         }
@@ -192,26 +194,41 @@ namespace FørsteÅrsEksamen.GameManagement
             if (Enum.TryParse(newSceneName, out SceneNames newScene))
             {
                 nextScene = newScene;
+
+                if (!Scenes.ContainsKey(newScene)) // The next scene dosent exit
+                {
+                    nextScene = SceneNames.MainMenu; // Sends them back to the menu
+                }
             }
             else
             {
-                throw new Exception($"No scene found with the name {newSceneName}.");
+                nextScene = SceneNames.MainMenu; // Sends them back to the menu
             }
         }
 
         /// <summary>
         /// A method to prevent changing in the GameObject lists while its still inside the Update
         /// </summary>
-        private void HandleSceneChange()
+        private async Task HandleSceneChange()
         {
             if (nextScene == null || Scenes[nextScene.Value] == null) return;
 
-            CurrentScene.OnSceneChange(); // Removes stuff like commands
-            SceneData.DeleteAllGameObjects(); // Removes every object
+            await InputHandlerSemaphore.WaitAsync();
 
-            CurrentScene = Scenes[nextScene.Value]; // Changes to new scene
-            CurrentScene.Initialize();
-            nextScene = null;
+            try
+            {
+                // Change the scene
+                CurrentScene.OnSceneChange(); // Removes stuff like commands
+                SceneData.DeleteAllGameObjects(); // Removes every object
+
+                CurrentScene = Scenes[nextScene.Value]; // Changes to new scene
+                CurrentScene.Initialize();
+                nextScene = null;
+            }
+            finally
+            {
+                InputHandlerSemaphore.Release();
+            }
         }
 
         #endregion

@@ -66,7 +66,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
             }
             else
             {
-                DrawMenuText(spriteBatch, "Doctor's Dunguon", TextPos);
+                DrawMenuText(spriteBatch, "Doctor's Dungeon", TextPos);
             }
         }
     }

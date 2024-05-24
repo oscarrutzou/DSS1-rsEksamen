@@ -39,6 +39,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
         public Vector2 Origin { get; set; }
         public Vector2 OriginOffSet { get; set; }
         public Vector2 DrawPosOffSet { get; set; }
+        public bool ShouldDraw = true;
         public bool IsCentered = true;
         public LayerDepth LayerName { get; private set; } = ComponentPattern.LayerDepth.Default;
         public SpriteEffects SpriteEffects { get; set; } = SpriteEffects.None;
@@ -70,7 +71,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (Sprite == null) return;
+            if (Sprite == null || !ShouldDraw) return;
 
             Origin = IsCentered ? new Vector2(Sprite.Width / 2, Sprite.Height / 2) : OriginOffSet;
 

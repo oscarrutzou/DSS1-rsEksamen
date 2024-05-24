@@ -5,6 +5,8 @@ using FørsteÅrsEksamen.DB;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace FørsteÅrsEksamen.CommandPattern
 {
@@ -36,7 +38,7 @@ namespace FørsteÅrsEksamen.CommandPattern
 
         public Vector2 MouseInWorld, MouseOnUI;
         public bool MouseOutOfBounds, DebugMode;
-
+        public bool IsUpdating { get; private set; }
         #endregion Properties
 
         private InputHandler()
@@ -44,11 +46,20 @@ namespace FørsteÅrsEksamen.CommandPattern
             SetBaseKeys();
         }
 
-        public void StartInputThead()
+        public void StartInputThread()
         {
             while (true) // The update for input should always run.
             {
-                Update();
+                GameWorld.Instance.InputHandlerSemaphore.Wait();
+
+                try
+                {
+                    Update();
+                }
+                finally
+                {
+                    GameWorld.Instance.InputHandlerSemaphore.Release();
+                }
             }
         }
 

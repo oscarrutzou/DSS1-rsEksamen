@@ -29,12 +29,12 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
     public abstract class Weapon : Component
     {
         public int Damage = 10;
-        public Character WeaponUser;
+        public Character WeaponUser { get; set; }
 
         protected float AttackSpeed;
 
         protected SpriteRenderer spriteRenderer;
-        protected float LerpFromTo = MathHelper.Pi;
+        protected float LerpFromTo;
         protected float TotalLerp;
 
         protected bool EnemyWeapon;
@@ -47,6 +47,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
 
         protected SoundNames[] AttackSoundNames;
         protected bool PlayingSound;
+
+        protected Vector2 StartPosOffset = new(40, 20);
 
         protected Weapon(GameObject gameObject) : base(gameObject)
         {
@@ -92,7 +94,30 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
             PlayingSound = true;
         }
 
-        public void MoveWeapon(Vector2 movePos) => GameObject.Transform.Position = movePos;
+        Vector2 lastOffSet;
+        public void MoveWeapon()
+        {
+            Vector2 userPos = WeaponUser.GameObject.Transform.Position;
+
+            if (Attacking)
+            {
+                // Lock the offset
+                GameObject.Transform.Position = userPos + lastOffSet;
+                return;
+            }
+
+            if (WeaponUser.Direction.X >= 0)
+            {
+                // Right
+                lastOffSet = new Vector2(StartPosOffset.X, -StartPosOffset.Y);
+                GameObject.Transform.Position = userPos + lastOffSet;
+            }
+            else if (WeaponUser.Direction.X < 0)
+            {
+                lastOffSet = -StartPosOffset;
+                GameObject.Transform.Position = userPos + lastOffSet;
+            }
+        }
 
         public override void Draw(SpriteBatch spriteBatch)
         {

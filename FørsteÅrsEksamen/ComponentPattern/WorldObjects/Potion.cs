@@ -3,10 +3,10 @@ using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
 using System;
 
-namespace FørsteÅrsEksamen.ComponentPattern
+namespace FørsteÅrsEksamen.ComponentPattern.WorldObjects
 {
     //Asser
-    public class PickupableItem : Component
+    public class Potion : Component
     {
         protected SpriteRenderer SpriteRenderer;
         protected Collider Collider, PlayerCollider;
@@ -16,11 +16,11 @@ namespace FørsteÅrsEksamen.ComponentPattern
 
         public string Name = "Health Potion";
 
-        public PickupableItem(GameObject gameObject) : base(gameObject)
+        public Potion(GameObject gameObject) : base(gameObject)
         {
         }
 
-        public PickupableItem(GameObject gameObject, GameObject player) : base(gameObject)
+        public Potion(GameObject gameObject, GameObject player) : base(gameObject)
         {
             playerGo = player;
         }

@@ -62,8 +62,6 @@ namespace FørsteÅrsEksamen.DB
             return runDataDB.GetCollection<RunData>().FindOne(data => data.Run_ID == existingLink.Run_ID);
         }
 
-
-
         private static RunData SaveRunData(DataBase runDataDB)
         {
             RunData runData = new()

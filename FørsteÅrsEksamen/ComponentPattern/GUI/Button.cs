@@ -106,6 +106,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
 
         public bool IsMouseOver()
         {
+            if (collider == null) return false;
             return collider.CollisionBox.Contains(InputHandler.Instance.MouseOnUI.ToPoint());
         }
 

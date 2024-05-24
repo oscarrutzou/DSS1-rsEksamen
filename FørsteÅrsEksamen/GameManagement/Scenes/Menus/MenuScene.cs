@@ -67,7 +67,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
         }
         protected void DrawMenuText(SpriteBatch spriteBatch, string text, Vector2 position)
         {
-            GuiMethods.DrawTextCentered(spriteBatch, Font, position, text, Color.Black);
+            GuiMethods.DrawTextCentered(spriteBatch, Font, position, text, Color.RoyalBlue);
         }
     }
 }

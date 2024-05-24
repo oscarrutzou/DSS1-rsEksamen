@@ -15,7 +15,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
 {
     public abstract class RoomBase : Scene
     {
-        public Point PlayerSpawnPos;
+        public Point PlayerSpawnPos, EndPointSpawnPos = new(6, 6);
         protected GameObject PlayerGo;
         private Player player;
 
@@ -39,6 +39,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
             SpawnTexture(ForeGroundTexture, LayerDepth.WorldForeground);
             SpawnGrid();
             SpawnPlayer();
+            SpawnEndPos();
             SetCommands();
 
             DBMethods.RegularSave();
@@ -96,6 +97,13 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
             GameWorld.Instance.Instantiate(PlayerGo);
         }
 
+        private void SpawnEndPos()
+        {
+            GameObject go = TransferDoorFactory.Create();
+            go.Transform.Position = GridManager.Instance.GetCornerPositionOfCell(EndPointSpawnPos);
+            GameWorld.Instance.Instantiate(go);
+        }
+
         private void SetCommands()
         {
             player = PlayerGo.GetComponent<Player>();
@@ -122,34 +130,34 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
 
             pauseMenu.DrawOnScreen(spriteBatch);
 
+            Vector2 playerHpPos = GameWorld.Instance.UiCam.BottomLeft + new Vector2(30, -50);
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Player HP: {player.CurrentHealth}/{player.MaxHealth}", playerHpPos, Color.Red);
+
+
             if (!InputHandler.Instance.DebugMode) return;
 
             spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], GameWorld.Instance.UiCam.TopLeft, null, Color.WhiteSmoke, 0f, Vector2.Zero, new Vector2(350, 180), SpriteEffects.None, 0f);
 
             Vector2 mousePos = InputHandler.Instance.MouseOnUI;
-            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"MousePos UI {mousePos}", GameWorld.Instance.UiCam.TopLeft, Color.Black);
-
-            DrawCellPos(spriteBatch);
-
-            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"PlayerPos {PlayerGo.Transform.Position}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 60), Color.Black);
-
             
-            SceneData.GameObjectLists.TryGetValue(GameObjectTypes.Cell, out cells);
-            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Cell GameObjects in scene {cells.Count}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 90), Color.Black);
+            DrawString(spriteBatch, $"MousePos UI {mousePos}", GameWorld.Instance.UiCam.TopLeft);
 
-            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"RoomNr {GridManager.Instance.RoomNrIndex}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 120), Color.Black);
+            GameObject cellGo = GridManager.Instance.GetCellAtPos(InputHandler.Instance.MouseInWorld);
+            if (cellGo != null)
+            {
+                Point cellGridPos = cellGo.Transform.GridPosition;
+                DrawString(spriteBatch, $"Cell Point from MousePos: {cellGridPos}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 30));
+            }
 
-            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Current Room Reached {SaveData.Room_Reached}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 150), Color.Black);
+            DrawString(spriteBatch, $"PlayerPos {PlayerGo.Transform.Position}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 60));
+            DrawString(spriteBatch, $"Cell GameObjects in scene {cells.Count}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 90));
+            DrawString(spriteBatch, $"RoomNr {GridManager.Instance.RoomNrIndex}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 120));
+            DrawString(spriteBatch, $"Current Room Reached {SaveData.Room_Reached}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 150));
         }
 
-        private void DrawCellPos(SpriteBatch spriteBatch)
+        private void DrawString(SpriteBatch spriteBatch, string text, Vector2 position)
         {
-            //if (GridManager.Instance.CurrentGrid == null) throw new System.Exception("Error spørg da Oscar");
-            GameObject cellGo = GridManager.Instance.GetCellAtPos(InputHandler.Instance.MouseInWorld);
-
-            if (cellGo == null) return;
-            Point cellGridPos = cellGo.Transform.GridPosition;
-            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Cell Point from MousePos: {cellGridPos}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 30), Color.Black);
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, text, position, Color.Black, 0f, Vector2.Zero, 1, SpriteEffects.None, 1f);
         }
     }
 }

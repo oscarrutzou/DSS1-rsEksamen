@@ -1,5 +1,6 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern.Classes;
 using FørsteÅrsEksamen.ComponentPattern.Path;
+using FørsteÅrsEksamen.ComponentPattern.WorldObjects;
 using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -69,7 +70,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             // Sets start position
             GameObject.Transform.Position = grid.GetCellGameObjectFromPoint(GameObject.Transform.GridPosition).Transform.Position;
 
-            Weapon.MoveWeapon(GameObject.Transform.Position);
+            Weapon.MoveWeapon();
 
             SetPath(); // We know that the player the targetPoint has been set
 
@@ -79,6 +80,12 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
         public override void Update(GameTime gameTime)
         {
             CheckLayerDepth();
+
+            // Enemy is in the attacking state proberly from something like it just started the weapon
+            if (WeaponGo == null)
+            {
+                State = CharacterState.Dead;
+            }
 
             //To make a new path towards the player, if they have moved.
             if (playerGo.Transform.GridPosition != targetPoint && State != CharacterState.Dead)
@@ -97,9 +104,16 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
                     break;
 
                 case CharacterState.Attacking:
+
                     // Do nothing if the player has died.
                     if (player.State == CharacterState.Dead) return;
+
+                    // Update direction towards player insted of moving direction
+                    Direction = Vector2.Normalize(playerGo.Transform.Position - GameObject.Transform.Position);
+                    Weapon.MoveWeapon();
+                    UpdateDirection();
                     Attack();
+
                     break;
 
                 case CharacterState.Dead:
@@ -184,7 +198,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             Direction = Vector2.Normalize(nextTarget - position);
 
             GameObject.Transform.Translate(Direction * speed * (float)gameTime.ElapsedGameTime.TotalSeconds);
-            Weapon.MoveWeapon(GameObject.Transform.Position);
+            Weapon.MoveWeapon();
 
             if (path.Count == 1 && Vector2.Distance(position, nextTarget) < threshold)
             {
