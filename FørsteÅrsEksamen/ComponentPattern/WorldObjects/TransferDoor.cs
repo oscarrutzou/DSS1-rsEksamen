@@ -43,19 +43,10 @@ namespace FørsteÅrsEksamen.ComponentPattern.WorldObjects
 
                 if (timer >= timeTillActivation)
                 {
-                    OnCollision();
+                    DBMethods.CheckChangeDungeonScene();
                     timer = 0f;
                 }
             }
-        }
-
-        private async void OnCollision()
-        {
-            // After it has saved the palyer it will change scene
-            await Task.Run(DBMethods.SavePlayer);
-
-            int newRoomNr = SaveData.Room_Reached + 1;
-            GameWorld.Instance.ChangeDungounScene(SceneNames.DungounRoom, newRoomNr);
         }
     }
 }

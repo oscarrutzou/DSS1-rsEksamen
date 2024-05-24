@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System;
 
 namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
 {
@@ -48,7 +49,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
         private void ChangeScene()
         {
             int newRoomNr = SaveData.Room_Reached + 1;
-            GameWorld.Instance.ChangeDungounScene(SceneNames.DungounRoom, newRoomNr);
+            GameWorld.Instance.ChangeDungeonScene(SceneNames.DungeonRoom, newRoomNr);
         }
 
         private void SpawnTexture(TextureNames textureName, LayerDepth layerDepth)
@@ -124,6 +125,19 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DBGrid.SaveGrid(GridManager.Instance.CurrentGrid); }));
         }
 
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            SaveData.Time_Left -= GameWorld.DeltaTime;
+
+            if (SaveData.Time_Left <= 0) // Player ran out of Time
+            {
+                SaveData.HasWon = false;
+                DBMethods.OnChangeSceneEnd();
+            }
+        }
+
         public override void DrawOnScreen(SpriteBatch spriteBatch)
         {
             base.DrawOnScreen(spriteBatch);
@@ -133,13 +147,22 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
             Vector2 playerHpPos = GameWorld.Instance.UiCam.BottomLeft + new Vector2(30, -50);
             spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Player HP: {player.CurrentHealth}/{player.MaxHealth}", playerHpPos, Color.Red);
 
+            Vector2 timerPos = playerHpPos - new Vector2(0, 30);
+            TimeSpan time = TimeSpan.FromSeconds(SaveData.Time_Left);
+            string minutes = time.Minutes.ToString("D2");
+            string seconds = time.Seconds.ToString("D2");
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Time Left: {minutes}:{seconds}", timerPos, Color.Red);
 
             if (!InputHandler.Instance.DebugMode) return;
+            DebugDraw(spriteBatch);
+        }
 
+        private void DebugDraw(SpriteBatch spriteBatch)
+        {
             spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], GameWorld.Instance.UiCam.TopLeft, null, Color.WhiteSmoke, 0f, Vector2.Zero, new Vector2(350, 180), SpriteEffects.None, 0f);
 
             Vector2 mousePos = InputHandler.Instance.MouseOnUI;
-            
+
             DrawString(spriteBatch, $"MousePos UI {mousePos}", GameWorld.Instance.UiCam.TopLeft);
 
             GameObject cellGo = GridManager.Instance.GetCellAtPos(InputHandler.Instance.MouseInWorld);

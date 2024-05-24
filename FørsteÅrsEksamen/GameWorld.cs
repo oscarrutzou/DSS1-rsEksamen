@@ -25,10 +25,11 @@ namespace FørsteÅrsEksamen.GameManagement
         public Camera UiCam { get; private set; } //Static on the ui
         public static float DeltaTime { get; private set; }
         public GraphicsDeviceManager GfxManager { get; private set; }
-        public SemaphoreSlim InputHandlerSemaphore = new SemaphoreSlim(1, 1);
+
+        public static readonly object InputHandlerLock = new();
 
         private SpriteBatch _spriteBatch;
-        private SceneNames? nextScene = null;
+        public SceneNames? NextScene { get; private set; } = null;
 
         public GameWorld()
         {
@@ -72,7 +73,7 @@ namespace FørsteÅrsEksamen.GameManagement
             _spriteBatch = new SpriteBatch(GraphicsDevice);
         }
 
-        protected override async void Update(GameTime gameTime)
+        protected override void Update(GameTime gameTime)
         {
             DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -80,7 +81,7 @@ namespace FørsteÅrsEksamen.GameManagement
 
             CurrentScene.Update(gameTime);
 
-            await HandleSceneChange();
+            HandleSceneChange();
 
             base.Update(gameTime);
         }
@@ -152,10 +153,11 @@ namespace FørsteÅrsEksamen.GameManagement
                 [SceneNames.MainMenu] = new MainMenu(),
                 [SceneNames.SaveFileMenu] = new SaveFileMenu(),
                 [SceneNames.CharacterSelectorMenu] = new CharacterSelectorMenu(),
-                //Scenes[ScenesNames.LoadingScreen] = new ();
-                //Scenes[ScenesNames.EndMenu] = new();
-                [SceneNames.DungounRoom1] = new Room1Scene(),
-                [SceneNames.DungounRoom2] = new Room2Scene(),
+                [SceneNames.EndMenu] = new EndMenu(),
+                //[SceneNames.LoadingScreen] = new LoadingScreen(),
+
+                [SceneNames.DungeonRoom1] = new Room1Scene(),
+                [SceneNames.DungeonRoom2] = new Room2Scene(),
 
                 // Test scenes
                 [SceneNames.WeaponTestScene] = new WeaponTestScene(),
@@ -173,10 +175,10 @@ namespace FørsteÅrsEksamen.GameManagement
                 throw new Exception("Dont try and use this method to change between Dungoun Rooms. " +
                     "Summon the Wizard Oscar:)");
 
-            nextScene = sceneName;
+            NextScene = sceneName;
         }
 
-        public void ChangeDungounScene(SceneNames baseRoomType, int roomReached)
+        public void ChangeDungeonScene(SceneNames baseRoomType, int roomReached)
         {
             string sceneNameString = baseRoomType.ToString();
 
@@ -193,41 +195,41 @@ namespace FørsteÅrsEksamen.GameManagement
             // Try to parse the new scene name as a SceneNames enum value
             if (Enum.TryParse(newSceneName, out SceneNames newScene))
             {
-                nextScene = newScene;
+                NextScene = newScene;
 
                 if (!Scenes.ContainsKey(newScene)) // The next scene dosent exit
                 {
-                    nextScene = SceneNames.MainMenu; // Sends them back to the menu
+                    NextScene = SceneNames.MainMenu; // Sends them back to the menu
                 }
             }
             else
             {
-                nextScene = SceneNames.MainMenu; // Sends them back to the menu
+                NextScene = SceneNames.MainMenu; // Sends them back to the menu
             }
         }
 
         /// <summary>
         /// A method to prevent changing in the GameObject lists while its still inside the Update
         /// </summary>
-        private async Task HandleSceneChange()
+        private void HandleSceneChange()
         {
-            if (nextScene == null || Scenes[nextScene.Value] == null) return;
+            if (NextScene == null || Scenes[NextScene.Value] == null) return;
 
-            await InputHandlerSemaphore.WaitAsync();
-
+            Monitor.Enter(InputHandlerLock); 
+            
             try
             {
                 // Change the scene
                 CurrentScene.OnSceneChange(); // Removes stuff like commands
                 SceneData.DeleteAllGameObjects(); // Removes every object
 
-                CurrentScene = Scenes[nextScene.Value]; // Changes to new scene
+                CurrentScene = Scenes[NextScene.Value]; // Changes to new scene
                 CurrentScene.Initialize();
-                nextScene = null;
+                NextScene = null;
             }
             finally
             {
-                InputHandlerSemaphore.Release();
+                Monitor.Exit(InputHandlerLock);
             }
         }
 

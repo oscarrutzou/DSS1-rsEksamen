@@ -26,10 +26,6 @@ namespace FørsteÅrsEksamen.GameManagement
             }
         }
 
-        public static void Test()
-        {
-        }
-
         /// <summary>
         /// Clear all the lists of GameObjects
         /// </summary>

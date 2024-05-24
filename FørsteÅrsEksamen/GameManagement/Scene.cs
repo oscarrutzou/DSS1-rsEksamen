@@ -14,12 +14,10 @@ namespace FørsteÅrsEksamen.GameManagement
         LoadingScreen,
         EndMenu,
 
-        DungounRoom, // BASE, NO SCRIPT HERE
-        DungounRoom1,
-        DungounRoom2,
-        DungounRoom3,
-        DungounRoom15,
-        DungounBossRoom1,
+        DungeonRoom, // BASE, NO SCRIPT HERE
+        DungeonRoom1,
+        DungeonRoom2,
+        DungeonRoom3,
 
         WeaponTestScene,
 

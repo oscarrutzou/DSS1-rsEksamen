@@ -7,7 +7,9 @@ using FørsteÅrsEksamen.Factory;
 using FørsteÅrsEksamen.GameManagement;
 using LiteDB;
 using Microsoft.Xna.Framework;
+using SharpDX.Multimedia;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FørsteÅrsEksamen.LiteDB
 {
@@ -67,11 +69,6 @@ namespace FørsteÅrsEksamen.LiteDB
             return playerGo;
         }
 
-        private static void MakePlayer()
-        {
-
-        }
-
         public static void SavePlayer()
         {
             RunData runData = DBRunData.LoadRunData(SaveData.CurrentSaveID);
@@ -80,8 +77,6 @@ namespace FørsteÅrsEksamen.LiteDB
 
         public static void DeleteSave(int saveID)
         {
-            if (!InputHandler.Instance.DebugMode) return;
-
             using var saveFileDB = new DataBase(CollectionName.SaveFile);
             SaveFileData data = saveFileDB.FindOne<SaveFileData>(x => x.Save_ID == saveID);
 
@@ -114,6 +109,68 @@ namespace FørsteÅrsEksamen.LiteDB
 
             // Delete run data. Need to be last, since it needs to be used to get and delete the Player.
             DBRunData.DeleteRunData(data, fileHasRunDataLinkDB, runDataDB);
+        }
+
+        public static void DeleteRun(int saveID)
+        {
+            SaveData.SetBaseValues();
+
+            using var saveFileDB = new DataBase(CollectionName.SaveFile);
+            SaveFileData data = saveFileDB.FindOne<SaveFileData>(x => x.Save_ID == saveID);
+
+            if (data == null) return; // Has deleted data
+
+            using var fileHasRunDataLinkDB = new DataBase(CollectionName.SaveFileHasRunData);
+            using var runDataDB = new DataBase(CollectionName.RunData);
+
+            // Find the rundata for the
+            SaveFileHasRunData existingLink = fileHasRunDataLinkDB.GetCollection<SaveFileHasRunData>()
+                                                      .FindOne(link => link.Save_ID == data.Save_ID);
+
+            // If there is no link, we can just delete the savefile and quit out of the method
+            if (existingLink == null)
+            {
+                //Delete SaveFile.
+                saveFileDB.Delete<SaveFileData>(data.Save_ID);
+                return;
+            }
+
+            RunData runData = runDataDB.GetCollection<RunData>()
+                                                    .FindOne(data => data.Run_ID == existingLink.Run_ID);
+
+            using var runDataHasPlayerLinkDB = new DataBase(CollectionName.RunDataHasPlayerData);
+            using var playerDB = new DataBase(CollectionName.PlayerData);
+            DBRunData.DeletePlayer(runData, runDataHasPlayerLinkDB, playerDB);
+
+            // Delete run data. Need to be last, since it needs to be used to get and delete the Player.
+            DBRunData.DeleteRunData(data, fileHasRunDataLinkDB, runDataDB);
+        }
+
+        public static async void CheckChangeDungeonScene()
+        {
+            // After it has saved the palyer it will change scene
+            await Task.Run(SavePlayer);
+
+            int newRoomNr = SaveData.Room_Reached + 1;
+
+            if (newRoomNr <= SaveData.MaxRooms)
+            {
+                // Change to next dungeon scene
+                GameWorld.Instance.ChangeDungeonScene(SceneNames.DungeonRoom, newRoomNr);
+            }
+            else // Player won
+            {
+                AddCurrency(100); // 100 for winning
+                SaveData.HasWon = true;
+                OnChangeSceneEnd();
+            }
+        }
+
+        public static void OnChangeSceneEnd()
+        {
+            // Delete the run
+            DeleteRun(SaveData.CurrentSaveID);
+            GameWorld.Instance.ChangeScene(SceneNames.EndMenu);
         }
 
         public static void UnlockClass(ClassTypes classType)
@@ -151,7 +208,7 @@ namespace FørsteÅrsEksamen.LiteDB
         /// </summary>
         /// <param name="amount"></param>
         /// <returns>To check if you can remove that much</returns>
-        public static bool AddRemove(int amount)
+        public static bool RemoveCurrency(int amount)
         {
             if (SaveData.Currency - amount < 0)
             {
@@ -180,28 +237,5 @@ namespace FørsteÅrsEksamen.LiteDB
 
             DBRunData.SavePlayer(runData);
         }
-
-        /// <summary>
-        /// A method that deletes all data related to each run.
-        /// </summary>
-        public static void DeleteRunData()
-        {
-            // This is ineffecient since we open and close connections,
-            // but since we are just dropping the collection, we are fine with some of the code being less effient.
-            // This metod will also only be called very rarely, so it wont make a difference, if we optimize this method.
-            foreach (CollectionName name in deleteRunCollections)
-            {
-                using LiteDatabase db = new(DataBase.GetConnectionString(name));
-                db.DropCollection(name.ToString());
-            }
-        }
-
-        /*
-         * Methods
-         * update potion on player
-         * Rundata
-         * Delete ids
-         * How to get the save id?
-         */
     }
 }

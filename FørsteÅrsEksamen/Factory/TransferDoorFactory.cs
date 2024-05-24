@@ -18,7 +18,7 @@ namespace FørsteÅrsEksamen.Factory
             sr.IsCentered = false;
 
             Collider collider = go.AddComponent<Collider>();
-            collider.SetCollisionBox(32, 48, Vector2.Zero);
+            collider.SetCollisionBox(32, 48, Vector2.Zero); // The size of our door and therefore our exit
 
             go.AddComponent<TransferDoor>();
             

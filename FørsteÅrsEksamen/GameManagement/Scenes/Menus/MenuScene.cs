@@ -31,6 +31,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
             InitFirstMenu();
             InitSecondMenu();
         }
+
         protected virtual void InitFirstMenu() { }
         protected virtual void InitSecondMenu() { }
         protected virtual void ShowHideSecondMenu()

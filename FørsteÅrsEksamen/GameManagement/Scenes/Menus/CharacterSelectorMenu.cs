@@ -100,7 +100,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
             DBRunData.SaveLoadRunData(saveFileData); // Save Run File
 
             // Go into the new scene with a new player.
-            GameWorld.Instance.ChangeDungounScene(SceneNames.DungounRoom, 1);
+            GameWorld.Instance.ChangeDungeonScene(SceneNames.DungeonRoom, 1);
         }
 
         private void Back()

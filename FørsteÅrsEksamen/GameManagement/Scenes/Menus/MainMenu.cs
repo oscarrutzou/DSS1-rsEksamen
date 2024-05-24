@@ -21,8 +21,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
         {
             GameObject startBtn = ButtonFactory.Create("Save Files", true,
                             () => { GameWorld.Instance.ChangeScene(SceneNames.SaveFileMenu); });
-                            //() => { GameWorld.Instance.ChangeDungounScene(SceneNames.DungounRoom, 1); });
-            //() => { GameWorld.Instance.ChangeScene(ScenesNames.OscarTestScene); });
+
             FirstMenuObjects.Add(startBtn);
 
             GameObject settingsBtn = ButtonFactory.Create("Settings", true, ShowHideSecondMenu);

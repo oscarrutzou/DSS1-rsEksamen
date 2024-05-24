@@ -98,8 +98,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
                 || !hasPressed
                 || GameObject.Transform.Scale != maxScale) return;
 
-            OnClick?.Invoke();
-            Debug.WriteLine("Invoke");
+            InvokeAction();
 
             hasPressed = false;
         }
@@ -135,9 +134,17 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
             }
             else
             {
-                OnClick?.Invoke();
+                InvokeAction();
             }
         }
+
+        public void InvokeAction()
+        {
+
+
+            OnClick?.Invoke();
+        }
+
 
         public override void Draw(SpriteBatch spriteBatch)
         {

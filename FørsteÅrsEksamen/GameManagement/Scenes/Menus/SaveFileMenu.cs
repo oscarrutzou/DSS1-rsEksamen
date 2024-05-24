@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using FørsteÅrsEksamen.LiteDB;
 using System.Collections.Generic;
+using FørsteÅrsEksamen.CommandPattern.Commands;
 
 namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
 {
@@ -23,9 +24,6 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
 
         protected override void InitFirstMenu()
         {
-            // Should check first for any save files. Then take their id, and the currency and add it to the button text.
-            // If there is none it will just be "New Save File"
-
             saveFileButtons = new Dictionary<int, Button>()
             {
                 { 1, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(1); }).GetComponent<Button>() },
@@ -43,14 +41,17 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
             {
                 GameWorld.Instance.ChangeScene(SceneNames.MainMenu);
             });
+
             FirstMenuObjects.Add(backBtn);
 
-            ChangeButtonText();
             GuiMethods.PlaceGameObjectsVertical(FirstMenuObjects, TextPos + new Vector2(0, 75), 25);
+            ChangeButtonText();
         }
 
         private void MakeNewSaveFile(int id)
         {
+            SaveData.SetBaseValues();
+
             SaveData.CurrentSaveID = id;
 
             // Dont override save files
@@ -75,8 +76,9 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
             }
             else
             {
+                SaveData.Time_Left = runData.Time_Left;
                 // Loads run
-                GameWorld.Instance.ChangeDungounScene(SceneNames.DungounRoom, runData.Room_Reached);
+                GameWorld.Instance.ChangeDungeonScene(SceneNames.DungeonRoom, runData.Room_Reached);
             }
         }
 
@@ -88,20 +90,45 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
         /// </summary>
         private void ChangeButtonText()
         {
-            List<SaveFileData> saveFiles = DBSaveFile.LoadSaveFiles();
-
-            if (saveFiles.Count == 0) return; // There is no files yet, so we dont change the text.
-
-            foreach (SaveFileData saveFile in saveFiles)
+            //CheckButtonCmd.GameObjectListLock.EnterWriteLock();
+            try
             {
-                if (saveFileButtons.ContainsKey(saveFile.Save_ID))
+                List<SaveFileData> saveFiles = DBSaveFile.LoadSaveFiles();
+
+                if (saveFiles.Count == 0) return; // There is no files yet, so we dont change the text.
+
+                foreach (SaveFileData saveFile in saveFiles)
                 {
-                    saveFileButtons[saveFile.Save_ID].Text =
-                        $"Save {saveFile.Save_ID}" +
-                        $"\nCurrency {saveFile.Currency}" +
-                        $"\n Last Login {saveFile.Last_Login:yyyy-MM-dd}"; // Removes .ToString
+                    if (!saveFileButtons.ContainsKey(saveFile.Save_ID)) continue;
+
+                    Button saveFileBtn = saveFileButtons[saveFile.Save_ID];
+
+                    saveFileBtn.Text =
+                            //saveFileButtons[saveFile.Save_ID].Text =
+                            $"Save {saveFile.Save_ID}" +
+                            $"\nCurrency {saveFile.Currency}" +
+                            $"\n Last Login {saveFile.Last_Login:yyyy-MM-dd}"; // Removes .ToString
+
+                    // Add a delete button next to it. 
+                    GameObject deleteBtn = ButtonFactory.Create("X", true, () => { DeleteSave(saveFile.Save_ID); });
+                    Button delete = deleteBtn.GetComponent<Button>();
+                    delete.ChangeScale(new Vector2(3, 5));
+                    deleteBtn.Transform.Position = saveFileBtn.GameObject.Transform.Position + new Vector2(150, 0);
+
+                    GameWorld.Instance.Instantiate(deleteBtn);
                 }
             }
+            finally
+            {
+                //CheckButtonCmd.GameObjectListLock.ExitWriteLock();
+            }
+        }
+
+        private void DeleteSave(int saveID)
+        {
+            DBMethods.DeleteSave(saveID);
+
+            GameWorld.Instance.ChangeScene(SceneNames.SaveFileMenu);
         }
 
         public override void DrawOnScreen(SpriteBatch spriteBatch)

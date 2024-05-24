@@ -15,9 +15,10 @@ namespace FørsteÅrsEksamen.LiteDB
 
         public static List<ClassTypes> UnlockedClasses = new() { ClassTypes.Warrior, ClassTypes.Archer };
 
-        public static int Room_Reached = 1;
-        public static float Time_Left = 300f;
-
+        public static int Room_Reached { get; set; } = 1;
+        public static int MaxRooms = 2;
+        public static float Time_Left { get; set; } = 300f;
+        public static bool HasWon;
         // For when we load or select each weapon, to make the player.
         
         // We also need to save the player with the next scene int just before they go into the new scene 
@@ -27,5 +28,15 @@ namespace FørsteÅrsEksamen.LiteDB
         public static WeaponTypes SelectedWeapon; 
         public static ClassTypes SelectedClass {  get; set; }
         public static Player Player { get; set; }
+
+        public static void SetBaseValues()
+        {
+            Currency = 0;
+            Time_Left = 300f;
+            Room_Reached = 1;
+            UnlockedWeapons = new();
+            UnlockedClasses = new();
+            Player = null;
+        }
     }
 }

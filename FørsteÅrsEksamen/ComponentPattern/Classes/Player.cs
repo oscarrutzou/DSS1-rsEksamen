@@ -3,6 +3,7 @@ using FørsteÅrsEksamen.ComponentPattern.Weapons;
 using FørsteÅrsEksamen.ComponentPattern.WorldObjects;
 using FørsteÅrsEksamen.Factory;
 using FørsteÅrsEksamen.GameManagement;
+using FørsteÅrsEksamen.LiteDB;
 using FørsteÅrsEksamen.ObserverPattern;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -28,6 +29,9 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
 
         public WeaponTypes WeaponType;
         public ClassTypes ClassType;
+
+        private float onDeadTimer;
+        private float timeTillSceneChange = 3f;
 
         public Player(GameObject gameObject) : base(gameObject)
         {
@@ -80,10 +84,22 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
                     break;
 
                 case CharacterState.Dead:
+                    ChangeScene();
                     break;
             }
 
             totalMovementInput = Vector2.Zero;
+        }
+
+        private void ChangeScene()
+        {
+            onDeadTimer += GameWorld.DeltaTime;
+            if (onDeadTimer >= timeTillSceneChange)
+            {
+                onDeadTimer = 0;
+                SaveData.HasWon = false;
+                DBMethods.OnChangeSceneEnd();
+            }
         }
 
         private void CheckForMovement()
@@ -128,31 +144,46 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
 
         public void Move(Vector2 input)
         {
-            targetVelocity = Vector2.Zero;
-
-            previousPosition = GameObject.Transform.Position;
+            InitializeMovement();
 
             if (input != Vector2.Zero)
             {
-                input.Normalize();
-
-                targetVelocity = input * speed * GameWorld.DeltaTime;
-
-                // To fix the error that if all buttons have been pressed, that it sometimes sets the velocity to Nan/Nan
-                if (float.IsNaN(velocity.X))
-                {
-                    velocity = Vector2.Zero;
-                }
-
-                // Interpolate the velocity
-                velocity = Vector2.Lerp(velocity, targetVelocity, turnSpeed * GameWorld.DeltaTime);
-                Direction = velocity;
+                ProcessInput(input);
             }
 
             UpdateDirection();
 
-            if (GridManager.Instance.CurrentGrid == null) return; // Player cant walk if there is no grid.
+            if (GridManager.Instance.CurrentGrid == null) return; // Player can't walk if there is no grid.
 
+            TryMoveInBothDirections();
+
+            UpdatePositionAndNotify();
+        }
+
+        private void InitializeMovement()
+        {
+            targetVelocity = Vector2.Zero;
+            previousPosition = GameObject.Transform.Position;
+        }
+
+        private void ProcessInput(Vector2 input)
+        {
+            input.Normalize();
+            targetVelocity = input * speed * GameWorld.DeltaTime;
+
+            // To fix the error that if all buttons have been pressed, that it sometimes sets the velocity to Nan/Nan
+            if (float.IsNaN(velocity.X))
+            {
+                velocity = Vector2.Zero;
+            }
+
+            // Interpolate the velocity
+            velocity = Vector2.Lerp(velocity, targetVelocity, turnSpeed * GameWorld.DeltaTime);
+            Direction = velocity;
+        }
+
+        private void TryMoveInBothDirections()
+        {
             // Separate the movement into X and Y components
             Vector2 xMovement = new Vector2(velocity.X, 0) * speed * GameWorld.DeltaTime;
             Vector2 yMovement = new Vector2(0, velocity.Y) * speed * GameWorld.DeltaTime;
@@ -174,8 +205,11 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
                 hasMoved = true;
             }
 
-            if (!hasMoved) return; // Dont need to set new position, since its the same.
+            if (!hasMoved) return; // Don't need to set new position, since it's the same.
+        }
 
+        private void UpdatePositionAndNotify()
+        {
             SetMovement(GameObject.Transform.Position); // So we set the other gameobjects (Hands, Movement Collider...)
 
             // Updates the grid position
@@ -184,6 +218,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
 
             Notify();
         }
+
 
         private bool TryMove(Vector2 movement)
         {

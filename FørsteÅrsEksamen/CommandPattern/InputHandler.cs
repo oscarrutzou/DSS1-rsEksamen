@@ -48,9 +48,9 @@ namespace FørsteÅrsEksamen.CommandPattern
 
         public void StartInputThread()
         {
-            while (true) // The update for input should always run.
+            while (true)
             {
-                GameWorld.Instance.InputHandlerSemaphore.Wait();
+                Monitor.Enter(GameWorld.InputHandlerLock);
 
                 try
                 {
@@ -58,7 +58,7 @@ namespace FørsteÅrsEksamen.CommandPattern
                 }
                 finally
                 {
-                    GameWorld.Instance.InputHandlerSemaphore.Release();
+                    Monitor.Exit(GameWorld.InputHandlerLock);
                 }
             }
         }
@@ -72,8 +72,6 @@ namespace FørsteÅrsEksamen.CommandPattern
 
             AddKeyButtonDownCommand(Keys.Q, new CustomCmd(() => { GridManager.Instance.ChangeRoomNrIndex(-1); }));
             AddKeyButtonDownCommand(Keys.E, new CustomCmd(() => { GridManager.Instance.ChangeRoomNrIndex(1); }));
-
-            AddKeyButtonDownCommand(Keys.T, new CustomCmd(() => { DBMethods.DeleteSave(SaveData.CurrentSaveID); }));
         }
 
         #region Command
