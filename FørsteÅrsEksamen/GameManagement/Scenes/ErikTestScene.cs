@@ -5,7 +5,7 @@ using FørsteÅrsEksamen.ComponentPattern.Classes;
 using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.ComponentPattern.Weapons;
 using FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons;
-using FørsteÅrsEksamen.DB;
+using FørsteÅrsEksamen.LiteDB;
 using FørsteÅrsEksamen.Factory;
 using FørsteÅrsEksamen.Other;
 

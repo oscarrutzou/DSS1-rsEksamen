@@ -1,4 +1,4 @@
-﻿using FørsteÅrsEksamen.DB;
+﻿using FørsteÅrsEksamen.LiteDB;
 using Microsoft.Xna.Framework;
 
 namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms

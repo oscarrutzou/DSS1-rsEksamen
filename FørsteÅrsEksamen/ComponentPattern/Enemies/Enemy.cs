@@ -82,7 +82,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             CheckLayerDepth();
 
             // Enemy is in the attacking state proberly from something like it just started the weapon
-            if (WeaponGo == null)
+            if (Weapon == null)
             {
                 State = CharacterState.Dead;
             }
@@ -117,6 +117,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
                     break;
 
                 case CharacterState.Dead:
+                    SetState(CharacterState.Dead); // Updates the animation if it has bugged out
                     break;
             }
         }

@@ -3,7 +3,7 @@ using FørsteÅrsEksamen.ComponentPattern;
 using FørsteÅrsEksamen.Factory.Gui;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using FørsteÅrsEksamen.DB;
+using FørsteÅrsEksamen.LiteDB;
 using System.Collections.Generic;
 
 namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus

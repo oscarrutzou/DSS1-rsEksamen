@@ -146,6 +146,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
         {
             SetState(CharacterState.Dead);
             GameWorld.Instance.Destroy(WeaponGo);
+            Weapon = null;
             // Remove hands
             SpriteRenderer.Color = Color.LightPink;
         }

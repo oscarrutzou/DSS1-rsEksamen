@@ -1,7 +1,7 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern;
 using FørsteÅrsEksamen.ComponentPattern.Path;
 
-namespace FørsteÅrsEksamen.DB
+namespace FørsteÅrsEksamen.LiteDB
 {
     public interface IRepository
     {

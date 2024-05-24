@@ -1,7 +1,6 @@
 ﻿using FørsteÅrsEksamen.CommandPattern;
 using FørsteÅrsEksamen.ComponentPattern;
 using FørsteÅrsEksamen.ComponentPattern.Path;
-using FørsteÅrsEksamen.DB.NewTestDB;
 using FørsteÅrsEksamen.Factory;
 using FørsteÅrsEksamen.GameManagement;
 using LiteDB;
@@ -10,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FørsteÅrsEksamen.DB
+namespace FørsteÅrsEksamen.LiteDB
 {
     public static class DBGrid
     {

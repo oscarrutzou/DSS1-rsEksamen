@@ -5,7 +5,7 @@ using LiteDB;
 using System;
 using System.Collections.Generic;
 
-namespace FørsteÅrsEksamen.DB
+namespace FørsteÅrsEksamen.LiteDB
 {
 
     public class GridTestData

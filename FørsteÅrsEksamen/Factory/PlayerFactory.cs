@@ -1,7 +1,7 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern;
 using FørsteÅrsEksamen.ComponentPattern.Classes;
 using FørsteÅrsEksamen.GameManagement;
-using FørsteÅrsEksamen.DB;
+using FørsteÅrsEksamen.LiteDB;
 using Microsoft.Xna.Framework;
 using FørsteÅrsEksamen.ComponentPattern.Classes.RangedClasses;
 using FørsteÅrsEksamen.ComponentPattern.Classes.MeleeClasses;

@@ -2,7 +2,7 @@
 using FørsteÅrsEksamen.ComponentPattern;
 using Microsoft.Xna.Framework.Input;
 using FørsteÅrsEksamen.ComponentPattern.GUI;
-using FørsteÅrsEksamen.DB;
+using FørsteÅrsEksamen.LiteDB;
 using FørsteÅrsEksamen.Factory;
 using FørsteÅrsEksamen.Factory.Gui;
 using Microsoft.Xna.Framework;

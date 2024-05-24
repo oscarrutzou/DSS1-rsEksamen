@@ -3,7 +3,7 @@ using FørsteÅrsEksamen.CommandPattern.Commands;
 using FørsteÅrsEksamen.ComponentPattern;
 using FørsteÅrsEksamen.ComponentPattern.Classes;
 using FørsteÅrsEksamen.ComponentPattern.Path;
-using FørsteÅrsEksamen.DB;
+using FørsteÅrsEksamen.LiteDB;
 using FørsteÅrsEksamen.Factory;
 using FørsteÅrsEksamen.GameManagement.Scenes.Menus;
 using Microsoft.Xna.Framework;

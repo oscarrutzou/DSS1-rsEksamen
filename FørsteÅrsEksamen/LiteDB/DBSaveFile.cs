@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FørsteÅrsEksamen.DB
+namespace FørsteÅrsEksamen.LiteDB
 {
     /// <summary>
     /// Dont use this class other that in the method that saves the game!

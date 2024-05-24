@@ -1,5 +1,5 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern.Classes;
-using FørsteÅrsEksamen.DB;
+using FørsteÅrsEksamen.LiteDB;
 using FørsteÅrsEksamen.GameManagement;
 using Microsoft.Xna.Framework;
 using System;

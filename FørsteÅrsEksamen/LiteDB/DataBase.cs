@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq.Expressions;
 
-namespace FørsteÅrsEksamen.DB
+namespace FørsteÅrsEksamen.LiteDB
 {
     public enum CollectionName
     {
