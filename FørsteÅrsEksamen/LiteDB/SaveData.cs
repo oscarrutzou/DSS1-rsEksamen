@@ -18,7 +18,8 @@ namespace FørsteÅrsEksamen.LiteDB
         public static int Room_Reached { get; set; } = 1;
         public static int MaxRooms = 2;
         public static float Time_Left { get; set; } = 20f;
-        public static bool HasWon;
+        public static bool HasWon { get; set; }
+        public static bool LostByTime;
        
         public static WeaponTypes SelectedWeapon; 
         public static ClassTypes SelectedClass {  get; set; }

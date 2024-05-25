@@ -114,15 +114,15 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
             InputHandler.Instance.AddKeyUpdateCommand(Keys.W, new MoveCmd(player, new Vector2(0, -1)));
             InputHandler.Instance.AddKeyUpdateCommand(Keys.S, new MoveCmd(player, new Vector2(0, 1)));
 
-
             //InputHandler.Instance.AddMouseUpdateCommand(MouseCmdState.Left, new CustomCmd(player.Attack));
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, new CustomCmd(player.Attack));
 
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Escape, new CustomCmd(pauseMenu.TogglePauseMenu));
 
+            InputHandler.Instance.AddKeyButtonDownCommand(Keys.D1, new CustomCmd(player.UseItem));
+
             // For debugging
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Enter, new CustomCmd(ChangeScene));
-            InputHandler.Instance.AddKeyButtonDownCommand(Keys.I, new CustomCmd(() => { GridManager.Instance.ShowHideGrid(); }));
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DBGrid.SaveGrid(GridManager.Instance.CurrentGrid); }));
         }
 
@@ -135,6 +135,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
             if (SaveData.Time_Left <= 0) // Player ran out of Time
             {
                 SaveData.Time_Left = 0;
+                SaveData.LostByTime = true;
                 player.TakeDamage(1000); // Kills the player
             }
         }
@@ -154,13 +155,21 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
             string seconds = time.Seconds.ToString("D2");
             spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Time Left: {minutes}:{seconds}", timerPos, Color.Red);
 
+            if (player.ItemInInventory != null)
+            {
+                string text = $"Inventory: {player.ItemInInventory.Name}";
+                Vector2 textSize = GlobalTextures.DefaultFont.MeasureString(text);
+                Vector2 postionPos = GameWorld.Instance.UiCam.BottomRight - new Vector2(textSize.X + 30, textSize.Y / 2 + 30);
+                spriteBatch.DrawString(GlobalTextures.DefaultFont, text, postionPos, Color.Red);
+            }
+
             if (!InputHandler.Instance.DebugMode) return;
             DebugDraw(spriteBatch);
         }
 
         private void DebugDraw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], GameWorld.Instance.UiCam.TopLeft, null, Color.WhiteSmoke, 0f, Vector2.Zero, new Vector2(350, 180), SpriteEffects.None, 0f);
+            spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], GameWorld.Instance.UiCam.TopLeft, null, Color.WhiteSmoke, 0f, Vector2.Zero, new Vector2(350, 180), SpriteEffects.None, 0.99f); // Over everything exept text
 
             Vector2 mousePos = InputHandler.Instance.MouseOnUI;
 

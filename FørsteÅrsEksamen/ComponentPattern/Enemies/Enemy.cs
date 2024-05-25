@@ -117,7 +117,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
                     break;
 
                 case CharacterState.Dead:
-                    SetState(CharacterState.Dead); // Updates the animation if it has bugged out
                     break;
             }
         }

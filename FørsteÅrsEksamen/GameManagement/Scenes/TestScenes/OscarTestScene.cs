@@ -14,7 +14,7 @@ using System.Collections.Generic;
 using FørsteÅrsEksamen.Factory.Gui;
 using FørsteÅrsEksamen.ComponentPattern.Enemies.RangedEnemies;
 
-namespace FørsteÅrsEksamen.GameManagement.Scenes
+namespace FørsteÅrsEksamen.GameManagement.Scenes.TestScenes
 {
     public class OscarTestScene : Scene, IObserver
     {

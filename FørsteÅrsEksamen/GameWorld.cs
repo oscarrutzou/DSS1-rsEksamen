@@ -1,6 +1,6 @@
 ﻿using FørsteÅrsEksamen.CommandPattern;
 using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.GameManagement.Scenes;
+using FørsteÅrsEksamen.GameManagement.Scenes.TestScenes;
 using FørsteÅrsEksamen.GameManagement.Scenes.Menus;
 using FørsteÅrsEksamen.GameManagement.Scenes.Rooms;
 using Microsoft.Xna.Framework;

@@ -63,8 +63,17 @@ namespace FørsteÅrsEksamen.LiteDB
             // Sets the saved data to the player
             Player player = playerGo.GetComponent<Player>();
             player.CurrentHealth = playerData.Health;
-            player.ItemInInventory = ItemFactory.Create(playerGo).GetComponent<Potion>();
-            player.ItemInInventory.Name = playerData.Potion_Name;
+
+            // Load the potion is there is any.
+            if (playerData.Potion_Name != null)
+            {
+                GameObject potionGo = ItemFactory.Create(playerGo);
+                potionGo.IsEnabled = false;
+                GameWorld.Instance.Instantiate(potionGo); // So the potion gets loaded with its awake and instantiate
+                
+                player.ItemInInventory = potionGo.GetComponent<Potion>();
+                player.ItemInInventory.Name = playerData.Potion_Name;
+            }
 
             return playerGo;
         }
@@ -162,6 +171,7 @@ namespace FørsteÅrsEksamen.LiteDB
             {
                 AddCurrency(100); // 100 for winning
                 SaveData.HasWon = true;
+                SaveData.LostByTime = false;
                 OnChangeSceneEnd();
             }
         }

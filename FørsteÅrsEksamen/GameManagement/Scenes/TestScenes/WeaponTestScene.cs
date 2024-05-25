@@ -7,7 +7,7 @@ using FørsteÅrsEksamen.Factory;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace FørsteÅrsEksamen.GameManagement.Scenes
+namespace FørsteÅrsEksamen.GameManagement.Scenes.TestScenes
 {
     public class WeaponTestScene : Scene
     {

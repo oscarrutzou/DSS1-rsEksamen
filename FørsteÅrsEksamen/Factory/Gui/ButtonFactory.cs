@@ -15,7 +15,7 @@ namespace FørsteÅrsEksamen.Factory.Gui
             roomBtn.AddComponent<SpriteRenderer>().SetSprite(textureName);
             roomBtn.AddComponent<Animator>();
             roomBtn.AddComponent<Collider>();
-            roomBtn.AddComponent<Button>(text, invokeActionOnFullScale, onClick, textureName);
+            roomBtn.AddComponent<Button>(text, invokeActionOnFullScale, onClick);
 
             return roomBtn;
         }

@@ -1,4 +1,7 @@
-﻿using FørsteÅrsEksamen.LiteDB;
+﻿using FørsteÅrsEksamen.ComponentPattern;
+using FørsteÅrsEksamen.ComponentPattern.Path;
+using FørsteÅrsEksamen.Factory;
+using FørsteÅrsEksamen.LiteDB;
 using Microsoft.Xna.Framework;
 
 namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
@@ -18,6 +21,15 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
             SaveData.Room_Reached = 1;
 
             base.Initialize();
+
+            SpawnPotions();
+        }
+
+        private void SpawnPotions()
+        {
+            GameObject go = ItemFactory.Create(PlayerGo);
+            go.Transform.Position = GridManager.Instance.GetCornerPositionOfCell(new Point(2, 5));
+            GameWorld.Instance.Instantiate(go);
         }
     }
 }

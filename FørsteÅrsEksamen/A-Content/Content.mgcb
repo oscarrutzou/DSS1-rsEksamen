@@ -681,7 +681,7 @@
 /processorParam:TextureFormat=Color
 /build:World/Levels/Test1UnderPlayer.png
 
-#begin World/MediumPotion.png
+#begin World/Objects/Potions/RedPotion1.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -691,7 +691,31 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:World/MediumPotion.png
+/build:World/Objects/Potions/RedPotion1.png
+
+#begin World/Objects/Potions/RedPotion2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/Objects/Potions/RedPotion2.png
+
+#begin World/Objects/Potions/RedPotion3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/Objects/Potions/RedPotion3.png
 
 #begin World/Pixel.png
 /importer:TextureImporter

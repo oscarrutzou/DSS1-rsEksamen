@@ -13,7 +13,7 @@ namespace FørsteÅrsEksamen.Factory
             GameObject itemGo = new GameObject();
             itemGo.Transform.Scale = new Vector2(4, 4);
             SpriteRenderer sr = itemGo.AddComponent<SpriteRenderer>();
-            sr.SetSprite(TextureNames.HealthPotion);
+            sr.SetSprite(TextureNames.HealthPotionFull);
             sr.SetLayerDepth(LayerDepth.WorldForeground);
             itemGo.AddComponent<Collider>();
             itemGo.AddComponent<Potion>(playerGo);

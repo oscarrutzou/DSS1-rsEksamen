@@ -11,7 +11,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
     public class Button : Component
     {
         #region Properties
-
         public Action OnClick;
         public string Text;
         private SpriteFont font;
@@ -22,8 +21,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
         public Color TextColor = Color.Black;
 
         private Color baseColor;
-        public Color OnHoverColor = Color.Cyan;
-        public Color OnMouseDownColor = Color.DarkCyan;
+        public Color OnHoverColor = new(200, 200, 200);
+        public Color OnMouseDownColor = new(150, 150, 150);
 
         private Vector2 maxScale;
         private float clickCooldown = 0.1f; // The delay between button clicks in seconds
@@ -33,9 +32,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
 
         private Vector2 scaleUpAmount;
         private float scaleDownOnClickAmount = 0.95f;
-
-        private AnimNames animationName;
-        private TextureNames textureName;
         #endregion Properties
 
         public Button(GameObject gameObject) : base(gameObject)
@@ -47,13 +43,12 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
             GameObject.Type = GameObjectTypes.Gui;
         }
 
-        public Button(GameObject gameObject, string text, bool invokeActionOnFullScale, Action onClick, TextureNames textureName) : base(gameObject)
+        public Button(GameObject gameObject, string text, bool invokeActionOnFullScale, Action onClick) : base(gameObject)
         {
             maxScale = GameObject.Transform.Scale;
             scaleUpAmount = new Vector2(maxScale.X * 0.01f, maxScale.Y * 0.01f);
 
             font = GlobalTextures.DefaultFont;
-            this.textureName = textureName;
             this.Text = text;
             this.invokeActionOnFullScale = invokeActionOnFullScale;
             this.OnClick = onClick;

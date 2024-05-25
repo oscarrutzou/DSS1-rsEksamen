@@ -15,7 +15,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
 
-namespace FørsteÅrsEksamen.GameManagement.Scenes
+namespace FørsteÅrsEksamen.GameManagement.Scenes.TestScenes
 {
     public class ErikTestScene : Scene
     {
@@ -30,7 +30,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             PlayerSpawnPos = new Point(5, 5);
             MakePlayer();
 
-            
+
             OnPlayerChanged();
 
             //InitSpawner();
@@ -47,7 +47,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            
+
         }
 
         private List<Point> spawnPoints = new()
@@ -97,7 +97,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         private void SetCommands()
         {
             player = PlayerGo.GetComponent<Player>();
-            
+
             InputHandler.Instance.AddKeyUpdateCommand(Keys.D, new MoveCmd(player, new Vector2(1, 0)));
             InputHandler.Instance.AddKeyUpdateCommand(Keys.A, new MoveCmd(player, new Vector2(-1, 0)));
             InputHandler.Instance.AddKeyUpdateCommand(Keys.W, new MoveCmd(player, new Vector2(0, -1)));
@@ -117,21 +117,21 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
         private void MakeWeapon()
         {
-            weapon = WeaponFactory.Create(WeaponTypes.Sword,false);
-            
-            bow = WeaponFactory.Create(WeaponTypes.Bow,false);
-            
-            
+            weapon = WeaponFactory.Create(WeaponTypes.Sword, false);
+
+            bow = WeaponFactory.Create(WeaponTypes.Bow, false);
+
+
             GameWorld.Instance.Instantiate(weapon);
             GameWorld.Instance.Instantiate(bow);
         }
 
-       
+
 
         private void Attack()
         {
             weapon.GetComponent<Weapon>().StartAttack();
-            
+
             //projectile.GetComponent<MagicStaff>().Attack();
         }
 
@@ -146,7 +146,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
 
         public void Shoot()
         {
-           var rangedWeapon = bow.GetComponent<RangedWeapon>();  
+            var rangedWeapon = bow.GetComponent<RangedWeapon>();
 
             //projectile.GetComponent<Projectile>().SetValues(MathHelper.Pi);
 
@@ -154,7 +154,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             {
 
                 rangedWeapon.Shoot();
-                
+
 
             }
 

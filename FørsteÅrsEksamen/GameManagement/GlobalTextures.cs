@@ -14,7 +14,7 @@ namespace FørsteÅrsEksamen.GameManagement
         TestLevelFG,
         WoodSword,
         WoodArrow,
-        HealthPotion,
+        HealthPotionFull,
 
         // UI
         SmallBtn,
@@ -49,7 +49,7 @@ namespace FørsteÅrsEksamen.GameManagement
 
                 {TextureNames.WoodSword, content.Load<Texture2D>("World\\Weapons\\Melee Weapons\\WoodSword") },
                 {TextureNames.WoodArrow, content.Load<Texture2D>("Test\\WoodArrow") },
-                {TextureNames.HealthPotion, content.Load<Texture2D>("World\\MediumPotion") },
+                {TextureNames.HealthPotionFull, content.Load<Texture2D>("World\\Objects\\Potions\\RedPotion1") },
 
                 {TextureNames.SmallBtn, content.Load<Texture2D>("UI\\SmallButtonIndividuel (1)") },
                 {TextureNames.LargeBtn, content.Load<Texture2D>("UI\\BigButtonIndividuel (1)") },

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FørsteÅrsEksamen.GameManagement.Scenes
+namespace FørsteÅrsEksamen.GameManagement.Scenes.TestScenes
 {
     public class StefanTestScene : Scene
     {

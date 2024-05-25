@@ -23,7 +23,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.PlayerClasses
 
         protected List<IObserver> observers = new();
 
-        public Potion ItemInInventory;
+        public Potion ItemInInventory { get; set; }
 
         private Collider movementCollider;
 
@@ -280,10 +280,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.PlayerClasses
         #endregion
 
         #region Item
-        public void PickUpItem(GameObject item)
-        {
-            ItemInInventory = item.GetComponent<Potion>();
-        }
+        public void PickUpItem(Potion item) => ItemInInventory = item;
 
         public void UseItem()
         {
