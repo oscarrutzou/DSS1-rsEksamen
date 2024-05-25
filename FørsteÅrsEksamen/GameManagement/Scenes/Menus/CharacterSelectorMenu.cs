@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using FørsteÅrsEksamen.CommandPattern.Commands;
-using FørsteÅrsEksamen.ComponentPattern.Classes;
+using FørsteÅrsEksamen.ComponentPattern.PlayerClasses;
 
 namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
 {

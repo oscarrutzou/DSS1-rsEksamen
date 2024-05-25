@@ -1,5 +1,5 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.Classes;
+using FørsteÅrsEksamen.ComponentPattern.PlayerClasses;
 using FørsteÅrsEksamen.ComponentPattern.Weapons.MeleeWeapons;
 using FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons;
 using Microsoft.Xna.Framework;

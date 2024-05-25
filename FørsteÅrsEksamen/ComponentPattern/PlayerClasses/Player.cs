@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
-namespace FørsteÅrsEksamen.ComponentPattern.Classes
+namespace FørsteÅrsEksamen.ComponentPattern.PlayerClasses
 {
     // Oscar
     public abstract class Player : Character, ISubject

@@ -1,4 +1,4 @@
-﻿using FørsteÅrsEksamen.ComponentPattern.Classes;
+﻿using FørsteÅrsEksamen.ComponentPattern.PlayerClasses;
 using FørsteÅrsEksamen.Factory;
 using System.Collections.Generic;
 

@@ -1,4 +1,4 @@
-﻿using FørsteÅrsEksamen.ComponentPattern.Classes;
+﻿using FørsteÅrsEksamen.ComponentPattern.PlayerClasses;
 using Microsoft.Xna.Framework;
 
 namespace FørsteÅrsEksamen.CommandPattern.Commands

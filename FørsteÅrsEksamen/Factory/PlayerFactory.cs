@@ -1,10 +1,10 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.Classes;
+using FørsteÅrsEksamen.ComponentPattern.PlayerClasses;
 using FørsteÅrsEksamen.GameManagement;
 using FørsteÅrsEksamen.LiteDB;
 using Microsoft.Xna.Framework;
-using FørsteÅrsEksamen.ComponentPattern.Classes.RangedClasses;
-using FørsteÅrsEksamen.ComponentPattern.Classes.MeleeClasses;
+using FørsteÅrsEksamen.ComponentPattern.PlayerClasses.RangedClasses;
+using FørsteÅrsEksamen.ComponentPattern.PlayerClasses.MeleeClasses;
 using FørsteÅrsEksamen.ComponentPattern.Weapons;
 
 namespace FørsteÅrsEksamen.Factory

@@ -1,10 +1,10 @@
 ﻿using FørsteÅrsEksamen.GameManagement;
 
-namespace FørsteÅrsEksamen.ComponentPattern.Classes.RangedClasses
+namespace FørsteÅrsEksamen.ComponentPattern.PlayerClasses.RangedClasses
 {
-    public class Mage : Player
+    public class Archer : Player
     {
-        public Mage(GameObject gameObject) : base(gameObject)
+        public Archer(GameObject gameObject) : base(gameObject)
         {
         }
 

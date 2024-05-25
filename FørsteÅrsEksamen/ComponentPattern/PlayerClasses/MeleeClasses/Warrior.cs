@@ -1,6 +1,6 @@
 ﻿using FørsteÅrsEksamen.GameManagement;
 
-namespace FørsteÅrsEksamen.ComponentPattern.Classes.MeleeClasses
+namespace FørsteÅrsEksamen.ComponentPattern.PlayerClasses.MeleeClasses
 {
     public class Warrior : Player
     {

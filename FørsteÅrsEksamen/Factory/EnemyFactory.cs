@@ -1,7 +1,7 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.Classes;
-using FørsteÅrsEksamen.ComponentPattern.Classes.MeleeClasses;
-using FørsteÅrsEksamen.ComponentPattern.Classes.RangedClasses;
+using FørsteÅrsEksamen.ComponentPattern.PlayerClasses;
+using FørsteÅrsEksamen.ComponentPattern.PlayerClasses.MeleeClasses;
+using FørsteÅrsEksamen.ComponentPattern.PlayerClasses.RangedClasses;
 using FørsteÅrsEksamen.ComponentPattern.Enemies;
 using FørsteÅrsEksamen.ComponentPattern.Enemies.MeleeEnemies;
 using FørsteÅrsEksamen.ComponentPattern.Enemies.RangedEnemies;
