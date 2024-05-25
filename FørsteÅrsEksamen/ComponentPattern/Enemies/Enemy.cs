@@ -157,7 +157,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 
             if (State == CharacterState.Dead) // Bug happend because this path got returned just as it died
             {
-                path = null;
                 return;
             }
 

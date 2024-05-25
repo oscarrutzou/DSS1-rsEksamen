@@ -13,6 +13,7 @@ using FørsteÅrsEksamen.Factory;
 using Microsoft.Xna.Framework;
 using FørsteÅrsEksamen.ComponentPattern.Enemies;
 using FørsteÅrsEksamen.ComponentPattern.Enemies.RangedEnemies;
+using FørsteÅrsEksamen.ComponentPattern.WorldObjects;
 
 namespace FørsteÅrsEksamen.Other
 {
@@ -24,20 +25,33 @@ namespace FørsteÅrsEksamen.Other
                
         }
 
-        public void SpawnEnemies(List<Point> spawnLocations, GameObject playerGo)
+        public List<Enemy> SpawnEnemies(List<Point> spawnLocations, GameObject playerGo)
         {
+            List<Enemy> enemies = new();
             for (int i = 0; i < spawnLocations.Count; i++)
             {
                 Point spawnPoint = spawnLocations[i];
-                GameObject enemyGo = EnemyFactory.CreateWithRandomType();
-                                
+                GameObject enemyGo = EnemyFactory.Create(EnemyTypes.OrcWarrior);
+                //GameObject enemyGo = EnemyFactory.CreateWithRandomType();
+                Enemy enemy = enemyGo.GetComponent<Enemy>();
+                enemy.SetStartPosition(playerGo, spawnPoint);
+                
+                enemies.Add(enemy);
                 GameWorld.Instance.Instantiate(enemyGo);
-                if (GridManager.Instance.CurrentGrid != null)
-                {
-                    SkeletonWarrior enemy = enemyGo.GetComponent<SkeletonWarrior>();
-                    enemy.SetStartPosition(playerGo, spawnPoint);
-                }
             }
+
+            return enemies;
+        }
+
+        public void SpawnPotions(List<Point> spawnLocations, GameObject playerGo)
+        {
+            for (int i = 0; i < spawnLocations.Count; i++)
+            {
+                GameObject potionGo = ItemFactory.Create(playerGo);
+                potionGo.Transform.Position = GridManager.Instance.CurrentGrid.PosFromGridPos(spawnLocations[i]);
+                GameWorld.Instance.Instantiate(potionGo);
+            }
+
         }
     }
 }

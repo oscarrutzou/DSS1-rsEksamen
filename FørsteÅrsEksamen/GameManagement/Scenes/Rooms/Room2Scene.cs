@@ -10,23 +10,36 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
 {
     public class Room2Scene : RoomBase
     {
-        public Room2Scene()
-        {
-            PlayerSpawnPos = new Point(3, 3);
-            GridName = "Test2";
-            GridHeight = 10;
-            GridWidth = 10;
-        }
+
 
         public override void Initialize()
         {
-            SaveData.Level_Reached = 2;
-            base.Initialize();
+            throw new System.Exception("This next room is not made yet");
+            GridName = "Level2";
+            GridWidth = 40;
+            GridHeight = 28;
 
-            GameObject enemyGo = EnemyFactory.Create(EnemyTypes.OrcWarrior);
-            enemyGo.GetComponent<Enemy>().SetStartPosition(PlayerGo, new Point(5, 5));
-            
-            GameWorld.Instance.Instantiate(enemyGo);
+            SaveData.Level_Reached = 1;
+
+            BackGroundTexture = TextureNames.Level1BG;
+            ForeGroundTexture = TextureNames.Level1FG;
+
+            base.Initialize();
+        }
+
+        protected override void SetSpawnPotions()
+        {
+            PlayerSpawnPos = new Point(10, 3);
+            EndPointSpawnPos = new Point(33, 2);
+
+            enemySpawnPoints = new() {
+            new Point(10, 21),
+            new Point(25, 21),
+            new Point(37, 12),};
+
+            potionSpawnPoints = new() {
+            new Point(7, 4),
+            new Point(29, 9),};
         }
     }
 }

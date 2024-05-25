@@ -111,6 +111,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
 
             while (currentNode != startPoint)
             {
+                if (currentNode == null) continue;
                 path.Add(currentNode);
                 currentNode = currentNode.GetComponent<Cell>().Parent;
             }

@@ -1,35 +1,43 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern;
+using FørsteÅrsEksamen.ComponentPattern.Enemies;
 using FørsteÅrsEksamen.ComponentPattern.Path;
 using FørsteÅrsEksamen.Factory;
 using FørsteÅrsEksamen.LiteDB;
+using FørsteÅrsEksamen.Other;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
 {
     public class Room1Scene : RoomBase
     {
-        public Room1Scene()
-        {
-            PlayerSpawnPos = new Point(5, 5);
-            GridName = "Test1";
-            GridWidth = 24;
-            GridHeight = 18;
-        }
-
         public override void Initialize()
         {
+            GridName = "Level1";
+            GridWidth = 40;
+            GridHeight = 28;
+
             SaveData.Level_Reached = 1;
 
-            base.Initialize();
+            BackGroundTexture = TextureNames.Level1BG;
+            ForeGroundTexture = TextureNames.Level1FG;
 
-            SpawnPotions();
+            base.Initialize();
         }
 
-        private void SpawnPotions()
+        protected override void SetSpawnPotions()
         {
-            GameObject go = ItemFactory.Create(PlayerGo);
-            go.Transform.Position = GridManager.Instance.GetCornerPositionOfCell(new Point(2, 5));
-            GameWorld.Instance.Instantiate(go);
+            PlayerSpawnPos = new Point(10, 3);
+            EndPointSpawnPos = new Point(33, 2);
+
+            enemySpawnPoints = new() {
+            new Point(10, 21),
+            new Point(25, 21),
+            new Point(37, 12),};
+
+            potionSpawnPoints = new() {
+            new Point(7, 4),
+            new Point(29, 9),};
         }
     }
 }

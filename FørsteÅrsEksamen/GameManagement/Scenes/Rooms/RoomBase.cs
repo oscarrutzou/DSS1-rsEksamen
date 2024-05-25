@@ -11,25 +11,37 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System;
+using FørsteÅrsEksamen.ComponentPattern.Enemies;
+using FørsteÅrsEksamen.Other;
 
 namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
 {
     public abstract class RoomBase : Scene
     {
+        #region Properties
+        protected string GridName;
+        protected int GridWidth, GridHeight;
+        protected TextureNames BackGroundTexture = TextureNames.TestLevelBG;
+        protected TextureNames ForeGroundTexture = TextureNames.TestLevelFG;
+
         public Point PlayerSpawnPos, EndPointSpawnPos = new(6, 6);
         protected GameObject PlayerGo;
         private Player player;
 
-        protected TextureNames BackGroundTexture = TextureNames.TestLevelBG;
-        protected TextureNames ForeGroundTexture = TextureNames.TestLevelFG;
-        protected string GridName;
-        protected int GridWidth, GridHeight;
-        
+        protected List<Point> enemySpawnPoints = new();
+        protected List<Point> potionSpawnPoints = new();
+
+        private List<Enemy> enemiesInRoom = new();
+        private Spawner spawner;
+
         private List<GameObject> cells = new(); // For debug
         private PauseMenu pauseMenu;
+        #endregion
 
         public override void Initialize()
         {
+            SetSpawnPotions();
+
             // There needs to have been set some stuff before this base.Initialize (Look at Room1 for reference)
             PlayerGo = null; //Remove this from normal Scene and make another scene that sets all up.
 
@@ -39,20 +51,23 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
 
             SpawnTexture(BackGroundTexture, LayerDepth.WorldBackground);
             SpawnTexture(ForeGroundTexture, LayerDepth.WorldForeground);
+            
             SpawnGrid();
+            
             SpawnPlayer();
+            
             SpawnEndPos();
+            
+            SpawnEnemies();
+            SpawnPotions();
+
             SetCommands();
 
             DBMethods.RegularSave();
         }
 
-        private void ChangeScene()
-        {
-            int newRoomNr = SaveData.Level_Reached + 1;
-            GameWorld.Instance.ChangeDungeonScene(SceneNames.DungeonRoom, newRoomNr);
-        }
-
+        #region Initialize Methods
+        protected abstract void SetSpawnPotions();
         private void SpawnTexture(TextureNames textureName, LayerDepth layerDepth)
         {
             GameObject backgroundGo = new()
@@ -99,11 +114,26 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
             GameWorld.Instance.Instantiate(PlayerGo);
         }
 
-        private void SpawnEndPos()
+        private void SpawnEndPos() 
         {
-            GameObject go = TransferDoorFactory.Create();
-            go.Transform.Position = GridManager.Instance.GetCornerPositionOfCell(EndPointSpawnPos);
-            GameWorld.Instance.Instantiate(go);
+            // If all enemies are dead the player can go though the door, otherwise its locked.
+            // Change sprite on door.
+
+            GameObject endDoor = TransferDoorFactory.Create();
+            endDoor.Transform.Position = GridManager.Instance.GetCornerPositionOfCell(EndPointSpawnPos);
+            GameWorld.Instance.Instantiate(endDoor);
+        }
+
+        private void SpawnEnemies()
+        {
+            GameObject spawnerGo = new();
+            spawner = spawnerGo.AddComponent<Spawner>();
+            enemiesInRoom = spawner.SpawnEnemies(enemySpawnPoints, PlayerGo);
+        }
+
+        private void SpawnPotions()
+        {
+            spawner.SpawnPotions(potionSpawnPoints, PlayerGo);
         }
 
         private void SetCommands()
@@ -125,6 +155,12 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Enter, new CustomCmd(ChangeScene));
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DBGrid.SaveGrid(GridManager.Instance.CurrentGrid); }));
         }
+        private void ChangeScene()
+        {
+            int newRoomNr = SaveData.Level_Reached + 1;
+            GameWorld.Instance.ChangeDungeonScene(SceneNames.DungeonRoom, newRoomNr);
+        }
+#endregion
 
         public override void Update(GameTime gameTime)
         {
@@ -140,6 +176,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
             }
         }
 
+        #region Draw
         public override void DrawOnScreen(SpriteBatch spriteBatch)
         {
             base.DrawOnScreen(spriteBatch);
@@ -149,24 +186,31 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
             Vector2 playerHpPos = GameWorld.Instance.UiCam.BottomLeft + new Vector2(30, -50);
             spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Player HP: {player.CurrentHealth}/{player.MaxHealth}", playerHpPos, Color.Red);
 
-            Vector2 timerPos = playerHpPos - new Vector2(0, 30);
-            TimeSpan time = TimeSpan.FromSeconds(SaveData.Time_Left);
-            string minutes = time.Minutes.ToString("D2");
-            string seconds = time.Seconds.ToString("D2");
-            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Time Left: {minutes}:{seconds}", timerPos, Color.Red);
+            DrawTimer(spriteBatch, playerHpPos - new Vector2(0, 30));
 
-            if (player.ItemInInventory != null)
-            {
-                string text = $"Inventory: {player.ItemInInventory.Name}";
-                Vector2 textSize = GlobalTextures.DefaultFont.MeasureString(text);
-                Vector2 postionPos = GameWorld.Instance.UiCam.BottomRight - new Vector2(textSize.X + 30, textSize.Y / 2 + 30);
-                spriteBatch.DrawString(GlobalTextures.DefaultFont, text, postionPos, Color.Red);
-            }
-
+            DrawPotion(spriteBatch);
+            
             if (!InputHandler.Instance.DebugMode) return;
             DebugDraw(spriteBatch);
         }
 
+        
+        private void DrawTimer(SpriteBatch spriteBatch, Vector2 timerPos)
+        {
+            TimeSpan time = TimeSpan.FromSeconds(SaveData.Time_Left);
+            string minutes = time.Minutes.ToString("D2");
+            string seconds = time.Seconds.ToString("D2");
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Time Left: {minutes}:{seconds}", timerPos, Color.Red);
+        }
+        private void DrawPotion(SpriteBatch spriteBatch)
+        {
+            if (player.ItemInInventory == null) return;
+
+            string text = $"Inventory: {player.ItemInInventory.Name}";
+            Vector2 textSize = GlobalTextures.DefaultFont.MeasureString(text);
+            Vector2 postionPos = GameWorld.Instance.UiCam.BottomRight - new Vector2(textSize.X + 30, textSize.Y / 2 + 30);
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, text, postionPos, Color.Red);
+        }
         private void DebugDraw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], GameWorld.Instance.UiCam.TopLeft, null, Color.WhiteSmoke, 0f, Vector2.Zero, new Vector2(400, 300), SpriteEffects.None, 0.99f); // Over everything exept text
@@ -188,10 +232,10 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
             DrawString(spriteBatch, $"Current Level Reached {SaveData.Level_Reached}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 150));
             DrawString(spriteBatch, $"Player Room Nr {player.RoomNr}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 180));
         }
-
         protected void DrawString(SpriteBatch spriteBatch, string text, Vector2 position)
         {
             spriteBatch.DrawString(GlobalTextures.DefaultFont, text, position, Color.Black, 0f, Vector2.Zero, 1, SpriteEffects.None, 1f);
         }
+        #endregion
     }
 }

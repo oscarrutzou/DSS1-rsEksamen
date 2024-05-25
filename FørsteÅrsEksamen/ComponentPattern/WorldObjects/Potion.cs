@@ -46,8 +46,10 @@ namespace FørsteÅrsEksamen.ComponentPattern.WorldObjects
             // Skal kun fjerne item ved player position, ikke alle items.
             if (collider.CollisionBox.Intersects(PlayerCollider.CollisionBox))
             {
-                Player.PickUpItem(this);
-                GameObject.IsEnabled = false;
+                if (Player.CanPickUpItem(this))
+                {
+                    GameObject.IsEnabled = false;
+                }
             }
         }
 

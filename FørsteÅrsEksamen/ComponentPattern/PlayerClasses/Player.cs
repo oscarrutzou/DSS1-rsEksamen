@@ -281,7 +281,18 @@ namespace FørsteÅrsEksamen.ComponentPattern.PlayerClasses
         #endregion
 
         #region Item
-        public void PickUpItem(Potion item) => ItemInInventory = item;
+        public bool CanPickUpItem(Potion item)
+        {
+            if (ItemInInventory == null)
+            {
+                ItemInInventory = item;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         public void UseItem()
         {

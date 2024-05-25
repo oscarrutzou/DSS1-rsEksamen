@@ -657,6 +657,30 @@
 /processorParam:TextureFormat=Color
 /build:World/Enemies/Skeleton/Skeleton - Warrior/Run-Sheet.png
 
+#begin World/Levels/Level1Over.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/Levels/Level1Over.png
+
+#begin World/Levels/Level1Under.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/Levels/Level1Under.png
+
 #begin World/Levels/Test1OverPlayer.png
 /importer:TextureImporter
 /processor:TextureProcessor

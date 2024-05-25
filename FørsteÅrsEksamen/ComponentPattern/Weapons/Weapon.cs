@@ -122,11 +122,13 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
                 // Right
                 lastOffSet = new Vector2(StartPosOffset.X, -StartPosOffset.Y);
                 GameObject.Transform.Position = userPos + lastOffSet;
+                spriteRenderer.SpriteEffects = SpriteEffects.None;
             }
             else if (WeaponUser.Direction.X < 0)
             {
                 lastOffSet = -StartPosOffset;
                 GameObject.Transform.Position = userPos + lastOffSet;
+                spriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
             }
         }
 

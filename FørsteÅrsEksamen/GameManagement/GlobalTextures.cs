@@ -10,6 +10,10 @@ namespace FørsteÅrsEksamen.GameManagement
         Pixel,
         SpaceBG1,
         SpaceBG2,
+
+        Level1BG,
+        Level1FG,
+
         TestLevelBG,
         TestLevelFG,
         WoodSword,
@@ -45,6 +49,8 @@ namespace FørsteÅrsEksamen.GameManagement
                 {TextureNames.SpaceBG1, content.Load<Texture2D>("World\\Backgrounds\\Space Background1") },
                 {TextureNames.SpaceBG2, content.Load<Texture2D>("World\\Backgrounds\\Space Background2") },
 
+                {TextureNames.Level1BG, content.Load<Texture2D>("World\\Levels\\Level1Under") },
+                {TextureNames.Level1FG, content.Load<Texture2D>("World\\Levels\\Level1Over") },
                 {TextureNames.TestLevelBG, content.Load<Texture2D>("World\\Levels\\Test1UnderPlayer") },
                 {TextureNames.TestLevelFG, content.Load<Texture2D>("World\\Levels\\Test1OverPlayer") },
 
