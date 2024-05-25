@@ -23,7 +23,7 @@ namespace FørsteÅrsEksamen.GameManagement
         private static int maxInstanceOfOneSound = 2;
         //private static int maxInstanceOfGunSound = 10;
 
-        public static bool InMenu = true;
+        public static bool InMenu { get; set; } = true;
 
         private static SoundEffect menuMusic;
         private static SoundEffect gameMusic;

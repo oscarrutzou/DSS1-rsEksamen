@@ -14,7 +14,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
     public abstract class Enemy : Character
     {
         #region Properties
-
         private Grid grid;
         private Astar astar;
         private GameObject playerGo;
@@ -28,9 +27,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
         private readonly float threshold = 10f;
 
         public Action onGoalReached;
-
-        private bool inRange = false;
-        private float range;
+        private bool hasBeenAwoken;
 
         #endregion Properties
 
@@ -50,6 +47,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
 
             Collider.SetCollisionBox(15, 27, new Vector2(0, 15)); // Players collider for taking damage
         }
+
         public void SetStartPosition(GameObject playerGo, Point gridPos)
         {
             this.playerGo = playerGo;
@@ -60,7 +58,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             GameObject.Transform.GridPosition = gridPos;
         }
 
-
         public override void Start()
         {
             SpriteRenderer.SetLayerDepth(LayerDepth.EnemyUnder);
@@ -68,31 +65,24 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             SetState(CharacterState.Idle);
 
             // Sets start position
-            GameObject.Transform.Position = grid.GetCellGameObjectFromPoint(GameObject.Transform.GridPosition).Transform.Position;
+            GameObject currentCellGo = grid.GetCellGameObjectFromPoint(GameObject.Transform.GridPosition);
+            GameObject.Transform.Position = currentCellGo.Transform.Position;
+            Cell cell = currentCellGo.GetComponent<Cell>();
+            RoomNr = cell.RoomNr;
 
             Weapon.MoveWeapon();
 
-            SetPath(); // We know that the player the targetPoint has been set
+            if (player.RoomNr == RoomNr) SetPath(); // We know that the player the targetPoint has been set
 
             onGoalReached += OnGoalReached;
         }
 
         public override void Update(GameTime gameTime)
         {
-            CheckLayerDepth();
-
-            // Enemy is in the attacking state proberly from something like it just started the weapon
-            if (Weapon == null)
-            {
-                State = CharacterState.Dead;
-            }
+            CheckLayerDepth(); // Make sure the enemy is drawn correctly.
 
             //To make a new path towards the player, if they have moved.
-            if (playerGo.Transform.GridPosition != targetPoint && State != CharacterState.Dead)
-            {
-                targetPoint = playerGo.Transform.GridPosition;
-                SetPath(); 
-            }
+            PlayerMovedInRoom();
 
             switch (State)
             {
@@ -121,6 +111,18 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             }
         }
 
+        private void PlayerMovedInRoom()
+        {
+            if (player.RoomNr != RoomNr && !hasBeenAwoken) return; // Cant move if the player isnt in the same room.
+
+            if (playerGo.Transform.GridPosition != targetPoint && State != CharacterState.Dead)
+            {
+                targetPoint = playerGo.Transform.GridPosition;
+                hasBeenAwoken = true;
+                SetPath();
+            }
+        }
+
         private void CheckLayerDepth()
         {
             if (GameObject.Transform.Position.Y < playerGo.Transform.Position.Y)
@@ -139,8 +141,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             }
         }
 
-        // Kig hvad jeg har i starten af update, husk at have de checks med og sætte targetPoint til playerGo GridPosition.
-
         #region PathFinding
         private async void SetPath()
         {
@@ -154,6 +154,12 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             {
                 return astar.FindPath(GameObject.Transform.GridPosition, targetPoint);
             });
+
+            if (State == CharacterState.Dead) // Bug happend because this path got returned just as it died
+            {
+                path = null;
+                return;
+            }
 
             if (path != null && path.Count > 0)
             {
@@ -182,13 +188,15 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
                 if (path.Count > 2)
                 {
                     GameObject.Transform.GridPosition = path[0].Transform.GridPosition;
+                    UpdateRoomNr(path[0]);
                     ResetCellColor(path[0]);
                     path.RemoveAt(0);
                     SetNextTargetPos(path[0]);
                 }
-                else if (path.Count == 2)
+                else if (path.Count == 2) // Stops the path.
                 {
                     GameObject.Transform.GridPosition = path[0].Transform.GridPosition;
+                    UpdateRoomNr(path[0]);
                     SetNextTargetPos(path[0]);
                     ResetCellColor(path[0]);
                     path.RemoveAt(0);
@@ -209,6 +217,12 @@ namespace FørsteÅrsEksamen.ComponentPattern.Enemies
             }
 
             UpdateDirection();
+        }
+
+        private void UpdateRoomNr(GameObject cellGo)
+        {
+            Cell cell = cellGo.GetComponent<Cell>();
+            RoomNr = cell.RoomNr;
         }
 
         private void OnGoalReached()

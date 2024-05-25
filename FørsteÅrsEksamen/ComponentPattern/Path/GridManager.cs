@@ -39,7 +39,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
         /// <summary>
         /// For the room index on the cells, right now there is a limit of 10 rooms.
         /// </summary>
-        public int RoomNrIndex
+        public int LevelNrIndex
         {
             get { return roomNrIndex; }
             set
@@ -60,7 +60,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
         public void ChangeRoomNrIndex(int addToCurrentRoomNr)
         {
             if (!InputHandler.Instance.DebugMode) return;
-            RoomNrIndex += addToCurrentRoomNr;
+            LevelNrIndex += addToCurrentRoomNr;
         }
         #region SaveLoad
 
@@ -111,7 +111,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
             GameObject cellGo = GetCellAtPos(InputHandler.Instance.MouseInWorld);
             if (cellGo == null) return;
 
-            SetCellProperties(cellGo, CellWalkableType.FullValid, RoomNrIndex); // Move the is walkable out of this
+            SetCellProperties(cellGo, CellWalkableType.FullValid, LevelNrIndex); // Move the is walkable out of this
         }
 
         public void SetDefaultOnCell()

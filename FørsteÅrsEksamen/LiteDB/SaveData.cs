@@ -15,9 +15,9 @@ namespace FørsteÅrsEksamen.LiteDB
 
         public static List<ClassTypes> UnlockedClasses = new() { ClassTypes.Warrior, ClassTypes.Archer };
 
-        public static int Room_Reached { get; set; } = 1;
+        public static int Level_Reached { get; set; } = 1;
         public static int MaxRooms = 2;
-        public static float Time_Left { get; set; } = 20f;
+        public static float Time_Left { get; set; } = 3000f;
         public static bool HasWon { get; set; }
         public static bool LostByTime;
        
@@ -28,8 +28,8 @@ namespace FørsteÅrsEksamen.LiteDB
         public static void SetBaseValues()
         {
             Currency = 0;
-            Time_Left = 20f;
-            Room_Reached = 1;
+            Time_Left = 3000f;
+            Level_Reached = 1;
             UnlockedWeapons = new();
             UnlockedClasses = new();
             Player = null;

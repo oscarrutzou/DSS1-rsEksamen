@@ -18,7 +18,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
 
         public override void Initialize()
         {
-            SaveData.Room_Reached = 1;
+            SaveData.Level_Reached = 1;
 
             base.Initialize();
 

@@ -16,7 +16,6 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
         protected SpriteFont Font;
         protected Vector2 TextPos;
         protected Button MusicBtn, SfxBtn;
-        protected bool ShowBG = true;
         public override void Initialize()
         {
             FirstMenuObjects = new();
@@ -24,13 +23,14 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
             ShowSecondMenu = false;
 
             GlobalSounds.InMenu = true;
+            GameWorld.Instance.ShowBG = true;
 
             Font = GlobalTextures.BigFont;
             TextPos = GameWorld.Instance.UiCam.Center + new Vector2(0, -200);
             
             OnFirstCleanUp = AfterFirstCleanUp;
 
-            SpawnBG();
+            //SpawnBG();
             InitFirstMenu();
             InitSecondMenu();
 
@@ -47,17 +47,11 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
 
         protected virtual void InitFirstMenu() { }
         protected virtual void InitSecondMenu() { }
-        private void SpawnBG()
-        {
-            if (!ShowBG) return;
-            GameObject go = new();
-            go.Transform.Scale = new(4, 4);
-            go.Type = GameObjectTypes.Background;
-            SpriteRenderer sr = go.AddComponent<SpriteRenderer>();
-            sr.SetLayerDepth(LayerDepth.WorldBackground);
-            sr.SetSprite(TextureNames.SpaceBG1);
-            GameWorld.Instance.Instantiate(go);
-        }
+        //private void SpawnBG()
+        //{
+            
+        //    GameWorld.Instance.Instantiate(go);
+        //}
 
         public virtual void AfterFirstCleanUp()
         {

@@ -14,8 +14,9 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
 
         public override void Initialize()
         {
-            ShowBG = false;
             base.Initialize();
+            GameWorld.Instance.ShowBG = false;
+            //GlobalSounds.InMenu = false; //Uncomment this when there has been made a ease in and out from menu and game music
         }
 
         protected override void InitFirstMenu()

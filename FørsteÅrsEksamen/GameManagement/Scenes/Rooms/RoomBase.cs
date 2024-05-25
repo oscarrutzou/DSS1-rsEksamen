@@ -49,7 +49,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
 
         private void ChangeScene()
         {
-            int newRoomNr = SaveData.Room_Reached + 1;
+            int newRoomNr = SaveData.Level_Reached + 1;
             GameWorld.Instance.ChangeDungeonScene(SceneNames.DungeonRoom, newRoomNr);
         }
 
@@ -169,7 +169,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
 
         private void DebugDraw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], GameWorld.Instance.UiCam.TopLeft, null, Color.WhiteSmoke, 0f, Vector2.Zero, new Vector2(350, 180), SpriteEffects.None, 0.99f); // Over everything exept text
+            spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], GameWorld.Instance.UiCam.TopLeft, null, Color.WhiteSmoke, 0f, Vector2.Zero, new Vector2(400, 300), SpriteEffects.None, 0.99f); // Over everything exept text
 
             Vector2 mousePos = InputHandler.Instance.MouseOnUI;
 
@@ -184,11 +184,12 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
 
             DrawString(spriteBatch, $"PlayerPos {PlayerGo.Transform.Position}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 60));
             DrawString(spriteBatch, $"Cell GameObjects in scene {cells.Count}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 90));
-            DrawString(spriteBatch, $"RoomNr {GridManager.Instance.RoomNrIndex}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 120));
-            DrawString(spriteBatch, $"Current Room Reached {SaveData.Room_Reached}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 150));
+            DrawString(spriteBatch, $"LevelNr {GridManager.Instance.LevelNrIndex}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 120));
+            DrawString(spriteBatch, $"Current Level Reached {SaveData.Level_Reached}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 150));
+            DrawString(spriteBatch, $"Player Room Nr {player.RoomNr}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 180));
         }
 
-        private void DrawString(SpriteBatch spriteBatch, string text, Vector2 position)
+        protected void DrawString(SpriteBatch spriteBatch, string text, Vector2 position)
         {
             spriteBatch.DrawString(GlobalTextures.DefaultFont, text, position, Color.Black, 0f, Vector2.Zero, 1, SpriteEffects.None, 1f);
         }

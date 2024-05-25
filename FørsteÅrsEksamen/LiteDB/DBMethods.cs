@@ -160,7 +160,7 @@ namespace FørsteÅrsEksamen.LiteDB
             // After it has saved the palyer it will change scene
             await Task.Run(SavePlayer);
 
-            int newRoomNr = SaveData.Room_Reached + 1;
+            int newRoomNr = SaveData.Level_Reached + 1;
 
             if (newRoomNr <= SaveData.MaxRooms)
             {

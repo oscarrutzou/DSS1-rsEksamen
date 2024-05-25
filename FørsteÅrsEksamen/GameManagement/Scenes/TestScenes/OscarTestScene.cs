@@ -179,7 +179,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.TestScenes
             SceneData.GameObjectLists.TryGetValue(GameObjectTypes.Cell, out list);
             spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Cell GameObjects in scene {list.Count}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 90), Color.Black);
 
-            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"RoomNr {GridManager.Instance.RoomNrIndex}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 120), Color.Black);
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"RoomNr {GridManager.Instance.LevelNrIndex}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 120), Color.Black);
 
             base.DrawOnScreen(spriteBatch);
         }

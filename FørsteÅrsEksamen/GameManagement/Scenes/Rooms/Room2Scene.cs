@@ -20,18 +20,13 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
 
         public override void Initialize()
         {
-            SaveData.Room_Reached = 2;
-            //DBGrid.DeleteGrid(GridName);
+            SaveData.Level_Reached = 2;
             base.Initialize();
 
             GameObject enemyGo = EnemyFactory.Create(EnemyTypes.OrcWarrior);
             enemyGo.GetComponent<Enemy>().SetStartPosition(PlayerGo, new Point(5, 5));
+            
             GameWorld.Instance.Instantiate(enemyGo);
-        }
-
-        public override void DrawOnScreen(SpriteBatch spriteBatch)
-        {
-            base.DrawOnScreen(spriteBatch);
         }
     }
 }

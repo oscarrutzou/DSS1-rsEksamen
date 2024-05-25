@@ -67,7 +67,7 @@ namespace FørsteÅrsEksamen.LiteDB
             RunData runData = new()
             {
                 Run_ID = SaveData.CurrentSaveID,
-                Room_Reached = SaveData.Room_Reached,
+                Room_Reached = SaveData.Level_Reached,
                 Time_Left = SaveData.Time_Left,
             };
 

@@ -48,7 +48,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
         protected int speed = 200;
         public int CurrentHealth = 100;
         public int MaxHealth = 100;
-
+        public int RoomNr { get; set; }
         #endregion Properties
 
         public Character(GameObject gameObject) : base(gameObject)
@@ -147,6 +147,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
             SetState(CharacterState.Dead);
             GameWorld.Instance.Destroy(WeaponGo);
             Weapon = null;
+            
             // Remove hands
             SpriteRenderer.Color = Color.LightPink;
         }

@@ -13,6 +13,7 @@ namespace FørsteÅrsEksamen.GameManagement
         TestLevelBG,
         TestLevelFG,
         WoodSword,
+        BoneSword,
         WoodArrow,
         HealthPotionFull,
 
@@ -48,6 +49,7 @@ namespace FørsteÅrsEksamen.GameManagement
                 {TextureNames.TestLevelFG, content.Load<Texture2D>("World\\Levels\\Test1OverPlayer") },
 
                 {TextureNames.WoodSword, content.Load<Texture2D>("World\\Weapons\\Melee Weapons\\WoodSword") },
+                {TextureNames.BoneSword, content.Load<Texture2D>("World\\Weapons\\Melee Weapons\\BoneSword") },
                 {TextureNames.WoodArrow, content.Load<Texture2D>("Test\\WoodArrow") },
                 {TextureNames.HealthPotionFull, content.Load<Texture2D>("World\\Objects\\Potions\\RedPotion1") },
 

@@ -215,6 +215,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.PlayerClasses
             // Updates the grid position
             GameObject cellGoUnderPlayer = GridManager.Instance.GetCellAtPos(GameObject.Transform.Position);
             GameObject.Transform.GridPosition = cellGoUnderPlayer.Transform.GridPosition;
+            RoomNr = cellGoUnderPlayer.GetComponent<Cell>().RoomNr;
 
             Notify();
         }

@@ -89,6 +89,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Path
 
         public GameObject GetCellGameObjectFromPoint(Point point) => GetCellGameObject(PosFromGridPos(point));
 
+        public Cell GetCellFromPos(Vector2 pos) => GetCellGameObject(pos).GetComponent<Cell>();
         public Cell GetCellFromPoint(Point point) => GetCellGameObjectFromPoint(point).GetComponent<Cell>();
     }
 }

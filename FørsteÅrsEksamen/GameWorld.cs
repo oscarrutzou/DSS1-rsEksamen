@@ -29,8 +29,11 @@ namespace FørsteÅrsEksamen.GameManagement
         public static bool IsPaused = false;
         public static readonly object InputHandlerLock = new();
 
-        private SpriteBatch _spriteBatch;
         public SceneNames? NextScene { get; private set; } = null;
+        public bool ShowBG { get; set; } = true;
+        
+        private SpriteBatch _spriteBatch;
+        private GameObject menuBackground;
 
         public GameWorld()
         {
@@ -54,6 +57,8 @@ namespace FørsteÅrsEksamen.GameManagement
             GlobalAnimations.LoadContent();
 
             GenerateScenes();
+
+            SpawnBG();
 
             CurrentScene = Scenes[SceneNames.MainMenu];
             CurrentScene.Initialize();
@@ -95,6 +100,8 @@ namespace FørsteÅrsEksamen.GameManagement
                 transformMatrix: WorldCam.GetMatrix());
 
             CurrentScene.DrawInWorld(_spriteBatch);
+            DrawBG(_spriteBatch);
+
             _spriteBatch.End();
 
             //Draw on screen objects. Use pixel perfect and a stationary UiCam that dosent move around
@@ -231,6 +238,25 @@ namespace FørsteÅrsEksamen.GameManagement
             {
                 Monitor.Exit(InputHandlerLock);
             }
+        }
+
+        private void SpawnBG()
+        {
+            menuBackground = new();
+            menuBackground.Transform.Scale = new(4, 4);
+            menuBackground.Type = GameObjectTypes.Background;
+            SpriteRenderer sr = menuBackground.AddComponent<SpriteRenderer>();
+            sr.SetLayerDepth(LayerDepth.WorldBackground);
+            sr.SetSprite(TextureNames.SpaceBG1);
+
+            menuBackground.Awake();
+            menuBackground.Start();
+        }
+
+        private void DrawBG(SpriteBatch spriteBatch)
+        {
+            if (!ShowBG) return;
+            menuBackground.Draw(spriteBatch);
         }
 
         #endregion

@@ -64,6 +64,15 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
             spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
             spriteRenderer.SetLayerDepth(LayerDepth.PlayerWeapon);
             spriteRenderer.IsCentered = false;
+
+            if (EnemyWeapon)
+            {
+                EnemyWeaponSprite();
+            }
+            else
+            {
+                PlayerWeaponSprite();
+            }
         }       
 
         public void StartAttack() 
@@ -83,8 +92,10 @@ namespace FørsteÅrsEksamen.ComponentPattern.Weapons
             }
         }
 
+        protected virtual void PlayerWeaponSprite() {}
+        protected virtual void EnemyWeaponSprite() { }
         protected virtual void PlayerStartAttack() {}
-        protected virtual void EnemyStartAttack() { }
+        protected virtual void EnemyStartAttack() {}
 
         protected void PlayAttackSound()
         {
