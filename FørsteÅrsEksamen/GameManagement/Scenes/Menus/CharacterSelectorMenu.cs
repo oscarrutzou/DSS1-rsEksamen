@@ -17,7 +17,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
     {
 
         private Dictionary<ClassTypes, List<GameObject>> classWeaponButton;
-        private Vector2 buttonScale = new(9f, 15f);
+        private Vector2 buttonScale = new(6, 6);
         private int spaceBetween = 30;
 
         public override void Initialize()
@@ -34,12 +34,10 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
         {
             foreach (ClassTypes type in Enum.GetValues(typeof(ClassTypes)))
             {
-                GameObject btn = ButtonFactory.Create($"{type}", true, () => { SelectClass(type); });
-                btn.GetComponent<Button>().ChangeScale(buttonScale);
+                GameObject btn = ButtonFactory.Create($"{type}", true, () => { SelectClass(type); }, TextureNames.LargeBtn, AnimNames.LargeBtn);
+                //btn.GetComponent<Button>().ChangeScale(buttonScale);
                 FirstMenuObjects.Add(btn);
             }
-
-            GuiMethods.PlaceGameObjectsHorizontal(FirstMenuObjects, Vector2.Zero, spaceBetween, true);
         }
 
         private void SelectClass(ClassTypes type)
@@ -58,8 +56,8 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
 
                 foreach (WeaponTypes weaponType in WeaponFactory.ClassHasWeapons[classType])
                 {
-                    GameObject btn = ButtonFactory.Create($"{weaponType}", true, () => { SeletectWeapon(weaponType); });
-                    btn.GetComponent<Button>().ChangeScale(buttonScale);
+                    GameObject btn = ButtonFactory.Create($"{weaponType}", true, () => { SeletectWeapon(weaponType); }, TextureNames.LargeBtn, AnimNames.LargeBtn);
+                    //btn.GetComponent<Button>().ChangeScale(buttonScale);
                     gameObjects.Add(btn);
                 }
 
@@ -69,6 +67,21 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
             foreach (List<GameObject> goList in classWeaponButton.Values)
             {
                 ShowHideGameObjects(goList, false);
+
+                foreach (GameObject gameObject in goList)
+                {
+                    GameWorld.Instance.Instantiate(gameObject);
+                }
+            }
+
+        }
+
+        public override void AfterFirstCleanUp()
+        {
+            GuiMethods.PlaceGameObjectsHorizontal(FirstMenuObjects, Vector2.Zero, spaceBetween, true);
+
+            foreach (List<GameObject> goList in classWeaponButton.Values)
+            {
                 GuiMethods.PlaceGameObjectsHorizontal(goList, Vector2.Zero, spaceBetween, true);
             }
         }
@@ -80,8 +93,6 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
             backBtn.Transform.Position += new Vector2(0, 200 + FirstMenuObjects[0].Transform.Position.Y);
             GameWorld.Instance.Instantiate(backBtn);
         }
-
-        
 
         private void SeletectWeapon(WeaponTypes weapon)
         {

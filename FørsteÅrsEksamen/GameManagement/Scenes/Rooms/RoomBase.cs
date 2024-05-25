@@ -35,6 +35,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
 
             pauseMenu = new PauseMenu();
             pauseMenu.Initialize();
+            OnFirstCleanUp = pauseMenu.AfterFirstCleanUp;
 
             SpawnTexture(BackGroundTexture, LayerDepth.WorldBackground);
             SpawnTexture(ForeGroundTexture, LayerDepth.WorldForeground);
@@ -94,7 +95,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
 
             PlayerGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[PlayerSpawnPos].Transform.Position;
             PlayerGo.Transform.GridPosition = PlayerSpawnPos;
-            GameWorld.Instance.WorldCam.position = PlayerGo.Transform.Position;
+            GameWorld.Instance.WorldCam.Position = PlayerGo.Transform.Position;
             GameWorld.Instance.Instantiate(PlayerGo);
         }
 
@@ -133,8 +134,8 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
 
             if (SaveData.Time_Left <= 0) // Player ran out of Time
             {
-                SaveData.HasWon = false;
-                DBMethods.OnChangeSceneEnd();
+                SaveData.Time_Left = 0;
+                player.TakeDamage(1000); // Kills the player
             }
         }
 

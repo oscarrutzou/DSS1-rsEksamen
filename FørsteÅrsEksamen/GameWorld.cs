@@ -26,6 +26,7 @@ namespace FørsteÅrsEksamen.GameManagement
         public static float DeltaTime { get; private set; }
         public GraphicsDeviceManager GfxManager { get; private set; }
 
+        public static bool IsPaused = false;
         public static readonly object InputHandlerLock = new();
 
         private SpriteBatch _spriteBatch;
@@ -57,7 +58,7 @@ namespace FørsteÅrsEksamen.GameManagement
             CurrentScene = Scenes[SceneNames.MainMenu];
             CurrentScene.Initialize();
 
-            Thread inputThread = new Thread(InputHandler.Instance.StartInputThread)
+            Thread inputThread = new(InputHandler.Instance.StartInputThread)
             {
                 IsBackground = true // Stops the thread abruptly
             };
@@ -65,8 +66,6 @@ namespace FørsteÅrsEksamen.GameManagement
 
             base.Initialize();
         }
-
-        // Simpel lås verision for at ikke åbne 2 versioner af spillet, brug mutex
 
         protected override void LoadContent()
         {
@@ -223,6 +222,7 @@ namespace FørsteÅrsEksamen.GameManagement
                 CurrentScene.OnSceneChange(); // Removes stuff like commands
                 SceneData.DeleteAllGameObjects(); // Removes every object
 
+                WorldCam.Position = Vector2.Zero;
                 CurrentScene = Scenes[NextScene.Value]; // Changes to new scene
                 CurrentScene.Initialize();
                 NextScene = null;

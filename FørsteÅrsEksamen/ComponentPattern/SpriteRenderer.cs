@@ -77,7 +77,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
 
             drawPos = GameObject.Transform.Position;
 
-            if (animator != null && animator.CurrentAnimation.UseSpriteSheet)
+            if (animator != null && animator.CurrentAnimation != null && animator.CurrentAnimation.UseSpriteSheet)
             {
                 drawPos += new Vector2(animator.MaxFrames * animator.CurrentAnimation.FrameDimensions * GameObject.Transform.Scale.X / 2 - animator.CurrentAnimation.FrameDimensions * 2, 0);
             }

@@ -1,7 +1,9 @@
 ﻿using FørsteÅrsEksamen.CommandPattern;
 using FørsteÅrsEksamen.ComponentPattern;
+using FørsteÅrsEksamen.ComponentPattern.GUI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 
 namespace FørsteÅrsEksamen.GameManagement
@@ -30,11 +32,9 @@ namespace FørsteÅrsEksamen.GameManagement
     // Oscar
     public abstract class Scene
     {
-        public bool IsPaused;
-
         private List<GameObject> newGameObjects = new List<GameObject>();
         private List<GameObject> destroyedGameObjects = new List<GameObject>();
-
+        protected Action OnFirstCleanUp;
         public abstract void Initialize();
 
         /// <summary>
@@ -44,7 +44,13 @@ namespace FørsteÅrsEksamen.GameManagement
         {
             CleanUp();
 
-            if (IsPaused) return;
+            if (OnFirstCleanUp != null)
+            {
+                OnFirstCleanUp();
+                OnFirstCleanUp = null;
+            }
+
+            if (GameWorld.IsPaused) return;
 
             foreach (GameObjectTypes type in SceneData.GameObjectLists.Keys)
             {
@@ -70,6 +76,7 @@ namespace FørsteÅrsEksamen.GameManagement
 
         public virtual void OnSceneChange()
         {
+            OnFirstCleanUp = null; // For extra safety
             InputHandler.Instance.RemoveAllExeptBaseCommands();
         }
 
@@ -149,7 +156,7 @@ namespace FørsteÅrsEksamen.GameManagement
 
         public virtual void DrawSceenColor()
         {
-            GameWorld.Instance.GraphicsDevice.Clear(Color.Beige);
+            GameWorld.Instance.GraphicsDevice.Clear(new Color(20, 20, 18, 255));
         }
     }
 }

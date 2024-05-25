@@ -14,17 +14,11 @@ namespace FørsteÅrsEksamen.ComponentPattern
         private Dictionary<AnimNames, Animation> animations = new Dictionary<AnimNames, Animation>();
         public Animation CurrentAnimation { get; private set; }
 
-        /// <summary>
-        /// If its false, the animation will play once, and then stop
-        /// </summary>
-        private bool isLooping;
-
-        private bool hasPlayedAnim;
-
+        private bool isLooping, hasPlayedAnim;
         public int CurrentIndex { get; private set; }
         public int MaxFrames;
-        private float timeElapsed;
-        private float frameDuration;
+        private float timeElapsed, frameDuration;
+
 
         public Animator(GameObject gameObject) : base(gameObject)
         {
@@ -72,6 +66,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
                 }
             }
 
+            if (CurrentIndex < 0) CurrentIndex = 0;
             spriteRenderer.Sprite = CurrentAnimation.Sprites[CurrentIndex];
         }
 

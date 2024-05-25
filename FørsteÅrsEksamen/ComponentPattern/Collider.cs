@@ -22,7 +22,7 @@ namespace FørsteÅrsEksamen.ComponentPattern
             {
                 int width, height;
                 Vector2 pos = GameObject.Transform.Position;
-                if (animator != null)
+                if (animator != null && animator.CurrentAnimation != null)
                 {
                     width = collisionWidth > 0 ? collisionWidth : animator.CurrentAnimation.FrameDimensions;
                     height = collisionHeight > 0 ? collisionHeight : animator.CurrentAnimation.FrameDimensions;

@@ -26,21 +26,17 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
 
             GameObject quitBtn = ButtonFactory.Create("Quit", true, GameWorld.Instance.Exit);
             FirstMenuObjects.Add(quitBtn);
-
-            GuiMethods.PlaceGameObjectsVertical(FirstMenuObjects, TextPos + new Vector2(0, 75), 25);
         }
 
         protected override void InitSecondMenu()
         {
-            GameObject musicVolGo = ButtonFactory.Create("", true, ChangeMusic);
+            GameObject musicVolGo = ButtonFactory.Create("", true, ChangeMusic, TextureNames.LargeBtn, AnimNames.LargeBtn);
             MusicBtn = musicVolGo.GetComponent<Button>();
-            MusicBtn.ChangeScale(new Vector2(14, 4));
             MusicBtn.Text = $"Music Volume {GlobalSounds.MusicVolume * 100}%";
             SecondMenuObjects.Add(musicVolGo);
 
-            GameObject sfxVolGo = ButtonFactory.Create("", true, ChangeSfx);
+            GameObject sfxVolGo = ButtonFactory.Create("", true, ChangeSfx, TextureNames.LargeBtn, AnimNames.LargeBtn);
             SfxBtn = sfxVolGo.GetComponent<Button>();
-            SfxBtn.ChangeScale(new Vector2(14, 4));
             SfxBtn.Text = $"SFX Volume {GlobalSounds.SfxVolume * 100}%";
             SecondMenuObjects.Add(sfxVolGo);
 
@@ -48,8 +44,6 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
             SecondMenuObjects.Add(quitBtn);
 
             ShowHideGameObjects(SecondMenuObjects, false);
-
-            GuiMethods.PlaceGameObjectsVertical(SecondMenuObjects, TextPos + new Vector2(0, 75), 25);
         }
 
         public override void DrawOnScreen(SpriteBatch spriteBatch)

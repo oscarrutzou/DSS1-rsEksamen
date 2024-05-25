@@ -30,7 +30,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
         private void MakePlayer()
         {
             playerGo = PlayerFactory.Create(ClassTypes.Warrior, WeaponTypes.Sword);
-            GameWorld.Instance.WorldCam.position = playerGo.Transform.Position;
+            GameWorld.Instance.WorldCam.Position = playerGo.Transform.Position;
             GameWorld.Instance.Instantiate(playerGo);
         }
 

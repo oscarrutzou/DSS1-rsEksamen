@@ -12,6 +12,12 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
         private enum MenuState { StartMenu, SettingsMenu }
         private MenuState currentMenuState = MenuState.StartMenu;
 
+        public override void Initialize()
+        {
+            ShowBG = false;
+            base.Initialize();
+        }
+
         protected override void InitFirstMenu()
         {
             GameObject startBtn = ButtonFactory.Create("Pause", true, TogglePauseMenu);
@@ -28,21 +34,17 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
             FirstMenuObjects.Add(mainMenu);
 
             ShowHideGameObjects(FirstMenuObjects, false);
-
-            GuiMethods.PlaceGameObjectsVertical(FirstMenuObjects, TextPos + new Vector2(0, 75), 25);
         }
 
         protected override void InitSecondMenu()
         {
-            GameObject musicVolGo = ButtonFactory.Create("", true, ChangeMusic);
+            GameObject musicVolGo = ButtonFactory.Create("", true, ChangeMusic, TextureNames.LargeBtn, AnimNames.LargeBtn);
             MusicBtn = musicVolGo.GetComponent<Button>();
-            MusicBtn.ChangeScale(new Vector2(14, 4));
             MusicBtn.Text = $"Music Volume {GlobalSounds.MusicVolume * 100}%";
             SecondMenuObjects.Add(musicVolGo);
 
-            GameObject sfxVolGo = ButtonFactory.Create("", true, ChangeSfx);
+            GameObject sfxVolGo = ButtonFactory.Create("", true, ChangeSfx, TextureNames.LargeBtn, AnimNames.LargeBtn);
             SfxBtn = sfxVolGo.GetComponent<Button>();
-            SfxBtn.ChangeScale(new Vector2(14, 4));
             SfxBtn.Text = $"SFX Volume {GlobalSounds.SfxVolume * 100}%";
             SecondMenuObjects.Add(sfxVolGo);
 
@@ -50,8 +52,6 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
             SecondMenuObjects.Add(quitBtn);
 
             ShowHideGameObjects(SecondMenuObjects, false);
-
-            GuiMethods.PlaceGameObjectsVertical(SecondMenuObjects, TextPos + new Vector2(0, 75), 25);
         }
 
         public void TogglePauseMenu()

@@ -89,7 +89,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes
             PlayerGo = PlayerFactory.Create(ClassTypes.Warrior, WeaponTypes.Sword);
             PlayerGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[PlayerSpawnPos].Transform.Position;
             PlayerGo.Transform.GridPosition = PlayerSpawnPos;
-            GameWorld.Instance.WorldCam.position = PlayerGo.Transform.Position;
+            GameWorld.Instance.WorldCam.Position = PlayerGo.Transform.Position;
             GameWorld.Instance.Instantiate(PlayerGo);
         }
 

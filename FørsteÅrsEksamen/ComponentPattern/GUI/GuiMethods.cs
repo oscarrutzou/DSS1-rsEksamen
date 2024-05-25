@@ -13,7 +13,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
 
         public static void PlaceGameObjectsVertical(List<GameObject> list, Vector2 startPos, int spaceBetween, bool center = false)
         {
-            int buttonHeight = list[0].GetComponent<SpriteRenderer>().Sprite.Height * (int)list[0].Transform.Scale.Y;
+            int buttonHeight = list[0].GetComponent<Collider>().CollisionBox.Height;
 
             if (center)
             {
@@ -33,15 +33,13 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
                 GameObject btn = list[i];
                 int newPosY = (int)startPos.Y + i * (buttonHeight + spaceBetween);
                 btn.Transform.Position = new Vector2(startPos.X, newPosY);
-
-                GameWorld.Instance.Instantiate(btn);
             }
         }
 
         public static void PlaceGameObjectsHorizontal(List<GameObject> list, Vector2 startPos, int spaceBetween, bool center = true)
         {
             // Calculate the width of a button
-            int buttonWidth = list[0].GetComponent<SpriteRenderer>().Sprite.Width * (int)list[0].Transform.Scale.X;
+            int buttonWidth = list[0].GetComponent<Collider>().CollisionBox.Width;
 
             if (center)
             {
@@ -57,8 +55,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
                 GameObject btn = list[i];
                 int newPosX = (int)startPos.X + i * (buttonWidth + spaceBetween);
                 btn.Transform.Position = new Vector2(newPosX, startPos.Y);
-
-                GameWorld.Instance.Instantiate(btn);
             }
         }
 

@@ -17,13 +17,8 @@ namespace FørsteÅrsEksamen.LiteDB
 
         public static int Room_Reached { get; set; } = 1;
         public static int MaxRooms = 2;
-        public static float Time_Left { get; set; } = 300f;
+        public static float Time_Left { get; set; } = 20f;
         public static bool HasWon;
-        // For when we load or select each weapon, to make the player.
-        
-        // We also need to save the player with the next scene int just before they go into the new scene 
-        // This is so we keep our Health and other stuff.
-        // Should happend in a loading screen.
        
         public static WeaponTypes SelectedWeapon; 
         public static ClassTypes SelectedClass {  get; set; }
@@ -32,7 +27,7 @@ namespace FørsteÅrsEksamen.LiteDB
         public static void SetBaseValues()
         {
             Currency = 0;
-            Time_Left = 300f;
+            Time_Left = 20f;
             Room_Reached = 1;
             UnlockedWeapons = new();
             UnlockedClasses = new();

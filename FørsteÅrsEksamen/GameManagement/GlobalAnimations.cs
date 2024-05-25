@@ -7,6 +7,10 @@ namespace FørsteÅrsEksamen.GameManagement
 {
     public enum AnimNames
     {
+        // GUI
+        SmallBtn,
+        LargeBtn,
+
         TestWizardRightIndividualFrames,
 
         // Player Classes
@@ -74,8 +78,7 @@ namespace FørsteÅrsEksamen.GameManagement
         {
             Animations = new Dictionary<AnimNames, Animation>();
 
-            //Can upload sprite sheets
-            //// The Name of the Animation, the path, the FPS (how many times we change the frame per second, and the 
+            //Sprite sheets
 
             // Load animations for Knight
             LoadSpriteSheet(AnimNames.KnightIdle, "World\\Classes\\Knight\\Idle-Sheet", 5, 32);
@@ -142,6 +145,8 @@ namespace FørsteÅrsEksamen.GameManagement
 
             #endregion How to Upload Individual Frame Animation
 
+            LoadIndividualFramesAnimation(AnimNames.SmallBtn, "UI\\SmallButtonIndividuel (1)", 3, 2);
+            LoadIndividualFramesAnimation(AnimNames.LargeBtn, "UI\\BigButtonIndividuel (1)", 3, 2);
             //LoadIndividualFramesAnimation(AnimNames.TestWizardRightIndividualFrames, "Test\\MultipleFilesAnim\\wizardRight (1)", 5, 8);
         }
 

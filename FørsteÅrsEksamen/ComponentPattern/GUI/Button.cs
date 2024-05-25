@@ -18,6 +18,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
 
         private SpriteRenderer spriteRenderer;
         private Collider collider;
+        private Animator animator;
 
         public Color TextColor = Color.Black;
 
@@ -34,6 +35,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
         private Vector2 scaleUpAmount;
         private float scaleDownOnClickAmount = 0.95f;
 
+        private AnimNames animationName;
+        private TextureNames textureName;
         #endregion Properties
 
         public Button(GameObject gameObject) : base(gameObject)
@@ -45,12 +48,14 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
             GameObject.Type = GameObjectTypes.Gui;
         }
 
-        public Button(GameObject gameObject, string text, bool invokeActionOnFullScale, Action onClick) : base(gameObject)
+        public Button(GameObject gameObject, string text, bool invokeActionOnFullScale, Action onClick, TextureNames textureName, AnimNames animationName) : base(gameObject)
         {
             maxScale = GameObject.Transform.Scale;
             scaleUpAmount = new Vector2(maxScale.X * 0.01f, maxScale.Y * 0.01f);
 
             font = GlobalTextures.DefaultFont;
+            this.animationName = animationName;
+            this.textureName = textureName;
             this.Text = text;
             this.invokeActionOnFullScale = invokeActionOnFullScale;
             this.OnClick = onClick;
@@ -61,6 +66,8 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
         {
             collider = GameObject.GetComponent<Collider>();
             spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
+            animator = GameObject.GetComponent<Animator>();
+
             baseColor = spriteRenderer.Color;
         }
 
@@ -76,6 +83,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
                 if (InputHandler.Instance.MouseState.LeftButton != ButtonState.Released)
                 {
                     spriteRenderer.Color = OnMouseDownColor;
+                    PlayAnim();
                     return;
                 }
 
@@ -98,9 +106,16 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
                 || !hasPressed
                 || GameObject.Transform.Scale != maxScale) return;
 
-            InvokeAction();
+            OnClick?.Invoke();
+            spriteRenderer.SetSprite(textureName); // Resets the texture
 
             hasPressed = false;
+        }
+
+        private void PlayAnim()
+        {
+            animator.PlayAnimation(animationName);
+            animator.StopCurrentAnimationAtLastSprite();
         }
 
         public bool IsMouseOver()
@@ -134,17 +149,10 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
             }
             else
             {
-                InvokeAction();
+                OnClick?.Invoke();
+                PlayAnim();
             }
         }
-
-        public void InvokeAction()
-        {
-
-
-            OnClick?.Invoke();
-        }
-
 
         public override void Draw(SpriteBatch spriteBatch)
         {

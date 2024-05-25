@@ -275,7 +275,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.Classes
             MovementColliderGo.Transform.Position = GameObject.Transform.Position;
             HandsGo.Transform.Position = GameObject.Transform.Position;
             Weapon.MoveWeapon();
-            GameWorld.Instance.WorldCam.position = GameObject.Transform.Position; //Sets the new position of the world cam
+            GameWorld.Instance.WorldCam.Position = GameObject.Transform.Position; //Sets the new position of the world cam
         }
         #endregion
 

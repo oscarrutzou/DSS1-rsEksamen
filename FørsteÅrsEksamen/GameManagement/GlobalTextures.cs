@@ -8,11 +8,17 @@ namespace FørsteÅrsEksamen.GameManagement
     {
         Cell,
         Pixel,
+        SpaceBG1,
+        SpaceBG2,
         TestLevelBG,
         TestLevelFG,
         WoodSword,
         WoodArrow,
         HealthPotion,
+
+        // UI
+        SmallBtn,
+        LargeBtn,
     }
 
     // Oscar
@@ -34,11 +40,19 @@ namespace FørsteÅrsEksamen.GameManagement
             {
                 {TextureNames.Cell, content.Load<Texture2D>("World\\16x16White") },
                 {TextureNames.Pixel, content.Load<Texture2D>("World\\Pixel") },
+
+                {TextureNames.SpaceBG1, content.Load<Texture2D>("World\\Backgrounds\\Space Background1") },
+                {TextureNames.SpaceBG2, content.Load<Texture2D>("World\\Backgrounds\\Space Background2") },
+
                 {TextureNames.TestLevelBG, content.Load<Texture2D>("World\\Levels\\Test1UnderPlayer") },
                 {TextureNames.TestLevelFG, content.Load<Texture2D>("World\\Levels\\Test1OverPlayer") },
+
                 {TextureNames.WoodSword, content.Load<Texture2D>("World\\Weapons\\Melee Weapons\\WoodSword") },
                 {TextureNames.WoodArrow, content.Load<Texture2D>("Test\\WoodArrow") },
-                {TextureNames.HealthPotion, content.Load<Texture2D>("World\\MediumPotion") }
+                {TextureNames.HealthPotion, content.Load<Texture2D>("World\\MediumPotion") },
+
+                {TextureNames.SmallBtn, content.Load<Texture2D>("UI\\SmallButtonIndividuel (1)") },
+                {TextureNames.LargeBtn, content.Load<Texture2D>("UI\\BigButtonIndividuel (1)") },
             };
 
             // Load all fonts

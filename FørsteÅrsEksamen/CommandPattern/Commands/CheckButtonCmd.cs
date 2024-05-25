@@ -9,7 +9,6 @@ namespace FørsteÅrsEksamen.CommandPattern.Commands
 {
     public class CheckButtonCmd : ICommand
     {
-
         public void Execute()
         {
             List<GameObject> gameObjectListCopy = new(SceneData.GameObjectLists[GameObjectTypes.Gui]);

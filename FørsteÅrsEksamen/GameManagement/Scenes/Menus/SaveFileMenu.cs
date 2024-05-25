@@ -26,14 +26,14 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
         {
             saveFileButtons = new Dictionary<int, Button>()
             {
-                { 1, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(1); }).GetComponent<Button>() },
-                { 2, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(2); }).GetComponent<Button>()  },
-                { 3, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(3); }).GetComponent<Button>()  }
+                { 1, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(1); }, TextureNames.LargeBtn, AnimNames.LargeBtn).GetComponent<Button>() },
+                { 2, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(2); }, TextureNames.LargeBtn, AnimNames.LargeBtn).GetComponent<Button>()  },
+                { 3, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(3); }, TextureNames.LargeBtn, AnimNames.LargeBtn).GetComponent<Button>()  }
             };
 
             foreach (Button button in saveFileButtons.Values)
             {
-                button.ChangeScale(new Vector2(14, 5));
+                //button.ChangeScale(new Vector2(14, 5));
                 FirstMenuObjects.Add(button.GameObject);
             }
 
@@ -43,8 +43,12 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
             });
 
             FirstMenuObjects.Add(backBtn);
+        }
 
+        public override void AfterFirstCleanUp()
+        {
             GuiMethods.PlaceGameObjectsVertical(FirstMenuObjects, TextPos + new Vector2(0, 75), 25);
+
             ChangeButtonText();
         }
 
@@ -90,37 +94,28 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
         /// </summary>
         private void ChangeButtonText()
         {
-            //CheckButtonCmd.GameObjectListLock.EnterWriteLock();
-            try
+            List<SaveFileData> saveFiles = DBSaveFile.LoadSaveFiles();
+
+            if (saveFiles.Count == 0) return; // There is no files yet, so we dont change the text.
+
+            foreach (SaveFileData saveFile in saveFiles)
             {
-                List<SaveFileData> saveFiles = DBSaveFile.LoadSaveFiles();
+                if (!saveFileButtons.ContainsKey(saveFile.Save_ID)) continue;
 
-                if (saveFiles.Count == 0) return; // There is no files yet, so we dont change the text.
+                Button saveFileBtn = saveFileButtons[saveFile.Save_ID];
 
-                foreach (SaveFileData saveFile in saveFiles)
-                {
-                    if (!saveFileButtons.ContainsKey(saveFile.Save_ID)) continue;
+                saveFileBtn.Text =
+                        $"Save {saveFile.Save_ID}" +
+                        $"\nCurrency {saveFile.Currency}" +
+                        $"\n Last Login {saveFile.Last_Login:MM-dd}"; // Removes .ToString
 
-                    Button saveFileBtn = saveFileButtons[saveFile.Save_ID];
+                // Add a delete button next to it. 
+                GameObject deleteBtn = ButtonFactory.Create("X", true, () => { DeleteSave(saveFile.Save_ID); });
+                Button delete = deleteBtn.GetComponent<Button>();
+                delete.ChangeScale(new Vector2(2, 6));
+                deleteBtn.Transform.Position = saveFileBtn.GameObject.Transform.Position + new Vector2(180, 0);
 
-                    saveFileBtn.Text =
-                            //saveFileButtons[saveFile.Save_ID].Text =
-                            $"Save {saveFile.Save_ID}" +
-                            $"\nCurrency {saveFile.Currency}" +
-                            $"\n Last Login {saveFile.Last_Login:yyyy-MM-dd}"; // Removes .ToString
-
-                    // Add a delete button next to it. 
-                    GameObject deleteBtn = ButtonFactory.Create("X", true, () => { DeleteSave(saveFile.Save_ID); });
-                    Button delete = deleteBtn.GetComponent<Button>();
-                    delete.ChangeScale(new Vector2(3, 5));
-                    deleteBtn.Transform.Position = saveFileBtn.GameObject.Transform.Position + new Vector2(150, 0);
-
-                    GameWorld.Instance.Instantiate(deleteBtn);
-                }
-            }
-            finally
-            {
-                //CheckButtonCmd.GameObjectListLock.ExitWriteLock();
+                GameWorld.Instance.Instantiate(deleteBtn);
             }
         }
 
