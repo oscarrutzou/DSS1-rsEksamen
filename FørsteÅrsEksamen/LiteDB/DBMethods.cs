@@ -15,13 +15,6 @@ namespace FørsteÅrsEksamen.LiteDB
 {
     public static class DBMethods
     {
-        private static readonly List<CollectionName> deleteRunCollections = new() {
-            CollectionName.RunData,
-            CollectionName.SaveFileHasRunData,
-            CollectionName.PlayerData,
-            CollectionName.RunDataHasPlayerData,
-        };
-
         //public static void SaveGame()
         //{
         //    SaveFileData saveFileData = DBSaveFile.LoadSaveFileData(Data.CurrentSaveID, false);
@@ -238,14 +231,22 @@ namespace FørsteÅrsEksamen.LiteDB
             // Override current data
             SaveFileData saveFileData = DBSaveFile.LoadSaveFileData(SaveData.CurrentSaveID, true); 
 
-            DBSaveFile.LoadSaveWeaponType(saveFileData, true);
-            DBSaveFile.LoadSaveClassType(saveFileData, true);
+            SaveData.UnlockedClasses = DBSaveFile.LoadSaveClassType(saveFileData, true);
+            SaveData.UnlockedWeapons = DBSaveFile.LoadSaveWeaponType(saveFileData, true);
 
             RunData runData = DBRunData.SaveLoadRunData(saveFileData); // Save Run File
 
             if (SaveData.Player == null) return;
 
             DBRunData.SavePlayer(runData);
+        }
+
+        public static void LoadClassAndWeapons()
+        {
+            SaveFileData saveFileData = DBSaveFile.LoadSaveFileData(SaveData.CurrentSaveID, true);
+
+            SaveData.UnlockedClasses = DBSaveFile.LoadSaveClassType(saveFileData);
+            SaveData.UnlockedWeapons = DBSaveFile.LoadSaveWeaponType(saveFileData);
         }
     }
 }

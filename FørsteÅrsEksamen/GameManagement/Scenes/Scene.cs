@@ -18,8 +18,8 @@ namespace FørsteÅrsEksamen.GameManagement
 
         DungeonRoom, // BASE, NO SCRIPT HERE
         DungeonRoom1,
-        DungeonRoom2,
-        DungeonRoom3,
+        //DungeonRoom2,
+        //DungeonRoom3,
 
         WeaponTestScene,
 

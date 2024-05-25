@@ -40,6 +40,8 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
 
         public override void Initialize()
         {
+            GameWorld.Instance.IsMouseVisible = false;
+
             SetSpawnPotions();
 
             // There needs to have been set some stuff before this base.Initialize (Look at Room1 for reference)
@@ -208,7 +210,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
 
             string text = $"Inventory: {player.ItemInInventory.Name}";
             Vector2 textSize = GlobalTextures.DefaultFont.MeasureString(text);
-            Vector2 postionPos = GameWorld.Instance.UiCam.BottomRight - new Vector2(textSize.X + 30, textSize.Y / 2 + 30);
+            Vector2 postionPos = GameWorld.Instance.UiCam.BottomRight - new Vector2(textSize.X + 30, textSize.Y / 2 + 40);
             spriteBatch.DrawString(GlobalTextures.DefaultFont, text, postionPos, Color.Red);
         }
         private void DebugDraw(SpriteBatch spriteBatch)

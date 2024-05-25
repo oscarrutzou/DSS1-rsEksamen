@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using FørsteÅrsEksamen.ComponentPattern;
 using FørsteÅrsEksamen.ComponentPattern.GUI;
+using FørsteÅrsEksamen.CommandPattern;
 
 namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
 {
@@ -105,7 +106,21 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
         public override void DrawOnScreen(SpriteBatch spriteBatch)
         {
             // Shouldnt update or draw as normal.
-            if (!IsMenuVisible()) return;
+            if (!IsMenuVisible())
+            {
+                // So we can see the mouse when drawing cells and debugging
+                if (!InputHandler.Instance.DebugMode)
+                {
+                    GameWorld.Instance.IsMouseVisible = false;
+                }
+                else
+                {
+                    GameWorld.Instance.IsMouseVisible = true;
+                }
+                return;
+            }
+
+            GameWorld.Instance.IsMouseVisible = true;
 
             if (currentMenuState == MenuState.StartMenu)
             {

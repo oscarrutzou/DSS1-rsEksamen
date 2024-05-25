@@ -168,7 +168,7 @@ namespace FørsteÅrsEksamen.LiteDB
 
         #region Class
 
-        public static List<ClassTypes> LoadSaveClassType(SaveFileData saveFileData, bool overrideSave)
+        public static List<ClassTypes> LoadSaveClassType(SaveFileData saveFileData, bool overrideSave = false)
         {
             List<ClassTypes> classTypes = new();
 

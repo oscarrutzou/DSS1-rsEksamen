@@ -23,6 +23,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
             ShowSecondMenu = false;
 
             GlobalSounds.InMenu = true;
+            GameWorld.Instance.IsMouseVisible = true;
             GameWorld.Instance.ShowBG = true;
 
             Font = GlobalTextures.BigFont;
@@ -93,7 +94,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
         }
         protected void DrawMenuText(SpriteBatch spriteBatch, string text, Vector2 position)
         {
-            GuiMethods.DrawTextCentered(spriteBatch, Font, position, text, Color.RoyalBlue);
+            GuiMethods.DrawTextCentered(spriteBatch, Font, position, text, Color.DarkRed);
         }
     }
 }

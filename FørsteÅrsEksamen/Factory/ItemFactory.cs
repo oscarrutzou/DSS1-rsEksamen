@@ -14,7 +14,7 @@ namespace FørsteÅrsEksamen.Factory
             itemGo.Transform.Scale = new Vector2(4, 4);
             SpriteRenderer sr = itemGo.AddComponent<SpriteRenderer>();
             sr.SetSprite(TextureNames.HealthPotionFull);
-            sr.SetLayerDepth(LayerDepth.WorldForeground);
+            sr.SetLayerDepth(LayerDepth.WorldBackground);
             itemGo.AddComponent<Collider>();
             itemGo.AddComponent<Potion>(playerGo);
 

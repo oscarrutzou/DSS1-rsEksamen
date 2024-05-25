@@ -163,7 +163,7 @@ namespace FørsteÅrsEksamen.GameManagement
                 //[SceneNames.LoadingScreen] = new LoadingScreen(),
 
                 [SceneNames.DungeonRoom1] = new Room1Scene(),
-                [SceneNames.DungeonRoom2] = new Room2Scene(),
+                //[SceneNames.DungeonRoom2] = new Room2Scene(),
 
                 // Test scenes
                 [SceneNames.WeaponTestScene] = new WeaponTestScene(),
