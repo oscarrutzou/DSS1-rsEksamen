@@ -7,7 +7,7 @@ namespace FørsteÅrsEksamen.Factory.Gui
 {
     public static class ButtonFactory
     {
-        public static GameObject Create(string text, bool invokeActionOnFullScale, Action onClick, TextureNames textureName = TextureNames.SmallBtn, AnimNames animName = AnimNames.SmallBtn)
+        public static GameObject Create(string text, bool invokeActionOnFullScale, Action onClick, TextureNames textureName = TextureNames.SmallBtn)
         {
             GameObject roomBtn = new();
             roomBtn.Transform.Scale = new(6, 6);
@@ -15,7 +15,7 @@ namespace FørsteÅrsEksamen.Factory.Gui
             roomBtn.AddComponent<SpriteRenderer>().SetSprite(textureName);
             roomBtn.AddComponent<Animator>();
             roomBtn.AddComponent<Collider>();
-            roomBtn.AddComponent<Button>(text, invokeActionOnFullScale, onClick, textureName, animName);
+            roomBtn.AddComponent<Button>(text, invokeActionOnFullScale, onClick, textureName);
 
             return roomBtn;
         }

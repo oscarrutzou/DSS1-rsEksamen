@@ -103,6 +103,7 @@ namespace FørsteÅrsEksamen.GameManagement
             destroyedGameObjects.Clear();
         }
 
+
         /// <summary>
         /// Adds the gameObject to the correct list based on the gameobjects type.
         /// </summary>

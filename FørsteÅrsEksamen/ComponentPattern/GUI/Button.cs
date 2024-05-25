@@ -18,7 +18,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
 
         private SpriteRenderer spriteRenderer;
         private Collider collider;
-        private Animator animator;
 
         public Color TextColor = Color.Black;
 
@@ -48,13 +47,12 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
             GameObject.Type = GameObjectTypes.Gui;
         }
 
-        public Button(GameObject gameObject, string text, bool invokeActionOnFullScale, Action onClick, TextureNames textureName, AnimNames animationName) : base(gameObject)
+        public Button(GameObject gameObject, string text, bool invokeActionOnFullScale, Action onClick, TextureNames textureName) : base(gameObject)
         {
             maxScale = GameObject.Transform.Scale;
             scaleUpAmount = new Vector2(maxScale.X * 0.01f, maxScale.Y * 0.01f);
 
             font = GlobalTextures.DefaultFont;
-            this.animationName = animationName;
             this.textureName = textureName;
             this.Text = text;
             this.invokeActionOnFullScale = invokeActionOnFullScale;
@@ -66,7 +64,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
         {
             collider = GameObject.GetComponent<Collider>();
             spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
-            animator = GameObject.GetComponent<Animator>();
 
             baseColor = spriteRenderer.Color;
         }
@@ -83,7 +80,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
                 if (InputHandler.Instance.MouseState.LeftButton != ButtonState.Released)
                 {
                     spriteRenderer.Color = OnMouseDownColor;
-                    PlayAnim();
                     return;
                 }
 
@@ -107,15 +103,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
                 || GameObject.Transform.Scale != maxScale) return;
 
             OnClick?.Invoke();
-            spriteRenderer.SetSprite(textureName); // Resets the texture
-
             hasPressed = false;
-        }
-
-        private void PlayAnim()
-        {
-            animator.PlayAnimation(animationName);
-            animator.StopCurrentAnimationAtLastSprite();
         }
 
         public bool IsMouseOver()
@@ -143,6 +131,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
 
             timeSinceLastClick = 0;
 
+
             if (invokeActionOnFullScale)
             {
                 hasPressed = true;
@@ -150,7 +139,6 @@ namespace FørsteÅrsEksamen.ComponentPattern.GUI
             else
             {
                 OnClick?.Invoke();
-                PlayAnim();
             }
         }
 

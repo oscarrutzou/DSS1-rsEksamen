@@ -26,9 +26,9 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
         {
             saveFileButtons = new Dictionary<int, Button>()
             {
-                { 1, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(1); }, TextureNames.LargeBtn, AnimNames.LargeBtn).GetComponent<Button>() },
-                { 2, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(2); }, TextureNames.LargeBtn, AnimNames.LargeBtn).GetComponent<Button>()  },
-                { 3, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(3); }, TextureNames.LargeBtn, AnimNames.LargeBtn).GetComponent<Button>()  }
+                { 1, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(1); }, TextureNames.LargeBtn).GetComponent<Button>() },
+                { 2, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(2); }, TextureNames.LargeBtn).GetComponent<Button>()  },
+                { 3, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(3); }, TextureNames.LargeBtn).GetComponent<Button>()  }
             };
 
             foreach (Button button in saveFileButtons.Values)

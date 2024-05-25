@@ -34,7 +34,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
         {
             foreach (ClassTypes type in Enum.GetValues(typeof(ClassTypes)))
             {
-                GameObject btn = ButtonFactory.Create($"{type}", true, () => { SelectClass(type); }, TextureNames.LargeBtn, AnimNames.LargeBtn);
+                GameObject btn = ButtonFactory.Create($"{type}", true, () => { SelectClass(type); }, TextureNames.LargeBtn);
                 //btn.GetComponent<Button>().ChangeScale(buttonScale);
                 FirstMenuObjects.Add(btn);
             }
@@ -56,7 +56,7 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
 
                 foreach (WeaponTypes weaponType in WeaponFactory.ClassHasWeapons[classType])
                 {
-                    GameObject btn = ButtonFactory.Create($"{weaponType}", true, () => { SeletectWeapon(weaponType); }, TextureNames.LargeBtn, AnimNames.LargeBtn);
+                    GameObject btn = ButtonFactory.Create($"{weaponType}", true, () => { SeletectWeapon(weaponType); }, TextureNames.LargeBtn);
                     //btn.GetComponent<Button>().ChangeScale(buttonScale);
                     gameObjects.Add(btn);
                 }

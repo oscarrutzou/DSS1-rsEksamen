@@ -38,12 +38,12 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
 
         protected override void InitSecondMenu()
         {
-            GameObject musicVolGo = ButtonFactory.Create("", true, ChangeMusic, TextureNames.LargeBtn, AnimNames.LargeBtn);
+            GameObject musicVolGo = ButtonFactory.Create("", true, ChangeMusic, TextureNames.LargeBtn);
             MusicBtn = musicVolGo.GetComponent<Button>();
             MusicBtn.Text = $"Music Volume {GlobalSounds.MusicVolume * 100}%";
             SecondMenuObjects.Add(musicVolGo);
 
-            GameObject sfxVolGo = ButtonFactory.Create("", true, ChangeSfx, TextureNames.LargeBtn, AnimNames.LargeBtn);
+            GameObject sfxVolGo = ButtonFactory.Create("", true, ChangeSfx, TextureNames.LargeBtn);
             SfxBtn = sfxVolGo.GetComponent<Button>();
             SfxBtn.Text = $"SFX Volume {GlobalSounds.SfxVolume * 100}%";
             SecondMenuObjects.Add(sfxVolGo);
