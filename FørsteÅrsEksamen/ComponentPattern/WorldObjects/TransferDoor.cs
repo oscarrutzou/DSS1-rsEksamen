@@ -1,6 +1,5 @@
-﻿using FørsteÅrsEksamen.ComponentPattern.PlayerClasses;
-using FørsteÅrsEksamen.LiteDB;
-using FørsteÅrsEksamen.GameManagement;
+﻿using DoctorsDungeon.ComponentPattern.PlayerClasses;
+using DoctorsDungeon.LiteDB;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -8,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FørsteÅrsEksamen.ComponentPattern.WorldObjects
+namespace DoctorsDungeon.ComponentPattern.WorldObjects
 {
     public class TransferDoor : Component
     {

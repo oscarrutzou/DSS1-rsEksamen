@@ -1,4 +1,4 @@
-﻿namespace FørsteÅrsEksamen.ObserverPattern
+﻿namespace DoctorsDungeon.ObserverPattern
 {
     // Oscar
     public interface ISubject

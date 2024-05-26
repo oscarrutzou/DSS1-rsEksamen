@@ -1,9 +1,9 @@
-﻿using FørsteÅrsEksamen.ComponentPattern;
+﻿using DoctorsDungeon.ComponentPattern;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.IO;
 
-namespace FørsteÅrsEksamen.GameManagement
+namespace DoctorsDungeon.GameManagement
 {
     public enum AnimNames
     {

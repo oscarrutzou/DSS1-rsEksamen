@@ -1,7 +1,7 @@
-﻿using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.Factory;
+﻿using DoctorsDungeon.ComponentPattern;
+using DoctorsDungeon.Factory;
 
-namespace FørsteÅrsEksamen.ObjectPoolPattern
+namespace DoctorsDungeon.ObjectPoolPattern
 {
     //Stefan
     public class ProjectilePool : ObjectPool

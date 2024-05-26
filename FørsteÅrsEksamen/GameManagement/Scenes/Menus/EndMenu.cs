@@ -1,6 +1,6 @@
-﻿using FørsteÅrsEksamen.ComponentPattern.GUI;
-using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.Factory.Gui;
+﻿using DoctorsDungeon.ComponentPattern.GUI;
+using DoctorsDungeon.ComponentPattern;
+using DoctorsDungeon.Factory.Gui;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using FørsteÅrsEksamen.LiteDB;
+using DoctorsDungeon.LiteDB;
 
-namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
+namespace DoctorsDungeon.GameManagement.Scenes.Menus
 {
     public class EndMenu : MenuScene
     {

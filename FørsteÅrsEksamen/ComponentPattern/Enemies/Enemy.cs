@@ -1,14 +1,14 @@
-﻿using FørsteÅrsEksamen.ComponentPattern.PlayerClasses;
-using FørsteÅrsEksamen.ComponentPattern.Path;
-using FørsteÅrsEksamen.ComponentPattern.WorldObjects;
-using FørsteÅrsEksamen.GameManagement;
+﻿using DoctorsDungeon.ComponentPattern.PlayerClasses;
+using DoctorsDungeon.ComponentPattern.Path;
+using DoctorsDungeon.ComponentPattern.WorldObjects;
+using DoctorsDungeon.GameManagement;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace FørsteÅrsEksamen.ComponentPattern.Enemies
+namespace DoctorsDungeon.ComponentPattern.Enemies
 {
     //Asser, Oscar
     public abstract class Enemy : Character

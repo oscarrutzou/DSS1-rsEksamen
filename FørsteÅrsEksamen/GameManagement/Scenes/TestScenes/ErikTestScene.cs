@@ -1,13 +1,13 @@
-﻿using FørsteÅrsEksamen.CommandPattern;
-using FørsteÅrsEksamen.CommandPattern.Commands;
-using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.PlayerClasses;
-using FørsteÅrsEksamen.ComponentPattern.Path;
-using FørsteÅrsEksamen.ComponentPattern.Weapons;
-using FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons;
-using FørsteÅrsEksamen.LiteDB;
-using FørsteÅrsEksamen.Factory;
-using FørsteÅrsEksamen.Other;
+﻿using DoctorsDungeon.CommandPattern;
+using DoctorsDungeon.CommandPattern.Commands;
+using DoctorsDungeon.ComponentPattern;
+using DoctorsDungeon.ComponentPattern.PlayerClasses;
+using DoctorsDungeon.ComponentPattern.Path;
+using DoctorsDungeon.ComponentPattern.Weapons;
+using DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons;
+using DoctorsDungeon.LiteDB;
+using DoctorsDungeon.Factory;
+using DoctorsDungeon.Other;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -15,7 +15,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
 
-namespace FørsteÅrsEksamen.GameManagement.Scenes.TestScenes
+namespace DoctorsDungeon.GameManagement.Scenes.TestScenes
 {
     public class ErikTestScene : Scene
     {

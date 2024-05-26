@@ -1,8 +1,7 @@
-﻿using FørsteÅrsEksamen.Factory;
-using FørsteÅrsEksamen.GameManagement;
+﻿using DoctorsDungeon.Factory;
 using Microsoft.Xna.Framework;
 
-namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
+namespace DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons
 {
     public abstract class RangedWeapon : Weapon
     {

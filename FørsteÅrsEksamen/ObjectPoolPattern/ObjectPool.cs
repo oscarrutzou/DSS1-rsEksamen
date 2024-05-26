@@ -1,10 +1,9 @@
-﻿using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.GameManagement;
+﻿using DoctorsDungeon.ComponentPattern;
 using LiteDB;
 using System.Collections.Generic;
 
-namespace FørsteÅrsEksamen.ObjectPoolPattern
-{ 
+namespace DoctorsDungeon.ObjectPoolPattern
+{
     //Stefan
     public abstract class ObjectPool
     {

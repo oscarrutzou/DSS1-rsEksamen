@@ -1,6 +1,6 @@
-﻿using FørsteÅrsEksamen.GameManagement;
+﻿using DoctorsDungeon.GameManagement;
 
-namespace FørsteÅrsEksamen.ComponentPattern.PlayerClasses.MeleeClasses
+namespace DoctorsDungeon.ComponentPattern.PlayerClasses.MeleeClasses
 {
     public class Warrior : Player
     {

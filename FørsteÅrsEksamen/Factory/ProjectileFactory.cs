@@ -1,8 +1,8 @@
-﻿using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons;
+﻿using DoctorsDungeon.ComponentPattern;
+using DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons;
 using Microsoft.Xna.Framework;
 
-namespace FørsteÅrsEksamen.Factory
+namespace DoctorsDungeon.Factory
 {
     public static class ProjectileFactory
     {

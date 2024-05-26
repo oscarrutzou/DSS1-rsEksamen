@@ -1,4 +1,4 @@
-﻿namespace FørsteÅrsEksamen.CommandPattern
+﻿namespace DoctorsDungeon.CommandPattern
 {
     // Oscar
     public interface ICommand

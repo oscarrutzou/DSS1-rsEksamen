@@ -1,11 +1,11 @@
-﻿using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.GUI;
-using FørsteÅrsEksamen.GameManagement;
+﻿using DoctorsDungeon.ComponentPattern;
+using DoctorsDungeon.ComponentPattern.GUI;
+using DoctorsDungeon.GameManagement.Scenes;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace FørsteÅrsEksamen.CommandPattern.Commands
+namespace DoctorsDungeon.CommandPattern.Commands
 {
     public class CheckButtonCmd : ICommand
     {

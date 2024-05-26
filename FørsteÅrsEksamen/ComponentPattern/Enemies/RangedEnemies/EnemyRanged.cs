@@ -1,4 +1,4 @@
-﻿namespace FørsteÅrsEksamen.ComponentPattern.Enemies.Skeleton
+﻿namespace DoctorsDungeon.ComponentPattern.Enemies.RangedEnemies
 {
     //Asser
 

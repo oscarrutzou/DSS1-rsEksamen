@@ -1,12 +1,11 @@
-﻿using FørsteÅrsEksamen.CommandPattern;
-using FørsteÅrsEksamen.ComponentPattern.GUI;
-using FørsteÅrsEksamen.GameManagement;
-using FørsteÅrsEksamen.ObserverPattern;
-using FørsteÅrsEksamen.LiteDB;
+﻿using DoctorsDungeon.CommandPattern;
+using DoctorsDungeon.ComponentPattern.GUI;
+using DoctorsDungeon.ObserverPattern;
+using DoctorsDungeon.LiteDB;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
-namespace FørsteÅrsEksamen.ComponentPattern.Path
+namespace DoctorsDungeon.ComponentPattern.Path
 {
     public class GridManager : ISubject
     {

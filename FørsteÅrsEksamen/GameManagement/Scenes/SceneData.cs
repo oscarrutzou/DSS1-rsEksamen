@@ -1,8 +1,8 @@
-﻿using FørsteÅrsEksamen.ComponentPattern;
+﻿using DoctorsDungeon.ComponentPattern;
 using System;
 using System.Collections.Generic;
 
-namespace FørsteÅrsEksamen.GameManagement
+namespace DoctorsDungeon.GameManagement.Scenes
 {
     // Oscar
     public static class SceneData

@@ -1,9 +1,9 @@
 ﻿//using FørsteÅrsEksamen.ComponentPattern.Characters;
-using FørsteÅrsEksamen.ComponentPattern.Enemies.MeleeEnemies;
-using FørsteÅrsEksamen.GameManagement;
+using DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies;
+using DoctorsDungeon.GameManagement;
 using Microsoft.Xna.Framework;
 
-namespace FørsteÅrsEksamen.ComponentPattern.Enemies.RangedEnemies
+namespace DoctorsDungeon.ComponentPattern.Enemies.RangedEnemies
 {
     //Asser
 

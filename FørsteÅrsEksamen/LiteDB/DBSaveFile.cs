@@ -1,10 +1,10 @@
-﻿using FørsteÅrsEksamen.ComponentPattern.PlayerClasses;
-using FørsteÅrsEksamen.Factory;
+﻿using DoctorsDungeon.ComponentPattern.PlayerClasses;
+using DoctorsDungeon.Factory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FørsteÅrsEksamen.LiteDB
+namespace DoctorsDungeon.LiteDB
 {
     /// <summary>
     /// Dont use this class other that in the method that saves the game!

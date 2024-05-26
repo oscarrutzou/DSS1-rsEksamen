@@ -1,11 +1,11 @@
-﻿using FørsteÅrsEksamen.ComponentPattern.PlayerClasses;
-using FørsteÅrsEksamen.ComponentPattern.Path;
-using FørsteÅrsEksamen.Factory;
+﻿using DoctorsDungeon.ComponentPattern.PlayerClasses;
+using DoctorsDungeon.ComponentPattern.Path;
+using DoctorsDungeon.Factory;
 using LiteDB;
 using System;
 using System.Collections.Generic;
 
-namespace FørsteÅrsEksamen.LiteDB
+namespace DoctorsDungeon.LiteDB
 {
 
     public class GridTestData

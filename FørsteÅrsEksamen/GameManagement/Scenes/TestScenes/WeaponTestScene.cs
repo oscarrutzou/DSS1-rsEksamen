@@ -1,13 +1,13 @@
-﻿using FørsteÅrsEksamen.CommandPattern;
-using FørsteÅrsEksamen.CommandPattern.Commands;
-using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.PlayerClasses;
-using FørsteÅrsEksamen.ComponentPattern.Weapons;
-using FørsteÅrsEksamen.Factory;
+﻿using DoctorsDungeon.CommandPattern;
+using DoctorsDungeon.CommandPattern.Commands;
+using DoctorsDungeon.ComponentPattern;
+using DoctorsDungeon.ComponentPattern.PlayerClasses;
+using DoctorsDungeon.ComponentPattern.Weapons;
+using DoctorsDungeon.Factory;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace FørsteÅrsEksamen.GameManagement.Scenes.TestScenes
+namespace DoctorsDungeon.GameManagement.Scenes.TestScenes
 {
     public class WeaponTestScene : Scene
     {

@@ -1,9 +1,9 @@
-﻿using FørsteÅrsEksamen.GameManagement;
+﻿using DoctorsDungeon.GameManagement;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
-namespace FørsteÅrsEksamen.ComponentPattern
+namespace DoctorsDungeon.ComponentPattern
 {
     // Remember with GUI text it dosen't use these layerdepth to draw the text and just uses 1.
     public enum LayerDepth

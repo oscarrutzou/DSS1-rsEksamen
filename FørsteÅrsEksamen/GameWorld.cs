@@ -1,8 +1,8 @@
-﻿using FørsteÅrsEksamen.CommandPattern;
-using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.GameManagement.Scenes.TestScenes;
-using FørsteÅrsEksamen.GameManagement.Scenes.Menus;
-using FørsteÅrsEksamen.GameManagement.Scenes.Rooms;
+﻿using DoctorsDungeon.CommandPattern;
+using DoctorsDungeon.ComponentPattern;
+using DoctorsDungeon.GameManagement.Scenes.TestScenes;
+using DoctorsDungeon.GameManagement.Scenes.Menus;
+using DoctorsDungeon.GameManagement.Scenes.Rooms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -10,8 +10,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DoctorsDungeon.GameManagement.Scenes;
+using DoctorsDungeon.GameManagement;
+using DoctorsDungeon.Other;
+using System.Diagnostics;
 
-namespace FørsteÅrsEksamen.GameManagement
+namespace DoctorsDungeon
 {
     // Oscar
     public class GameWorld : Game
@@ -31,7 +35,7 @@ namespace FørsteÅrsEksamen.GameManagement
 
         public SceneNames? NextScene { get; private set; } = null;
         public bool ShowBG { get; set; } = true;
-        
+
         private SpriteBatch _spriteBatch;
         private GameObject menuBackground;
 
@@ -45,8 +49,16 @@ namespace FørsteÅrsEksamen.GameManagement
 
         protected override void Initialize()
         {
-            SceneData.GenereateGameObjectDicionary();
+  //          //string gm = UmlWriter.GetClass(typeof(GameWorld), false);
+  //          List<string> uml = UmlWriter.GetEntireProject();
 
+  //          foreach (string item in uml)
+          
+  //{
+  //              Debug.WriteLine(item);
+  //          }
+
+  //          SceneData.GenereateGameObjectDicionary();
             //ResolutionSize(1280, 720);
             Fullscreen();
             WorldCam = new Camera(true);
@@ -221,8 +233,8 @@ namespace FørsteÅrsEksamen.GameManagement
         {
             if (NextScene == null || Scenes[NextScene.Value] == null) return;
 
-            Monitor.Enter(InputHandlerLock); 
-            
+            Monitor.Enter(InputHandlerLock);
+
             try
             {
                 // Change the scene

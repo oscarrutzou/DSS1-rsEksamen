@@ -1,15 +1,14 @@
-﻿using FørsteÅrsEksamen.ComponentPattern.Path;
-using FørsteÅrsEksamen.ComponentPattern.Weapons;
-using FørsteÅrsEksamen.ComponentPattern.WorldObjects;
-using FørsteÅrsEksamen.Factory;
-using FørsteÅrsEksamen.GameManagement;
-using FørsteÅrsEksamen.LiteDB;
-using FørsteÅrsEksamen.ObserverPattern;
+﻿using DoctorsDungeon.ComponentPattern.Path;
+using DoctorsDungeon.ComponentPattern.Weapons;
+using DoctorsDungeon.ComponentPattern.WorldObjects;
+using DoctorsDungeon.Factory;
+using DoctorsDungeon.LiteDB;
+using DoctorsDungeon.ObserverPattern;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
-namespace FørsteÅrsEksamen.ComponentPattern.PlayerClasses
+namespace DoctorsDungeon.ComponentPattern.PlayerClasses
 {
     // Oscar
     public abstract class Player : Character, ISubject

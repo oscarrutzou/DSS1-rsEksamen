@@ -1,7 +1,7 @@
-﻿using FørsteÅrsEksamen.ComponentPattern.PlayerClasses;
+﻿using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using Microsoft.Xna.Framework;
 
-namespace FørsteÅrsEksamen.CommandPattern.Commands
+namespace DoctorsDungeon.CommandPattern.Commands
 {
     public class MoveCmd : ICommand
     {

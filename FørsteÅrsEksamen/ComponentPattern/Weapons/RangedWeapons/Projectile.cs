@@ -1,12 +1,12 @@
-﻿using FørsteÅrsEksamen.CommandPattern;
-using FørsteÅrsEksamen.ComponentPattern.Enemies;
-using FørsteÅrsEksamen.GameManagement;
-using FørsteÅrsEksamen.Other;
+﻿using DoctorsDungeon.CommandPattern;
+using DoctorsDungeon.ComponentPattern.Enemies;
+using DoctorsDungeon.GameManagement;
+using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
 using Npgsql.Replication.PgOutput.Messages;
 using System;
 
-namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
+namespace DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons
 {
     // Erik
     public class Projectile : Component

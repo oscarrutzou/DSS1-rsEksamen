@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FørsteÅrsEksamen.ComponentPattern.Path
+namespace DoctorsDungeon.ComponentPattern.Path
 {
     // Oscar
     public class Astar

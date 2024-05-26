@@ -1,13 +1,13 @@
-﻿using FørsteÅrsEksamen.CommandPattern;
-using FørsteÅrsEksamen.ComponentPattern.PlayerClasses;
-using FørsteÅrsEksamen.ComponentPattern.Enemies;
-using FørsteÅrsEksamen.ComponentPattern.Weapons;
-using FørsteÅrsEksamen.GameManagement;
+﻿using DoctorsDungeon.CommandPattern;
+using DoctorsDungeon.ComponentPattern.PlayerClasses;
+using DoctorsDungeon.ComponentPattern.Enemies;
+using DoctorsDungeon.ComponentPattern.Weapons;
+using DoctorsDungeon.GameManagement;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
-namespace FørsteÅrsEksamen.ComponentPattern
+namespace DoctorsDungeon.ComponentPattern
 {
     public enum AnimationDirectionState
     {

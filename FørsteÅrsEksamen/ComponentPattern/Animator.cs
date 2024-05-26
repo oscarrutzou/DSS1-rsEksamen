@@ -1,9 +1,9 @@
-﻿using FørsteÅrsEksamen.GameManagement;
+﻿using DoctorsDungeon.GameManagement;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 
-namespace FørsteÅrsEksamen.ComponentPattern
+namespace DoctorsDungeon.ComponentPattern
 {
     // Oscar
     public class Animator : Component

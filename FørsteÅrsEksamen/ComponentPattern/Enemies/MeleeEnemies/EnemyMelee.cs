@@ -1,4 +1,4 @@
-﻿namespace FørsteÅrsEksamen.ComponentPattern.Enemies.MeleeEnemies
+﻿namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
 {
     //Asser
 

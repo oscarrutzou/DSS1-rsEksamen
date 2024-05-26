@@ -1,9 +1,9 @@
-﻿using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.Path;
-using FørsteÅrsEksamen.GameManagement;
+﻿using DoctorsDungeon.ComponentPattern;
+using DoctorsDungeon.ComponentPattern.Path;
+using DoctorsDungeon.GameManagement;
 using Microsoft.Xna.Framework;
 
-namespace FørsteÅrsEksamen.Factory
+namespace DoctorsDungeon.Factory
 {
     public static class CellFactory
     {

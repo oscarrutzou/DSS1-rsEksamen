@@ -1,20 +1,20 @@
-﻿using FørsteÅrsEksamen.CommandPattern;
-using FørsteÅrsEksamen.CommandPattern.Commands;
-using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.PlayerClasses;
-using FørsteÅrsEksamen.ComponentPattern.Enemies.MeleeEnemies;
-using FørsteÅrsEksamen.ComponentPattern.Path;
-using FørsteÅrsEksamen.Factory;
-using FørsteÅrsEksamen.ObserverPattern;
-using FørsteÅrsEksamen.LiteDB;
+﻿using DoctorsDungeon.CommandPattern;
+using DoctorsDungeon.CommandPattern.Commands;
+using DoctorsDungeon.ComponentPattern;
+using DoctorsDungeon.ComponentPattern.PlayerClasses;
+using DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies;
+using DoctorsDungeon.ComponentPattern.Path;
+using DoctorsDungeon.Factory;
+using DoctorsDungeon.ObserverPattern;
+using DoctorsDungeon.LiteDB;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
-using FørsteÅrsEksamen.Factory.Gui;
-using FørsteÅrsEksamen.ComponentPattern.Enemies.RangedEnemies;
+using DoctorsDungeon.Factory.Gui;
+using DoctorsDungeon.ComponentPattern.Enemies.RangedEnemies;
 
-namespace FørsteÅrsEksamen.GameManagement.Scenes.TestScenes
+namespace DoctorsDungeon.GameManagement.Scenes.TestScenes
 {
     public class OscarTestScene : Scene, IObserver
     {

@@ -1,17 +1,16 @@
-﻿using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.PlayerClasses;
-using FørsteÅrsEksamen.ComponentPattern.PlayerClasses.MeleeClasses;
-using FørsteÅrsEksamen.ComponentPattern.PlayerClasses.RangedClasses;
-using FørsteÅrsEksamen.ComponentPattern.Enemies;
-using FørsteÅrsEksamen.ComponentPattern.Enemies.MeleeEnemies;
-using FørsteÅrsEksamen.ComponentPattern.Enemies.RangedEnemies;
-using FørsteÅrsEksamen.ComponentPattern.Path;
-using FørsteÅrsEksamen.ComponentPattern.Weapons;
-using FørsteÅrsEksamen.GameManagement;
+﻿using DoctorsDungeon.ComponentPattern;
+using DoctorsDungeon.ComponentPattern.PlayerClasses;
+using DoctorsDungeon.ComponentPattern.PlayerClasses.MeleeClasses;
+using DoctorsDungeon.ComponentPattern.PlayerClasses.RangedClasses;
+using DoctorsDungeon.ComponentPattern.Enemies;
+using DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies;
+using DoctorsDungeon.ComponentPattern.Enemies.RangedEnemies;
+using DoctorsDungeon.ComponentPattern.Path;
+using DoctorsDungeon.ComponentPattern.Weapons;
 using Microsoft.Xna.Framework;
 using System;
 
-namespace FørsteÅrsEksamen.Factory
+namespace DoctorsDungeon.Factory
 {
     public enum EnemyTypes
     {

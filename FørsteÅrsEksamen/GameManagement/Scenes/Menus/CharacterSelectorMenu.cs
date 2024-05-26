@@ -1,20 +1,20 @@
-﻿using FørsteÅrsEksamen.CommandPattern;
-using FørsteÅrsEksamen.ComponentPattern;
+﻿using DoctorsDungeon.CommandPattern;
+using DoctorsDungeon.ComponentPattern;
 using Microsoft.Xna.Framework.Input;
-using FørsteÅrsEksamen.ComponentPattern.GUI;
-using FørsteÅrsEksamen.LiteDB;
-using FørsteÅrsEksamen.Factory;
-using FørsteÅrsEksamen.Factory.Gui;
+using DoctorsDungeon.ComponentPattern.GUI;
+using DoctorsDungeon.LiteDB;
+using DoctorsDungeon.Factory;
+using DoctorsDungeon.Factory.Gui;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using FørsteÅrsEksamen.CommandPattern.Commands;
-using FørsteÅrsEksamen.ComponentPattern.PlayerClasses;
+using DoctorsDungeon.CommandPattern.Commands;
+using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using System.Diagnostics.Contracts;
 using Microsoft.Xna.Framework.Graphics;
 using System.Linq;
 
-namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
+namespace DoctorsDungeon.GameManagement.Scenes.Menus
 {
     public class CharacterSelectorMenu : MenuScene
     {

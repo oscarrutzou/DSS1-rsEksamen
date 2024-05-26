@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace FørsteÅrsEksamen.GameManagement
+namespace DoctorsDungeon.GameManagement
 {
     // Oscar
     public class Camera

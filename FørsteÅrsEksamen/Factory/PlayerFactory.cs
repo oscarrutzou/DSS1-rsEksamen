@@ -1,13 +1,12 @@
-﻿using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.PlayerClasses;
-using FørsteÅrsEksamen.GameManagement;
-using FørsteÅrsEksamen.LiteDB;
+﻿using DoctorsDungeon.ComponentPattern;
+using DoctorsDungeon.ComponentPattern.PlayerClasses;
+using DoctorsDungeon.LiteDB;
 using Microsoft.Xna.Framework;
-using FørsteÅrsEksamen.ComponentPattern.PlayerClasses.RangedClasses;
-using FørsteÅrsEksamen.ComponentPattern.PlayerClasses.MeleeClasses;
-using FørsteÅrsEksamen.ComponentPattern.Weapons;
+using DoctorsDungeon.ComponentPattern.PlayerClasses.RangedClasses;
+using DoctorsDungeon.ComponentPattern.PlayerClasses.MeleeClasses;
+using DoctorsDungeon.ComponentPattern.Weapons;
 
-namespace FørsteÅrsEksamen.Factory
+namespace DoctorsDungeon.Factory
 {
     public enum ClassTypes
     {

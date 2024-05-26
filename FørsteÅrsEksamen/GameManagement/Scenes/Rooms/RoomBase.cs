@@ -1,22 +1,22 @@
-﻿using FørsteÅrsEksamen.CommandPattern;
-using FørsteÅrsEksamen.CommandPattern.Commands;
-using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.PlayerClasses;
-using FørsteÅrsEksamen.ComponentPattern.Path;
-using FørsteÅrsEksamen.LiteDB;
-using FørsteÅrsEksamen.Factory;
-using FørsteÅrsEksamen.GameManagement.Scenes.Menus;
+﻿using DoctorsDungeon.CommandPattern;
+using DoctorsDungeon.CommandPattern.Commands;
+using DoctorsDungeon.ComponentPattern;
+using DoctorsDungeon.ComponentPattern.PlayerClasses;
+using DoctorsDungeon.ComponentPattern.Path;
+using DoctorsDungeon.LiteDB;
+using DoctorsDungeon.Factory;
+using DoctorsDungeon.GameManagement.Scenes.Menus;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System;
-using FørsteÅrsEksamen.ComponentPattern.Enemies;
-using FørsteÅrsEksamen.Other;
-using FørsteÅrsEksamen.ComponentPattern.WorldObjects;
+using DoctorsDungeon.ComponentPattern.Enemies;
+using DoctorsDungeon.Other;
+using DoctorsDungeon.ComponentPattern.WorldObjects;
 using System.Linq;
 
-namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
+namespace DoctorsDungeon.GameManagement.Scenes.Rooms
 {
     public abstract class RoomBase : Scene
     {
@@ -151,16 +151,16 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
             InputHandler.Instance.AddKeyUpdateCommand(Keys.W, new MoveCmd(player, new Vector2(0, -1)));
             InputHandler.Instance.AddKeyUpdateCommand(Keys.S, new MoveCmd(player, new Vector2(0, 1)));
 
-            //InputHandler.Instance.AddMouseUpdateCommand(MouseCmdState.Left, new CustomCmd(player.Attack));
-            InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, new CustomCmd(player.Attack));
+            InputHandler.Instance.AddMouseUpdateCommand(MouseCmdState.Left, new CustomCmd(player.Attack));
 
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Escape, new CustomCmd(pauseMenu.TogglePauseMenu));
 
-            InputHandler.Instance.AddKeyButtonDownCommand(Keys.D1, new CustomCmd(player.UseItem));
+            InputHandler.Instance.AddKeyButtonDownCommand(Keys.E, new CustomCmd(player.UseItem));
 
             // For debugging
-            InputHandler.Instance.AddKeyButtonDownCommand(Keys.Enter, new CustomCmd(ChangeScene));
-            InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DBGrid.SaveGrid(GridManager.Instance.CurrentGrid); }));
+            //InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, new CustomCmd(player.Attack));
+            //InputHandler.Instance.AddKeyButtonDownCommand(Keys.Enter, new CustomCmd(ChangeScene));
+            //InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DBGrid.SaveGrid(GridManager.Instance.CurrentGrid); }));
         }
         private void ChangeScene()
         {

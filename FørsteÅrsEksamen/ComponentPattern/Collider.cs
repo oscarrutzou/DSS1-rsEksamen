@@ -1,9 +1,9 @@
-﻿using FørsteÅrsEksamen.CommandPattern;
-using FørsteÅrsEksamen.GameManagement;
+﻿using DoctorsDungeon.CommandPattern;
+using DoctorsDungeon.GameManagement;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FørsteÅrsEksamen.ComponentPattern
+namespace DoctorsDungeon.ComponentPattern
 {
     // Oscar
     public class Collider : Component

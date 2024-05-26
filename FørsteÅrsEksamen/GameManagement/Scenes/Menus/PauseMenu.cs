@@ -1,11 +1,11 @@
-﻿using FørsteÅrsEksamen.Factory.Gui;
+﻿using DoctorsDungeon.Factory.Gui;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.GUI;
-using FørsteÅrsEksamen.CommandPattern;
+using DoctorsDungeon.ComponentPattern;
+using DoctorsDungeon.ComponentPattern.GUI;
+using DoctorsDungeon.CommandPattern;
 
-namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
+namespace DoctorsDungeon.GameManagement.Scenes.Menus
 {
     public class PauseMenu : MenuScene
     {

@@ -1,12 +1,12 @@
-﻿using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.PlayerClasses;
-using FørsteÅrsEksamen.ComponentPattern.Enemies;
-using FørsteÅrsEksamen.LiteDB;
-using FørsteÅrsEksamen.Factory;
+﻿using DoctorsDungeon.ComponentPattern;
+using DoctorsDungeon.ComponentPattern.PlayerClasses;
+using DoctorsDungeon.ComponentPattern.Enemies;
+using DoctorsDungeon.LiteDB;
+using DoctorsDungeon.Factory;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
+namespace DoctorsDungeon.GameManagement.Scenes.Rooms
 {
     public class Room2Scene : RoomBase
     {

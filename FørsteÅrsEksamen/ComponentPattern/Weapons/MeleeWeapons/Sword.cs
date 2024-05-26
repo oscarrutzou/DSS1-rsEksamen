@@ -1,9 +1,9 @@
-﻿using FørsteÅrsEksamen.CommandPattern;
-using FørsteÅrsEksamen.LiteDB;
-using FørsteÅrsEksamen.GameManagement;
+﻿using DoctorsDungeon.CommandPattern;
+using DoctorsDungeon.LiteDB;
+using DoctorsDungeon.GameManagement;
 using Microsoft.Xna.Framework;
 
-namespace FørsteÅrsEksamen.ComponentPattern.Weapons.MeleeWeapons
+namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons
 {
     public class Sword : MeleeWeapon
     {

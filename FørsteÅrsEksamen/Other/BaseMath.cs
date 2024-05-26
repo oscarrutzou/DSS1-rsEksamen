@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 
-namespace FørsteÅrsEksamen.Other
+namespace DoctorsDungeon.Other
 {
     public static class BaseMath
     {

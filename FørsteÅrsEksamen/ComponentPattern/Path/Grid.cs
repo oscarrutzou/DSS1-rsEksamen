@@ -1,9 +1,8 @@
-﻿using FørsteÅrsEksamen.Factory;
-using FørsteÅrsEksamen.GameManagement;
+﻿using DoctorsDungeon.Factory;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
-namespace FørsteÅrsEksamen.ComponentPattern.Path
+namespace DoctorsDungeon.ComponentPattern.Path
 {
     // Oscar
     public class Grid : Component

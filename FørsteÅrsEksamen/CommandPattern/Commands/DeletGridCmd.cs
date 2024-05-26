@@ -1,6 +1,6 @@
-﻿using FørsteÅrsEksamen.ComponentPattern.Path;
+﻿using DoctorsDungeon.ComponentPattern.Path;
 
-namespace FørsteÅrsEksamen.CommandPattern.Commands
+namespace DoctorsDungeon.CommandPattern.Commands
 {
     public class DeletGridCmd : ICommand
     {

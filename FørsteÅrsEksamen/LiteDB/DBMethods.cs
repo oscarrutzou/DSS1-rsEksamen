@@ -1,17 +1,17 @@
-﻿using FørsteÅrsEksamen.CommandPattern;
-using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.PlayerClasses;
-using FørsteÅrsEksamen.ComponentPattern.Path;
-using FørsteÅrsEksamen.ComponentPattern.WorldObjects;
-using FørsteÅrsEksamen.Factory;
-using FørsteÅrsEksamen.GameManagement;
+﻿using DoctorsDungeon.CommandPattern;
+using DoctorsDungeon.ComponentPattern;
+using DoctorsDungeon.ComponentPattern.PlayerClasses;
+using DoctorsDungeon.ComponentPattern.Path;
+using DoctorsDungeon.ComponentPattern.WorldObjects;
+using DoctorsDungeon.Factory;
 using LiteDB;
 using Microsoft.Xna.Framework;
 using SharpDX.Multimedia;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DoctorsDungeon.GameManagement.Scenes;
 
-namespace FørsteÅrsEksamen.LiteDB
+namespace DoctorsDungeon.LiteDB
 {
     public static class DBMethods
     {

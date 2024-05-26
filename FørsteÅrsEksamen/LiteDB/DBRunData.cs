@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FørsteÅrsEksamen.LiteDB
+namespace DoctorsDungeon.LiteDB
 {
     public static class DBRunData
     {

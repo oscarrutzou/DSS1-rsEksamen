@@ -1,12 +1,12 @@
-﻿using FørsteÅrsEksamen.CommandPattern;
-using FørsteÅrsEksamen.ComponentPattern.Enemies;
-using FørsteÅrsEksamen.GameManagement;
-using FørsteÅrsEksamen.Other;
+﻿using DoctorsDungeon.CommandPattern;
+using DoctorsDungeon.ComponentPattern.Enemies;
+using DoctorsDungeon.GameManagement.Scenes;
+using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 
-namespace FørsteÅrsEksamen.ComponentPattern.Weapons.MeleeWeapons
+namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons
 {
     public abstract class MeleeWeapon : Weapon
     {

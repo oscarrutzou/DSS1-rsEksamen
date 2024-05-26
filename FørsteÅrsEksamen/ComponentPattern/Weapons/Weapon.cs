@@ -1,13 +1,13 @@
-﻿using FørsteÅrsEksamen.CommandPattern;
-using FørsteÅrsEksamen.GameManagement;
-using FørsteÅrsEksamen.Other;
+﻿using DoctorsDungeon.CommandPattern;
+using DoctorsDungeon.GameManagement;
+using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace FørsteÅrsEksamen.ComponentPattern.Weapons
+namespace DoctorsDungeon.ComponentPattern.Weapons
 {
     /// <summary>
     /// A class used to generate a collider that moves a rotation around its startPos

@@ -1,13 +1,13 @@
-﻿using FørsteÅrsEksamen.ComponentPattern.GUI;
-using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.Factory.Gui;
+﻿using DoctorsDungeon.ComponentPattern.GUI;
+using DoctorsDungeon.ComponentPattern;
+using DoctorsDungeon.Factory.Gui;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using FørsteÅrsEksamen.LiteDB;
+using DoctorsDungeon.LiteDB;
 using System.Collections.Generic;
-using FørsteÅrsEksamen.CommandPattern.Commands;
+using DoctorsDungeon.CommandPattern.Commands;
 
-namespace FørsteÅrsEksamen.GameManagement.Scenes.Menus
+namespace DoctorsDungeon.GameManagement.Scenes.Menus
 {
     public class SaveFileMenu : MenuScene
     {

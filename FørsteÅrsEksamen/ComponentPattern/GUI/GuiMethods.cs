@@ -1,11 +1,11 @@
-﻿using FørsteÅrsEksamen.CommandPattern;
-using FørsteÅrsEksamen.GameManagement;
+﻿using DoctorsDungeon.CommandPattern;
+using DoctorsDungeon.GameManagement.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FørsteÅrsEksamen.ComponentPattern.GUI
+namespace DoctorsDungeon.ComponentPattern.GUI
 {
     // Oscar
     public static class GuiMethods

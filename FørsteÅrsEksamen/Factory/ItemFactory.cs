@@ -1,9 +1,9 @@
-﻿using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.WorldObjects;
-using FørsteÅrsEksamen.GameManagement;
+﻿using DoctorsDungeon.ComponentPattern;
+using DoctorsDungeon.ComponentPattern.WorldObjects;
+using DoctorsDungeon.GameManagement;
 using System.Numerics;
 
-namespace FørsteÅrsEksamen.Factory
+namespace DoctorsDungeon.Factory
 {
     //Asser
     public static class ItemFactory

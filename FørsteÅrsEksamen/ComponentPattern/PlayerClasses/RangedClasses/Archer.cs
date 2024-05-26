@@ -1,6 +1,6 @@
-﻿using FørsteÅrsEksamen.GameManagement;
+﻿using DoctorsDungeon.GameManagement;
 
-namespace FørsteÅrsEksamen.ComponentPattern.PlayerClasses.RangedClasses
+namespace DoctorsDungeon.ComponentPattern.PlayerClasses.RangedClasses
 {
     public class Archer : Player
     {

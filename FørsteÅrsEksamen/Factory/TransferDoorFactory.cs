@@ -1,9 +1,9 @@
-﻿using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.WorldObjects;
+﻿using DoctorsDungeon.ComponentPattern;
+using DoctorsDungeon.ComponentPattern.WorldObjects;
 using Microsoft.Xna.Framework;
-using FørsteÅrsEksamen.GameManagement;
+using DoctorsDungeon.GameManagement;
 
-namespace FørsteÅrsEksamen.Factory
+namespace DoctorsDungeon.Factory
 {
     public static class TransferDoorFactory
     {

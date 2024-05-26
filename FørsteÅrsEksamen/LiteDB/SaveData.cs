@@ -1,8 +1,8 @@
-﻿using FørsteÅrsEksamen.ComponentPattern.PlayerClasses;
-using FørsteÅrsEksamen.Factory;
+﻿using DoctorsDungeon.ComponentPattern.PlayerClasses;
+using DoctorsDungeon.Factory;
 using System.Collections.Generic;
 
-namespace FørsteÅrsEksamen.LiteDB
+namespace DoctorsDungeon.LiteDB
 {
     public static class SaveData
     {

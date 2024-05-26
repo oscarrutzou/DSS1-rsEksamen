@@ -1,9 +1,9 @@
-﻿using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.GUI;
-using FørsteÅrsEksamen.GameManagement;
+﻿using DoctorsDungeon.ComponentPattern;
+using DoctorsDungeon.ComponentPattern.GUI;
+using DoctorsDungeon.GameManagement;
 using System;
 
-namespace FørsteÅrsEksamen.Factory.Gui
+namespace DoctorsDungeon.Factory.Gui
 {
     public static class ButtonFactory
     {

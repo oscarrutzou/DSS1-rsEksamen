@@ -1,4 +1,4 @@
-﻿namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
+﻿namespace DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons
 {
     public class BowFire : RangedWeapon
     {

@@ -1,4 +1,4 @@
-﻿using FørsteÅrsEksamen.GameManagement;
+﻿using DoctorsDungeon;
 using System;
 
 public static class Program

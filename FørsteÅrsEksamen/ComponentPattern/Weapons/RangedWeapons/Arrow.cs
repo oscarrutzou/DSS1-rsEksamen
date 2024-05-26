@@ -1,4 +1,4 @@
-﻿using FørsteÅrsEksamen.GameManagement;
+﻿using DoctorsDungeon.GameManagement;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons
+namespace DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons
 {
     public class Arrow : Projectile
     {

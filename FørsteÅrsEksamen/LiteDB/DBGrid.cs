@@ -1,15 +1,14 @@
-﻿using FørsteÅrsEksamen.CommandPattern;
-using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.Path;
-using FørsteÅrsEksamen.Factory;
-using FørsteÅrsEksamen.GameManagement;
+﻿using DoctorsDungeon.CommandPattern;
+using DoctorsDungeon.ComponentPattern;
+using DoctorsDungeon.ComponentPattern.Path;
+using DoctorsDungeon.Factory;
 using LiteDB;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FørsteÅrsEksamen.LiteDB
+namespace DoctorsDungeon.LiteDB
 {
     public static class DBGrid
     {

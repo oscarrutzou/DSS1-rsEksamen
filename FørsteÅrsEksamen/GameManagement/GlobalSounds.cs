@@ -1,11 +1,9 @@
-﻿
-
-using Microsoft.Xna.Framework.Audio;
+﻿using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using System;
 using System.Collections.Generic;
 
-namespace FørsteÅrsEksamen.GameManagement
+namespace DoctorsDungeon.GameManagement
 {
     public enum SoundNames
     {

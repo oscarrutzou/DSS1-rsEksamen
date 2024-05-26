@@ -1,11 +1,11 @@
-﻿using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.ComponentPattern.PlayerClasses;
-using FørsteÅrsEksamen.ComponentPattern.Weapons.MeleeWeapons;
-using FørsteÅrsEksamen.ComponentPattern.Weapons.RangedWeapons;
+﻿using DoctorsDungeon.ComponentPattern;
+using DoctorsDungeon.ComponentPattern.PlayerClasses;
+using DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons;
+using DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
-namespace FørsteÅrsEksamen.Factory
+namespace DoctorsDungeon.Factory
 {
     public enum WeaponTypes
     {

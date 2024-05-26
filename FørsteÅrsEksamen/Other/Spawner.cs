@@ -1,21 +1,20 @@
-﻿using FørsteÅrsEksamen.ComponentPattern.Path;
-using FørsteÅrsEksamen.ComponentPattern;
-using FørsteÅrsEksamen.GameManagement;
-using FørsteÅrsEksamen.ObjectPoolPattern;
+﻿using DoctorsDungeon.ComponentPattern.Path;
+using DoctorsDungeon.ComponentPattern;
+using DoctorsDungeon.ObjectPoolPattern;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FørsteÅrsEksamen.ComponentPattern.PlayerClasses;
-using FørsteÅrsEksamen.ComponentPattern.Enemies.MeleeEnemies;
-using FørsteÅrsEksamen.Factory;
+using DoctorsDungeon.ComponentPattern.PlayerClasses;
+using DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies;
+using DoctorsDungeon.Factory;
 using Microsoft.Xna.Framework;
-using FørsteÅrsEksamen.ComponentPattern.Enemies;
-using FørsteÅrsEksamen.ComponentPattern.Enemies.RangedEnemies;
-using FørsteÅrsEksamen.ComponentPattern.WorldObjects;
+using DoctorsDungeon.ComponentPattern.Enemies;
+using DoctorsDungeon.ComponentPattern.Enemies.RangedEnemies;
+using DoctorsDungeon.ComponentPattern.WorldObjects;
 
-namespace FørsteÅrsEksamen.Other
+namespace DoctorsDungeon.Other
 {
     // Erik
     public class Spawner: Component

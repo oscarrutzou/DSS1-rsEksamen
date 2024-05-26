@@ -1,9 +1,8 @@
-﻿using FørsteÅrsEksamen.ComponentPattern.PlayerClasses;
-using FørsteÅrsEksamen.GameManagement;
+﻿using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using Microsoft.Xna.Framework;
 using System;
 
-namespace FørsteÅrsEksamen.ComponentPattern.WorldObjects
+namespace DoctorsDungeon.ComponentPattern.WorldObjects
 {
     //Asser
     public class Potion : Component

@@ -1,12 +1,12 @@
-﻿using FørsteÅrsEksamen.CommandPattern;
-using FørsteÅrsEksamen.GameManagement;
+﻿using DoctorsDungeon.CommandPattern;
+using DoctorsDungeon.GameManagement;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Diagnostics;
 
-namespace FørsteÅrsEksamen.ComponentPattern.GUI
+namespace DoctorsDungeon.ComponentPattern.GUI
 {
     public class Button : Component
     {

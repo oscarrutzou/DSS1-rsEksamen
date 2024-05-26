@@ -1,4 +1,4 @@
-﻿namespace FørsteÅrsEksamen.ComponentPattern.Weapons.MeleeWeapons
+﻿namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons
 {
     public class Axe : MeleeWeapon
     {

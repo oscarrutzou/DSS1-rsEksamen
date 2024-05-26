@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FørsteÅrsEksamen.CommandPattern.Commands
+namespace DoctorsDungeon.CommandPattern.Commands
 {
     // Oscar
 

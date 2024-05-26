@@ -1,14 +1,13 @@
-﻿using FørsteÅrsEksamen.CommandPattern.Commands;
-using FørsteÅrsEksamen.ComponentPattern.Path;
-using FørsteÅrsEksamen.GameManagement;
-using FørsteÅrsEksamen.LiteDB;
+﻿using DoctorsDungeon.CommandPattern.Commands;
+using DoctorsDungeon.ComponentPattern.Path;
+using DoctorsDungeon.LiteDB;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace FørsteÅrsEksamen.CommandPattern
+namespace DoctorsDungeon.CommandPattern
 {
     public enum ScrollWheelState
     {
@@ -68,13 +67,13 @@ namespace FørsteÅrsEksamen.CommandPattern
             AddMouseButtonDownCommand(MouseCmdState.Left, new CheckButtonCmd());
             
             // For debugging
-            AddKeyButtonDownCommand(Keys.Q, new CustomCmd(() => { GridManager.Instance.ChangeRoomNrIndex(-1); }));
-            AddKeyButtonDownCommand(Keys.E, new CustomCmd(() => { GridManager.Instance.ChangeRoomNrIndex(1); }));
+            //AddKeyButtonDownCommand(Keys.Q, new CustomCmd(() => { GridManager.Instance.ChangeRoomNrIndex(-1); }));
+            //AddKeyButtonDownCommand(Keys.E, new CustomCmd(() => { GridManager.Instance.ChangeRoomNrIndex(1); }));
 
-            AddMouseUpdateCommand(MouseCmdState.Left, new CustomCmd(() => { GridManager.Instance.DrawOnCells(); }));
-            AddMouseUpdateCommand(MouseCmdState.Right, new CustomCmd(() => { GridManager.Instance.SetDefaultOnCell(); }));
+            //AddMouseUpdateCommand(MouseCmdState.Left, new CustomCmd(() => { GridManager.Instance.DrawOnCells(); }));
+            //AddMouseUpdateCommand(MouseCmdState.Right, new CustomCmd(() => { GridManager.Instance.SetDefaultOnCell(); }));
 
-            AddKeyButtonDownCommand(Keys.I, new CustomCmd(() => { GridManager.Instance.ShowHideGrid(); }));
+            //AddKeyButtonDownCommand(Keys.I, new CustomCmd(() => { GridManager.Instance.ShowHideGrid(); }));
         }
 
         #region Command
