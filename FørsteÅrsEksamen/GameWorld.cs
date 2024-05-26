@@ -58,7 +58,7 @@ namespace DoctorsDungeon
   //              Debug.WriteLine(item);
   //          }
 
-  //          SceneData.GenereateGameObjectDicionary();
+            SceneData.GenereateGameObjectDicionary();
             //ResolutionSize(1280, 720);
             Fullscreen();
             WorldCam = new Camera(true);

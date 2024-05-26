@@ -97,7 +97,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
             GameObject gridGo = new();
             Grid grid = gridGo.AddComponent<Grid>(GridName, new Vector2(0, 0), GridWidth, GridHeight);
             grid.GenerateGrid();
-            GridManager.Instance.SaveGrid(grid);
+            GridManager.Instance.SaveLoadGrid(grid);
         }
 
         private void SpawnPlayer()
@@ -160,7 +160,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
             // For debugging
             //InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, new CustomCmd(player.Attack));
             //InputHandler.Instance.AddKeyButtonDownCommand(Keys.Enter, new CustomCmd(ChangeScene));
-            //InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DBGrid.SaveGrid(GridManager.Instance.CurrentGrid); }));
+            //InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DBGrid.OverrideSaveGrid(GridManager.Instance.CurrentGrid); }));
         }
         private void ChangeScene()
         {

@@ -63,7 +63,7 @@ namespace DoctorsDungeon.ComponentPattern.Path
         }
         #region SaveLoad
 
-        public void SaveGrid(Grid grid)
+        public void SaveLoadGrid(Grid grid)
         {
             CurrentGrid = grid;
 
@@ -75,7 +75,7 @@ namespace DoctorsDungeon.ComponentPattern.Path
             else
             {
                 // Save Grid
-                DBGrid.SaveGrid(CurrentGrid);
+                DBGrid.OverrideSaveGrid(CurrentGrid);
 
                 // Draw Grid
                 foreach (GameObject cellGo in CurrentGrid.Cells.Values)
@@ -84,6 +84,26 @@ namespace DoctorsDungeon.ComponentPattern.Path
                 }
             }
         }
+
+        // A bug in the update grid cells
+        //public void UpdateGrid(Grid grid)
+        //{
+        //    if (DBGrid.DoesGridExits(grid.Name))
+        //    {
+        //        DBGrid.UpdateGridCells(grid);
+        //    }
+        //    else
+        //    {
+        //        // Save Grid
+        //        DBGrid.OverrideSaveGrid(CurrentGrid);
+
+        //        // Draw Grid
+        //        foreach (GameObject cellGo in CurrentGrid.Cells.Values)
+        //        {
+        //            GameWorld.Instance.Instantiate(cellGo);
+        //        }
+        //    }
+        //}
 
         public void LoadGrid(string gridName)
         {

@@ -91,7 +91,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.TestScenes
             GameObject gridGo = new();
             Grid grid = gridGo.AddComponent<Grid>("Test1", new Vector2(0, 0), 24, 18);
             grid.GenerateGrid();
-            GridManager.Instance.SaveGrid(grid);
+            GridManager.Instance.SaveLoadGrid(grid);
         }
 
         private void SetCommands()
@@ -106,7 +106,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.TestScenes
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.D1, new CustomCmd(player.UseItem));
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Tab, new CustomCmd(() => { GridManager.Instance.ShowHideGrid(); }));
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, new CustomCmd(Attack));
-            InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DBGrid.SaveGrid(GridManager.Instance.CurrentGrid); }));
+            InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DBGrid.OverrideSaveGrid(GridManager.Instance.CurrentGrid); }));
         }
 
         public override void OnPlayerChanged()

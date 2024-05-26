@@ -15,25 +15,6 @@ namespace DoctorsDungeon.LiteDB
 {
     public static class DBMethods
     {
-        //public static void SaveGame()
-        //{
-        //    SaveFileData saveFileData = DBSaveFile.LoadSaveFileData(Data.CurrentSaveID, false);
-
-        //    Data.UnlockedWeapons = DBSaveFile.LoadSaveWeaponType(saveFileData, false);
-        //    Data.UnlockedClasses = DBSaveFile.LoadSaveClassType(saveFileData, false);
-
-        //    // In buy menu.
-        //    //UnlockWeapon(WeaponTypes.Axe);
-        //    //UnlockWeapon(WeaponTypes.MagicStaffFire);
-        //    //UnlockWeapon(WeaponTypes.Bow);
-
-        //    //UnlockClass(ClassTypes.Archer);
-        //    //UnlockClass(ClassTypes.Warrior);
-        //    //UnlockClass(ClassTypes.Mage);
-
-        //    SaveRunData();
-        //}
-
         public static void SaveRunData()
         {
             SaveFileData saveFileData = DBSaveFile.LoadFileData(SaveData.CurrentSaveID); // Load Save File

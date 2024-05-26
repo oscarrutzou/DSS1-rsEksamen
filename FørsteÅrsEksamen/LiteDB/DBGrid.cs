@@ -33,10 +33,38 @@ namespace DoctorsDungeon.LiteDB
         }
 
         /// <summary>
+        /// Updates the RoomNr and CellType on every saved cell.
+        /// </summary>
+        /// <param name="grid"></param>
+        //public static void UpdateGridCells(Grid grid)
+        //{
+        //    using var cellsDB = new DataBase(CollectionName.Cells, gridFolder);
+        //    var cellsCollection = cellsDB.GetCollection<CellData>();
+
+        //    foreach (GameObject cellGo in grid.Cells.Values)
+        //    {
+        //        Cell cell = cellGo.GetComponent<Cell>();
+        //        int[] PointPosition = new int[] { cellGo.Transform.GridPosition.X, cellGo.Transform.GridPosition.Y };
+                
+        //        CellData currentSavedData = cellsCollection.FindOne(x => x.PointPosition == PointPosition) ?? throw new Exception($"Cant find the cell for grid position {PointPosition}");
+
+        //        CellData newCellData = new()
+        //        {
+        //            Cell_ID = currentSavedData.Cell_ID,
+        //            PointPosition = PointPosition,
+        //            Room_Nr = cell.RoomNr,
+        //            Cell_Type = cell.CellWalkableType,
+        //        };
+        //        //cellsCollection.UpdateMany // Could use this? Maybe rework it
+        //        cellsDB.UpdateReplaceData(currentSavedData.Cell_ID, newCellData);
+        //    }
+        //}
+
+        /// <summary>
         /// Saves a Grid into LiteDB
         /// </summary>
         /// <param name="grid"></param>
-        public static void SaveGrid(Grid grid)
+        public static void OverrideSaveGrid(Grid grid)
         {
             if (grid == null) return;
 
