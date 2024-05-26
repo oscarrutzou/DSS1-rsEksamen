@@ -19,8 +19,9 @@ namespace FørsteÅrsEksamen.GameManagement
         WoodSword,
         BoneSword,
         WoodArrow,
+        
         HealthPotionFull,
-
+        DoorClosed,
         // UI
         SmallBtn,
         LargeBtn,
@@ -58,6 +59,7 @@ namespace FørsteÅrsEksamen.GameManagement
                 {TextureNames.BoneSword, content.Load<Texture2D>("World\\Weapons\\Melee Weapons\\BoneSword") },
                 {TextureNames.WoodArrow, content.Load<Texture2D>("Test\\WoodArrow") },
                 {TextureNames.HealthPotionFull, content.Load<Texture2D>("World\\Objects\\Potions\\RedPotion1") },
+                {TextureNames.DoorClosed, content.Load<Texture2D>("World\\Objects\\DoorClosed") },
 
                 {TextureNames.SmallBtn, content.Load<Texture2D>("UI\\SmallButtonIndividuel (1)") },
                 {TextureNames.LargeBtn, content.Load<Texture2D>("UI\\BigButtonIndividuel (1)") },

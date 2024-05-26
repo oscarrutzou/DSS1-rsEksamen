@@ -1,7 +1,7 @@
 ﻿using FørsteÅrsEksamen.ComponentPattern;
 using FørsteÅrsEksamen.ComponentPattern.WorldObjects;
 using Microsoft.Xna.Framework;
-
+using FørsteÅrsEksamen.GameManagement;
 
 namespace FørsteÅrsEksamen.Factory
 {
@@ -13,13 +13,11 @@ namespace FørsteÅrsEksamen.Factory
             go.Transform.Scale = new(4, 4);
             
             SpriteRenderer sr = go.AddComponent<SpriteRenderer>();
-            sr.SetSprite(GameManagement.TextureNames.Pixel);
-            sr.ShouldDraw = false;
+            sr.SetLayerDepth(LayerDepth.BackgroundDecoration);
+            sr.SetSprite(TextureNames.DoorClosed);
             sr.IsCentered = false;
 
-            Collider collider = go.AddComponent<Collider>();
-            collider.SetCollisionBox(32, 48, Vector2.Zero); // The size of our door and therefore our exit
-
+            go.AddComponent<Collider>();
             go.AddComponent<TransferDoor>();
             
             return go;

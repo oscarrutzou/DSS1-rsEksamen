@@ -13,12 +13,16 @@ using System.Collections.Generic;
 using System;
 using FørsteÅrsEksamen.ComponentPattern.Enemies;
 using FørsteÅrsEksamen.Other;
+using FørsteÅrsEksamen.ComponentPattern.WorldObjects;
+using System.Linq;
 
 namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
 {
     public abstract class RoomBase : Scene
     {
         #region Properties
+        private PauseMenu pauseMenu;
+        
         protected string GridName;
         protected int GridWidth, GridHeight;
         protected TextureNames BackGroundTexture = TextureNames.TestLevelBG;
@@ -31,11 +35,13 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
         protected List<Point> enemySpawnPoints = new();
         protected List<Point> potionSpawnPoints = new();
 
+        private TransferDoor transferDoor;
+        private SpriteRenderer transferDoorSpriteRenderer;
         private List<Enemy> enemiesInRoom = new();
+
         private Spawner spawner;
 
         private List<GameObject> cells = new(); // For debug
-        private PauseMenu pauseMenu;
         #endregion
 
         public override void Initialize()
@@ -118,10 +124,9 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
 
         private void SpawnEndPos() 
         {
-            // If all enemies are dead the player can go though the door, otherwise its locked.
-            // Change sprite on door.
-
             GameObject endDoor = TransferDoorFactory.Create();
+            transferDoor = endDoor.GetComponent<TransferDoor>();
+            transferDoorSpriteRenderer = endDoor.GetComponent<SpriteRenderer>();
             endDoor.Transform.Position = GridManager.Instance.GetCornerPositionOfCell(EndPointSpawnPos);
             GameWorld.Instance.Instantiate(endDoor);
         }
@@ -162,12 +167,12 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
             int newRoomNr = SaveData.Level_Reached + 1;
             GameWorld.Instance.ChangeDungeonScene(SceneNames.DungeonRoom, newRoomNr);
         }
-#endregion
-
+        #endregion
+        private List<Enemy> aliveEnemies;
+        
+        
         public override void Update(GameTime gameTime)
         {
-            base.Update(gameTime);
-
             SaveData.Time_Left -= GameWorld.DeltaTime;
 
             if (SaveData.Time_Left <= 0) // Player ran out of Time
@@ -176,6 +181,24 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
                 SaveData.LostByTime = true;
                 player.TakeDamage(1000); // Kills the player
             }
+
+            // Check if enemies has been killed
+            aliveEnemies = enemiesInRoom.Where(x => x.State != CharacterState.Dead).ToList();
+
+            if (aliveEnemies.Count == 0) // All enemies are dead to 
+            {
+                OnAllEnemiesDied();
+            }
+
+            base.Update(gameTime);
+        }
+
+        private void OnAllEnemiesDied()
+        {
+            if (transferDoorSpriteRenderer.ShouldDraw == false) return; // To stop method from being run twice.
+
+            transferDoorSpriteRenderer.ShouldDraw = false;
+            transferDoor.CanTranser = true;
         }
 
         #region Draw
@@ -185,18 +208,31 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
 
             pauseMenu.DrawOnScreen(spriteBatch);
 
-            Vector2 playerHpPos = GameWorld.Instance.UiCam.BottomLeft + new Vector2(30, -50);
-            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Player HP: {player.CurrentHealth}/{player.MaxHealth}", playerHpPos, Color.Red);
+            Vector2 leftPos = GameWorld.Instance.UiCam.TopLeft + new Vector2(30, 30);
+            DrawTimer(spriteBatch, leftPos);
+            
+            leftPos += new Vector2(0, 30);
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Player HP: {player.CurrentHealth}/{player.MaxHealth}", leftPos, Color.Red);
+            
+            leftPos += new Vector2(0, 30);
+            DrawPotion(spriteBatch, leftPos);
 
-            DrawTimer(spriteBatch, playerHpPos - new Vector2(0, 30));
-
-            DrawPotion(spriteBatch);
+            DrawQuest(spriteBatch);
             
             if (!InputHandler.Instance.DebugMode) return;
             DebugDraw(spriteBatch);
         }
 
-        
+        private void DrawQuest(SpriteBatch spriteBatch)
+        {
+            aliveEnemies = enemiesInRoom.Where(x => x.State != CharacterState.Dead).ToList();
+            int amountToKill = enemySpawnPoints.Count - aliveEnemies.Count;
+
+            string text = $"Kill your way though {amountToKill}/{enemySpawnPoints.Count}";
+            Vector2 size = GlobalTextures.DefaultFont.MeasureString(text);
+            Vector2 pos = GameWorld.Instance.UiCam.TopRight + new Vector2(-size.X - 30, size.Y + 10);
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, text, pos, Color.Red);
+        }
         private void DrawTimer(SpriteBatch spriteBatch, Vector2 timerPos)
         {
             TimeSpan time = TimeSpan.FromSeconds(SaveData.Time_Left);
@@ -204,14 +240,19 @@ namespace FørsteÅrsEksamen.GameManagement.Scenes.Rooms
             string seconds = time.Seconds.ToString("D2");
             spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Time Left: {minutes}:{seconds}", timerPos, Color.Red);
         }
-        private void DrawPotion(SpriteBatch spriteBatch)
+        private void DrawPotion(SpriteBatch spriteBatch, Vector2 intentoryPos)
         {
-            if (player.ItemInInventory == null) return;
+            string text;
+            if (player.ItemInInventory == null)
+            {
+                text = "Inventory (0/1):";
+            }
+            else
+            {
+                text = $"Inventory (1/1): {player.ItemInInventory.Name}";
+            }
 
-            string text = $"Inventory: {player.ItemInInventory.Name}";
-            Vector2 textSize = GlobalTextures.DefaultFont.MeasureString(text);
-            Vector2 postionPos = GameWorld.Instance.UiCam.BottomRight - new Vector2(textSize.X + 30, textSize.Y / 2 + 40);
-            spriteBatch.DrawString(GlobalTextures.DefaultFont, text, postionPos, Color.Red);
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, text, intentoryPos, Color.Red);
         }
         private void DebugDraw(SpriteBatch spriteBatch)
         {

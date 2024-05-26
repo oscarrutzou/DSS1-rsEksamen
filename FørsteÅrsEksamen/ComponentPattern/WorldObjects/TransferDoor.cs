@@ -16,6 +16,9 @@ namespace FørsteÅrsEksamen.ComponentPattern.WorldObjects
         private float timer;
         private float timeTillActivation = 2f;
 
+        // Open sprite
+        // Close dont draw sprite:)
+        public bool CanTranser;
 
         public TransferDoor(GameObject gameObject) : base(gameObject)
         {
@@ -34,6 +37,7 @@ namespace FørsteÅrsEksamen.ComponentPattern.WorldObjects
 
         public override void OnCollisionEnter(Collider collider)
         {
+            if (!CanTranser) return; //Stop the check from happening if the player hasent killed all enemies.
             // Skal kun fjerne item ved player position, ikke alle items.
             if (collider.CollisionBox.Intersects(playerCollider.CollisionBox))
             {
