@@ -1,5 +1,4 @@
-﻿using DoctorsDungeon.ComponentPattern.PlayerClasses;
-using DoctorsDungeon.ComponentPattern.Path;
+﻿using DoctorsDungeon.ComponentPattern.Path;
 using DoctorsDungeon.Factory;
 using LiteDB;
 using System;
@@ -7,7 +6,6 @@ using System.Collections.Generic;
 
 namespace DoctorsDungeon.LiteDB
 {
-
     public class GridTestData
     {
         [BsonId]
@@ -22,6 +20,7 @@ namespace DoctorsDungeon.LiteDB
     {
         [BsonId]
         public Guid Cell_ID { get; set; }
+
         public int[] PointPosition { get; set; }
         public int Room_Nr { get; set; }
         public CellWalkableType Cell_Type { get; set; }
@@ -39,12 +38,11 @@ namespace DoctorsDungeon.LiteDB
 
     //public class CellData
     //{
-
-
     public class SaveFileData
     {
         [BsonId]
         public int Save_ID { get; set; }
+
         public int Currency { get; set; }
         public DateTime Last_Login { get; set; }
 
@@ -58,6 +56,7 @@ namespace DoctorsDungeon.LiteDB
     {
         [BsonId]
         public Guid Class_ID { get; set; }
+
         public ClassTypes Class_Type { get; set; }
     }
 
@@ -65,6 +64,7 @@ namespace DoctorsDungeon.LiteDB
     {
         [BsonId]
         public Guid Class_ID { get; set; }
+
         public int Save_ID { get; set; }
     }
 
@@ -72,6 +72,7 @@ namespace DoctorsDungeon.LiteDB
     {
         [BsonId]
         public Guid Weapon_ID { get; set; }
+
         public WeaponTypes Weapon_Type { get; set; }
     }
 
@@ -79,6 +80,7 @@ namespace DoctorsDungeon.LiteDB
     {
         [BsonId]
         public Guid Weapon_ID { get; set; }
+
         public int Save_ID { get; set; }
     }
 
@@ -86,6 +88,7 @@ namespace DoctorsDungeon.LiteDB
     {
         [BsonId]
         public int Save_ID { get; set; }
+
         public int Run_ID { get; set; }
     }
 
@@ -93,6 +96,7 @@ namespace DoctorsDungeon.LiteDB
     {
         [BsonId]
         public int Run_ID { get; set; }
+
         public int Room_Reached { get; set; }
         public float Time_Left { get; set; }
     }
@@ -101,6 +105,7 @@ namespace DoctorsDungeon.LiteDB
     {
         [BsonId]
         public int Run_ID { get; set; }
+
         public Guid Player_ID { get; set; }
     }
 
@@ -119,6 +124,7 @@ namespace DoctorsDungeon.LiteDB
     {
         [BsonId]
         public string Grid_Name { get; set; }
+
         public float[] Position { get; set; }
         public int[] Start_Size { get; set; }
     }

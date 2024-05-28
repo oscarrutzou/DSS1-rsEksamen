@@ -1,6 +1,5 @@
 ﻿using DoctorsDungeon.ComponentPattern;
 using DoctorsDungeon.ComponentPattern.WorldObjects;
-using Microsoft.Xna.Framework;
 using DoctorsDungeon.GameManagement;
 
 namespace DoctorsDungeon.Factory
@@ -11,7 +10,7 @@ namespace DoctorsDungeon.Factory
         {
             GameObject go = new();
             go.Transform.Scale = new(4, 4);
-            
+
             SpriteRenderer sr = go.AddComponent<SpriteRenderer>();
             sr.SetLayerDepth(LayerDepth.BackgroundDecoration);
             sr.SetSprite(TextureNames.DoorClosed);
@@ -19,7 +18,7 @@ namespace DoctorsDungeon.Factory
 
             go.AddComponent<Collider>();
             go.AddComponent<TransferDoor>();
-            
+
             return go;
         }
     }

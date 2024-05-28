@@ -1,11 +1,8 @@
 ﻿using DoctorsDungeon.CommandPattern;
 using DoctorsDungeon.GameManagement;
-using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace DoctorsDungeon.ComponentPattern.Weapons
 {
@@ -18,13 +15,10 @@ namespace DoctorsDungeon.ComponentPattern.Weapons
         public Vector2 StartRelativePos;
     }
 
+    // Notes for what to add or change to the Weapon.
     // Only happen on attack. Also add hands. Remove it from the player and use 2 hands.
     // The hands should be given and made before making the weapon, as a part of which hands we should use.
     // Use the clenched hand for the one for the weapon and relaxed hand for the other.
-    // Make it easy to set how much it should lerp to and from.
-    // Make it wait for some time (need to be able to be set) before roating back.
-
-    // Maybe as a nice to have, look into how to make one of the less smooth path. So it e.g is fast in the beginning and slow at the end.
     // A really nice to have to so make a trail behind the weapon when it swings:D Would be fun to make
     public abstract class Weapon : Component
     {
@@ -73,9 +67,9 @@ namespace DoctorsDungeon.ComponentPattern.Weapons
             {
                 PlayerWeaponSprite();
             }
-        }       
+        }
 
-        public void StartAttack() 
+        public void StartAttack()
         {
             if (Attacking) return;
 
@@ -92,10 +86,17 @@ namespace DoctorsDungeon.ComponentPattern.Weapons
             }
         }
 
-        protected virtual void PlayerWeaponSprite() {}
-        protected virtual void EnemyWeaponSprite() { }
-        protected virtual void PlayerStartAttack() {}
-        protected virtual void EnemyStartAttack() {}
+        protected virtual void PlayerWeaponSprite()
+        { }
+
+        protected virtual void EnemyWeaponSprite()
+        { }
+
+        protected virtual void PlayerStartAttack()
+        { }
+
+        protected virtual void EnemyStartAttack()
+        { }
 
         protected void PlayAttackSound()
         {
@@ -105,7 +106,8 @@ namespace DoctorsDungeon.ComponentPattern.Weapons
             PlayingSound = true;
         }
 
-        Vector2 lastOffSet;
+        private Vector2 lastOffSet;
+
         public void MoveWeapon()
         {
             Vector2 userPos = WeaponUser.GameObject.Transform.Position;

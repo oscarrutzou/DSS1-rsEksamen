@@ -1,19 +1,17 @@
 ﻿using DoctorsDungeon.CommandPattern;
 using DoctorsDungeon.CommandPattern.Commands;
 using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using DoctorsDungeon.ComponentPattern.Path;
+using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using DoctorsDungeon.ComponentPattern.Weapons;
 using DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons;
-using DoctorsDungeon.LiteDB;
 using DoctorsDungeon.Factory;
+using DoctorsDungeon.LiteDB;
 using DoctorsDungeon.Other;
-
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
-
 
 namespace DoctorsDungeon.GameManagement.Scenes.TestScenes
 {
@@ -30,11 +28,9 @@ namespace DoctorsDungeon.GameManagement.Scenes.TestScenes
             PlayerSpawnPos = new Point(5, 5);
             MakePlayer();
 
-
             OnPlayerChanged();
 
             //InitSpawner();
-
 
             MakeWeapon();
             GameWorld.Instance.WorldCam.Position = Vector2.Zero;
@@ -47,7 +43,6 @@ namespace DoctorsDungeon.GameManagement.Scenes.TestScenes
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
         }
 
         private List<Point> spawnPoints = new()
@@ -121,12 +116,9 @@ namespace DoctorsDungeon.GameManagement.Scenes.TestScenes
 
             bow = WeaponFactory.Create(WeaponTypes.Bow, false);
 
-
             GameWorld.Instance.Instantiate(weapon);
             GameWorld.Instance.Instantiate(bow);
         }
-
-
 
         private void Attack()
         {
@@ -152,14 +144,9 @@ namespace DoctorsDungeon.GameManagement.Scenes.TestScenes
 
             if (rangedWeapon != null)
             {
-
                 rangedWeapon.Shoot();
-
-
             }
-
         }
-
 
         public override void DrawInWorld(SpriteBatch spriteBatch)
         {

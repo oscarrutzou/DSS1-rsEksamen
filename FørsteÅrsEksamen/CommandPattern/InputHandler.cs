@@ -1,11 +1,7 @@
 ﻿using DoctorsDungeon.CommandPattern.Commands;
-using DoctorsDungeon.ComponentPattern.Path;
-using DoctorsDungeon.LiteDB;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Threading;
 
 namespace DoctorsDungeon.CommandPattern
 {
@@ -38,6 +34,7 @@ namespace DoctorsDungeon.CommandPattern
         public Vector2 MouseInWorld, MouseOnUI;
         public bool MouseOutOfBounds, DebugMode;
         public bool IsUpdating { get; private set; }
+
         #endregion Properties
 
         private InputHandler()
@@ -49,23 +46,14 @@ namespace DoctorsDungeon.CommandPattern
         {
             while (true)
             {
-                Monitor.Enter(GameWorld.InputHandlerLock);
-
-                try
-                {
-                    Update();
-                }
-                finally
-                {
-                    Monitor.Exit(GameWorld.InputHandlerLock);
-                }
+                Update();
             }
         }
 
         private void SetBaseKeys()
         {
             AddMouseButtonDownCommand(MouseCmdState.Left, new CheckButtonCmd());
-            
+
             // For debugging
             //AddKeyButtonDownCommand(Keys.Q, new CustomCmd(() => { GridManager.Instance.ChangeRoomNrIndex(-1); }));
             //AddKeyButtonDownCommand(Keys.E, new CustomCmd(() => { GridManager.Instance.ChangeRoomNrIndex(1); }));

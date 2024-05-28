@@ -19,11 +19,13 @@ namespace DoctorsDungeon.GameManagement
         WoodSword,
         BoneSword,
         WoodArrow,
-        
+
         HealthPotionFull,
         DoorClosed,
+
         // UI
         SmallBtn,
+
         LargeBtn,
     }
 

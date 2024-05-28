@@ -7,6 +7,7 @@ namespace DoctorsDungeon.ComponentPattern.PlayerClasses.MeleeClasses
         public Warrior(GameObject gameObject) : base(gameObject)
         {
         }
+
         public override void Awake()
         {
             base.Awake();

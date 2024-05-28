@@ -1,5 +1,4 @@
 ﻿using DoctorsDungeon.GameManagement;
-using Microsoft.Xna.Framework;
 
 namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
 {
@@ -19,6 +18,5 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
             CharacterStateAnimations.Add(CharacterState.Moving, AnimNames.OrcWarriorRun);
             CharacterStateAnimations.Add(CharacterState.Dead, AnimNames.OrcWarriorDeath);
         }
-
     }
 }

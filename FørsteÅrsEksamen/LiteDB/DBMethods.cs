@@ -1,15 +1,10 @@
-﻿using DoctorsDungeon.CommandPattern;
-using DoctorsDungeon.ComponentPattern;
+﻿using DoctorsDungeon.ComponentPattern;
 using DoctorsDungeon.ComponentPattern.PlayerClasses;
-using DoctorsDungeon.ComponentPattern.Path;
 using DoctorsDungeon.ComponentPattern.WorldObjects;
 using DoctorsDungeon.Factory;
-using LiteDB;
-using Microsoft.Xna.Framework;
-using SharpDX.Multimedia;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using DoctorsDungeon.GameManagement.Scenes;
+using Microsoft.Xna.Framework;
+using System.Threading.Tasks;
 
 namespace DoctorsDungeon.LiteDB
 {
@@ -19,9 +14,9 @@ namespace DoctorsDungeon.LiteDB
         {
             SaveFileData saveFileData = DBSaveFile.LoadFileData(SaveData.CurrentSaveID); // Load Save File
             RunData runData = DBRunData.SaveLoadRunData(saveFileData); // Save Run File
-            
+
             if (SaveData.Player == null) return;
-            
+
             DBRunData.SavePlayer(runData);
         }
 
@@ -44,7 +39,7 @@ namespace DoctorsDungeon.LiteDB
                 GameObject potionGo = ItemFactory.Create(playerGo);
                 potionGo.IsEnabled = false;
                 GameWorld.Instance.Instantiate(potionGo); // So the potion gets loaded with its awake and instantiate
-                
+
                 player.ItemInInventory = potionGo.GetComponent<Potion>();
                 player.ItemInInventory.Name = playerData.Potion_Name;
             }
@@ -199,7 +194,7 @@ namespace DoctorsDungeon.LiteDB
                 return false;
             }
             SaveData.Currency -= amount;
-         
+
             DBSaveFile.LoadSaveFileData(SaveData.CurrentSaveID, true); // Override current data
             return true;
         }
@@ -210,7 +205,7 @@ namespace DoctorsDungeon.LiteDB
         public static void RegularSave()
         {
             // Override current data
-            SaveFileData saveFileData = DBSaveFile.LoadSaveFileData(SaveData.CurrentSaveID, true); 
+            SaveFileData saveFileData = DBSaveFile.LoadSaveFileData(SaveData.CurrentSaveID, true);
 
             SaveData.UnlockedClasses = DBSaveFile.LoadSaveClassType(saveFileData, true);
             SaveData.UnlockedWeapons = DBSaveFile.LoadSaveWeaponType(saveFileData, true);

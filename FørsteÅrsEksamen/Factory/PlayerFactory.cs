@@ -1,10 +1,10 @@
 ﻿using DoctorsDungeon.ComponentPattern;
 using DoctorsDungeon.ComponentPattern.PlayerClasses;
+using DoctorsDungeon.ComponentPattern.PlayerClasses.MeleeClasses;
+using DoctorsDungeon.ComponentPattern.PlayerClasses.RangedClasses;
+using DoctorsDungeon.ComponentPattern.Weapons;
 using DoctorsDungeon.LiteDB;
 using Microsoft.Xna.Framework;
-using DoctorsDungeon.ComponentPattern.PlayerClasses.RangedClasses;
-using DoctorsDungeon.ComponentPattern.PlayerClasses.MeleeClasses;
-using DoctorsDungeon.ComponentPattern.Weapons;
 
 namespace DoctorsDungeon.Factory
 {
@@ -29,13 +29,11 @@ namespace DoctorsDungeon.Factory
             playerGo.AddComponent<Animator>();
             playerGo.AddComponent<Collider>();
 
-
             GameObject hands = CreateHands();
             GameWorld.Instance.Instantiate(hands); // Makes hands
 
             GameObject movementColliderGo = CreatePlayerMovementCollider();
             GameWorld.Instance.Instantiate(movementColliderGo); // Makes the collider
-
 
             // remove the hands from the constructer
             playerGo = AddClassComponent(playerGo, playerClass);
@@ -46,7 +44,7 @@ namespace DoctorsDungeon.Factory
             player.MovementColliderGo = movementColliderGo;
 
             //Weapon
-            GameObject weaponGo = WeaponFactory.Create(weaponType,false);
+            GameObject weaponGo = WeaponFactory.Create(weaponType, false);
             weaponGo.GetComponent<Weapon>().WeaponUser = player;
             GameWorld.Instance.Instantiate(weaponGo);
 

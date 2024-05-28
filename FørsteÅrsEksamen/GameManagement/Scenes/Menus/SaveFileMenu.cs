@@ -1,11 +1,10 @@
-﻿using DoctorsDungeon.ComponentPattern.GUI;
-using DoctorsDungeon.ComponentPattern;
+﻿using DoctorsDungeon.ComponentPattern;
+using DoctorsDungeon.ComponentPattern.GUI;
 using DoctorsDungeon.Factory.Gui;
+using DoctorsDungeon.LiteDB;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using DoctorsDungeon.LiteDB;
 using System.Collections.Generic;
-using DoctorsDungeon.CommandPattern.Commands;
 
 namespace DoctorsDungeon.GameManagement.Scenes.Menus
 {
@@ -18,9 +17,9 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
             base.Initialize();
 
             // Add command to delete save files? Right click
-            
         }
-        private string newSaveFile = "New Save File";
+
+        private string newSaveFile = "New Save";
 
         protected override void InitFirstMenu()
         {
@@ -71,7 +70,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
                 }
             }
 
-            RunData runData = DBRunData.LoadRunData(SaveData.CurrentSaveID); 
+            RunData runData = DBRunData.LoadRunData(SaveData.CurrentSaveID);
 
             if (runData == null)
             {
@@ -109,7 +108,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
                         $"\nCurrency {saveFile.Currency}" +
                         $"\n Last Login {saveFile.Last_Login:MM-dd}"; // Removes .ToString
 
-                // Add a delete button next to it. 
+                // Add a delete button next to it.
                 GameObject deleteBtn = ButtonFactory.Create("X", true, () => { DeleteSave(saveFile.Save_ID); });
                 Button delete = deleteBtn.GetComponent<Button>();
                 delete.ChangeScale(new Vector2(2, 6));
@@ -129,7 +128,6 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
         public override void DrawOnScreen(SpriteBatch spriteBatch)
         {
             base.DrawOnScreen(spriteBatch);
-
         }
     }
 }

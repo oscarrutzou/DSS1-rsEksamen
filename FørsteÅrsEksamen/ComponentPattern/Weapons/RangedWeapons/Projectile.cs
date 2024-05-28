@@ -3,7 +3,6 @@ using DoctorsDungeon.ComponentPattern.Enemies;
 using DoctorsDungeon.GameManagement;
 using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
-using Npgsql.Replication.PgOutput.Messages;
 using System;
 
 namespace DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons
@@ -30,12 +29,10 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons
             sr.SetLayerDepth(LayerDepth.Player);
 
             sr.SetSprite(TextureNames.WoodArrow);
-            
         }
 
         public void SetValues(float rotation)
         {
-            
             GameObject.Transform.Rotation = rotation;
             startPos = GameObject.Transform.Position;
 
@@ -44,7 +41,7 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons
         }
 
         public void SetDirection()
-        {            
+        {
             targetPos = InputHandler.Instance.MouseOnUI;
 
             direction = Vector2.Normalize(targetPos - GameObject.Transform.Position);
@@ -76,11 +73,10 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons
 
             GameObject.Transform.Position += step;
 
-            if (Vector2.Distance(startPos, GameObject.Transform.Position)>=range)
+            if (Vector2.Distance(startPos, GameObject.Transform.Position) >= range)
             {
                 GameWorld.Instance.Destroy(GameObject);
             }
-                        
         }
 
         private bool colCalled;
@@ -94,10 +90,6 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons
                 //colCalled = true;
             }
         }
-
-       
-
-       
 
         public void Attack()
         {

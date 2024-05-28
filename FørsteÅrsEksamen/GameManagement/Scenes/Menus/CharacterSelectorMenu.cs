@@ -1,17 +1,14 @@
 ﻿using DoctorsDungeon.CommandPattern;
+using DoctorsDungeon.CommandPattern.Commands;
 using DoctorsDungeon.ComponentPattern;
-using Microsoft.Xna.Framework.Input;
 using DoctorsDungeon.ComponentPattern.GUI;
-using DoctorsDungeon.LiteDB;
 using DoctorsDungeon.Factory;
 using DoctorsDungeon.Factory.Gui;
+using DoctorsDungeon.LiteDB;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using DoctorsDungeon.CommandPattern.Commands;
-using DoctorsDungeon.ComponentPattern.PlayerClasses;
-using System.Diagnostics.Contracts;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DoctorsDungeon.GameManagement.Scenes.Menus
@@ -33,7 +30,6 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
             WeaponTypes.Sword,
         };
 
-
         private int spaceBetween = 30;
 
         public override void Initialize()
@@ -44,7 +40,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
 
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Escape, new CustomCmd(Back));
 
-            // Load Saved classes and 
+            // Load Saved classes and
             DBMethods.LoadClassAndWeapons();
 
             base.Initialize();
@@ -60,10 +56,10 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
         {
             //foreach (ClassTypes type in Enum.GetValues(typeof(ClassTypes)))
             foreach (ClassTypes type in classTypesThatAreDone)
-                {
+            {
                 GameObject btnGo = ButtonFactory.Create($"{type} 50g", true, () => { SelectClass(type); }, TextureNames.LargeBtn);
                 FirstMenuObjects.Add(btnGo);
-                
+
                 Button btn = btnGo.GetComponent<Button>();
                 classButtons.Add(type, btn);
 
@@ -147,7 +143,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
         private void InitBackButton()
         {
             GameObject backBtn = ButtonFactory.Create("Back", true, Back);
-            
+
             backBtn.Transform.Position += new Vector2(0, 200 + FirstMenuObjects[0].Transform.Position.Y);
             GameWorld.Instance.Instantiate(backBtn);
         }

@@ -14,15 +14,15 @@ namespace DoctorsDungeon.ComponentPattern
 
         EnemyUnder,
         EnemyUnderWeapon,
-        
+
         Player,
         PlayerWeapon,
 
         EnemyOver,
         EnemyOverWeapon,
-        
+
         WorldForeground,
-        
+
         UI,
         Button,
         Text,

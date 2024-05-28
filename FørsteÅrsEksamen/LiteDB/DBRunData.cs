@@ -104,11 +104,11 @@ namespace DoctorsDungeon.LiteDB
         /// <returns></returns>
         public static PlayerData LoadPlayerData(int sceneID)
         {
-            RunData runData = LoadRunData(sceneID); // 
+            RunData runData = LoadRunData(sceneID); //
 
             using var runDataHasPlayerLinkDB = new DataBase(CollectionName.RunDataHasPlayerData);
             using var playerDB = new DataBase(CollectionName.PlayerData);
-            
+
             RunDataHasPlayerData existingLink = runDataHasPlayerLinkDB.GetCollection<RunDataHasPlayerData>()
                                                                   .FindOne(link => link.Run_ID == runData.Run_ID);
 

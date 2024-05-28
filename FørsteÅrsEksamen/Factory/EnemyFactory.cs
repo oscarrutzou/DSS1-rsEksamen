@@ -1,11 +1,7 @@
 ﻿using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.PlayerClasses;
-using DoctorsDungeon.ComponentPattern.PlayerClasses.MeleeClasses;
-using DoctorsDungeon.ComponentPattern.PlayerClasses.RangedClasses;
 using DoctorsDungeon.ComponentPattern.Enemies;
 using DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies;
 using DoctorsDungeon.ComponentPattern.Enemies.RangedEnemies;
-using DoctorsDungeon.ComponentPattern.Path;
 using DoctorsDungeon.ComponentPattern.Weapons;
 using Microsoft.Xna.Framework;
 using System;
@@ -16,7 +12,7 @@ namespace DoctorsDungeon.Factory
     {
         OrcWarrior,
         OrcArcher,
-        SkeletonWarrior, 
+        SkeletonWarrior,
         SkeletonArcher,
     }
 
@@ -25,6 +21,7 @@ namespace DoctorsDungeon.Factory
     {
         private static Random random = new();
         private static int EnemyDmgDivide = 2;
+
         public static GameObject CreateWithRandomType()
         {
             Array enemyValue = Enum.GetValues(typeof(EnemyTypes));
@@ -70,12 +67,15 @@ namespace DoctorsDungeon.Factory
                 case EnemyTypes.OrcWarrior:
                     enemyGo.AddComponent<OrcWarrior>();
                     break;
+
                 case EnemyTypes.OrcArcher:
                     enemyGo.AddComponent<OrcArcher>();
                     break;
+
                 case EnemyTypes.SkeletonWarrior:
                     enemyGo.AddComponent<SkeletonWarrior>();
                     break;
+
                 case EnemyTypes.SkeletonArcher:
                     enemyGo.AddComponent<SkeletonArcher>();
                     break;
@@ -92,6 +92,5 @@ namespace DoctorsDungeon.Factory
             go.AddComponent<Animator>();
             return go;
         }
-
     }
 }

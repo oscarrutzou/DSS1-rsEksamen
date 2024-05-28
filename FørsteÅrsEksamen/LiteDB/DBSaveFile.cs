@@ -1,5 +1,4 @@
-﻿using DoctorsDungeon.ComponentPattern.PlayerClasses;
-using DoctorsDungeon.Factory;
+﻿using DoctorsDungeon.Factory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +10,6 @@ namespace DoctorsDungeon.LiteDB
     /// </summary>
     public static class DBSaveFile
     {
-
         public static List<SaveFileData> LoadSaveFiles()
         {
             List<SaveFileData> saveFiles = new();
@@ -29,9 +27,9 @@ namespace DoctorsDungeon.LiteDB
         public static SaveFileData LoadFileData(int currentSaveID)
         {
             using var db = new DataBase(CollectionName.SaveFile);
-            
+
             SaveFileData data = db.FindOne<SaveFileData>(x => x.Save_ID == currentSaveID);
-            
+
             return data;
         }
 

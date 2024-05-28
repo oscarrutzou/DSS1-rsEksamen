@@ -16,6 +16,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
         protected SpriteFont Font;
         protected Vector2 TextPos;
         protected Button MusicBtn, SfxBtn;
+
         public override void Initialize()
         {
             FirstMenuObjects = new();
@@ -28,7 +29,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
 
             Font = GlobalTextures.BigFont;
             TextPos = GameWorld.Instance.UiCam.Center + new Vector2(0, -200);
-            
+
             OnFirstCleanUp = AfterFirstCleanUp;
 
             //SpawnBG();
@@ -46,11 +47,14 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
             }
         }
 
-        protected virtual void InitFirstMenu() { }
-        protected virtual void InitSecondMenu() { }
+        protected virtual void InitFirstMenu()
+        { }
+
+        protected virtual void InitSecondMenu()
+        { }
+
         //private void SpawnBG()
         //{
-            
         //    GameWorld.Instance.Instantiate(go);
         //}
 
@@ -75,6 +79,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
                 ShowHideGameObjects(SecondMenuObjects, false);
             }
         }
+
         protected void ShowHideGameObjects(List<GameObject> gameObjects, bool isEnabled)
         {
             foreach (GameObject item in gameObjects)
@@ -82,16 +87,19 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
                 item.IsEnabled = isEnabled;
             }
         }
+
         protected void ChangeMusic()
         {
             GlobalSounds.ChangeMusicVolume();
             MusicBtn.Text = $"Music Volume {GlobalSounds.MusicVolume * 100}%";
         }
+
         protected void ChangeSfx()
         {
             GlobalSounds.ChangeSfxVolume();
             SfxBtn.Text = $"SFX Volume {GlobalSounds.SfxVolume * 100}%";
         }
+
         protected void DrawMenuText(SpriteBatch spriteBatch, string text, Vector2 position)
         {
             GuiMethods.DrawTextCentered(spriteBatch, Font, position, text, Color.DarkRed);

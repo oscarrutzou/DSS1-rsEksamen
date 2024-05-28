@@ -58,7 +58,6 @@ namespace DoctorsDungeon.Other
             sb.Append(GetMembers<MethodInfo>(type, writeInherited, BuildMethod, type.GetMethods));
 
             return sb.ToString();
-
         }
 
         /// <summary>
@@ -94,6 +93,7 @@ namespace DoctorsDungeon.Other
 
             return $"{GetAccessor(field)} {field.Name} : {field.FieldType.Name}";
         }
+
         private static string BuildProperty(PropertyInfo property)
         {
             StringBuilder sb = new StringBuilder();
@@ -123,6 +123,7 @@ namespace DoctorsDungeon.Other
 
             return sb.ToString();
         }
+
         private static string BuildConstructor(ConstructorInfo constructor)
         {
             StringBuilder sb = new StringBuilder();
@@ -140,6 +141,7 @@ namespace DoctorsDungeon.Other
             sb.Append(")");
             return sb.ToString();
         }
+
         private static string BuildMethod(MethodInfo method)
         {
             if (IsCompilerGenerated(method) == true || method.IsSpecialName == true)
@@ -170,19 +172,23 @@ namespace DoctorsDungeon.Other
         {
             return fieldInfo.IsPublic ? '+' : fieldInfo.IsFamily ? '#' : fieldInfo.IsPrivate ? '-' : (char?)null;
         }
+
         private static char? GetAccessor(PropertyInfo propertyInfo, bool useSetter)
         {
             var methodInfo = useSetter ? propertyInfo.GetSetMethod(true) : propertyInfo.GetGetMethod(true);
             return methodInfo?.IsPublic == true ? '+' : methodInfo?.IsFamily == true ? '#' : methodInfo?.IsPrivate == true ? '-' : (char?)null;
         }
+
         private static char? GetAccessor(ConstructorInfo constructorInfo)
         {
             return constructorInfo.IsPublic ? '+' : constructorInfo.IsFamily ? '#' : constructorInfo.IsPrivate ? '-' : (char?)null;
         }
+
         private static char? GetAccessor(MethodInfo methodInfo)
         {
             return methodInfo.IsPublic ? '+' : methodInfo.IsFamily ? '#' : methodInfo.IsPrivate ? '-' : (char?)null;
         }
+
         private static bool IsCompilerGenerated(MethodInfo method)
         {
             return method.GetCustomAttribute<CompilerGeneratedAttribute>() != null;

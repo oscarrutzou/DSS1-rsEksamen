@@ -9,18 +9,20 @@ namespace DoctorsDungeon.GameManagement
     {
         // GUI
         SmallBtn,
+
         LargeBtn,
 
         TestWizardRightIndividualFrames,
 
         // Player Classes
         KnightDeath,
+
         KnightIdle,
         KnightRun,
 
         ArcherDeath,
         ArcherIdle,
-        ArcherRun, 
+        ArcherRun,
 
         MageDeath,
         MageIdle,
@@ -28,6 +30,7 @@ namespace DoctorsDungeon.GameManagement
 
         // Enemy Classes
         OrcBaseDeath,
+
         OrcBaseIdle,
         OrcBaseRun,
 
@@ -37,7 +40,7 @@ namespace DoctorsDungeon.GameManagement
 
         OrcArcherDeath,
         OrcArcherIdle,
-        OrcArcherRun, 
+        OrcArcherRun,
 
         OrcShamanDeath,
         OrcShamanIdle,
@@ -134,7 +137,6 @@ namespace DoctorsDungeon.GameManagement
             LoadSpriteSheet(AnimNames.SkeletonMageIdle, "World\\Enemies\\Skeleton\\Skeleton - Mage\\Idle-Sheet", 4, 32);
             LoadSpriteSheet(AnimNames.SkeletonMageRun, "World\\Enemies\\Skeleton\\Skeleton - Mage\\Run-Sheet", 10, 64);
             LoadSpriteSheet(AnimNames.SkeletonMageDeath, "World\\Enemies\\Skeleton\\Skeleton - Mage\\Death-Sheet", 6, 64);
-
 
             #region How to Upload Individual Frame Animation
 

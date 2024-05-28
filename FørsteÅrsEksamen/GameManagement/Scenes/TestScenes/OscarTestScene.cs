@@ -1,18 +1,17 @@
 ﻿using DoctorsDungeon.CommandPattern;
 using DoctorsDungeon.CommandPattern.Commands;
 using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies;
 using DoctorsDungeon.ComponentPattern.Path;
+using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using DoctorsDungeon.Factory;
-using DoctorsDungeon.ObserverPattern;
+using DoctorsDungeon.Factory.Gui;
 using DoctorsDungeon.LiteDB;
+using DoctorsDungeon.ObserverPattern;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
-using DoctorsDungeon.Factory.Gui;
-using DoctorsDungeon.ComponentPattern.Enemies.RangedEnemies;
 
 namespace DoctorsDungeon.GameManagement.Scenes.TestScenes
 {
@@ -27,7 +26,6 @@ namespace DoctorsDungeon.GameManagement.Scenes.TestScenes
         public OscarTestScene()
         {
             PlayerSpawnPos = new Point(6, 6);
-
         }
 
         public override void Initialize()

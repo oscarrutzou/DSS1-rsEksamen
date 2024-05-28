@@ -19,7 +19,6 @@ namespace DoctorsDungeon.ComponentPattern
         public int MaxFrames;
         private float timeElapsed, frameDuration;
 
-
         public Animator(GameObject gameObject) : base(gameObject)
         {
         }

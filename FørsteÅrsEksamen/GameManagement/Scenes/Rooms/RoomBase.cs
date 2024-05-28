@@ -1,19 +1,19 @@
 ﻿using DoctorsDungeon.CommandPattern;
 using DoctorsDungeon.CommandPattern.Commands;
 using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.PlayerClasses;
+using DoctorsDungeon.ComponentPattern.Enemies;
 using DoctorsDungeon.ComponentPattern.Path;
-using DoctorsDungeon.LiteDB;
+using DoctorsDungeon.ComponentPattern.PlayerClasses;
+using DoctorsDungeon.ComponentPattern.WorldObjects;
 using DoctorsDungeon.Factory;
 using DoctorsDungeon.GameManagement.Scenes.Menus;
+using DoctorsDungeon.LiteDB;
+using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.Collections.Generic;
 using System;
-using DoctorsDungeon.ComponentPattern.Enemies;
-using DoctorsDungeon.Other;
-using DoctorsDungeon.ComponentPattern.WorldObjects;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DoctorsDungeon.GameManagement.Scenes.Rooms
@@ -21,8 +21,9 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
     public abstract class RoomBase : Scene
     {
         #region Properties
+
         private PauseMenu pauseMenu;
-        
+
         protected string GridName;
         protected int GridWidth, GridHeight;
         protected TextureNames BackGroundTexture = TextureNames.TestLevelBG;
@@ -42,7 +43,8 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
         private Spawner spawner;
 
         private List<GameObject> cells = new(); // For debug
-        #endregion
+
+        #endregion Properties
 
         public override void Initialize()
         {
@@ -59,13 +61,13 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
 
             SpawnTexture(BackGroundTexture, LayerDepth.WorldBackground);
             SpawnTexture(ForeGroundTexture, LayerDepth.WorldForeground);
-            
+
             SpawnGrid();
-            
+
             SpawnPlayer();
-            
+
             SpawnEndPos();
-            
+
             SpawnEnemies();
             SpawnPotions();
 
@@ -75,7 +77,9 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
         }
 
         #region Initialize Methods
+
         protected abstract void SetSpawnPotions();
+
         private void SpawnTexture(TextureNames textureName, LayerDepth layerDepth)
         {
             GameObject backgroundGo = new()
@@ -106,7 +110,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
 
             if (playerData != null)
             {
-               PlayerGo = DBMethods.SpawnPlayer(playerData, PlayerSpawnPos);
+                PlayerGo = DBMethods.SpawnPlayer(playerData, PlayerSpawnPos);
             }
             else
             {
@@ -122,7 +126,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
             GameWorld.Instance.Instantiate(PlayerGo);
         }
 
-        private void SpawnEndPos() 
+        private void SpawnEndPos()
         {
             GameObject endDoor = TransferDoorFactory.Create();
             transferDoor = endDoor.GetComponent<TransferDoor>();
@@ -162,15 +166,17 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
             //InputHandler.Instance.AddKeyButtonDownCommand(Keys.Enter, new CustomCmd(ChangeScene));
             //InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DBGrid.OverrideSaveGrid(GridManager.Instance.CurrentGrid); }));
         }
+
         private void ChangeScene()
         {
             int newRoomNr = SaveData.Level_Reached + 1;
             GameWorld.Instance.ChangeDungeonScene(SceneNames.DungeonRoom, newRoomNr);
         }
-        #endregion
+
+        #endregion Initialize Methods
+
         private List<Enemy> aliveEnemies;
-        
-        
+
         public override void Update(GameTime gameTime)
         {
             SaveData.Time_Left -= GameWorld.DeltaTime;
@@ -185,7 +191,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
             // Check if enemies has been killed
             aliveEnemies = enemiesInRoom.Where(x => x.State != CharacterState.Dead).ToList();
 
-            if (aliveEnemies.Count == 0) // All enemies are dead to 
+            if (aliveEnemies.Count == 0) // All enemies are dead to
             {
                 OnAllEnemiesDied();
             }
@@ -202,6 +208,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
         }
 
         #region Draw
+
         public override void DrawOnScreen(SpriteBatch spriteBatch)
         {
             base.DrawOnScreen(spriteBatch);
@@ -210,15 +217,15 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
 
             Vector2 leftPos = GameWorld.Instance.UiCam.TopLeft + new Vector2(30, 30);
             DrawTimer(spriteBatch, leftPos);
-            
+
             leftPos += new Vector2(0, 30);
             spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Player HP: {player.CurrentHealth}/{player.MaxHealth}", leftPos, Color.Red);
-            
+
             leftPos += new Vector2(0, 30);
             DrawPotion(spriteBatch, leftPos);
 
             DrawQuest(spriteBatch);
-            
+
             if (!InputHandler.Instance.DebugMode) return;
             DebugDraw(spriteBatch);
         }
@@ -228,11 +235,12 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
             aliveEnemies = enemiesInRoom.Where(x => x.State != CharacterState.Dead).ToList();
             int amountToKill = enemySpawnPoints.Count - aliveEnemies.Count;
 
-            string text = $"Kill your way though {amountToKill}/{enemySpawnPoints.Count}";
+            string text = $"Kill your way through {amountToKill}/{enemySpawnPoints.Count}";
             Vector2 size = GlobalTextures.DefaultFont.MeasureString(text);
             Vector2 pos = GameWorld.Instance.UiCam.TopRight + new Vector2(-size.X - 30, size.Y + 10);
             spriteBatch.DrawString(GlobalTextures.DefaultFont, text, pos, Color.Red);
         }
+
         private void DrawTimer(SpriteBatch spriteBatch, Vector2 timerPos)
         {
             TimeSpan time = TimeSpan.FromSeconds(SaveData.Time_Left);
@@ -240,6 +248,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
             string seconds = time.Seconds.ToString("D2");
             spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Time Left: {minutes}:{seconds}", timerPos, Color.Red);
         }
+
         private void DrawPotion(SpriteBatch spriteBatch, Vector2 intentoryPos)
         {
             string text;
@@ -254,6 +263,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
 
             spriteBatch.DrawString(GlobalTextures.DefaultFont, text, intentoryPos, Color.Red);
         }
+
         private void DebugDraw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], GameWorld.Instance.UiCam.TopLeft, null, Color.WhiteSmoke, 0f, Vector2.Zero, new Vector2(400, 300), SpriteEffects.None, 0.99f); // Over everything exept text
@@ -275,10 +285,12 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
             DrawString(spriteBatch, $"Current Level Reached {SaveData.Level_Reached}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 150));
             DrawString(spriteBatch, $"Player Room Nr {player.RoomNr}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 180));
         }
+
         protected void DrawString(SpriteBatch spriteBatch, string text, Vector2 position)
         {
             spriteBatch.DrawString(GlobalTextures.DefaultFont, text, position, Color.Black, 0f, Vector2.Zero, 1, SpriteEffects.None, 1f);
         }
-        #endregion
+
+        #endregion Draw
     }
 }

@@ -1,7 +1,7 @@
 ﻿using DoctorsDungeon.CommandPattern;
 using DoctorsDungeon.ComponentPattern.GUI;
-using DoctorsDungeon.ObserverPattern;
 using DoctorsDungeon.LiteDB;
+using DoctorsDungeon.ObserverPattern;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
@@ -61,6 +61,7 @@ namespace DoctorsDungeon.ComponentPattern.Path
             if (!InputHandler.Instance.DebugMode) return;
             LevelNrIndex += addToCurrentRoomNr;
         }
+
         #region SaveLoad
 
         public void SaveLoadGrid(Grid grid)

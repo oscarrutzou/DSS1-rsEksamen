@@ -45,7 +45,7 @@ namespace DoctorsDungeon.LiteDB
         //    {
         //        Cell cell = cellGo.GetComponent<Cell>();
         //        int[] PointPosition = new int[] { cellGo.Transform.GridPosition.X, cellGo.Transform.GridPosition.Y };
-                
+
         //        CellData currentSavedData = cellsCollection.FindOne(x => x.PointPosition == PointPosition) ?? throw new Exception($"Cant find the cell for grid position {PointPosition}");
 
         //        CellData newCellData = new()
@@ -72,10 +72,10 @@ namespace DoctorsDungeon.LiteDB
             GridData gridData = new()
             {
                 Grid_Name = grid.Name,
-                Position = new float[] { grid.StartPostion.X, grid.StartPostion.Y},
+                Position = new float[] { grid.StartPostion.X, grid.StartPostion.Y },
                 Start_Size = new int[] { grid.Width, grid.Height },
             };
-            
+
             DeleteGrid(grid.Name);
 
             // Open a new Database with the Grids connection.
@@ -105,7 +105,7 @@ namespace DoctorsDungeon.LiteDB
                     CellData cellData = new()
                     {
                         Cell_ID = Guid.NewGuid(), // A unique key
-                        PointPosition = new int[] { gridpos.X, gridpos.Y},
+                        PointPosition = new int[] { gridpos.X, gridpos.Y },
                         Room_Nr = cell.RoomNr,
                         Cell_Type = cell.CellWalkableType,
                     };

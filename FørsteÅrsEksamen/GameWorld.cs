@@ -1,19 +1,16 @@
 ﻿using DoctorsDungeon.CommandPattern;
 using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.GameManagement.Scenes.TestScenes;
+using DoctorsDungeon.GameManagement;
+using DoctorsDungeon.GameManagement.Scenes;
 using DoctorsDungeon.GameManagement.Scenes.Menus;
 using DoctorsDungeon.GameManagement.Scenes.Rooms;
+using DoctorsDungeon.GameManagement.Scenes.TestScenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
-using DoctorsDungeon.GameManagement.Scenes;
-using DoctorsDungeon.GameManagement;
-using DoctorsDungeon.Other;
-using System.Diagnostics;
 
 namespace DoctorsDungeon
 {
@@ -31,7 +28,7 @@ namespace DoctorsDungeon
         public GraphicsDeviceManager GfxManager { get; private set; }
 
         public static bool IsPaused = false;
-        public static readonly object InputHandlerLock = new();
+        public static readonly object GameobjectDeleteLock = new();
 
         public SceneNames? NextScene { get; private set; } = null;
         public bool ShowBG { get; set; } = true;
@@ -49,14 +46,14 @@ namespace DoctorsDungeon
 
         protected override void Initialize()
         {
-  //          //string gm = UmlWriter.GetClass(typeof(GameWorld), false);
-  //          List<string> uml = UmlWriter.GetEntireProject();
+            //          //string gm = UmlWriter.GetClass(typeof(GameWorld), false);
+            //          List<string> uml = UmlWriter.GetEntireProject();
 
-  //          foreach (string item in uml)
-          
-  //{
-  //              Debug.WriteLine(item);
-  //          }
+            //          foreach (string item in uml)
+
+            //{
+            //              Debug.WriteLine(item);
+            //          }
 
             SceneData.GenereateGameObjectDicionary();
             //ResolutionSize(1280, 720);
@@ -161,6 +158,7 @@ namespace DoctorsDungeon
         public void Destroy(GameObject go) => CurrentScene.Destroy(go);
 
         #region Scene
+
         /// <summary>
         /// Generates the scenes that can be used in the project.
         /// </summary>
@@ -233,23 +231,16 @@ namespace DoctorsDungeon
         {
             if (NextScene == null || Scenes[NextScene.Value] == null) return;
 
-            Monitor.Enter(InputHandlerLock);
-
-            try
+            lock (GameobjectDeleteLock)
             {
-                // Change the scene
-                CurrentScene.OnSceneChange(); // Removes stuff like commands
                 SceneData.DeleteAllGameObjects(); // Removes every object
-
-                WorldCam.Position = Vector2.Zero;
-                CurrentScene = Scenes[NextScene.Value]; // Changes to new scene
-                CurrentScene.Initialize();
-                NextScene = null;
             }
-            finally
-            {
-                Monitor.Exit(InputHandlerLock);
-            }
+            // Remove all extra unnecessary Start code from lock to avoid a DeadLock.
+            CurrentScene.OnSceneChange(); // Removes commands and more
+            WorldCam.Position = Vector2.Zero; // Resets world cam position
+            CurrentScene = Scenes[NextScene.Value]; // Changes to new scene
+            CurrentScene.Initialize(); // Starts the new scene
+            NextScene = null;
         }
 
         private void SpawnBG()
@@ -271,6 +262,6 @@ namespace DoctorsDungeon
             menuBackground.Draw(spriteBatch);
         }
 
-        #endregion
+        #endregion Scene
     }
 }

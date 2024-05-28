@@ -5,6 +5,5 @@
         public Axe(GameObject gameObject) : base(gameObject)
         {
         }
-
     }
 }
