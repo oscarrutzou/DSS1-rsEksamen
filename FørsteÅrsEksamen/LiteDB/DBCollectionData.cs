@@ -26,18 +26,6 @@ namespace DoctorsDungeon.LiteDB
         public CellWalkableType Cell_Type { get; set; }
     }
 
-    //}
-
-    //public class GridHasCells
-    //{
-    //    public string Grid_Name { get; set; }
-
-    //    [BsonId]
-    //    public Guid Cell_ID { get; set; }
-    //}
-
-    //public class CellData
-    //{
     public class SaveFileData
     {
         [BsonId]

@@ -79,15 +79,12 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons
             }
         }
 
-        private bool colCalled;
 
         public override void OnCollisionEnter(Collider collider)
         {
-            //if (colCalled) return;
             if (collider.GameObject.GetComponent<Enemy>() != null)
             {
                 GameWorld.Instance.Destroy(GameObject);
-                //colCalled = true;
             }
         }
 
