@@ -16,7 +16,7 @@ namespace DoctorsDungeon.Factory
         SkeletonArcher,
     }
 
-    //Asser
+    // Asser
     public static class EnemyFactory
     {
         private static Random random = new();

@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DoctorsDungeon.GameManagement.Scenes.Menus
 {
+    // Asser
     public class EndMenu : MenuScene
     {
         protected override void InitFirstMenu()

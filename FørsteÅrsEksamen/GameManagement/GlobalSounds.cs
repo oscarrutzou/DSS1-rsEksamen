@@ -11,7 +11,7 @@ namespace DoctorsDungeon.GameManagement
         SwipeFast2,
         SwipeSlow1,
     }
-
+    // Oscar
     public static class GlobalSounds
     {
         #region Properties

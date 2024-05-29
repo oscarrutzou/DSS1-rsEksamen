@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 
 namespace DoctorsDungeon.ComponentPattern.WorldObjects
 {
-    //Asser
+    // Asser
     public class Potion : Component
     {
         protected SpriteRenderer SpriteRenderer;

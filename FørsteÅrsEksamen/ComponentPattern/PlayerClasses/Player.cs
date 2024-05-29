@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace DoctorsDungeon.ComponentPattern.PlayerClasses
 {
-    // Oscar
+    // Stefan
     public abstract class Player : Character, ISubject
     {
         public GameObject HandsGo;

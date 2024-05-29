@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DoctorsDungeon.ObjectPoolPattern
 {
-    //Stefan
+    // Stefan
     public abstract class ObjectPool
     {
         public List<GameObject> active = new List<GameObject>();

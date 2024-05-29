@@ -14,7 +14,7 @@ using System.Threading;
 
 namespace DoctorsDungeon
 {
-    // Oscar
+    // Alle
     public class GameWorld : Game
     {
         public static GameWorld Instance;
@@ -46,17 +46,7 @@ namespace DoctorsDungeon
 
         protected override void Initialize()
         {
-            //          //string gm = UmlWriter.GetClass(typeof(GameWorld), false);
-            //          List<string> uml = UmlWriter.GetEntireProject();
-
-            //          foreach (string item in uml)
-
-            //{
-            //              Debug.WriteLine(item);
-            //          }
-
             SceneData.GenereateGameObjectDicionary();
-            //ResolutionSize(1280, 720);
             Fullscreen();
             WorldCam = new Camera(true);
             UiCam = new Camera(false);

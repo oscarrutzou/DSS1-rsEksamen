@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DoctorsDungeon.GameManagement.Scenes.Menus
 {
+    // Stefan
     public class PauseMenu : MenuScene
     {
         private bool isMenuVisible;

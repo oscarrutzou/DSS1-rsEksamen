@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons
 {
+    // Erik
     public abstract class MeleeWeapon : Weapon
     {
         private List<GameObject> hitGameObjects = new();

@@ -5,6 +5,8 @@ using System.Linq;
 
 namespace DoctorsDungeon.LiteDB
 {
+    // Oscar
+
     /// <summary>
     /// Dont use this class other that in the method that saves the game!
     /// </summary>

@@ -7,6 +7,7 @@ using System;
 
 namespace DoctorsDungeon.ComponentPattern.GUI
 {
+    // Stefan
     public class Button : Component
     {
         #region Properties

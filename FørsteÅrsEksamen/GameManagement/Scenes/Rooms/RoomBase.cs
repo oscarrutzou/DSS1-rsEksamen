@@ -18,6 +18,7 @@ using System.Linq;
 
 namespace DoctorsDungeon.GameManagement.Scenes.Rooms
 {
+    // Oscar
     public abstract class RoomBase : Scene
     {
         #region Properties

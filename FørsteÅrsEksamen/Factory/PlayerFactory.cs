@@ -15,6 +15,7 @@ namespace DoctorsDungeon.Factory
         Mage,
     }
 
+    // Stefan
     public static class PlayerFactory
     {
         public static GameObject Create(ClassTypes playerClass, WeaponTypes weaponType)

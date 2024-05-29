@@ -15,6 +15,8 @@ namespace DoctorsDungeon.ComponentPattern.Weapons
         public Vector2 StartRelativePos;
     }
 
+    // Erik
+
     // Notes for what to add or change to the Weapon.
     // Only happen on attack. Also add hands. Remove it from the player and use 2 hands.
     // The hands should be given and made before making the weapon, as a part of which hands we should use.

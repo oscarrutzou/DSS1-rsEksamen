@@ -17,6 +17,7 @@ namespace DoctorsDungeon.Factory
         WoodArrow,
     }
 
+    // Erik
     public static class WeaponFactory
     {
         public static Dictionary<ClassTypes, List<WeaponTypes>> ClassHasWeapons = new()

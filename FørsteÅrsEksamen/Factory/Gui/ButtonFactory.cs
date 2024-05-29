@@ -5,6 +5,7 @@ using System;
 
 namespace DoctorsDungeon.Factory.Gui
 {
+    // Stefan
     public static class ButtonFactory
     {
         public static GameObject Create(string text, bool invokeActionOnFullScale, Action onClick, TextureNames textureName = TextureNames.SmallBtn)

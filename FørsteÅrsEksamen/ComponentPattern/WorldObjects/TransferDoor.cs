@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 
 namespace DoctorsDungeon.ComponentPattern.WorldObjects
 {
+    // Oscar
     public class TransferDoor : Component
     {
         private Collider collider, playerCollider;

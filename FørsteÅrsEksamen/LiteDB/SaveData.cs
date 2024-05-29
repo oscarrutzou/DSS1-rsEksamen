@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace DoctorsDungeon.LiteDB
 {
+    // Oscar
     public static class SaveData
     {
         public static int CurrentSaveID = 1; //Gets set by player and determins loaded data

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 
 namespace DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons
 {
+    // Erik
     public abstract class RangedWeapon : Weapon
     {
         private GameObject projectile;

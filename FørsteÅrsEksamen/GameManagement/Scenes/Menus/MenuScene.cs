@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 namespace DoctorsDungeon.GameManagement.Scenes.Menus
 {
+    // Oscar
     public abstract class MenuScene : Scene
     {
         protected bool ShowSecondMenu;

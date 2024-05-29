@@ -3,7 +3,7 @@ using DoctorsDungeon.Factory;
 
 namespace DoctorsDungeon.ObjectPoolPattern
 {
-    //Stefan
+    // Stefan
     public class ProjectilePool : ObjectPool
     {
         private static ProjectilePool instance;

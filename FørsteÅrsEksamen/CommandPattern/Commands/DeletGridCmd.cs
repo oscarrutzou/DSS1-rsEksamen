@@ -2,6 +2,7 @@
 
 namespace DoctorsDungeon.CommandPattern.Commands
 {
+    // Oscar
     public class DeletGridCmd : ICommand
     {
         private bool test;

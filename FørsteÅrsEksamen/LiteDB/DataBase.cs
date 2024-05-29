@@ -24,6 +24,7 @@ namespace DoctorsDungeon.LiteDB
         CellsTest,
     }
 
+    // Oscar
     public class DataBase : IDisposable
     {
         private readonly LiteDatabase db;
