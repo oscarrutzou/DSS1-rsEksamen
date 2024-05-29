@@ -24,7 +24,7 @@ namespace DoctorsDungeon.LiteDB
         public static void DeleteGrid(string name)
         {
             using var gridDB = new DataBase(CollectionName.Grids, gridFolder);
-            GridData data = gridDB.GetCollection<GridData>().FindOne(x => x.Grid_Name == name);
+            GridData data = gridDB.FindOne<GridData>(x => x.Grid_Name == name);
 
             if (data == null) return; // No grid to delete
 

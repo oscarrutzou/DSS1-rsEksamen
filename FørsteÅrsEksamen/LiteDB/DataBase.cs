@@ -168,8 +168,8 @@ namespace DoctorsDungeon.LiteDB
 
         public static string GetConnectionString(CollectionName collectionName)
         {
-            string pathAppData = AppDomain.CurrentDomain.BaseDirectory;
-            var path = Path.Combine(pathAppData, "data");
+            string baseDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
+            var path = Path.Combine(baseDirectoryPath, "data");
             Directory.CreateDirectory(path);
 
             return Path.Combine(path, $"{collectionName}.db");
@@ -177,8 +177,8 @@ namespace DoctorsDungeon.LiteDB
 
         public static string GetConnectionString(CollectionName collectionName, string extraPath)
         {
-            string pathAppData = AppDomain.CurrentDomain.BaseDirectory;
-            var path = Path.Combine(pathAppData, $"data\\{extraPath}");
+            string baseDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
+            var path = Path.Combine(baseDirectoryPath, $"data\\{extraPath}");
             Directory.CreateDirectory(path);
 
             return Path.Combine(path, $"{collectionName}.db");
