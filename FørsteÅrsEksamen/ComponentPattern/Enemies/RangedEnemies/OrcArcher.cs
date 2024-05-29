@@ -1,7 +1,6 @@
 ﻿//using FørsteÅrsEksamen.ComponentPattern.Characters;
 using DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies;
 using DoctorsDungeon.GameManagement;
-using Microsoft.Xna.Framework;
 
 namespace DoctorsDungeon.ComponentPattern.Enemies.RangedEnemies
 {
@@ -21,6 +20,5 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.RangedEnemies
             CharacterStateAnimations.Add(CharacterState.Moving, AnimNames.OrcBaseRun);
             CharacterStateAnimations.Add(CharacterState.Dead, AnimNames.OrcBaseDeath);
         }
-
     }
 }

@@ -1,10 +1,9 @@
-﻿using DoctorsDungeon.CommandPattern;
-using DoctorsDungeon.LiteDB;
-using DoctorsDungeon.GameManagement;
+﻿using DoctorsDungeon.GameManagement;
 using Microsoft.Xna.Framework;
 
 namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons
 {
+    // Erik
     public class Sword : MeleeWeapon
     {
         public Sword(GameObject gameObject) : base(gameObject)

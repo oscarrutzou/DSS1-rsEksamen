@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace DoctorsDungeon.ComponentPattern.PlayerClasses
 {
-    // Oscar
+    // Stefan
     public abstract class Player : Character, ISubject
     {
         public GameObject HandsGo;
@@ -129,6 +129,7 @@ namespace DoctorsDungeon.ComponentPattern.PlayerClasses
         }
 
         #region Movement
+
         public void AddInput(Vector2 input)
         {
             if (input != Vector2.Zero)
@@ -219,7 +220,6 @@ namespace DoctorsDungeon.ComponentPattern.PlayerClasses
             Notify();
         }
 
-
         private bool TryMove(Vector2 movement)
         {
             // Translate the GameObject, and movement collider.
@@ -277,9 +277,11 @@ namespace DoctorsDungeon.ComponentPattern.PlayerClasses
             Weapon.MoveWeapon();
             GameWorld.Instance.WorldCam.Position = GameObject.Transform.Position; //Sets the new position of the world cam
         }
-        #endregion
+
+        #endregion Movement
 
         #region Item
+
         public bool CanPickUpItem(Potion item)
         {
             if (ItemInInventory == null)
@@ -299,7 +301,8 @@ namespace DoctorsDungeon.ComponentPattern.PlayerClasses
 
             ItemInInventory.Use();
         }
-        #endregion
+
+        #endregion Item
 
         #region Observer Pattern
 

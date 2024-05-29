@@ -1,33 +1,28 @@
 ﻿using DoctorsDungeon.ComponentPattern;
 using DoctorsDungeon.ComponentPattern.GUI;
 using DoctorsDungeon.GameManagement.Scenes;
-using System;
-using System.Collections.Generic;
-using System.Threading;
 
 namespace DoctorsDungeon.CommandPattern.Commands
 {
+    // Oscar
     public class CheckButtonCmd : ICommand
     {
         public void Execute()
         {
-            List<GameObject> gameObjectListCopy = new(SceneData.GameObjectLists[GameObjectTypes.Gui]);
-
-            Action clickAction = null;
-
-            foreach (GameObject gameObject in gameObjectListCopy)
+            lock (GameWorld.GameobjectDeleteLock) // Waits for lock
             {
-                if (gameObject.IsEnabled == false) continue;
+                foreach (GameObject gameObject in SceneData.GameObjectLists[GameObjectTypes.Gui])
+                {
+                    if (gameObject.IsEnabled == false) continue;
 
-                Button button = gameObject.GetComponent<Button>();
+                    Button button = gameObject.GetComponent<Button>();
 
-                if (button == null || !button.IsMouseOver()) continue;
+                    if (button == null || !button.IsMouseOver()) continue;
 
-                clickAction = button.OnClickButton;
-                break;
+                    button.OnClickButton();
+                    break;
+                }
             }
-
-            clickAction?.Invoke();
         }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace DoctorsDungeon.LiteDB
 {
+    // Oscar
     public static class DBRunData
     {
         /// <summary>
@@ -34,8 +35,8 @@ namespace DoctorsDungeon.LiteDB
         public static void DeleteRunData(SaveFileData saveFileData, DataBase fileHasRunDataLinkDB, DataBase runDataDB)
         {
             // Get the existing link
-            SaveFileHasRunData existingLink = fileHasRunDataLinkDB.GetCollection<SaveFileHasRunData>()
-                                                                  .FindOne(link => link.Save_ID == saveFileData.Save_ID);
+            SaveFileHasRunData existingLink = fileHasRunDataLinkDB
+                                                .FindOne<SaveFileHasRunData>(link => link.Save_ID == saveFileData.Save_ID);
 
             if (existingLink != null)
             {
@@ -54,8 +55,8 @@ namespace DoctorsDungeon.LiteDB
 
             if (saveData == null) return null;
 
-            SaveFileHasRunData existingLink = fileHasRunDataLinkDB.GetCollection<SaveFileHasRunData>()
-                                                      .FindOne(link => link.Save_ID == saveData.Save_ID);
+            SaveFileHasRunData existingLink = fileHasRunDataLinkDB
+                                                      .FindOne<SaveFileHasRunData>(link => link.Save_ID == saveData.Save_ID);
 
             if (existingLink == null) return null;
 
@@ -104,18 +105,18 @@ namespace DoctorsDungeon.LiteDB
         /// <returns></returns>
         public static PlayerData LoadPlayerData(int sceneID)
         {
-            RunData runData = LoadRunData(sceneID); // 
+            RunData runData = LoadRunData(sceneID); //
 
             using var runDataHasPlayerLinkDB = new DataBase(CollectionName.RunDataHasPlayerData);
             using var playerDB = new DataBase(CollectionName.PlayerData);
-            
-            RunDataHasPlayerData existingLink = runDataHasPlayerLinkDB.GetCollection<RunDataHasPlayerData>()
-                                                                  .FindOne(link => link.Run_ID == runData.Run_ID);
+
+            RunDataHasPlayerData existingLink = runDataHasPlayerLinkDB
+                                                .FindOne<RunDataHasPlayerData>(link => link.Run_ID == runData.Run_ID);
 
             // Check for runplayer
             if (existingLink == null) return null;
 
-            PlayerData playerData = playerDB.GetCollection<PlayerData>().FindOne(data => data.Player_ID == existingLink.Player_ID);
+            PlayerData playerData = playerDB.FindOne<PlayerData>(data => data.Player_ID == existingLink.Player_ID);
 
             return playerData;
         }
@@ -123,14 +124,12 @@ namespace DoctorsDungeon.LiteDB
         public static void DeletePlayer(RunData runData, DataBase runDataHasPlayerLinkDB, DataBase playerDB)
         {
             // Get the existing link
-            RunDataHasPlayerData existingLink = runDataHasPlayerLinkDB.GetCollection<RunDataHasPlayerData>()
-                                                                  .FindOne(link => link.Run_ID == runData.Run_ID);
+            RunDataHasPlayerData existingLink = runDataHasPlayerLinkDB.FindOne<RunDataHasPlayerData>(link => link.Run_ID == runData.Run_ID);
 
             // Delete the existing RunData and the link
             if (existingLink != null)
             {
-                PlayerData currentPlayerData = playerDB.GetCollection<PlayerData>()
-                                                       .FindOne(data => data.Player_ID == existingLink.Player_ID);
+                PlayerData currentPlayerData = playerDB.FindOne<PlayerData>(data => data.Player_ID == existingLink.Player_ID);
                 if (currentPlayerData != null)
                 {
                     playerDB.Delete<PlayerData>(currentPlayerData.Player_ID);

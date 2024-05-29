@@ -1,6 +1,4 @@
-﻿using DoctorsDungeon.CommandPattern;
-using DoctorsDungeon.ComponentPattern.Enemies;
-using DoctorsDungeon.GameManagement.Scenes;
+﻿using DoctorsDungeon.GameManagement.Scenes;
 using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
 using System;
@@ -8,6 +6,7 @@ using System.Collections.Generic;
 
 namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons
 {
+    // Erik
     public abstract class MeleeWeapon : Weapon
     {
         private List<GameObject> hitGameObjects = new();
@@ -18,7 +17,6 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons
 
         protected MeleeWeapon(GameObject gameObject, bool enemyWeapon) : base(gameObject, enemyWeapon)
         {
-
         }
 
         public void DealDamage(GameObject damageGo)
@@ -76,9 +74,11 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons
                     }
                 }
             }
+
         }
 
         #region Weapon Colliders
+
         private void AttackAnimation()
         {
             if (TotalElapsedTime >= 1f)
@@ -171,6 +171,7 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons
         }
 
         private Rectangle MakeRec(Vector2 pos, int width, int height, Vector2 scale) => new Rectangle((int)pos.X, (int)pos.Y, width * (int)scale.X, (int)scale.Y * height);
-        #endregion
+
+        #endregion Weapon Colliders
     }
 }

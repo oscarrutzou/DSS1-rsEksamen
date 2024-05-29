@@ -1,16 +1,10 @@
-﻿using DoctorsDungeon.GameManagement;
-using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons
+﻿namespace DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons
 {
+    // Erik
     public class Arrow : Projectile
     {
         private Weapon weapon;
+
         public Arrow(GameObject gameObject) : base(gameObject)
         {
         }

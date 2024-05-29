@@ -1,11 +1,10 @@
-﻿using DoctorsDungeon.ComponentPattern.PlayerClasses;
-using DoctorsDungeon.ComponentPattern.Path;
-using DoctorsDungeon.ComponentPattern.WorldObjects;
-using DoctorsDungeon.GameManagement;
+﻿using DoctorsDungeon.ComponentPattern.Path;
+using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DoctorsDungeon.ComponentPattern.Enemies
@@ -19,7 +18,6 @@ namespace DoctorsDungeon.ComponentPattern.Enemies
         private GameObject playerGo;
         private Player player;
         private SpriteRenderer weaponSpriteRenderer;
-
 
         private List<GameObject> path;
         private Vector2 nextTarget;
@@ -142,38 +140,39 @@ namespace DoctorsDungeon.ComponentPattern.Enemies
         }
 
         #region PathFinding
-        private async void SetPath()
+        private void SetPath()
         {
             ResetPathColor();
 
             path = null; // We cant use the previous path
 
-            // Waits in the Idle or Attack state until we find a path.
-            // asyncon afvilking. 
-            path = await Task.Run(() =>
+            // Create a new thread to find the path
+            Thread thread = new(() =>
             {
-                return astar.FindPath(GameObject.Transform.GridPosition, targetPoint);
-            });
-
-            if (State == CharacterState.Dead) // Bug happend because this path got returned just as it died
-            {
-                return;
-            }
-
-            if (path != null && path.Count > 0)
-            {
-                SetState(CharacterState.Moving);
-
-                // If a new path is being set, set the next target to the enemy's current position
-                if (GameObject.Transform.Position != path[0].Transform.Position)
+                path = astar.FindPath(GameObject.Transform.GridPosition, targetPoint);
+                if (State == CharacterState.Dead) // Bug happened because this path got returned just as it died
                 {
-                    nextTarget = GameObject.Transform.Position;
+                    return;
                 }
-                else
+                if (path != null && path.Count > 0)
                 {
-                    SetNextTargetPos(path[0]);
+                    // If a new path is being set, set the next target to the enemy's current position
+                    SetState(CharacterState.Moving); 
+                    if (GameObject.Transform.Position != path[0].Transform.Position)
+                    {
+                        nextTarget = GameObject.Transform.Position;
+                    }
+                    else
+                    {
+                        SetNextTargetPos(path[0]);
+                    }
                 }
-            }
+            })
+            {
+                // Stops the thread if the main thread closes
+                IsBackground = true
+            };
+            thread.Start();
         }
 
         private void UpdatePathing(GameTime gameTime)
@@ -254,6 +253,5 @@ namespace DoctorsDungeon.ComponentPattern.Enemies
         }
 
         #endregion PathFinding
-
     }
 }

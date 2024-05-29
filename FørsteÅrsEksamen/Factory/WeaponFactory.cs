@@ -1,5 +1,4 @@
 ﻿using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons;
 using DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons;
 using Microsoft.Xna.Framework;
@@ -18,6 +17,7 @@ namespace DoctorsDungeon.Factory
         WoodArrow,
     }
 
+    // Erik
     public static class WeaponFactory
     {
         public static Dictionary<ClassTypes, List<WeaponTypes>> ClassHasWeapons = new()

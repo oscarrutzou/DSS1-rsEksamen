@@ -11,12 +11,14 @@ namespace DoctorsDungeon.GameManagement
         SwipeFast2,
         SwipeSlow1,
     }
-
+    // Oscar
     public static class GlobalSounds
     {
         #region Properties
+
         //Sound effects
-        public static Dictionary<SoundNames, SoundEffect> Sounds {  get; private set; }
+        public static Dictionary<SoundNames, SoundEffect> Sounds { get; private set; }
+
         private static Dictionary<SoundNames, List<SoundEffectInstance>> soundInstancesPool;
         private static int maxInstanceOfOneSound = 2;
         //private static int maxInstanceOfGunSound = 10;
@@ -35,7 +37,8 @@ namespace DoctorsDungeon.GameManagement
         public static float SfxVolume = 0.5f;
         private static bool musicCountDown;
         private static bool sfxCountDown;
-        #endregion
+
+        #endregion Properties
 
         public static void LoadContent()
         {
@@ -165,7 +168,6 @@ namespace DoctorsDungeon.GameManagement
             PlaySound(soundName, soundVolDivided, enablePitch);
         }
 
-        
         // Helper method
         private static SoundEffectInstance GetAvailableInstance(SoundNames soundName)
         {
@@ -178,7 +180,7 @@ namespace DoctorsDungeon.GameManagement
             }
             return null;
         }
-        
+
         // Helper method
         private static int CountPlayingInstances(SoundNames soundName)
         {
@@ -200,6 +202,5 @@ namespace DoctorsDungeon.GameManagement
             float pitch = (float)rnd.NextDouble() * (maxPitch - minPitch) + minPitch;
             return pitch;
         }
-
     }
 }

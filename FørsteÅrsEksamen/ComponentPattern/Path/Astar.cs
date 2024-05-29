@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace DoctorsDungeon.ComponentPattern.Path
 {
-    // Oscar
+    // Asser, Oscar
     public class Astar
     {
         private Dictionary<Point, GameObject> cells;

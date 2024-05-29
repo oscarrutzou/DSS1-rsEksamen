@@ -2,11 +2,13 @@
 
 namespace DoctorsDungeon.ComponentPattern.PlayerClasses.MeleeClasses
 {
+    // Stefan
     public class Warrior : Player
     {
         public Warrior(GameObject gameObject) : base(gameObject)
         {
         }
+
         public override void Awake()
         {
             base.Awake();

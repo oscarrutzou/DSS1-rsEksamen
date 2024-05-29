@@ -1,17 +1,11 @@
-﻿using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.PlayerClasses;
-using DoctorsDungeon.ComponentPattern.Enemies;
-using DoctorsDungeon.LiteDB;
-using DoctorsDungeon.Factory;
+﻿using DoctorsDungeon.LiteDB;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace DoctorsDungeon.GameManagement.Scenes.Rooms
 {
+    // Oscar
     public class Room2Scene : RoomBase
     {
-
-
         public override void Initialize()
         {
             throw new System.Exception("This next room is not made yet");

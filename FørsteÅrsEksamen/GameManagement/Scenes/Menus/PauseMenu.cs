@@ -1,16 +1,19 @@
-﻿using DoctorsDungeon.Factory.Gui;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
+﻿using DoctorsDungeon.CommandPattern;
 using DoctorsDungeon.ComponentPattern;
 using DoctorsDungeon.ComponentPattern.GUI;
-using DoctorsDungeon.CommandPattern;
+using DoctorsDungeon.Factory.Gui;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace DoctorsDungeon.GameManagement.Scenes.Menus
 {
+    // Stefan
     public class PauseMenu : MenuScene
     {
         private bool isMenuVisible;
-        private enum MenuState { StartMenu, SettingsMenu }
+
+        private enum MenuState
+        { StartMenu, SettingsMenu }
+
         private MenuState currentMenuState = MenuState.StartMenu;
 
         public override void Initialize()

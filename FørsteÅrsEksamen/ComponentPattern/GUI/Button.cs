@@ -4,13 +4,14 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
-using System.Diagnostics;
 
 namespace DoctorsDungeon.ComponentPattern.GUI
 {
+    // Stefan
     public class Button : Component
     {
         #region Properties
+
         public Action OnClick;
         public string Text;
         private SpriteFont font;
@@ -32,6 +33,7 @@ namespace DoctorsDungeon.ComponentPattern.GUI
 
         private Vector2 scaleUpAmount;
         private float scaleDownOnClickAmount = 0.95f;
+
         #endregion Properties
 
         public Button(GameObject gameObject) : base(gameObject)
@@ -125,7 +127,6 @@ namespace DoctorsDungeon.ComponentPattern.GUI
             if (timeSinceLastClick < clickCooldown) return;
 
             timeSinceLastClick = 0;
-
 
             if (invokeActionOnFullScale)
             {

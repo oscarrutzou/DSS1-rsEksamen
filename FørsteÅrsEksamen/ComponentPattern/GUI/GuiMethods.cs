@@ -10,7 +10,6 @@ namespace DoctorsDungeon.ComponentPattern.GUI
     // Oscar
     public static class GuiMethods
     {
-
         public static void PlaceGameObjectsVertical(List<GameObject> list, Vector2 startPos, int spaceBetween, bool center = false)
         {
             int buttonHeight = list[0].GetComponent<Collider>().CollisionBox.Height;
@@ -26,7 +25,6 @@ namespace DoctorsDungeon.ComponentPattern.GUI
                     0,
                     (buttonHeight / 2 * (list.Count - 1)) + (spaceBetween * (list.Count - 1)) / 2);
             }
-
 
             for (int i = 0; i < list.Count; i++)
             {

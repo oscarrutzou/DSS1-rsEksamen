@@ -1,6 +1,4 @@
 ﻿using DoctorsDungeon.CommandPattern;
-using DoctorsDungeon.ComponentPattern.PlayerClasses;
-using DoctorsDungeon.ComponentPattern.Enemies;
 using DoctorsDungeon.ComponentPattern.Weapons;
 using DoctorsDungeon.GameManagement;
 using Microsoft.Xna.Framework;
@@ -27,6 +25,7 @@ namespace DoctorsDungeon.ComponentPattern
     public abstract class Character : Component
     {
         #region Properties
+
         public GameObject WeaponGo, HandLeft, HandRight;
 
         protected SpriteRenderer SpriteRenderer;
@@ -49,6 +48,7 @@ namespace DoctorsDungeon.ComponentPattern
         public int CurrentHealth = 100;
         public int MaxHealth = 100;
         public int RoomNr { get; set; }
+
         #endregion Properties
 
         public Character(GameObject gameObject) : base(gameObject)
@@ -147,7 +147,7 @@ namespace DoctorsDungeon.ComponentPattern
             SetState(CharacterState.Dead);
             GameWorld.Instance.Destroy(WeaponGo);
             Weapon = null;
-            
+
             // Remove hands
             SpriteRenderer.Color = Color.LightPink;
         }

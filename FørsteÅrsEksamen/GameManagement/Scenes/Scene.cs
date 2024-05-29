@@ -1,6 +1,5 @@
 ﻿using DoctorsDungeon.CommandPattern;
 using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.GUI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -35,6 +34,7 @@ namespace DoctorsDungeon.GameManagement.Scenes
         private List<GameObject> newGameObjects = new List<GameObject>();
         private List<GameObject> destroyedGameObjects = new List<GameObject>();
         protected Action OnFirstCleanUp;
+
         public abstract void Initialize();
 
         /// <summary>
@@ -102,7 +102,6 @@ namespace DoctorsDungeon.GameManagement.Scenes
             newGameObjects.Clear();
             destroyedGameObjects.Clear();
         }
-
 
         /// <summary>
         /// Adds the gameObject to the correct list based on the gameobjects type.

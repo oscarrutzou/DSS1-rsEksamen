@@ -2,6 +2,7 @@
 
 namespace DoctorsDungeon.ComponentPattern.PlayerClasses.RangedClasses
 {
+    // Stefan
     public class Archer : Player
     {
         public Archer(GameObject gameObject) : base(gameObject)

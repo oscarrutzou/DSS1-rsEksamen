@@ -9,7 +9,5 @@
         public Bow(GameObject gameObject, bool enemyWeapon) : base(gameObject, enemyWeapon)
         {
         }
-
-
     }
 }

@@ -1,27 +1,17 @@
-﻿using DoctorsDungeon.ComponentPattern.Path;
-using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ObjectPoolPattern;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DoctorsDungeon.ComponentPattern.PlayerClasses;
-using DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies;
+﻿using DoctorsDungeon.ComponentPattern;
+using DoctorsDungeon.ComponentPattern.Enemies;
+using DoctorsDungeon.ComponentPattern.Path;
 using DoctorsDungeon.Factory;
 using Microsoft.Xna.Framework;
-using DoctorsDungeon.ComponentPattern.Enemies;
-using DoctorsDungeon.ComponentPattern.Enemies.RangedEnemies;
-using DoctorsDungeon.ComponentPattern.WorldObjects;
+using System.Collections.Generic;
 
 namespace DoctorsDungeon.Other
 {
     // Erik
-    public class Spawner: Component
+    public class Spawner : Component
     {
         public Spawner(GameObject gameObject) : base(gameObject)
         {
-               
         }
 
         public List<Enemy> SpawnEnemies(List<Point> spawnLocations, GameObject playerGo)
@@ -34,7 +24,7 @@ namespace DoctorsDungeon.Other
                 //GameObject enemyGo = EnemyFactory.CreateWithRandomType();
                 Enemy enemy = enemyGo.GetComponent<Enemy>();
                 enemy.SetStartPosition(playerGo, spawnPoint);
-                
+
                 enemies.Add(enemy);
                 GameWorld.Instance.Instantiate(enemyGo);
             }
@@ -50,7 +40,6 @@ namespace DoctorsDungeon.Other
                 potionGo.Transform.Position = GridManager.Instance.CurrentGrid.PosFromGridPos(spawnLocations[i]);
                 GameWorld.Instance.Instantiate(potionGo);
             }
-
         }
     }
 }

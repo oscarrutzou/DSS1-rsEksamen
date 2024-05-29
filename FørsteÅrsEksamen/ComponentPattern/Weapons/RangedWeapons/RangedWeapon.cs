@@ -3,9 +3,10 @@ using Microsoft.Xna.Framework;
 
 namespace DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons
 {
+    // Erik
     public abstract class RangedWeapon : Weapon
     {
-        private GameObject projectile;        
+        private GameObject projectile;
         private bool canShoot = true;
         private float lastShot = 0;
         private float shootTimer = 0.5f;
@@ -34,16 +35,14 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons
             //ProjectileFactory projectileFactory = new ProjectileFactory();
             projectile = ProjectileFactory.Create();
             projectile.GetComponent<Projectile>().SetValues(GameObject.Transform.Rotation);
-            
+
             projectile.Transform.Position = GameObject.Transform.Position;
 
             GameWorld.Instance.Instantiate(projectile);
-            
         }
 
         public void Shoot()
         {
-
             //projectile.GetComponent<Projectile>().SetValues(MathHelper.Pi);
 
             if (canShoot)
@@ -52,10 +51,6 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons
                 lastShot = 0;
                 MakeProjectile();
             }
-
         }
-
-
-
     }
 }

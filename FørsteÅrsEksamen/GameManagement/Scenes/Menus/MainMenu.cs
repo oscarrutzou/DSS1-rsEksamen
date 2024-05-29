@@ -1,14 +1,11 @@
-﻿using DoctorsDungeon.CommandPattern;
-using DoctorsDungeon.CommandPattern.Commands;
-using DoctorsDungeon.ComponentPattern;
+﻿using DoctorsDungeon.ComponentPattern;
 using DoctorsDungeon.ComponentPattern.GUI;
 using DoctorsDungeon.Factory.Gui;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 
 namespace DoctorsDungeon.GameManagement.Scenes.Menus
 {
+    // Oscar
     public class MainMenu : MenuScene
     {
         public override void Initialize()
@@ -19,7 +16,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
 
         protected override void InitFirstMenu()
         {
-            GameObject startBtn = ButtonFactory.Create("Save Files", true,
+            GameObject startBtn = ButtonFactory.Create("Play", true,
                             () => { GameWorld.Instance.ChangeScene(SceneNames.SaveFileMenu); });
 
             FirstMenuObjects.Add(startBtn);
@@ -38,7 +35,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
             MusicBtn.Text = $"Music Volume {GlobalSounds.MusicVolume * 100}%";
             SecondMenuObjects.Add(musicVolGo);
 
-            GameObject sfxVolGo = ButtonFactory.Create("", true, ChangeSfx,TextureNames.LargeBtn);
+            GameObject sfxVolGo = ButtonFactory.Create("", true, ChangeSfx, TextureNames.LargeBtn);
             SfxBtn = sfxVolGo.GetComponent<Button>();
             SfxBtn.Text = $"SFX Volume {GlobalSounds.SfxVolume * 100}%";
             SecondMenuObjects.Add(sfxVolGo);

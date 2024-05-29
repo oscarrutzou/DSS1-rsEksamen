@@ -1,10 +1,9 @@
 ﻿using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using Microsoft.Xna.Framework;
-using System;
 
 namespace DoctorsDungeon.ComponentPattern.WorldObjects
 {
-    //Asser
+    // Asser
     public class Potion : Component
     {
         protected SpriteRenderer SpriteRenderer;
@@ -57,7 +56,7 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
             if (Player.CurrentHealth == Player.MaxHealth) return;
 
             Player.CurrentHealth += healAmount;
-            
+
             if (Player.CurrentHealth > Player.MaxHealth)
             {
                 Player.CurrentHealth = 100;

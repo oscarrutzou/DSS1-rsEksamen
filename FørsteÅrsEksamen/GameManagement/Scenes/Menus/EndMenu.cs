@@ -1,20 +1,14 @@
-﻿using DoctorsDungeon.ComponentPattern.GUI;
-using DoctorsDungeon.ComponentPattern;
+﻿using DoctorsDungeon.ComponentPattern;
+using DoctorsDungeon.ComponentPattern.GUI;
 using DoctorsDungeon.Factory.Gui;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using DoctorsDungeon.LiteDB;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace DoctorsDungeon.GameManagement.Scenes.Menus
 {
+    // Asser
     public class EndMenu : MenuScene
     {
-
         protected override void InitFirstMenu()
         {
             GameObject startBtn = ButtonFactory.Create("New Run", true,

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace DoctorsDungeon.LiteDB
 {
+    // Oscar
     public static class SaveData
     {
         public static int CurrentSaveID = 1; //Gets set by player and determins loaded data
@@ -20,9 +21,9 @@ namespace DoctorsDungeon.LiteDB
         public static float Time_Left { get; set; } = 60f;
         public static bool HasWon { get; set; }
         public static bool LostByTime;
-       
-        public static WeaponTypes SelectedWeapon; 
-        public static ClassTypes SelectedClass {  get; set; }
+
+        public static WeaponTypes SelectedWeapon;
+        public static ClassTypes SelectedClass { get; set; }
         public static Player Player { get; set; }
 
         public static void SetBaseValues()

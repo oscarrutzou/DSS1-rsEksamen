@@ -1,14 +1,9 @@
-﻿using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.Enemies;
-using DoctorsDungeon.ComponentPattern.Path;
-using DoctorsDungeon.Factory;
-using DoctorsDungeon.LiteDB;
-using DoctorsDungeon.Other;
+﻿using DoctorsDungeon.LiteDB;
 using Microsoft.Xna.Framework;
-using System.Collections.Generic;
 
 namespace DoctorsDungeon.GameManagement.Scenes.Rooms
 {
+    // Oscar
     public class Room1Scene : RoomBase
     {
         public override void Initialize()
