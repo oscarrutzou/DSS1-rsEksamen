@@ -25,6 +25,9 @@ namespace DoctorsDungeon.LiteDB
     }
 
     // Oscar
+
+    // Denne del med database er en meget stor opgave at refactor.
+    // Vi har dog brugt databasen forkert og derfor må vi nødt til at lave det om, hvis vi har tid til det efter aflevering. 
     public class DataBase : IDisposable
     {
         private readonly LiteDatabase db;

@@ -20,7 +20,7 @@ namespace DoctorsDungeon.GameManagement
         public static Dictionary<SoundNames, SoundEffect> Sounds { get; private set; }
 
         private static Dictionary<SoundNames, List<SoundEffectInstance>> soundInstancesPool;
-        private static int maxInstanceOfOneSound = 2;
+        private static int maxInstanceOfOneSound = 2; // There can only be 2 of the same sounds playing, otherwise it wont play.
         //private static int maxInstanceOfGunSound = 10;
 
         public static bool InMenu { get; set; } = true;
@@ -42,16 +42,18 @@ namespace DoctorsDungeon.GameManagement
 
         public static void LoadContent()
         {
-            musicCountDown = MusicVolume != 0;
+            musicCountDown = MusicVolume != 0; // For the method to change up and down on volume
             sfxCountDown = SfxVolume != 0;
 
             ContentManager content = GameWorld.Instance.Content;
 
             soundInstancesPool = new Dictionary<SoundNames, List<SoundEffectInstance>>();
 
+            // Loads music
             menuMusic = content.Load<SoundEffect>("Sound\\MenuTrack");
             gameMusic = content.Load<SoundEffect>("Sound\\GameTrack");
 
+            // Loads SFX's
             Sounds = new Dictionary<SoundNames, SoundEffect>
             {
                 {SoundNames.SwipeFast1, content.Load<SoundEffect>("Sound\\SwipeFast1") },
@@ -59,7 +61,7 @@ namespace DoctorsDungeon.GameManagement
                 {SoundNames.SwipeSlow1, content.Load<SoundEffect>("Sound\\SwipeSlow1") },
             };
 
-            //Create sound instances
+            //Create sound instances for the sound pool
             foreach (var sound in Sounds)
             {
                 soundInstancesPool[sound.Key] = new List<SoundEffectInstance>();
@@ -81,40 +83,49 @@ namespace DoctorsDungeon.GameManagement
                 instanceGameMusic = gameMusic.CreateInstance();
             }
 
+            // Make sure the volume is lower that the SFX's, since the SFX are more impactfull.
             instanceMenuMusic.Volume = Math.Clamp(MusicVolume, 0, 1) / musicVolDivide;
             instanceGameMusic.Volume = Math.Clamp(MusicVolume, 0, 1) / musicVolDivide;
 
             //Check if the music should be playing
             if (InMenu)
             {
-                instanceGameMusic.Stop();
+                instanceGameMusic.Stop(); // Stops it once and does nothing if its already stopped
             }
             else
             {
-                instanceMenuMusic.Stop();
+                instanceMenuMusic.Stop(); // Stops it once and does nothing if its already stopped
             }
 
             if (instanceMenuMusic.State == SoundState.Stopped && InMenu)
             {
-                instanceMenuMusic.Play();
+                instanceMenuMusic.Play(); // Play only plays it once and does nothing if it already plays
             }
 
             if (instanceGameMusic.State == SoundState.Stopped && !InMenu)
             {
-                instanceGameMusic.Play();
+                instanceGameMusic.Play();// Play only plays it once and does nothing if it already plays
             }
         }
 
+        /// <summary>
+        /// Changes the volume of music up or down with 25% each time.
+        /// </summary>
         public static void ChangeMusicVolume()
         {
+            // If the bool musicCountDown is true, we go down in volume towards 0, if its false we can go up until we hit 1.
             MusicVolume = musicCountDown ? Math.Max(0, MusicVolume - 0.25f) : Math.Min(1, MusicVolume + 0.25f);
-            if (MusicVolume == 0 || MusicVolume == 1) musicCountDown = !musicCountDown;
+            if (MusicVolume == 0 || MusicVolume == 1) musicCountDown = !musicCountDown; // Reverse the change direction
         }
 
+        /// <summary>
+        /// Changes the volume of sfx up or down with 25% each time.
+        /// </summary>
         public static void ChangeSfxVolume()
         {
+            // If the bool sfxCountDown is true, we go down in volume towards 0, if its false we can go up until we hit 1.
             SfxVolume = sfxCountDown ? Math.Max(0, SfxVolume - 0.25f) : Math.Min(1, SfxVolume + 0.25f);
-            if (SfxVolume == 0 || SfxVolume == 1) sfxCountDown = !sfxCountDown;
+            if (SfxVolume == 0 || SfxVolume == 1) sfxCountDown = !sfxCountDown;// Reverse the change direction
         }
 
         public static bool IsAnySoundPlaying(SoundNames[] soundArray)
@@ -134,7 +145,13 @@ namespace DoctorsDungeon.GameManagement
             return false;
         }
 
-        public static void PlaySound(SoundNames soundName, float floatSoundVolDivided = 1f, bool enablePitch = false)
+        /// <summary>
+        /// Plays a sound
+        /// </summary>
+        /// <param name="soundName">The sound to play</param>
+        /// <param name="soundVolDivided">Can change how loud the sound is</param>
+        /// <param name="enablePitch">If it should add a random pitch to the sounds</param>
+        public static void PlaySound(SoundNames soundName, float soundVolDivided = 1f, bool enablePitch = false)
         {
             // Play a sound with an optional random pitch
             float pitch = enablePitch ? GenerateRandomPitch() : 0f; // Base pitch is 0f
@@ -149,10 +166,17 @@ namespace DoctorsDungeon.GameManagement
             }
 
             instance.Pitch = pitch;
-            instance.Volume = SfxVolume / floatSoundVolDivided;
+            instance.Volume = SfxVolume / soundVolDivided;
             instance.Play();
         }
 
+        /// <summary>
+        /// Can play a random sound in a array
+        /// </summary>
+        /// <param name="soundArray">The array of different sound effets that can be played</param>
+        /// <param name="maxAmountPlaying">How many of the sounds that can play at once</param>
+        /// <param name="soundVolDivided">Can change how loud the sound is</param>
+        /// <param name="enablePitch">If it should add a random pitch to the sounds</param>
         public static void PlayRandomizedSound(SoundNames[] soundArray, int maxAmountPlaying, float soundVolDivided = 1f, bool enablePitch = false)
         {
             // Play a random sound from the array

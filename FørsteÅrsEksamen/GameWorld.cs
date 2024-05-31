@@ -31,7 +31,7 @@ namespace DoctorsDungeon
         public static readonly object GameobjectDeleteLock = new();
 
         public SceneNames? NextScene { get; private set; } = null;
-        public bool ShowBG { get; set; } = true;
+        public bool ShowBG { get; set; } = true; // If we should show our background 
 
         private SpriteBatch _spriteBatch;
         private GameObject menuBackground;
@@ -48,23 +48,24 @@ namespace DoctorsDungeon
         {
             SceneData.GenereateGameObjectDicionary();
             Fullscreen();
-            WorldCam = new Camera(true);
-            UiCam = new Camera(false);
+            WorldCam = new Camera(true); // Camera that follows the player
+            UiCam = new Camera(false); // Camera that is static
 
+            // Put some of this into threads to load faster in a loading menu, insted of running it here.
             GlobalTextures.LoadContent();
             GlobalSounds.LoadContent();
             GlobalAnimations.LoadContent();
 
-            GenerateScenes();
+            GenerateScenes(); // Makes a instance of all the scene we need
 
-            SpawnBG();
+            SpawnBG(); // The background that dont get deleted
 
             CurrentScene = Scenes[SceneNames.MainMenu];
-            CurrentScene.Initialize();
+            CurrentScene.Initialize(); // Starts the main menu
 
             Thread inputThread = new(InputHandler.Instance.StartInputThread)
             {
-                IsBackground = true // Stops the thread abruptly
+                IsBackground = true // Stops the thread when main thread closes
             };
             inputThread.Start();
 
@@ -80,11 +81,11 @@ namespace DoctorsDungeon
         {
             DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            GlobalSounds.MusicUpdate(); // Maybe run on own thread?
+            GlobalSounds.MusicUpdate(); // Updates the Music in the game, not SFX
 
-            CurrentScene.Update(gameTime);
+            CurrentScene.Update(gameTime); // Updates all gameobjects and their componetents in the scene
 
-            HandleSceneChange();
+            HandleSceneChange(); // Goes to the next scene
 
             base.Update(gameTime);
         }
@@ -93,7 +94,7 @@ namespace DoctorsDungeon
         {
             CurrentScene.DrawSceenColor();
 
-            //Draw in world objects. Use pixel perfect and a WorldCam, that can be moved around
+            //Draw in world objects. Uses pixel perfect and a WorldCam, that can be moved around
             _spriteBatch.Begin(sortMode: SpriteSortMode.FrontToBack, BlendState.AlphaBlend,
                 SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise,
                 transformMatrix: WorldCam.GetMatrix());
@@ -184,6 +185,8 @@ namespace DoctorsDungeon
             NextScene = sceneName;
         }
 
+        // Chosen to make it work with a base room type in the enum,
+        // so we can easily change what kind of difficulty a room is and load in how far a player has come in a run.
         public void ChangeDungeonScene(SceneNames baseRoomType, int roomReached)
         {
             string sceneNameString = baseRoomType.ToString();
@@ -233,6 +236,7 @@ namespace DoctorsDungeon
             NextScene = null;
         }
 
+        // We dont need a factory to do this, since its only this place we are going to use this background.
         private void SpawnBG()
         {
             menuBackground = new();
