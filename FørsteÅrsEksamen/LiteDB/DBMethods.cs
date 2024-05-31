@@ -71,6 +71,15 @@ namespace DoctorsDungeon.LiteDB
             SaveFileHasRunData existingLink = fileHasRunDataLinkDB
                                               .FindOne<SaveFileHasRunData>(link => link.Save_ID == data.Save_ID);
 
+            // Added last minute to fix a bug, where it tried to delete a run, when there was none
+            // If there is no link, we can just delete the savefile and quit out of the method
+            if (existingLink == null)
+            {
+                //Delete SaveFile.
+                saveFileDB.Delete<SaveFileData>(data.Save_ID);
+                return;
+            }
+
             RunData runData = runDataDB.FindOne<RunData>(data => data.Run_ID == existingLink.Run_ID);
 
             using var runDataHasPlayerLinkDB = new DataBase(CollectionName.RunDataHasPlayerData);

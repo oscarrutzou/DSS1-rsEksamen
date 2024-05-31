@@ -146,7 +146,7 @@ namespace DoctorsDungeon.ComponentPattern.Enemies
 
             path = null; // We cant use the previous path
 
-            // Create a new thread to find the path
+            // Create a new thread to find the path 
             Thread thread = new(() =>
             {
                 path = astar.FindPath(GameObject.Transform.GridPosition, targetPoint);
@@ -157,7 +157,7 @@ namespace DoctorsDungeon.ComponentPattern.Enemies
                 if (path != null && path.Count > 0)
                 {
                     // If a new path is being set, set the next target to the enemy's current position
-                    SetState(CharacterState.Moving); 
+                    SetState(CharacterState.Moving);
                     if (GameObject.Transform.Position != path[0].Transform.Position)
                     {
                         nextTarget = GameObject.Transform.Position;
@@ -167,11 +167,7 @@ namespace DoctorsDungeon.ComponentPattern.Enemies
                         SetNextTargetPos(path[0]);
                     }
                 }
-            })
-            {
-                // Stops the thread if the main thread closes
-                IsBackground = true
-            };
+            });
             thread.Start();
         }
 
