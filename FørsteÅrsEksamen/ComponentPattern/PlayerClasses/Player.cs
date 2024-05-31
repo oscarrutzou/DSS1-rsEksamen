@@ -98,7 +98,7 @@ namespace DoctorsDungeon.ComponentPattern.PlayerClasses
             {
                 onDeadTimer = 0;
                 SaveData.HasWon = false;
-                DBSave.Instance.OnChangeSceneEnd();
+                DB.Instance.OnChangeSceneEnd();
             }
         }
 

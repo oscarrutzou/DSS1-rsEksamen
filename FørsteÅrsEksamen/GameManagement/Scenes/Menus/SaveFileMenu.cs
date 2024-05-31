@@ -58,11 +58,11 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
 
             SaveData.CurrentSaveID = id;
 
-            SaveFileTestData saveFile = DBSave.Instance.LoadGame();
+            SaveFileTestData saveFile = DB.Instance.LoadGame();
 
             if (saveFile == null) // Creates a new save file
             {
-                saveFile = DBSave.Instance.SaveGame(id); // Makes the save id
+                saveFile = DB.Instance.SaveGame(id); // Makes the save id
             }
 
             if (saveFile.RunData == null)
@@ -83,7 +83,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
         /// </summary>
         private void ChangeButtonText()
         {
-            List<SaveFileTestData> saveFiles = DBSave.Instance.LoadAllSaveFiles();
+            List<SaveFileTestData> saveFiles = DB.Instance.LoadAllSaveFiles();
 
             if (saveFiles.Count == 0) return; // There is no files yet, so we dont change the text.
 
@@ -110,7 +110,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
 
         private void DeleteSave(int saveID)
         {
-            DBSave.Instance.DeleteSave(saveID);
+            DB.Instance.DeleteSave(saveID);
 
             GameWorld.Instance.ChangeScene(SceneNames.SaveFileMenu);
         }

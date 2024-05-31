@@ -105,7 +105,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
 
         private void SpawnAndLoadPlayer()
         {
-            DBSave.Instance.UpdateLoadRun(SaveData.CurrentSaveID);
+            DB.Instance.UpdateLoadRun(SaveData.CurrentSaveID);
 
             PlayerGo = SaveData.Player.GameObject;
 
@@ -152,7 +152,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
             // For debugging
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, new CustomCmd(player.Attack));
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Enter, new CustomCmd(ChangeScene));
-            InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DBSave.Instance.SaveGrid(GridManager.Instance.CurrentGrid); }));
+            InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DB.Instance.SaveGrid(GridManager.Instance.CurrentGrid); }));
         }
 
         private void ChangeScene()

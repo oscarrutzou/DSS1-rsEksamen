@@ -80,9 +80,9 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
             if (!SaveData.UnlockedClasses.Contains(type))
             {
                 // The player cant buy the class
-                if (!DBSave.Instance.RemoveCurrency(costAmount)) return;
+                if (!DB.Instance.RemoveCurrency(costAmount)) return;
 
-                DBSave.Instance.UnlockClass(type);
+                DB.Instance.UnlockClass(type);
                 
                 classButtons[type].Text = $"{type}";
             }
@@ -157,10 +157,10 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
             if (!SaveData.UnlockedWeapons.Contains(weapon))
             {
                 // The player cant buy the weapon, return
-                if (!DBSave.Instance.RemoveCurrency(costAmount)) return;
+                if (!DB.Instance.RemoveCurrency(costAmount)) return;
 
                 // Unlocked the weapon
-                DBSave.Instance.UnlockWeapon(weapon);
+                DB.Instance.UnlockWeapon(weapon);
 
                 weaponButtons[weapon].Text = $"{weapon}";
             }
@@ -172,7 +172,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
 
         private void NextScene()
         {
-            DBSave.Instance.SaveGame(SaveData.CurrentSaveID);
+            DB.Instance.SaveGame(SaveData.CurrentSaveID);
 
             // Go into the new scene with a new player.
             GameWorld.Instance.ChangeDungeonScene(SceneNames.DungeonRoom, 1);

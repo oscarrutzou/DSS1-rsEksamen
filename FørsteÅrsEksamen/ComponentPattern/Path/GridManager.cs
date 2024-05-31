@@ -60,11 +60,11 @@ namespace DoctorsDungeon.ComponentPattern.Path
 
         public void SaveLoadGrid(Grid grid)
         {
-            GameObject savedGrid = DBSave.Instance.LoadGrid(grid.Name);
+            GameObject savedGrid = DB.Instance.LoadGrid(grid.Name);
 
             if (savedGrid == null) // No saved
             {
-                DBSave.Instance.SaveGrid(grid);
+                DB.Instance.SaveGrid(grid);
                 CurrentGrid = grid;
             }
             else

@@ -66,7 +66,7 @@ namespace DoctorsDungeon.CommandPattern
 
             AddKeyButtonDownCommand(Keys.I, new CustomCmd(() => { GridManager.Instance.ShowHideGrid(); }));
 
-            AddKeyButtonDownCommand(Keys.U, new CustomCmd(() => { DBSave.Instance.SaveGame(SaveData.CurrentSaveID); }));
+            AddKeyButtonDownCommand(Keys.U, new CustomCmd(() => { DB.Instance.SaveGame(SaveData.CurrentSaveID); }));
         }
 
         #region Command

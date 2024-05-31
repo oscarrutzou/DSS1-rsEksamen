@@ -14,18 +14,18 @@ using System.Threading.Tasks;
 
 namespace DoctorsDungeon.LiteDB
 {
-    public class DBSave
+    public class DB
     {
         #region Start
-        private static DBSave instance;
+        private static DB instance;
 
-        public static DBSave Instance
+        public static DB Instance
         {
             get
             {
                 if (instance == null)
                 {
-                    instance = new DBSave();
+                    instance = new DB();
                     DataBasePath = GetStartPath();
                 }
                 return instance;
@@ -37,7 +37,7 @@ namespace DoctorsDungeon.LiteDB
         private static string GetStartPath()
         {
             string baseDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
-            var path = Path.Combine(baseDirectoryPath, $"data\\test");
+            var path = Path.Combine(baseDirectoryPath, $"data");
             Directory.CreateDirectory(path);
 
             return Path.Combine(path, "LiteDB.db");
