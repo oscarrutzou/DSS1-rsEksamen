@@ -8,6 +8,7 @@ using DoctorsDungeon.ComponentPattern.WorldObjects;
 using DoctorsDungeon.Factory;
 using DoctorsDungeon.GameManagement.Scenes.Menus;
 using DoctorsDungeon.LiteDB;
+using DoctorsDungeon.LiteDB.NewDB;
 using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -163,9 +164,9 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.E, new CustomCmd(player.UseItem));
 
             // For debugging
-            //InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, new CustomCmd(player.Attack));
-            //InputHandler.Instance.AddKeyButtonDownCommand(Keys.Enter, new CustomCmd(ChangeScene));
-            //InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DBGrid.OverrideSaveGrid(GridManager.Instance.CurrentGrid); }));
+            InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, new CustomCmd(player.Attack));
+            InputHandler.Instance.AddKeyButtonDownCommand(Keys.Enter, new CustomCmd(ChangeScene));
+            InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DBSave.Instance.SaveGrid(GridManager.Instance.CurrentGrid); }));
         }
 
         private void ChangeScene()

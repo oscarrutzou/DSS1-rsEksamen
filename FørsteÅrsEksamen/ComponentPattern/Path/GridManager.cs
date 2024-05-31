@@ -1,6 +1,7 @@
 ﻿using DoctorsDungeon.CommandPattern;
 using DoctorsDungeon.ComponentPattern.GUI;
 using DoctorsDungeon.LiteDB;
+using DoctorsDungeon.LiteDB.NewDB;
 using DoctorsDungeon.ObserverPattern;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
@@ -66,24 +67,36 @@ namespace DoctorsDungeon.ComponentPattern.Path
 
         public void SaveLoadGrid(Grid grid)
         {
-            CurrentGrid = grid;
 
-            if (DBGrid.DoesGridExits(CurrentGrid.Name))
+            GameObject savedGrid = DBSave.Instance.LoadGrid(grid.Name);
+
+            if (savedGrid == null) // No saved
             {
-                // Load grid
-                LoadGrid(CurrentGrid.Name);
+                DBSave.Instance.SaveGrid(grid);
+                CurrentGrid = grid;
             }
             else
             {
-                // Save Grid
-                DBGrid.OverrideSaveGrid(CurrentGrid);
-
-                // Draw Grid
-                foreach (GameObject cellGo in CurrentGrid.Cells.Values)
-                {
-                    GameWorld.Instance.Instantiate(cellGo);
-                }
+                CurrentGrid = savedGrid.GetComponent<Grid>();
             }
+            //DBSave.Instance.SaveGrid(CurrentGrid);
+
+            //if (DBGrid.DoesGridExits(CurrentGrid.Name))
+            //{
+            //    // Load grid
+            //    LoadGrid(CurrentGrid.Name);
+            //}
+            //else
+            //{
+            //    // Save Grid
+            //    DBGrid.OverrideSaveGrid(CurrentGrid);
+
+            //    // Draw Grid
+            //    foreach (GameObject cellGo in CurrentGrid.Cells.Values)
+            //    {
+            //        GameWorld.Instance.Instantiate(cellGo);
+            //    }
+            //}
         }
 
         // A bug in the update grid cells
