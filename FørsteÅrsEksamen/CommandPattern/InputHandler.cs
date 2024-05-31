@@ -1,5 +1,6 @@
 ﻿using DoctorsDungeon.CommandPattern.Commands;
 using DoctorsDungeon.ComponentPattern.Path;
+using DoctorsDungeon.LiteDB;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
@@ -61,8 +62,11 @@ namespace DoctorsDungeon.CommandPattern
 
             AddMouseUpdateCommand(MouseCmdState.Left, new CustomCmd(() => { GridManager.Instance.DrawOnCells(); }));
             AddMouseUpdateCommand(MouseCmdState.Right, new CustomCmd(() => { GridManager.Instance.SetDefaultOnCell(); }));
+            
 
             AddKeyButtonDownCommand(Keys.I, new CustomCmd(() => { GridManager.Instance.ShowHideGrid(); }));
+
+            AddKeyButtonDownCommand(Keys.U, new CustomCmd(() => { DBSave.Instance.SaveGame(SaveData.CurrentSaveID); }));
         }
 
         #region Command

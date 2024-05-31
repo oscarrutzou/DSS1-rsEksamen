@@ -7,6 +7,7 @@ using DoctorsDungeon.ObserverPattern;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.Data.Common;
 
 namespace DoctorsDungeon.ComponentPattern.PlayerClasses
 {
@@ -97,7 +98,7 @@ namespace DoctorsDungeon.ComponentPattern.PlayerClasses
             {
                 onDeadTimer = 0;
                 SaveData.HasWon = false;
-                DBMethods.OnChangeSceneEnd();
+                DBSave.Instance.OnChangeSceneEnd();
             }
         }
 

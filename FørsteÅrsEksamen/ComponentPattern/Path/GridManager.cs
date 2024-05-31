@@ -1,14 +1,11 @@
 ﻿using DoctorsDungeon.CommandPattern;
 using DoctorsDungeon.ComponentPattern.GUI;
 using DoctorsDungeon.LiteDB;
-using DoctorsDungeon.LiteDB.NewDB;
-using DoctorsDungeon.ObserverPattern;
 using Microsoft.Xna.Framework;
-using System.Collections.Generic;
 
 namespace DoctorsDungeon.ComponentPattern.Path
 {
-    public class GridManager : ISubject
+    public class GridManager
     {
         #region Parameters
 
@@ -27,7 +24,6 @@ namespace DoctorsDungeon.ComponentPattern.Path
                 if (value != currentGrid)
                 {
                     currentGrid = value;
-                    Notify();
                 }
             }
         }
@@ -53,7 +49,6 @@ namespace DoctorsDungeon.ComponentPattern.Path
             }
         }
 
-        private List<IObserver> gridChangeObservers = new();
 
         #endregion Parameters
 
@@ -63,11 +58,8 @@ namespace DoctorsDungeon.ComponentPattern.Path
             LevelNrIndex += addToCurrentRoomNr;
         }
 
-        #region SaveLoad
-
         public void SaveLoadGrid(Grid grid)
         {
-
             GameObject savedGrid = DBSave.Instance.LoadGrid(grid.Name);
 
             if (savedGrid == null) // No saved
@@ -79,60 +71,7 @@ namespace DoctorsDungeon.ComponentPattern.Path
             {
                 CurrentGrid = savedGrid.GetComponent<Grid>();
             }
-            //DBSave.Instance.SaveGrid(CurrentGrid);
-
-            //if (DBGrid.DoesGridExits(CurrentGrid.Name))
-            //{
-            //    // Load grid
-            //    LoadGrid(CurrentGrid.Name);
-            //}
-            //else
-            //{
-            //    // Save Grid
-            //    DBGrid.OverrideSaveGrid(CurrentGrid);
-
-            //    // Draw Grid
-            //    foreach (GameObject cellGo in CurrentGrid.Cells.Values)
-            //    {
-            //        GameWorld.Instance.Instantiate(cellGo);
-            //    }
-            //}
         }
-
-        // A bug in the update grid cells
-        //public void UpdateGrid(Grid grid)
-        //{
-        //    if (DBGrid.DoesGridExits(grid.Name))
-        //    {
-        //        DBGrid.UpdateGridCells(grid);
-        //    }
-        //    else
-        //    {
-        //        // Save Grid
-        //        DBGrid.OverrideSaveGrid(CurrentGrid);
-
-        //        // Draw Grid
-        //        foreach (GameObject cellGo in CurrentGrid.Cells.Values)
-        //        {
-        //            GameWorld.Instance.Instantiate(cellGo);
-        //        }
-        //    }
-        //}
-
-        public void LoadGrid(string gridName)
-        {
-            GameObject go = DBGrid.GetGrid(gridName);
-
-            if (go == null)
-            {
-                CurrentGrid = null;
-                return; //Didnt find the Grid in the repository.
-            }
-
-            CurrentGrid = go.GetComponent<Grid>();
-        }
-
-        #endregion SaveLoad
 
         #region Draw and Remove Current Grid
 
@@ -230,26 +169,5 @@ namespace DoctorsDungeon.ComponentPattern.Path
 
         #endregion Return Methods
 
-        #region Observer Pattern
-
-        public void Attach(IObserver observer)
-        {
-            gridChangeObservers.Add(observer);
-        }
-
-        public void Detach(IObserver observer)
-        {
-            gridChangeObservers.Remove(observer);
-        }
-
-        public void Notify()
-        {
-            foreach (IObserver item in gridChangeObservers)
-            {
-                item.UpdateObserver();
-            }
-        }
-
-        #endregion Observer Pattern
     }
 }

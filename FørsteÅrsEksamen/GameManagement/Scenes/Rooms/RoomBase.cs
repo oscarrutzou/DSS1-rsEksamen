@@ -8,7 +8,6 @@ using DoctorsDungeon.ComponentPattern.WorldObjects;
 using DoctorsDungeon.Factory;
 using DoctorsDungeon.GameManagement.Scenes.Menus;
 using DoctorsDungeon.LiteDB;
-using DoctorsDungeon.LiteDB.NewDB;
 using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -66,7 +65,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
 
             SpawnGrid();
 
-            SpawnPlayer();
+            SpawnAndLoadPlayer();
 
             SpawnEndPos();
 
@@ -74,8 +73,6 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
             SpawnPotions();
 
             SetCommands();
-
-            DBMethods.RegularSave();
         }
 
         #region Initialize Methods
@@ -106,26 +103,15 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
             GridManager.Instance.SaveLoadGrid(grid);
         }
 
-        private void SpawnPlayer()
+        private void SpawnAndLoadPlayer()
         {
-            PlayerData playerData = DBRunData.LoadPlayerData(SaveData.CurrentSaveID);
+            DBSave.Instance.UpdateLoadRun(SaveData.CurrentSaveID);
 
-            if (playerData != null)
-            {
-                PlayerGo = DBMethods.SpawnPlayer(playerData, PlayerSpawnPos);
-            }
-            else
-            {
-                // We already know a exploit here.
-                // If the user deletes the playerdata in the middle of a run, they will get a new Player with full stats
-                // and therefore not load the old saved one. We estimate it will take too long to fix this, so we place it on the back burner for now.
-                PlayerGo = PlayerFactory.Create(SaveData.SelectedClass, SaveData.SelectedWeapon);
-            }
+            PlayerGo = SaveData.Player.GameObject;
 
             PlayerGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[PlayerSpawnPos].Transform.Position;
             PlayerGo.Transform.GridPosition = PlayerSpawnPos;
             GameWorld.Instance.WorldCam.Position = PlayerGo.Transform.Position;
-            GameWorld.Instance.Instantiate(PlayerGo);
         }
 
         private void SpawnEndPos()
