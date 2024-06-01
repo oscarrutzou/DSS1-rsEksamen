@@ -1,7 +1,9 @@
 ﻿using DoctorsDungeon.CommandPattern;
 using DoctorsDungeon.GameManagement;
+using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 
 namespace DoctorsDungeon.ComponentPattern.Weapons
@@ -35,7 +37,7 @@ namespace DoctorsDungeon.ComponentPattern.Weapons
 
         protected bool EnemyWeapon;
         protected bool Attacking;
-        protected float StartAnimationAngle;
+        protected float StartAnimationAngle { get; set; }
 
         protected float TotalElapsedTime;
         protected bool IsRotatingBack;
@@ -108,8 +110,8 @@ namespace DoctorsDungeon.ComponentPattern.Weapons
             PlayingSound = true;
         }
 
-        private Vector2 lastOffSet;
-
+        private Vector2 lastOffSetPos, startRelativePos = new(0, 70);
+        public float angleToMouse;
         public void MoveWeapon()
         {
             Vector2 userPos = WeaponUser.GameObject.Transform.Position;
@@ -117,28 +119,63 @@ namespace DoctorsDungeon.ComponentPattern.Weapons
             if (Attacking)
             {
                 // Lock the offset
-                GameObject.Transform.Position = userPos + lastOffSet;
+                GameObject.Transform.Position = userPos + lastOffSetPos;
                 return;
             }
 
-            if (WeaponUser.Direction.X >= 0)
+            if (EnemyWeapon) return; //
+
+            // Only for player 
+
+            // Weapon
+            // need to make a start position that are like 80px from this postion and in a radius around the player
+            // use rotate method to get the ned point. After we have done that, we need to rotate it a bit
+            Vector2 mouseInUI = InputHandler.Instance.MouseOnUI;
+            angleToMouse = (float)Math.Atan2(mouseInUI.Y, mouseInUI.X);
+
+            // Adjust the angle to be in the range of 0 to 2π
+            if (angleToMouse < 0)
             {
-                // Right
-                lastOffSet = new Vector2(StartPosOffset.X, -StartPosOffset.Y);
-                GameObject.Transform.Position = userPos + lastOffSet;
-                spriteRenderer.SpriteEffects = SpriteEffects.None;
+                angleToMouse += 2 * MathHelper.Pi;
             }
-            else if (WeaponUser.Direction.X < 0)
+
+            lastOffSetPos = BaseMath.Rotate(startRelativePos, angleToMouse - MathHelper.PiOver2) + new Vector2(0, -20);
+            GameObject.Transform.Position = userPos + lastOffSetPos;
+
+            // Set the StartAnimationAngle based on the adjusted angle
+            if (angleToMouse > 0.5 * MathHelper.Pi && angleToMouse < 1.5 * MathHelper.Pi)
             {
-                lastOffSet = -StartPosOffset;
-                GameObject.Transform.Position = userPos + lastOffSet;
-                spriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
+                StartAnimationAngle = MathHelper.PiOver4;
             }
+            else
+            {
+                StartAnimationAngle = -MathHelper.PiOver4;
+            }
+
+            GameObject.Transform.Rotation = StartAnimationAngle;
+            // Mellem 0.5-1.5pi
+
+            // Can use lerp from the wanted move point, so its not as fast
         }
+
+        //if (WeaponUser.Direction.X >= 0)
+        //{
+        //    // Right
+        //    lastOffSet = new Vector2(StartPosOffset.X, -StartPosOffset.Y);
+        //    GameObject.Transform.Position = userPos + lastOffSet;
+        //    spriteRenderer.SpriteEffects = SpriteEffects.None;
+        //}
+        //else if (WeaponUser.Direction.X < 0)
+        //{
+        //    lastOffSet = -StartPosOffset;
+        //    GameObject.Transform.Position = userPos + lastOffSet;
+        //    spriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
+        //}
+
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (!InputHandler.Instance.DebugMode) return;
+            //if (!InputHandler.Instance.DebugMode) return;
 
             foreach (CollisionRectangle collisionRectangle in WeaponColliders)
             {

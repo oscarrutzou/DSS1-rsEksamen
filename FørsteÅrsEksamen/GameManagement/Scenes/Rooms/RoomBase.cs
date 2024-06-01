@@ -4,6 +4,8 @@ using DoctorsDungeon.ComponentPattern;
 using DoctorsDungeon.ComponentPattern.Enemies;
 using DoctorsDungeon.ComponentPattern.Path;
 using DoctorsDungeon.ComponentPattern.PlayerClasses;
+using DoctorsDungeon.ComponentPattern.Weapons;
+using DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons;
 using DoctorsDungeon.ComponentPattern.WorldObjects;
 using DoctorsDungeon.Factory;
 using DoctorsDungeon.GameManagement.Scenes.Menus;
@@ -49,7 +51,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
 
         public override void Initialize()
         {
-            GameWorld.Instance.IsMouseVisible = false;
+            //GameWorld.Instance.IsMouseVisible = false;
 
             SetSpawnPotions();
 
@@ -211,6 +213,20 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
 
             leftPos += new Vector2(0, 30);
             DrawPotion(spriteBatch, leftPos);
+
+            //if (aliveEnemies != null)
+            //{
+            //    foreach (Enemy enemy in aliveEnemies)
+            //    {
+            //        leftPos += new Vector2(0, 30);
+            //        spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Enemy health : {enemy.CurrentHealth} ::: Enemy weapon colliders {enemy.WeaponGo.GetComponent<MeleeWeapon>().hitGameObjects.Count}", leftPos, Color.Red);
+            //    }
+
+
+            //}
+            leftPos += new Vector2(0, 30);
+
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Angle: {player.WeaponGo.GetComponent<MeleeWeapon>().angleToMouse}", leftPos, Color.Red);
 
             DrawQuest(spriteBatch);
 

@@ -71,6 +71,11 @@ namespace DoctorsDungeon.ComponentPattern.PlayerClasses
                 CheckForMovement();
             }
 
+            if (Weapon != null)
+            {
+                Weapon.MoveWeapon();
+            }
+
             switch (State)
             {
                 case CharacterState.Idle:
@@ -128,6 +133,10 @@ namespace DoctorsDungeon.ComponentPattern.PlayerClasses
                 SpriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
             }
         }
+
+        // Weapon
+        // need to make a start position that are like 80px from this postion and in a radius around the player
+        // use rotate method to get the ned point. After we have done that, we need to rotate it a bit
 
         #region Movement
 

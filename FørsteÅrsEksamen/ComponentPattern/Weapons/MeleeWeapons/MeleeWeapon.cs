@@ -66,15 +66,28 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons
                 if (otherCollider == null) continue;
                 foreach (CollisionRectangle weaponRectangle in WeaponColliders)
                 {
+                    if (hitGameObjects.Contains(otherGo)) break;
+
                     if (weaponRectangle.Rectangle.Intersects(otherCollider.CollisionBox))
                     {
-                        DealDamage(otherGo);
                         hitGameObjects.Add(otherGo);
+                        DealDamage(otherGo);
                         break;
                     }
                 }
             }
+        }
 
+        protected override void EnemyStartAttack()
+        {
+            base.EnemyStartAttack();
+            hitGameObjects = new();
+        }
+
+        protected override void PlayerStartAttack()
+        {
+            base.PlayerStartAttack();
+            hitGameObjects = new();
         }
 
         #region Weapon Colliders
@@ -108,7 +121,6 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons
                 IsRotatingBack = false;
                 Attacking = false;
                 PlayingSound = false;
-                hitGameObjects = new();
             }
         }
 

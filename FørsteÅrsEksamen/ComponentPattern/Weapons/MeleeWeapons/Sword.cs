@@ -13,7 +13,7 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons
         public Sword(GameObject gameObject, bool enemyWeapon) : base(gameObject, enemyWeapon)
         {
             AttackSpeed = 1.7f;
-            Damage = 50;
+            Damage = 5;
             LerpFromTo = MathHelper.Pi;
         }
 
@@ -39,6 +39,8 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons
 
         protected override void PlayerStartAttack()
         {
+            base.PlayerStartAttack();
+
             if (WeaponUser.Direction.X >= 0)
             {
                 // Right
@@ -53,6 +55,8 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons
 
         protected override void EnemyStartAttack()
         {
+            base.EnemyStartAttack();
+
             if (WeaponUser.Direction.X >= 0)
             {
                 // Right

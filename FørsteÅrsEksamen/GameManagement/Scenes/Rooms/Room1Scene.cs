@@ -25,10 +25,11 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
             PlayerSpawnPos = new Point(10, 3);
             EndPointSpawnPos = new Point(33, 2);
 
-            enemySpawnPoints = new() {
-            new Point(10, 21),
-            new Point(25, 21),
-            new Point(37, 12),};
+            enemySpawnPoints = new();
+            //enemySpawnPoints = new() {
+            //new Point(10, 21),
+            //new Point(25, 21),
+            //new Point(37, 12),};
 
             potionSpawnPoints = new() {
             new Point(7, 4),
