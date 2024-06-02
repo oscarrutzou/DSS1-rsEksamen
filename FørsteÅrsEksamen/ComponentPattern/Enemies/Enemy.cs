@@ -31,6 +31,7 @@ namespace DoctorsDungeon.ComponentPattern.Enemies
 
         public Enemy(GameObject gameObject) : base(gameObject)
         {
+            Speed = 250;
             astar = new Astar();
         }
 
@@ -168,6 +169,7 @@ namespace DoctorsDungeon.ComponentPattern.Enemies
                     }
                 }
             });
+            thread.IsBackground = true;
             thread.Start();
         }
 
@@ -199,7 +201,7 @@ namespace DoctorsDungeon.ComponentPattern.Enemies
 
             Direction = Vector2.Normalize(nextTarget - position);
 
-            GameObject.Transform.Translate(Direction * speed * (float)gameTime.ElapsedGameTime.TotalSeconds);
+            GameObject.Transform.Translate(Direction * Speed * (float)gameTime.ElapsedGameTime.TotalSeconds);
             Weapon.MoveWeapon();
 
             if (path.Count == 1 && Vector2.Distance(position, nextTarget) < threshold)

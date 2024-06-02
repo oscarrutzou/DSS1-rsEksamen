@@ -1,7 +1,5 @@
 ﻿using DoctorsDungeon.ComponentPattern;
 using DoctorsDungeon.ComponentPattern.PlayerClasses;
-using DoctorsDungeon.ComponentPattern.PlayerClasses.MeleeClasses;
-using DoctorsDungeon.ComponentPattern.PlayerClasses.RangedClasses;
 using DoctorsDungeon.ComponentPattern.Weapons;
 using DoctorsDungeon.LiteDB;
 using Microsoft.Xna.Framework;

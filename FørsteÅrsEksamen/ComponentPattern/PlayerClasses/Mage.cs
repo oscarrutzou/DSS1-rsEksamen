@@ -1,6 +1,6 @@
 ﻿using DoctorsDungeon.GameManagement;
 
-namespace DoctorsDungeon.ComponentPattern.PlayerClasses.RangedClasses
+namespace DoctorsDungeon.ComponentPattern.PlayerClasses
 {
     // Stefan
     public class Mage : Player

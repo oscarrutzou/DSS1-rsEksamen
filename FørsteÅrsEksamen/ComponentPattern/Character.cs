@@ -44,7 +44,7 @@ namespace DoctorsDungeon.ComponentPattern
         protected float AttackTimer;
         protected float AttackCooldown = 2f;
 
-        protected int speed = 200;
+        protected int Speed { get; set; }
         public int CurrentHealth = 100;
         public int MaxHealth = 100;
         public int RoomNr { get; set; }
@@ -128,6 +128,7 @@ namespace DoctorsDungeon.ComponentPattern
         {
             if (Weapon == null) return;
             Weapon.MoveWeapon(); // Should maybe wait till it has reached towards the new direction
+            if (Weapon == null) return;
             Weapon.StartAttack();
         }
 

@@ -35,12 +35,12 @@ namespace DoctorsDungeon.ComponentPattern.PlayerClasses
 
         public Player(GameObject gameObject) : base(gameObject)
         {
-            speed = 150;
+            Speed = 150;
         }
 
         public Player(GameObject gameObject, GameObject handsGo, GameObject movementColliderGo) : base(gameObject)
         {
-            speed = 150;
+            Speed = 150;
             this.HandsGo = handsGo;
             this.MovementColliderGo = movementColliderGo;
         }
@@ -179,7 +179,7 @@ namespace DoctorsDungeon.ComponentPattern.PlayerClasses
         private void ProcessInput(Vector2 input)
         {
             input.Normalize();
-            targetVelocity = input * speed * GameWorld.DeltaTime;
+            targetVelocity = input * Speed * GameWorld.DeltaTime;
 
             // To fix the error that if all buttons have been pressed, that it sometimes sets the velocity to Nan/Nan
             if (float.IsNaN(velocity.X))
@@ -195,8 +195,8 @@ namespace DoctorsDungeon.ComponentPattern.PlayerClasses
         private void TryMoveInBothDirections()
         {
             // Separate the movement into X and Y components
-            Vector2 xMovement = new Vector2(velocity.X, 0) * speed * GameWorld.DeltaTime;
-            Vector2 yMovement = new Vector2(0, velocity.Y) * speed * GameWorld.DeltaTime;
+            Vector2 xMovement = new Vector2(velocity.X, 0) * Speed * GameWorld.DeltaTime;
+            Vector2 yMovement = new Vector2(0, velocity.Y) * Speed * GameWorld.DeltaTime;
 
             bool hasMoved = false;
             // Try moving along the X axis
