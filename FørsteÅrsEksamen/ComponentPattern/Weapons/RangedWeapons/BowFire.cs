@@ -6,8 +6,5 @@
         {
         }
 
-        public BowFire(GameObject gameObject, bool enemyWeapon) : base(gameObject, enemyWeapon)
-        {
-        }
     }
 }

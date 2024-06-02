@@ -45,8 +45,8 @@ namespace DoctorsDungeon.Factory
             player.MovementColliderGo = movementColliderGo;
 
             //Weapon
-            GameObject weaponGo = WeaponFactory.Create(weaponType, false);
-            weaponGo.GetComponent<Weapon>().WeaponUser = player;
+            GameObject weaponGo = WeaponFactory.Create(weaponType);
+            weaponGo.GetComponent<Weapon>().PlayerUser = player;
             GameWorld.Instance.Instantiate(weaponGo);
 
             // Add weapon to player

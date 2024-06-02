@@ -38,43 +38,43 @@ namespace DoctorsDungeon.Factory
             }},
         };
 
-        public static GameObject Create(WeaponTypes type, bool enemyWeapon)
+        public static GameObject Create(WeaponTypes type)
         {
             GameObject weaponGo = new GameObject();
             weaponGo.Type = GameObjectTypes.Weapon;
             weaponGo.Transform.Scale = new Vector2(4, 4);
             weaponGo.AddComponent<SpriteRenderer>();
-            AddClassComponent(weaponGo, type, enemyWeapon);
+            AddClassComponent(weaponGo, type);
 
             return weaponGo;
         }
 
-        private static GameObject AddClassComponent(GameObject weaponGo, WeaponTypes type, bool enemyWeapon)
+        private static GameObject AddClassComponent(GameObject weaponGo, WeaponTypes type)
         {
             switch (type)
             {
                 case WeaponTypes.Sword:
-                    weaponGo.AddComponent<Sword>(enemyWeapon);
+                    weaponGo.AddComponent<Sword>();
                     break;
 
                 case WeaponTypes.Axe:
-                    weaponGo.AddComponent<Axe>(enemyWeapon);
+                    weaponGo.AddComponent<Axe>();
                     break;
 
                 case WeaponTypes.MagicStaff:
-                    weaponGo.AddComponent<MagicStaff>(enemyWeapon);
+                    weaponGo.AddComponent<MagicStaff>();
                     break;
 
                 case WeaponTypes.MagicStaffFire:
-                    weaponGo.AddComponent<MagicStaff>(enemyWeapon);
+                    weaponGo.AddComponent<MagicStaff>();
                     break;
 
                 case WeaponTypes.Bow:
-                    weaponGo.AddComponent<Bow>(enemyWeapon);
+                    weaponGo.AddComponent<Bow>();
                     break;
 
                 case WeaponTypes.BowFire:
-                    weaponGo.AddComponent<MagicStaff>(enemyWeapon);
+                    weaponGo.AddComponent<MagicStaff>();
                     break;
             }
 

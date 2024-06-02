@@ -127,6 +127,7 @@ namespace DoctorsDungeon.ComponentPattern
         public void Attack()
         {
             if (Weapon == null) return;
+            Weapon.MoveWeapon(); // Should maybe wait till it has reached towards the new direction
             Weapon.StartAttack();
         }
 

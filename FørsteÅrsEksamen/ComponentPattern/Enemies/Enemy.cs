@@ -16,7 +16,7 @@ namespace DoctorsDungeon.ComponentPattern.Enemies
         private Grid grid;
         private Astar astar;
         private GameObject playerGo;
-        private Player player;
+        public Player Player;
         private SpriteRenderer weaponSpriteRenderer;
 
         private List<GameObject> path;
@@ -49,7 +49,7 @@ namespace DoctorsDungeon.ComponentPattern.Enemies
         public void SetStartPosition(GameObject playerGo, Point gridPos)
         {
             this.playerGo = playerGo;
-            player = playerGo.GetComponent<Player>();
+            Player = playerGo.GetComponent<Player>();
 
             targetPoint = playerGo.Transform.GridPosition;
             grid = GridManager.Instance.CurrentGrid;
@@ -70,7 +70,7 @@ namespace DoctorsDungeon.ComponentPattern.Enemies
 
             Weapon.MoveWeapon();
 
-            if (player.RoomNr == RoomNr) SetPath(); // We know that the player the targetPoint has been set
+            if (Player.RoomNr == RoomNr) SetPath(); // We know that the player the targetPoint has been set
 
             onGoalReached += OnGoalReached;
         }
@@ -94,7 +94,7 @@ namespace DoctorsDungeon.ComponentPattern.Enemies
                 case CharacterState.Attacking:
 
                     // Do nothing if the player has died.
-                    if (player.State == CharacterState.Dead) return;
+                    if (Player.State == CharacterState.Dead) return;
 
                     // Update direction towards player insted of moving direction
                     Direction = Vector2.Normalize(playerGo.Transform.Position - GameObject.Transform.Position);
@@ -111,7 +111,7 @@ namespace DoctorsDungeon.ComponentPattern.Enemies
 
         private void PlayerMovedInRoom()
         {
-            if (player.RoomNr != RoomNr && !hasBeenAwoken) return; // Cant move if the player isnt in the same room.
+            if (Player.RoomNr != RoomNr && !hasBeenAwoken) return; // Cant move if the player isnt in the same room.
 
             if (playerGo.Transform.GridPosition != targetPoint && State != CharacterState.Dead)
             {

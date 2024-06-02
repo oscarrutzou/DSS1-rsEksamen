@@ -1,10 +1,13 @@
 ﻿using DoctorsDungeon.CommandPattern;
+using DoctorsDungeon.ComponentPattern.Enemies;
+using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using DoctorsDungeon.GameManagement;
 using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 
 namespace DoctorsDungeon.ComponentPattern.Weapons
 {
@@ -27,7 +30,8 @@ namespace DoctorsDungeon.ComponentPattern.Weapons
     public abstract class Weapon : Component
     {
         public int Damage = 10;
-        public Character WeaponUser { get; set; }
+        public Player PlayerUser { get; set; }
+        public Enemy EnemyUser { get; set; }
 
         protected float AttackSpeed;
 
@@ -35,7 +39,7 @@ namespace DoctorsDungeon.ComponentPattern.Weapons
         protected float LerpFromTo;
         protected float TotalLerp;
 
-        protected bool EnemyWeapon;
+        //protected bool EnemyWeapon;
         protected bool Attacking;
         protected float StartAnimationAngle { get; set; }
 
@@ -52,18 +56,13 @@ namespace DoctorsDungeon.ComponentPattern.Weapons
         {
         }
 
-        protected Weapon(GameObject gameObject, bool enemyWeapon) : base(gameObject)
-        {
-            this.EnemyWeapon = enemyWeapon;
-        }
-
         public override void Awake()
         {
             spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
             spriteRenderer.SetLayerDepth(LayerDepth.PlayerWeapon);
             spriteRenderer.IsCentered = false;
 
-            if (EnemyWeapon)
+            if (EnemyUser != null)
             {
                 EnemyWeaponSprite();
             }
@@ -80,14 +79,7 @@ namespace DoctorsDungeon.ComponentPattern.Weapons
             Attacking = true;
             TotalElapsedTime = 0f;
 
-            if (EnemyWeapon)
-            {
-                EnemyStartAttack();
-            }
-            else
-            {
-                PlayerStartAttack();
-            }
+            SetAttackDirection();
         }
 
         protected virtual void PlayerWeaponSprite()
@@ -96,10 +88,7 @@ namespace DoctorsDungeon.ComponentPattern.Weapons
         protected virtual void EnemyWeaponSprite()
         { }
 
-        protected virtual void PlayerStartAttack()
-        { }
-
-        protected virtual void EnemyStartAttack()
+        protected virtual void SetAttackDirection()
         { }
 
         protected void PlayAttackSound()
@@ -110,11 +99,16 @@ namespace DoctorsDungeon.ComponentPattern.Weapons
             PlayingSound = true;
         }
 
-        private Vector2 lastOffSetPos, startRelativePos = new(0, 70);
-        public float angleToMouse;
+        private Vector2 lastOffSetPos, startRelativePos = new(0, 60), startRelativeOffsetPos = new Vector2(0, -20);
+        public float angleToMouse; // Public for test
+        protected bool LeftSide;
         public void MoveWeapon()
         {
-            Vector2 userPos = WeaponUser.GameObject.Transform.Position;
+            Vector2 userPos;
+            if (EnemyUser != null)
+                    userPos = EnemyUser.GameObject.Transform.Position;
+            else
+                userPos = PlayerUser.GameObject.Transform.Position;
 
             if (Attacking)
             {
@@ -123,15 +117,12 @@ namespace DoctorsDungeon.ComponentPattern.Weapons
                 return;
             }
 
-            if (EnemyWeapon) return; //
+            if (EnemyUser != null)
+                angleToMouse = GetAngleToMouseEnemy(userPos);
+            else
+                angleToMouse = GetAngleToMousePlayer();
 
-            // Only for player 
-
-            // Weapon
-            // need to make a start position that are like 80px from this postion and in a radius around the player
-            // use rotate method to get the ned point. After we have done that, we need to rotate it a bit
-            Vector2 mouseInUI = InputHandler.Instance.MouseOnUI;
-            angleToMouse = (float)Math.Atan2(mouseInUI.Y, mouseInUI.X);
+            // Can use lerp from the wanted move point, so its not as fast
 
             // Adjust the angle to be in the range of 0 to 2π
             if (angleToMouse < 0)
@@ -139,39 +130,40 @@ namespace DoctorsDungeon.ComponentPattern.Weapons
                 angleToMouse += 2 * MathHelper.Pi;
             }
 
-            lastOffSetPos = BaseMath.Rotate(startRelativePos, angleToMouse - MathHelper.PiOver2) + new Vector2(0, -20);
+            lastOffSetPos = BaseMath.Rotate(startRelativePos, angleToMouse - MathHelper.PiOver2) + startRelativeOffsetPos;
             GameObject.Transform.Position = userPos + lastOffSetPos;
 
             // Set the StartAnimationAngle based on the adjusted angle
             if (angleToMouse > 0.5 * MathHelper.Pi && angleToMouse < 1.5 * MathHelper.Pi)
             {
-                StartAnimationAngle = MathHelper.PiOver4;
+                spriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
+                StartAnimationAngle = angleToMouse + MathHelper.Pi;
+
+                LeftSide = true;
             }
             else
             {
-                StartAnimationAngle = -MathHelper.PiOver4;
+                StartAnimationAngle = angleToMouse;
+                LeftSide = false;
+                spriteRenderer.SpriteEffects = SpriteEffects.None;
             }
 
             GameObject.Transform.Rotation = StartAnimationAngle;
-            // Mellem 0.5-1.5pi
-
-            // Can use lerp from the wanted move point, so its not as fast
         }
 
-        //if (WeaponUser.Direction.X >= 0)
-        //{
-        //    // Right
-        //    lastOffSet = new Vector2(StartPosOffset.X, -StartPosOffset.Y);
-        //    GameObject.Transform.Position = userPos + lastOffSet;
-        //    spriteRenderer.SpriteEffects = SpriteEffects.None;
-        //}
-        //else if (WeaponUser.Direction.X < 0)
-        //{
-        //    lastOffSet = -StartPosOffset;
-        //    GameObject.Transform.Position = userPos + lastOffSet;
-        //    spriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
-        //}
+        private float GetAngleToMousePlayer()
+        {
+            Vector2 mouseInUI = InputHandler.Instance.MouseOnUI;
+            return (float)Math.Atan2(mouseInUI.Y, mouseInUI.X);
+        }
 
+        private float GetAngleToMouseEnemy(Vector2 userPos)
+        {
+            Player target = EnemyUser.Player;
+
+            Vector2 relativePos = target.GameObject.Transform.Position - userPos;
+            return (float)Math.Atan2(relativePos.Y, relativePos.X);
+        }
 
         public override void Draw(SpriteBatch spriteBatch)
         {

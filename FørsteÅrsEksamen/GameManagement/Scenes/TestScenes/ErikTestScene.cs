@@ -112,9 +112,9 @@ namespace DoctorsDungeon.GameManagement.Scenes.TestScenes
 
         private void MakeWeapon()
         {
-            weapon = WeaponFactory.Create(WeaponTypes.Sword, false);
+            weapon = WeaponFactory.Create(WeaponTypes.Sword);
 
-            bow = WeaponFactory.Create(WeaponTypes.Bow, false);
+            bow = WeaponFactory.Create(WeaponTypes.Bow);
 
             GameWorld.Instance.Instantiate(weapon);
             GameWorld.Instance.Instantiate(bow);

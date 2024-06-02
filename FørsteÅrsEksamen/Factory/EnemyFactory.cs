@@ -47,9 +47,9 @@ namespace DoctorsDungeon.Factory
             // Add weapon
             Enemy enemy = enemyGo.GetComponent<Enemy>();
 
-            GameObject weaponGo = WeaponFactory.Create(WeaponTypes.Sword, true);
+            GameObject weaponGo = WeaponFactory.Create(WeaponTypes.Sword);
             Weapon weapon = weaponGo.GetComponent<Weapon>();
-            weapon.WeaponUser = enemy;
+            weapon.EnemyUser = enemy;
             weapon.Damage /= EnemyDmgDivide; // Make enemies do less damage
             GameWorld.Instance.Instantiate(weaponGo);
 

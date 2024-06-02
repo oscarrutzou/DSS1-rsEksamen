@@ -112,14 +112,14 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
             if (!IsMenuVisible())
             {
                 // So we can see the mouse when drawing cells and debugging
-                if (!InputHandler.Instance.DebugMode)
-                {
-                    GameWorld.Instance.IsMouseVisible = false;
-                }
-                else
-                {
-                    GameWorld.Instance.IsMouseVisible = true;
-                }
+                //if (!InputHandler.Instance.DebugMode)
+                //{
+                //    GameWorld.Instance.IsMouseVisible = false;
+                //}
+                //else
+                //{
+                //    GameWorld.Instance.IsMouseVisible = true;
+                //}
                 return;
             }
 

@@ -15,10 +15,6 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons
         {
         }
 
-        protected RangedWeapon(GameObject gameObject, bool enemyWeapon) : base(gameObject, enemyWeapon)
-        {
-        }
-
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
