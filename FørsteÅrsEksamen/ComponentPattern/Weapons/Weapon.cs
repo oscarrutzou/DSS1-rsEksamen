@@ -106,7 +106,7 @@ namespace DoctorsDungeon.ComponentPattern.Weapons
         {
             Vector2 userPos;
             if (EnemyUser != null)
-                    userPos = EnemyUser.GameObject.Transform.Position;
+                userPos = EnemyUser.GameObject.Transform.Position;
             else
                 userPos = PlayerUser.GameObject.Transform.Position;
 

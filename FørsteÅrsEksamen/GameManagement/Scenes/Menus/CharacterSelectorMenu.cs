@@ -24,11 +24,13 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
         private List<ClassTypes> classTypesThatAreDone = new()
         {
             ClassTypes.Warrior,
+            ClassTypes.Archer,
         };
 
         private List<WeaponTypes> weaponTypesThatAreDone = new()
         {
             WeaponTypes.Sword,
+            WeaponTypes.Dagger,
         };
 
         private int spaceBetween = 30;

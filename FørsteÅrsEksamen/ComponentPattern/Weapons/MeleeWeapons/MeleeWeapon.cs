@@ -116,7 +116,7 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons
                 //easedTime = EaseInOutBack(totalElapsedTime); // Feels heavy
                 GameObject.Transform.Rotation = MathHelper.Lerp(finalLerp, StartAnimationAngle, easedTime);
             }
-            if (Math.Abs(GameObject.Transform.Rotation - StartAnimationAngle) < 0.01f && IsRotatingBack)
+            if (Math.Abs(GameObject.Transform.Rotation - StartAnimationAngle) < 1f && IsRotatingBack)
             {
                 IsRotatingBack = false;
                 Attacking = false;

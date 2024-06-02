@@ -16,8 +16,14 @@ namespace DoctorsDungeon.GameManagement
 
         TestLevelBG,
         TestLevelFG,
+        
+        
         WoodSword,
         BoneSword,
+        WoodDagger,
+        BoneDagger,
+
+
         WoodArrow,
 
         HealthPotionFull,
@@ -59,6 +65,9 @@ namespace DoctorsDungeon.GameManagement
 
                 {TextureNames.WoodSword, content.Load<Texture2D>("World\\Weapons\\Melee Weapons\\WoodSword") },
                 {TextureNames.BoneSword, content.Load<Texture2D>("World\\Weapons\\Melee Weapons\\BoneSword") },
+                {TextureNames.WoodDagger, content.Load<Texture2D>("World\\Weapons\\Melee Weapons\\WoodDagger") },
+                {TextureNames.BoneDagger, content.Load<Texture2D>("World\\Weapons\\Melee Weapons\\BoneDagger") },
+
                 {TextureNames.WoodArrow, content.Load<Texture2D>("Test\\WoodArrow") },
                 {TextureNames.HealthPotionFull, content.Load<Texture2D>("World\\Objects\\Potions\\RedPotion1") },
                 {TextureNames.DoorClosed, content.Load<Texture2D>("World\\Objects\\DoorClosed") },

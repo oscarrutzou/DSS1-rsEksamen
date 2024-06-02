@@ -13,9 +13,9 @@ namespace DoctorsDungeon.ComponentPattern.PlayerClasses.RangedClasses
         {
             base.Awake();
 
-            CharacterStateAnimations.Add(CharacterState.Idle, AnimNames.KnightIdle);
-            CharacterStateAnimations.Add(CharacterState.Moving, AnimNames.KnightRun);
-            CharacterStateAnimations.Add(CharacterState.Dead, AnimNames.KnightDeath);
+            CharacterStateAnimations.Add(CharacterState.Idle, AnimNames.ArcherIdle);
+            CharacterStateAnimations.Add(CharacterState.Moving, AnimNames.ArcherRun);
+            CharacterStateAnimations.Add(CharacterState.Dead, AnimNames.ArcherDeath);
         }
     }
 }

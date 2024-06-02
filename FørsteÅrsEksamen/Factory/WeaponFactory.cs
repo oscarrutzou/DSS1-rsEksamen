@@ -10,6 +10,7 @@ namespace DoctorsDungeon.Factory
     {
         Sword,
         Axe,
+        Dagger,
         MagicStaff,
         MagicStaffFire,
         Bow,
@@ -23,6 +24,7 @@ namespace DoctorsDungeon.Factory
         public static Dictionary<ClassTypes, List<WeaponTypes>> ClassHasWeapons = new()
         {
             { ClassTypes.Archer, new List<WeaponTypes>(){
+                WeaponTypes.Dagger,
                 WeaponTypes.Bow,
                 WeaponTypes.BowFire,
             }},
@@ -59,6 +61,10 @@ namespace DoctorsDungeon.Factory
 
                 case WeaponTypes.Axe:
                     weaponGo.AddComponent<Axe>();
+                    break;
+
+                case WeaponTypes.Dagger:
+                    weaponGo.AddComponent<Dagger>();
                     break;
 
                 case WeaponTypes.MagicStaff:
