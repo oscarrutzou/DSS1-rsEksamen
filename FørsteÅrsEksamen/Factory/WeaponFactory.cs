@@ -40,6 +40,25 @@ namespace DoctorsDungeon.Factory
             }},
         };
 
+        public static Dictionary<EnemyTypes, List<WeaponTypes>> EnemyHasWeapon = new()
+        {
+            { EnemyTypes.OrcArcher, new List<WeaponTypes>(){
+                WeaponTypes.Dagger,
+                WeaponTypes.Bow,
+                WeaponTypes.BowFire,
+            }},
+
+            { EnemyTypes.OrcShaman, new List<WeaponTypes>(){
+                WeaponTypes.MagicStaff,
+                WeaponTypes.MagicStaffFire,
+            }},
+
+            { EnemyTypes.OrcWarrior, new List<WeaponTypes>(){
+                WeaponTypes.Sword,
+                WeaponTypes.Axe,
+            }},
+        };
+
         public static GameObject Create(WeaponTypes type)
         {
             GameObject weaponGo = new GameObject();

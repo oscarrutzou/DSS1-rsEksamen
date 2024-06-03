@@ -20,8 +20,11 @@ namespace DoctorsDungeon.Other
             for (int i = 0; i < spawnLocations.Count; i++)
             {
                 Point spawnPoint = spawnLocations[i];
-                GameObject enemyGo = EnemyFactory.Create(EnemyTypes.OrcWarrior);
-                //GameObject enemyGo = EnemyFactory.CreateWithRandomType();
+
+                GameObject enemyGo;
+                if (i % 2 == 0) enemyGo = EnemyFactory.Create(EnemyTypes.OrcWarrior, WeaponTypes.Sword);
+                else enemyGo = EnemyFactory.Create(EnemyTypes.OrcArcher, WeaponTypes.Dagger);
+
                 Enemy enemy = enemyGo.GetComponent<Enemy>();
                 enemy.SetStartPosition(playerGo, spawnPoint);
 

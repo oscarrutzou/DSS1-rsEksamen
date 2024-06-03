@@ -62,7 +62,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.TestScenes
 
         private void MakeEnemy()
         {
-            GameObject enemGo = EnemyFactory.Create(EnemyTypes.OrcWarrior);
+            GameObject enemGo = EnemyFactory.Create(EnemyTypes.OrcWarrior, WeaponTypes.Sword);
             GameWorld.Instance.Instantiate(enemGo);
 
             if (GridManager.Instance.CurrentGrid != null)

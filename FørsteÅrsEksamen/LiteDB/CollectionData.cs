@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace DoctorsDungeon.LiteDB
 {
+    // Oscar
     public class GridData
     {
         [BsonId]

@@ -10,15 +10,16 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.RangedEnemies
     {
         public OrcArcher(GameObject gameObject) : base(gameObject)
         {
+            Speed = 300;
         }
 
         public override void Awake()
         {
             base.Awake();
 
-            CharacterStateAnimations.Add(CharacterState.Idle, AnimNames.OrcBaseIdle);
-            CharacterStateAnimations.Add(CharacterState.Moving, AnimNames.OrcBaseRun);
-            CharacterStateAnimations.Add(CharacterState.Dead, AnimNames.OrcBaseDeath);
+            CharacterStateAnimations.Add(CharacterState.Idle, AnimNames.OrcArcherIdle);
+            CharacterStateAnimations.Add(CharacterState.Moving, AnimNames.OrcArcherRun);
+            CharacterStateAnimations.Add(CharacterState.Dead, AnimNames.OrcArcherDeath);
         }
     }
 }
