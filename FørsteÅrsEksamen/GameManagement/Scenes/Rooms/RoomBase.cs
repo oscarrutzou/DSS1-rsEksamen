@@ -226,7 +226,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
             //}
             leftPos += new Vector2(0, 30);
 
-            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Angle: {player.WeaponGo.GetComponent<MeleeWeapon>().angleToMouse}", leftPos, Color.Red);
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Angle: {player.WeaponGo.GetComponent<MeleeWeapon>().angle}", leftPos, Color.Red);
 
             DrawQuest(spriteBatch);
 

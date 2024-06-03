@@ -22,24 +22,23 @@ namespace DoctorsDungeon.Factory
     public static class EnemyFactory
     {
         private static Random random = new();
-        private static int EnemyDmgDivide = 2;
+        private static int EnemyDmgDivide = 2; // Should be in weapon 
 
-        public static GameObject CreateWithRandomType()
-        {
+        //public static GameObject CreateWithRandomType()
+        //{
+        //    Array enemyValue = Enum.GetValues(typeof(EnemyTypes));
+        //    int randomClassIndex = random.Next(enemyValue.Length);
+        //    EnemyTypes randomType = (EnemyTypes)enemyValue.GetValue(randomClassIndex);
 
-            Array enemyValue = Enum.GetValues(typeof(EnemyTypes));
-            int randomClassIndex = random.Next(enemyValue.Length);
-            EnemyTypes randomType = (EnemyTypes)enemyValue.GetValue(randomClassIndex);
 
+        //    Array weaponValue = Enum.GetValues(typeof(WeaponTypes));
+        //    int randomWeaponIndex = random.Next(weaponValue.Length);
+        //    WeaponTypes randomWeapon = (WeaponTypes)weaponValue.GetValue(randomWeaponIndex);
 
-            Array weaponValue = Enum.GetValues(typeof(WeaponTypes));
-            int randomWeaponIndex = random.Next(weaponValue.Length);
-            WeaponTypes randomWeapon = (WeaponTypes)weaponValue.GetValue(randomWeaponIndex);
+        //    // Need to put them into classes
 
-            // Need to put them into classes
-
-            return Create(randomType, randomWeapon);
-        }
+        //    return Create(randomType, randomWeapon);
+        //}
 
         public static GameObject Create(EnemyTypes enemyType, WeaponTypes weaponType)
         {
@@ -58,7 +57,7 @@ namespace DoctorsDungeon.Factory
             GameObject weaponGo = WeaponFactory.Create(weaponType);
             Weapon weapon = weaponGo.GetComponent<Weapon>();
             weapon.EnemyUser = enemy;
-            weapon.Damage /= EnemyDmgDivide; // Make enemies do less damage
+            weapon.Damage /= EnemyDmgDivide; // Make enemies do less damage /= divide
             GameWorld.Instance.Instantiate(weaponGo);
 
             enemy.WeaponGo = weaponGo;

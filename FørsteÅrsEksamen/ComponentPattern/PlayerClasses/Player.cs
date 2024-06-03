@@ -58,12 +58,6 @@ namespace DoctorsDungeon.ComponentPattern.PlayerClasses
             SetState(CharacterState.Idle);
         }
 
-        public override void Die()
-        {
-            base.Die();
-            // Start a timer after some time to change the scene
-        }
-
         public override void Update(GameTime gameTime)
         {
             if (State != CharacterState.Dead)
@@ -120,19 +114,7 @@ namespace DoctorsDungeon.ComponentPattern.PlayerClasses
             }
         }
 
-        protected override void UpdateDirection()
-        {
-            if (Direction.X >= 0)
-            {
-                DirectionState = AnimationDirectionState.Right;
-                SpriteRenderer.SpriteEffects = SpriteEffects.None;
-            }
-            else if (Direction.X < 0)
-            {
-                DirectionState = AnimationDirectionState.Left;
-                SpriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
-            }
-        }
+
 
         // Weapon
         // need to make a start position that are like 80px from this postion and in a radius around the player
@@ -140,7 +122,7 @@ namespace DoctorsDungeon.ComponentPattern.PlayerClasses
 
         #region Movement
 
-        public void AddInput(Vector2 input)
+        public void AddInput(Vector2 input) // 0, 1 / 0, -1 / 1,0 / -1, 0
         {
             if (input != Vector2.Zero)
             {
@@ -176,7 +158,7 @@ namespace DoctorsDungeon.ComponentPattern.PlayerClasses
             previousPosition = GameObject.Transform.Position;
         }
 
-        private void ProcessInput(Vector2 input)
+        private void ProcessInput(Vector2 input) // 0.77 / 0.77
         {
             input.Normalize();
             targetVelocity = input * Speed * GameWorld.DeltaTime;

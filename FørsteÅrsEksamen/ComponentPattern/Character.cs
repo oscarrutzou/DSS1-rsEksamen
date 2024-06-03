@@ -126,7 +126,6 @@ namespace DoctorsDungeon.ComponentPattern
 
         public void Attack()
         {
-            // Do it better, it 
             if (Weapon == null) return;
             Weapon.MoveWeapon(); // Should maybe wait till it has reached towards the new direction
             if (Weapon == null) return; 

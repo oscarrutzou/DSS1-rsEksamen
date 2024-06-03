@@ -8,12 +8,6 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
     // Oscar
     public class MainMenu : MenuScene
     {
-        public override void Initialize()
-        {
-            base.Initialize();
-            // Draw BG
-        }
-
         protected override void InitFirstMenu()
         {
             GameObject startBtn = ButtonFactory.Create("Play", true,

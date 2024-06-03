@@ -61,7 +61,7 @@ namespace DoctorsDungeon.Factory
 
         public static GameObject Create(WeaponTypes type)
         {
-            GameObject weaponGo = new GameObject();
+            GameObject weaponGo = new();
             weaponGo.Type = GameObjectTypes.Weapon;
             weaponGo.Transform.Scale = new Vector2(4, 4);
             weaponGo.AddComponent<SpriteRenderer>();
@@ -70,7 +70,7 @@ namespace DoctorsDungeon.Factory
             return weaponGo;
         }
 
-        private static GameObject AddClassComponent(GameObject weaponGo, WeaponTypes type)
+        private static void AddClassComponent(GameObject weaponGo, WeaponTypes type)
         {
             switch (type)
             {
@@ -102,8 +102,6 @@ namespace DoctorsDungeon.Factory
                     weaponGo.AddComponent<MagicStaff>();
                     break;
             }
-
-            return weaponGo;
         }
     }
 }

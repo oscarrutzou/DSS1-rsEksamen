@@ -85,7 +85,7 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons
 
         private void AttackAnimation()
         {
-            if (TotalElapsedTime >= 1f)
+            if (TotalElapsedTime >= 1f) // Should be half the time the animation takes
             {
                 TotalElapsedTime = 0f; // Reset totalElapsedTime
                 IsRotatingBack = true;
@@ -116,7 +116,8 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons
                 //easedTime = EaseInOutBack(totalElapsedTime); // Feels heavy
                 GameObject.Transform.Rotation = MathHelper.Lerp(finalLerp, StartAnimationAngle, easedTime);
             }
-            if (Math.Abs(GameObject.Transform.Rotation - StartAnimationAngle) < 1f && IsRotatingBack)
+
+            if (Math.Abs(GameObject.Transform.Rotation - StartAnimationAngle) < 0.1f && IsRotatingBack)
             {
                 IsRotatingBack = false;
                 Attacking = false;
@@ -129,10 +130,10 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons
             foreach (CollisionRectangle collisionRectangle in WeaponColliders)
             {
                 // Calculate the position relative to the center of the weapon
-                Vector2 relativePos = collisionRectangle.StartRelativePos;
+                Vector2 relativePos = collisionRectangle.StartRelativePos; 
 
                 // Rotate the relative position
-                Vector2 newPos = BaseMath.Rotate(relativePos, rotation);
+                Vector2 newPos = BaseMath.Rotate(relativePos, rotation); 
 
                 // Set the collision rectangle position based on the rotated relative position
                 collisionRectangle.Rectangle.X = (int)(GameObject.Transform.Position.X + newPos.X) - collisionRectangle.Rectangle.Width / 2;

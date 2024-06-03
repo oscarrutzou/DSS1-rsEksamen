@@ -36,16 +36,17 @@ namespace DoctorsDungeon.ComponentPattern.Weapons
         protected float AttackSpeed;
 
         protected SpriteRenderer spriteRenderer;
+        // Melee weapon
         protected float LerpFromTo;
-        protected float TotalLerp;
-
-        //protected bool EnemyWeapon;
-        protected bool Attacking;
         protected float StartAnimationAngle { get; set; }
-
+        protected float TotalLerp;
         protected float TotalElapsedTime;
         protected bool IsRotatingBack;
         protected List<CollisionRectangle> WeaponColliders = new();
+
+
+        //protected bool EnemyWeapon;
+        protected bool Attacking;
 
         protected SoundNames[] AttackSoundNames;
         protected bool PlayingSound;
@@ -59,7 +60,7 @@ namespace DoctorsDungeon.ComponentPattern.Weapons
         public override void Awake()
         {
             spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
-            spriteRenderer.SetLayerDepth(LayerDepth.PlayerWeapon);
+            spriteRenderer.SetLayerDepth(LayerDepth.PlayerWeapon); // Should not matter?
             spriteRenderer.IsCentered = false;
 
             if (EnemyUser != null)
@@ -100,7 +101,7 @@ namespace DoctorsDungeon.ComponentPattern.Weapons
         }
 
         private Vector2 lastOffSetPos, startRelativePos = new(0, 60), startRelativeOffsetPos = new Vector2(0, -20);
-        public float angleToMouse; // Public for test
+        public float angle; // Public for test
         protected bool LeftSide;
         public void MoveWeapon()
         {
@@ -118,32 +119,32 @@ namespace DoctorsDungeon.ComponentPattern.Weapons
             }
 
             if (EnemyUser != null)
-                angleToMouse = GetAngleToMouseEnemy(userPos);
+                angle = GetAngleToMouseEnemy(userPos);
             else
-                angleToMouse = GetAngleToMousePlayer();
+                angle = GetAngleToMousePlayer();
 
             // Can use lerp from the wanted move point, so its not as fast
 
             // Adjust the angle to be in the range of 0 to 2π
-            if (angleToMouse < 0)
+            if (angle < 0)
             {
-                angleToMouse += 2 * MathHelper.Pi;
+                angle += 2 * MathHelper.Pi;
             }
 
-            lastOffSetPos = BaseMath.Rotate(startRelativePos, angleToMouse - MathHelper.PiOver2) + startRelativeOffsetPos;
+            lastOffSetPos = BaseMath.Rotate(startRelativePos, angle - MathHelper.PiOver2) + startRelativeOffsetPos;
             GameObject.Transform.Position = userPos + lastOffSetPos;
 
             // Set the StartAnimationAngle based on the adjusted angle
-            if (angleToMouse > 0.5 * MathHelper.Pi && angleToMouse < 1.5 * MathHelper.Pi)
+            if (angle > 0.5 * MathHelper.Pi && angle < 1.5 * MathHelper.Pi)
             {
                 spriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
-                StartAnimationAngle = angleToMouse + MathHelper.Pi;
+                StartAnimationAngle = angle + MathHelper.Pi;
 
                 LeftSide = true;
             }
             else
             {
-                StartAnimationAngle = angleToMouse;
+                StartAnimationAngle = angle;
                 LeftSide = false;
                 spriteRenderer.SpriteEffects = SpriteEffects.None;
             }

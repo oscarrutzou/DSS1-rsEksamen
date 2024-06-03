@@ -25,7 +25,6 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
             ShowSecondMenu = false;
 
             GlobalSounds.InMenu = true;
-            GameWorld.Instance.IsMouseVisible = true;
             GameWorld.Instance.ShowBG = true;
 
             Font = GlobalTextures.BigFont;
@@ -53,11 +52,6 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
 
         protected virtual void InitSecondMenu()
         { }
-
-        //private void SpawnBG()
-        //{
-        //    GameWorld.Instance.Instantiate(go);
-        //}
 
         public virtual void AfterFirstCleanUp()
         {
