@@ -50,7 +50,6 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
             }
             else
             {
-                //string text = SaveData.HasWon == true ? "You Won!" : "Try Again";
                 string text;
                 if (SaveData.HasWon) text = "You Won!";
                 else if (SaveData.LostByTime) text = "Time Ran Out";

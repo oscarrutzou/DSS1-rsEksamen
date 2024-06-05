@@ -6,8 +6,5 @@
         {
         }
 
-        public MagicStaff(GameObject gameObject, bool enemyWeapon) : base(gameObject, enemyWeapon)
-        {
-        }
     }
 }

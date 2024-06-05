@@ -1,12 +1,15 @@
 ﻿using DoctorsDungeon.GameManagement;
 
-namespace DoctorsDungeon.ComponentPattern.PlayerClasses.RangedClasses
+namespace DoctorsDungeon.ComponentPattern.PlayerClasses
 {
     // Stefan
-    public class Archer : Player
+    public class Warrior : Player
     {
-        public Archer(GameObject gameObject) : base(gameObject)
+        public Warrior(GameObject gameObject) : base(gameObject)
         {
+            Speed = 150;
+            MaxHealth = 125;
+            CurrentHealth = MaxHealth;
         }
 
         public override void Awake()

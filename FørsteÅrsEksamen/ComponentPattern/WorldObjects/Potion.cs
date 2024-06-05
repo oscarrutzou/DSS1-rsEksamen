@@ -59,7 +59,7 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
 
             if (Player.CurrentHealth > Player.MaxHealth)
             {
-                Player.CurrentHealth = 100;
+                Player.CurrentHealth = Player.MaxHealth;
             }
 
             Player.ItemInInventory = null;

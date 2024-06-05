@@ -10,6 +10,7 @@ namespace DoctorsDungeon.Factory
     {
         Sword,
         Axe,
+        Dagger,
         MagicStaff,
         MagicStaffFire,
         Bow,
@@ -23,6 +24,7 @@ namespace DoctorsDungeon.Factory
         public static Dictionary<ClassTypes, List<WeaponTypes>> ClassHasWeapons = new()
         {
             { ClassTypes.Archer, new List<WeaponTypes>(){
+                WeaponTypes.Dagger,
                 WeaponTypes.Bow,
                 WeaponTypes.BowFire,
             }},
@@ -38,47 +40,68 @@ namespace DoctorsDungeon.Factory
             }},
         };
 
-        public static GameObject Create(WeaponTypes type, bool enemyWeapon)
+        public static Dictionary<EnemyTypes, List<WeaponTypes>> EnemyHasWeapon = new()
         {
-            GameObject weaponGo = new GameObject();
+            { EnemyTypes.OrcArcher, new List<WeaponTypes>(){
+                WeaponTypes.Dagger,
+                WeaponTypes.Bow,
+                WeaponTypes.BowFire,
+            }},
+
+            { EnemyTypes.OrcShaman, new List<WeaponTypes>(){
+                WeaponTypes.MagicStaff,
+                WeaponTypes.MagicStaffFire,
+            }},
+
+            { EnemyTypes.OrcWarrior, new List<WeaponTypes>(){
+                WeaponTypes.Sword,
+                WeaponTypes.Axe,
+            }},
+        };
+
+        public static GameObject Create(WeaponTypes type)
+        {
+            GameObject weaponGo = new();
             weaponGo.Type = GameObjectTypes.Weapon;
             weaponGo.Transform.Scale = new Vector2(4, 4);
             weaponGo.AddComponent<SpriteRenderer>();
-            AddClassComponent(weaponGo, type, enemyWeapon);
+            AddClassComponent(weaponGo, type);
 
             return weaponGo;
         }
 
-        private static GameObject AddClassComponent(GameObject weaponGo, WeaponTypes type, bool enemyWeapon)
+        private static void AddClassComponent(GameObject weaponGo, WeaponTypes type)
         {
             switch (type)
             {
                 case WeaponTypes.Sword:
-                    weaponGo.AddComponent<Sword>(enemyWeapon);
+                    weaponGo.AddComponent<Sword>();
                     break;
 
                 case WeaponTypes.Axe:
-                    weaponGo.AddComponent<Axe>(enemyWeapon);
+                    weaponGo.AddComponent<Axe>();
+                    break;
+
+                case WeaponTypes.Dagger:
+                    weaponGo.AddComponent<Dagger>();
                     break;
 
                 case WeaponTypes.MagicStaff:
-                    weaponGo.AddComponent<MagicStaff>(enemyWeapon);
+                    weaponGo.AddComponent<MagicStaff>();
                     break;
 
                 case WeaponTypes.MagicStaffFire:
-                    weaponGo.AddComponent<MagicStaff>(enemyWeapon);
+                    weaponGo.AddComponent<MagicStaff>();
                     break;
 
                 case WeaponTypes.Bow:
-                    weaponGo.AddComponent<Bow>(enemyWeapon);
+                    weaponGo.AddComponent<Bow>();
                     break;
 
                 case WeaponTypes.BowFire:
-                    weaponGo.AddComponent<MagicStaff>(enemyWeapon);
+                    weaponGo.AddComponent<MagicStaff>();
                     break;
             }
-
-            return weaponGo;
         }
     }
 }

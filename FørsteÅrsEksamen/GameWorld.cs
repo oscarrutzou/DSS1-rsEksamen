@@ -22,7 +22,7 @@ namespace DoctorsDungeon
         public Dictionary<SceneNames, Scene> Scenes { get; private set; }
 
         public Scene CurrentScene;
-        public Camera WorldCam { get; private set; }
+        public Camera WorldCam { get; private set; } // Follows player
         public Camera UiCam { get; private set; } //Static on the ui
         public static float DeltaTime { get; private set; }
         public GraphicsDeviceManager GfxManager { get; private set; }
@@ -137,7 +137,7 @@ namespace DoctorsDungeon
         }
 
         /// <summary>
-        /// Adds the GameObject to the CurrentScene
+        /// Adds the GameObject to the CurrentScene 
         /// </summary>
         /// <param name="go"></param>
         public void Instantiate(GameObject go) => CurrentScene.Instantiate(go);

@@ -58,47 +58,36 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
 
             SaveData.CurrentSaveID = id;
 
-            // Dont override save files
-            List<SaveFileData> saveFiles = DBSaveFile.LoadSaveFiles();
+            SaveFileTestData saveFile = DB.Instance.LoadGame();
 
-            foreach (SaveFileData saveFile in saveFiles)
+            if (saveFile == null) // Creates a new save file
             {
-                if (saveFile.Save_ID == id)
-                {
-                    SaveData.Currency = saveFile.Currency;
-                    // maybe take player and current weapon and other stuff.
-                    break;
-                }
+                saveFile = DB.Instance.SaveGame(id); // Makes the save id
             }
 
-            RunData runData = DBRunData.LoadRunData(SaveData.CurrentSaveID);
-
-            if (runData == null)
+            if (saveFile.RunData == null)
             {
                 // Make a new run after the characterSelector
                 GameWorld.Instance.ChangeScene(SceneNames.CharacterSelectorMenu);
             }
             else
             {
-                SaveData.Time_Left = runData.Time_Left;
+                SaveData.Time_Left = saveFile.RunData.Time_Left;
                 // Loads run
-                GameWorld.Instance.ChangeDungeonScene(SceneNames.DungeonRoom, runData.Room_Reached);
+                GameWorld.Instance.ChangeDungeonScene(SceneNames.DungeonRoom, saveFile.RunData.Room_Reached);
             }
         }
-
-        // Maybe delete with a small button the right top of the save file
-        // Need a way to create these stuff that are buttons but with some overlay
 
         /// <summary>
         /// Updates the Button text
         /// </summary>
         private void ChangeButtonText()
         {
-            List<SaveFileData> saveFiles = DBSaveFile.LoadSaveFiles();
+            List<SaveFileTestData> saveFiles = DB.Instance.LoadAllSaveFiles();
 
             if (saveFiles.Count == 0) return; // There is no files yet, so we dont change the text.
 
-            foreach (SaveFileData saveFile in saveFiles)
+            foreach (SaveFileTestData saveFile in saveFiles)
             {
                 if (!saveFileButtons.ContainsKey(saveFile.Save_ID)) continue;
 
@@ -121,14 +110,9 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
 
         private void DeleteSave(int saveID)
         {
-            DBMethods.DeleteSave(saveID);
+            DB.Instance.DeleteSave(saveID);
 
             GameWorld.Instance.ChangeScene(SceneNames.SaveFileMenu);
-        }
-
-        public override void DrawOnScreen(SpriteBatch spriteBatch)
-        {
-            base.DrawOnScreen(spriteBatch);
         }
     }
 }

@@ -45,8 +45,6 @@ namespace DoctorsDungeon.GameManagement.Scenes.TestScenes
             MakeButtons();
 
             OnPlayerChanged();
-
-            //DBMethods.SaveGame();
         }
 
         private void SetLevelBG()
@@ -64,7 +62,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.TestScenes
 
         private void MakeEnemy()
         {
-            GameObject enemGo = EnemyFactory.Create(EnemyTypes.OrcWarrior);
+            GameObject enemGo = EnemyFactory.Create(EnemyTypes.OrcWarrior, WeaponTypes.Sword);
             GameWorld.Instance.Instantiate(enemGo);
 
             if (GridManager.Instance.CurrentGrid != null)
@@ -105,7 +103,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.TestScenes
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.D1, new CustomCmd(player.UseItem));
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Tab, new CustomCmd(() => { GridManager.Instance.ShowHideGrid(); }));
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, new CustomCmd(Attack));
-            InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DBGrid.OverrideSaveGrid(GridManager.Instance.CurrentGrid); }));
+            InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DB.Instance.SaveGrid(GridManager.Instance.CurrentGrid); }));
         }
 
         public override void OnPlayerChanged()

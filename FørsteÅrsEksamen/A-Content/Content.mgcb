@@ -777,6 +777,18 @@
 /processorParam:TextureFormat=Color
 /build:World/TIle_overlay.png
 
+#begin World/Weapons/Melee Weapons/BoneDagger.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/Weapons/Melee Weapons/BoneDagger.png
+
 #begin World/Weapons/Melee Weapons/BoneSword.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -788,6 +800,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:World/Weapons/Melee Weapons/BoneSword.png
+
+#begin World/Weapons/Melee Weapons/WoodDagger.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/Weapons/Melee Weapons/WoodDagger.png
 
 #begin World/Weapons/Melee Weapons/WoodSword.png
 /importer:TextureImporter

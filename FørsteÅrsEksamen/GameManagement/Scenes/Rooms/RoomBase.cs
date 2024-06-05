@@ -4,6 +4,8 @@ using DoctorsDungeon.ComponentPattern;
 using DoctorsDungeon.ComponentPattern.Enemies;
 using DoctorsDungeon.ComponentPattern.Path;
 using DoctorsDungeon.ComponentPattern.PlayerClasses;
+using DoctorsDungeon.ComponentPattern.Weapons;
+using DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons;
 using DoctorsDungeon.ComponentPattern.WorldObjects;
 using DoctorsDungeon.Factory;
 using DoctorsDungeon.GameManagement.Scenes.Menus;
@@ -49,7 +51,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
 
         public override void Initialize()
         {
-            GameWorld.Instance.IsMouseVisible = false;
+            //GameWorld.Instance.IsMouseVisible = false;
 
             SetSpawnPotions();
 
@@ -65,7 +67,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
 
             SpawnGrid();
 
-            SpawnPlayer();
+            SpawnAndLoadPlayer();
 
             SpawnEndPos();
 
@@ -73,8 +75,6 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
             SpawnPotions();
 
             SetCommands();
-
-            DBMethods.RegularSave();
         }
 
         #region Initialize Methods
@@ -105,26 +105,15 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
             GridManager.Instance.SaveLoadGrid(grid);
         }
 
-        private void SpawnPlayer()
+        private void SpawnAndLoadPlayer()
         {
-            PlayerData playerData = DBRunData.LoadPlayerData(SaveData.CurrentSaveID);
+            DB.Instance.UpdateLoadRun(SaveData.CurrentSaveID);
 
-            if (playerData != null)
-            {
-                PlayerGo = DBMethods.SpawnPlayer(playerData, PlayerSpawnPos);
-            }
-            else
-            {
-                // We already know a exploit here.
-                // If the user deletes the playerdata in the middle of a run, they will get a new Player with full stats
-                // and therefore not load the old saved one. We estimate it will take too long to fix this, so we place it on the back burner for now.
-                PlayerGo = PlayerFactory.Create(SaveData.SelectedClass, SaveData.SelectedWeapon);
-            }
+            PlayerGo = SaveData.Player.GameObject;
 
             PlayerGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[PlayerSpawnPos].Transform.Position;
             PlayerGo.Transform.GridPosition = PlayerSpawnPos;
             GameWorld.Instance.WorldCam.Position = PlayerGo.Transform.Position;
-            GameWorld.Instance.Instantiate(PlayerGo);
         }
 
         private void SpawnEndPos()
@@ -163,9 +152,9 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.E, new CustomCmd(player.UseItem));
 
             // For debugging
-            //InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, new CustomCmd(player.Attack));
-            //InputHandler.Instance.AddKeyButtonDownCommand(Keys.Enter, new CustomCmd(ChangeScene));
-            //InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DBGrid.OverrideSaveGrid(GridManager.Instance.CurrentGrid); }));
+            InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, new CustomCmd(player.Attack));
+            InputHandler.Instance.AddKeyButtonDownCommand(Keys.Enter, new CustomCmd(ChangeScene));
+            InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DB.Instance.SaveGrid(GridManager.Instance.CurrentGrid); }));
         }
 
         private void ChangeScene()
@@ -224,6 +213,20 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
 
             leftPos += new Vector2(0, 30);
             DrawPotion(spriteBatch, leftPos);
+
+            //if (aliveEnemies != null)
+            //{
+            //    foreach (Enemy enemy in aliveEnemies)
+            //    {
+            //        leftPos += new Vector2(0, 30);
+            //        spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Enemy health : {enemy.CurrentHealth} ::: Enemy weapon colliders {enemy.WeaponGo.GetComponent<MeleeWeapon>().hitGameObjects.Count}", leftPos, Color.Red);
+            //    }
+
+
+            //}
+            leftPos += new Vector2(0, 30);
+
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Angle: {player.WeaponGo.GetComponent<MeleeWeapon>().angle}", leftPos, Color.Red);
 
             DrawQuest(spriteBatch);
 

@@ -3,6 +3,7 @@ using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons
 {
@@ -12,10 +13,6 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons
         private List<GameObject> hitGameObjects = new();
 
         protected MeleeWeapon(GameObject gameObject) : base(gameObject)
-        {
-        }
-
-        protected MeleeWeapon(GameObject gameObject, bool enemyWeapon) : base(gameObject, enemyWeapon)
         {
         }
 
@@ -40,19 +37,10 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons
             UpdateCollisionBoxesPos(GameObject.Transform.Rotation);
         }
 
-        // Attack direction
-        //startAnimationAngle = GameObject.Transform.Rotation;
-        //Vector2 mouseInUI = InputHandler.Instance.MouseOnUI;
-        //float angleToMouse = (float)Math.Atan2(mouseInUI.Y, mouseInUI.X) + MathHelper.PiOver2;
-        //startAnimationAngle = angleToMouse;
-        // should lerp to the correct angle before attacking. Use a bool to see if the angle has been set
-
-        // Need to set a bool or something to the hit objects so we stop the bug where it kills it in 10 update
-
         public void CheckCollisionAndDmg()
         {
             GameObjectTypes type;
-            if (EnemyWeapon)
+            if (EnemyUser != null)
                 type = GameObjectTypes.Player;
             else
                 type = GameObjectTypes.Enemy;
@@ -66,49 +54,74 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons
                 if (otherCollider == null) continue;
                 foreach (CollisionRectangle weaponRectangle in WeaponColliders)
                 {
+                    if (hitGameObjects.Contains(otherGo)) break; // Need to check again here so it dosent attack twice
+
                     if (weaponRectangle.Rectangle.Intersects(otherCollider.CollisionBox))
                     {
-                        DealDamage(otherGo);
                         hitGameObjects.Add(otherGo);
+                        DealDamage(otherGo);
                         break;
                     }
                 }
             }
+        }
 
+        protected override void SetAttackDirection()
+        {
+            hitGameObjects = new();
+            if (LeftSide)
+            {
+                // Left
+                TotalLerp = -LerpFromTo;
+            }
+            else
+            {
+                // Right
+                TotalLerp = LerpFromTo;
+            }
         }
 
         #region Weapon Colliders
 
         private void AttackAnimation()
         {
-            if (TotalElapsedTime >= 1f)
+            if (TotalElapsedTime >= 1f) // Should be half the time the animation takes
             {
                 TotalElapsedTime = 0f; // Reset totalElapsedTime
                 IsRotatingBack = true;
+                hitGameObjects = new(); // Reset hit gameobjects so we can hit when it goes back again
+
+                // Makes the weapon flip when rotating back
+                if (spriteRenderer.SpriteEffects == SpriteEffects.FlipHorizontally)
+                    spriteRenderer.SpriteEffects = SpriteEffects.None;
+                else if (spriteRenderer.SpriteEffects == SpriteEffects.None)
+                    spriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
+
             }
 
             // Play with some other methods, for different weapons, to make them feel slow or fast https://easings.net/
             float easedTime; // maybe switch between them.
+            float finalLerp = StartAnimationAngle + TotalLerp;
 
             if (!IsRotatingBack)
             {
                 // Down attack
                 easedTime = BaseMath.EaseInOutBack(TotalElapsedTime);
-                GameObject.Transform.Rotation = MathHelper.Lerp(StartAnimationAngle, TotalLerp, easedTime);
+                GameObject.Transform.Rotation = MathHelper.Lerp(StartAnimationAngle, finalLerp, easedTime);
             }
             else
             {
                 //Up attack
                 easedTime = BaseMath.EaseInOutBack(TotalElapsedTime);
                 //easedTime = EaseInOutBack(totalElapsedTime); // Feels heavy
-                GameObject.Transform.Rotation = MathHelper.Lerp(TotalLerp, StartAnimationAngle, easedTime);
+                GameObject.Transform.Rotation = MathHelper.Lerp(finalLerp, StartAnimationAngle, easedTime);
             }
-            if (Math.Abs(GameObject.Transform.Rotation - StartAnimationAngle) < 0.01f && IsRotatingBack)
+
+            if (Math.Abs(GameObject.Transform.Rotation - StartAnimationAngle) < 0.1f && IsRotatingBack)
             {
                 IsRotatingBack = false;
                 Attacking = false;
                 PlayingSound = false;
-                hitGameObjects = new();
             }
         }
 
@@ -117,10 +130,10 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons
             foreach (CollisionRectangle collisionRectangle in WeaponColliders)
             {
                 // Calculate the position relative to the center of the weapon
-                Vector2 relativePos = collisionRectangle.StartRelativePos;
+                Vector2 relativePos = collisionRectangle.StartRelativePos; 
 
                 // Rotate the relative position
-                Vector2 newPos = BaseMath.Rotate(relativePos, rotation);
+                Vector2 newPos = BaseMath.Rotate(relativePos, rotation); 
 
                 // Set the collision rectangle position based on the rotated relative position
                 collisionRectangle.Rectangle.X = (int)(GameObject.Transform.Position.X + newPos.X) - collisionRectangle.Rectangle.Width / 2;

@@ -16,7 +16,7 @@ namespace DoctorsDungeon.ComponentPattern.Enemies
         private Grid grid;
         private Astar astar;
         private GameObject playerGo;
-        private Player player;
+        public Player Player;
         private SpriteRenderer weaponSpriteRenderer;
 
         private List<GameObject> path;
@@ -24,13 +24,13 @@ namespace DoctorsDungeon.ComponentPattern.Enemies
         private Point targetPoint;
         private readonly float threshold = 10f;
 
-        public Action onGoalReached;
         private bool hasBeenAwoken;
 
         #endregion Properties
 
         public Enemy(GameObject gameObject) : base(gameObject)
         {
+            Speed = 250;
             astar = new Astar();
         }
 
@@ -43,13 +43,13 @@ namespace DoctorsDungeon.ComponentPattern.Enemies
                 weaponSpriteRenderer = WeaponGo.GetComponent<SpriteRenderer>();
             }
 
-            Collider.SetCollisionBox(15, 27, new Vector2(0, 15)); // Players collider for taking damage
+            Collider.SetCollisionBox(15, 27, new Vector2(0, 15));
         }
 
         public void SetStartPosition(GameObject playerGo, Point gridPos)
         {
             this.playerGo = playerGo;
-            player = playerGo.GetComponent<Player>();
+            Player = playerGo.GetComponent<Player>();
 
             targetPoint = playerGo.Transform.GridPosition;
             grid = GridManager.Instance.CurrentGrid;
@@ -70,9 +70,7 @@ namespace DoctorsDungeon.ComponentPattern.Enemies
 
             Weapon.MoveWeapon();
 
-            if (player.RoomNr == RoomNr) SetPath(); // We know that the player the targetPoint has been set
-
-            onGoalReached += OnGoalReached;
+            if (Player.RoomNr == RoomNr) SetPath(); // We know that the player the targetPoint has been set
         }
 
         public override void Update(GameTime gameTime)
@@ -88,20 +86,19 @@ namespace DoctorsDungeon.ComponentPattern.Enemies
                     break;
 
                 case CharacterState.Moving:
-                    UpdatePathing(gameTime);
+                    UpdatePathing();
                     break;
 
                 case CharacterState.Attacking:
 
                     // Do nothing if the player has died.
-                    if (player.State == CharacterState.Dead) return;
+                    if (Player.State == CharacterState.Dead) return; // Weird bug here
 
                     // Update direction towards player insted of moving direction
                     Direction = Vector2.Normalize(playerGo.Transform.Position - GameObject.Transform.Position);
                     Weapon.MoveWeapon();
                     UpdateDirection();
                     Attack();
-
                     break;
 
                 case CharacterState.Dead:
@@ -111,9 +108,9 @@ namespace DoctorsDungeon.ComponentPattern.Enemies
 
         private void PlayerMovedInRoom()
         {
-            if (player.RoomNr != RoomNr && !hasBeenAwoken) return; // Cant move if the player isnt in the same room.
+            if (Player.RoomNr != RoomNr && !hasBeenAwoken || State == CharacterState.Dead) return; // Cant move if the player isnt in the same room.
 
-            if (playerGo.Transform.GridPosition != targetPoint && State != CharacterState.Dead)
+            if (playerGo.Transform.GridPosition != targetPoint)
             {
                 targetPoint = playerGo.Transform.GridPosition;
                 hasBeenAwoken = true;
@@ -142,7 +139,7 @@ namespace DoctorsDungeon.ComponentPattern.Enemies
         #region PathFinding
         private void SetPath()
         {
-            ResetPathColor();
+            ResetPathColor(); // For debugging
 
             path = null; // We cant use the previous path
 
@@ -168,10 +165,11 @@ namespace DoctorsDungeon.ComponentPattern.Enemies
                     }
                 }
             });
+            thread.IsBackground = true;
             thread.Start();
         }
 
-        private void UpdatePathing(GameTime gameTime)
+        private void UpdatePathing()
         {
             if (path == null)
                 return;
@@ -199,13 +197,13 @@ namespace DoctorsDungeon.ComponentPattern.Enemies
 
             Direction = Vector2.Normalize(nextTarget - position);
 
-            GameObject.Transform.Translate(Direction * speed * (float)gameTime.ElapsedGameTime.TotalSeconds);
+            GameObject.Transform.Translate(Direction * Speed * GameWorld.DeltaTime);
             Weapon.MoveWeapon();
 
             if (path.Count == 1 && Vector2.Distance(position, nextTarget) < threshold)
             {
-                onGoalReached?.Invoke();
-                ResetCellColor(path[0]);
+                SetState(CharacterState.Attacking);
+                ResetCellColor(path[0]); // Debug
 
                 path = null;
             }
@@ -217,13 +215,6 @@ namespace DoctorsDungeon.ComponentPattern.Enemies
         {
             Cell cell = cellGo.GetComponent<Cell>();
             RoomNr = cell.RoomNr;
-        }
-
-        private void OnGoalReached()
-        {
-            SetState(CharacterState.Attacking);
-
-            SpriteRenderer.SpriteEffects = SpriteEffects.None;
         }
 
         private void ResetPathColor()

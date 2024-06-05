@@ -7,6 +7,7 @@ using DoctorsDungeon.ObserverPattern;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.Data.Common;
 
 namespace DoctorsDungeon.ComponentPattern.PlayerClasses
 {
@@ -34,12 +35,12 @@ namespace DoctorsDungeon.ComponentPattern.PlayerClasses
 
         public Player(GameObject gameObject) : base(gameObject)
         {
-            speed = 150;
+            Speed = 150;
         }
 
         public Player(GameObject gameObject, GameObject handsGo, GameObject movementColliderGo) : base(gameObject)
         {
-            speed = 150;
+            Speed = 150;
             this.HandsGo = handsGo;
             this.MovementColliderGo = movementColliderGo;
         }
@@ -57,17 +58,16 @@ namespace DoctorsDungeon.ComponentPattern.PlayerClasses
             SetState(CharacterState.Idle);
         }
 
-        public override void Die()
-        {
-            base.Die();
-            // Start a timer after some time to change the scene
-        }
-
         public override void Update(GameTime gameTime)
         {
             if (State != CharacterState.Dead)
             {
                 CheckForMovement();
+            }
+
+            if (Weapon != null)
+            {
+                Weapon.MoveWeapon();
             }
 
             switch (State)
@@ -97,7 +97,7 @@ namespace DoctorsDungeon.ComponentPattern.PlayerClasses
             {
                 onDeadTimer = 0;
                 SaveData.HasWon = false;
-                DBMethods.OnChangeSceneEnd();
+                DB.Instance.OnChangeSceneEnd();
             }
         }
 
@@ -114,23 +114,15 @@ namespace DoctorsDungeon.ComponentPattern.PlayerClasses
             }
         }
 
-        protected override void UpdateDirection()
-        {
-            if (Direction.X >= 0)
-            {
-                DirectionState = AnimationDirectionState.Right;
-                SpriteRenderer.SpriteEffects = SpriteEffects.None;
-            }
-            else if (Direction.X < 0)
-            {
-                DirectionState = AnimationDirectionState.Left;
-                SpriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
-            }
-        }
+
+
+        // Weapon
+        // need to make a start position that are like 80px from this postion and in a radius around the player
+        // use rotate method to get the ned point. After we have done that, we need to rotate it a bit
 
         #region Movement
 
-        public void AddInput(Vector2 input)
+        public void AddInput(Vector2 input) // 0, 1 / 0, -1 / 1,0 / -1, 0
         {
             if (input != Vector2.Zero)
             {
@@ -166,10 +158,10 @@ namespace DoctorsDungeon.ComponentPattern.PlayerClasses
             previousPosition = GameObject.Transform.Position;
         }
 
-        private void ProcessInput(Vector2 input)
+        private void ProcessInput(Vector2 input) // 0.77 / 0.77
         {
             input.Normalize();
-            targetVelocity = input * speed * GameWorld.DeltaTime;
+            targetVelocity = input * Speed * GameWorld.DeltaTime;
 
             // To fix the error that if all buttons have been pressed, that it sometimes sets the velocity to Nan/Nan
             if (float.IsNaN(velocity.X))
@@ -185,8 +177,8 @@ namespace DoctorsDungeon.ComponentPattern.PlayerClasses
         private void TryMoveInBothDirections()
         {
             // Separate the movement into X and Y components
-            Vector2 xMovement = new Vector2(velocity.X, 0) * speed * GameWorld.DeltaTime;
-            Vector2 yMovement = new Vector2(0, velocity.Y) * speed * GameWorld.DeltaTime;
+            Vector2 xMovement = new Vector2(velocity.X, 0) * Speed * GameWorld.DeltaTime;
+            Vector2 yMovement = new Vector2(0, velocity.Y) * Speed * GameWorld.DeltaTime;
 
             bool hasMoved = false;
             // Try moving along the X axis

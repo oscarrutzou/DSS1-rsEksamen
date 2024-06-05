@@ -1,7 +1,5 @@
 ﻿using DoctorsDungeon.ComponentPattern;
 using DoctorsDungeon.ComponentPattern.PlayerClasses;
-using DoctorsDungeon.ComponentPattern.PlayerClasses.MeleeClasses;
-using DoctorsDungeon.ComponentPattern.PlayerClasses.RangedClasses;
 using DoctorsDungeon.ComponentPattern.Weapons;
 using DoctorsDungeon.LiteDB;
 using Microsoft.Xna.Framework;
@@ -45,8 +43,8 @@ namespace DoctorsDungeon.Factory
             player.MovementColliderGo = movementColliderGo;
 
             //Weapon
-            GameObject weaponGo = WeaponFactory.Create(weaponType, false);
-            weaponGo.GetComponent<Weapon>().WeaponUser = player;
+            GameObject weaponGo = WeaponFactory.Create(weaponType);
+            weaponGo.GetComponent<Weapon>().PlayerUser = player;
             GameWorld.Instance.Instantiate(weaponGo);
 
             // Add weapon to player

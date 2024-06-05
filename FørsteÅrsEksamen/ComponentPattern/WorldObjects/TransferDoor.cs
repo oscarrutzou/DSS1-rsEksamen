@@ -41,7 +41,7 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
 
                 if (timer >= timeTillActivation)
                 {
-                    DBMethods.CheckChangeDungeonScene();
+                    DB.Instance.CheckChangeDungeonScene();
                     timer = 0f;
                 }
             }

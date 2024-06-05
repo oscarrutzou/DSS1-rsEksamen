@@ -101,7 +101,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.TestScenes
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.D1, new CustomCmd(player.UseItem));
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Tab, new CustomCmd(() => { GridManager.Instance.ShowHideGrid(); }));
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, new CustomCmd(Attack));
-            InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DBGrid.OverrideSaveGrid(GridManager.Instance.CurrentGrid); }));
+            InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DB.Instance.SaveGrid(GridManager.Instance.CurrentGrid); }));
         }
 
         public override void OnPlayerChanged()
@@ -112,9 +112,9 @@ namespace DoctorsDungeon.GameManagement.Scenes.TestScenes
 
         private void MakeWeapon()
         {
-            weapon = WeaponFactory.Create(WeaponTypes.Sword, false);
+            weapon = WeaponFactory.Create(WeaponTypes.Sword);
 
-            bow = WeaponFactory.Create(WeaponTypes.Bow, false);
+            bow = WeaponFactory.Create(WeaponTypes.Bow);
 
             GameWorld.Instance.Instantiate(weapon);
             GameWorld.Instance.Instantiate(bow);

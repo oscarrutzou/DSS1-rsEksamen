@@ -25,7 +25,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
 
         protected override void InitFirstMenu()
         {
-            GameObject startBtn = ButtonFactory.Create("Pause", true, TogglePauseMenu);
+            GameObject startBtn = ButtonFactory.Create("Pause", true, TogglePauseMenu); // Delete?
             FirstMenuObjects.Add(startBtn);
 
             GameObject settingsBtn = ButtonFactory.Create("Settings", true, ShowHideSecondMenu);
@@ -109,21 +109,9 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
         public override void DrawOnScreen(SpriteBatch spriteBatch)
         {
             // Shouldnt update or draw as normal.
-            if (!IsMenuVisible())
-            {
-                // So we can see the mouse when drawing cells and debugging
-                if (!InputHandler.Instance.DebugMode)
-                {
-                    GameWorld.Instance.IsMouseVisible = false;
-                }
-                else
-                {
-                    GameWorld.Instance.IsMouseVisible = true;
-                }
-                return;
-            }
+            if (!IsMenuVisible()) return;
 
-            GameWorld.Instance.IsMouseVisible = true;
+            //GameWorld.Instance.IsMouseVisible = true;
 
             if (currentMenuState == MenuState.StartMenu)
             {

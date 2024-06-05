@@ -12,28 +12,35 @@ namespace DoctorsDungeon.Factory
     {
         OrcWarrior,
         OrcArcher,
+        OrcShaman,
         SkeletonWarrior,
         SkeletonArcher,
+        SkeletonMage,
     }
 
     // Asser
     public static class EnemyFactory
     {
         private static Random random = new();
-        private static int EnemyDmgDivide = 2;
+        private static int EnemyDmgDivide = 2; // Should be in weapon 
 
-        public static GameObject CreateWithRandomType()
-        {
-            Array enemyValue = Enum.GetValues(typeof(EnemyTypes));
+        //public static GameObject CreateWithRandomType()
+        //{
+        //    Array enemyValue = Enum.GetValues(typeof(EnemyTypes));
+        //    int randomClassIndex = random.Next(enemyValue.Length);
+        //    EnemyTypes randomType = (EnemyTypes)enemyValue.GetValue(randomClassIndex);
 
-            int randomIndex = random.Next(enemyValue.Length);
 
-            EnemyTypes randomType = (EnemyTypes)enemyValue.GetValue(randomIndex);
+        //    Array weaponValue = Enum.GetValues(typeof(WeaponTypes));
+        //    int randomWeaponIndex = random.Next(weaponValue.Length);
+        //    WeaponTypes randomWeapon = (WeaponTypes)weaponValue.GetValue(randomWeaponIndex);
 
-            return Create(randomType);
-        }
+        //    // Need to put them into classes
 
-        public static GameObject Create(EnemyTypes enemyType)
+        //    return Create(randomType, randomWeapon);
+        //}
+
+        public static GameObject Create(EnemyTypes enemyType, WeaponTypes weaponType)
         {
             GameObject enemyGo = new GameObject();
             enemyGo.Type = GameObjectTypes.Enemy;
@@ -47,10 +54,10 @@ namespace DoctorsDungeon.Factory
             // Add weapon
             Enemy enemy = enemyGo.GetComponent<Enemy>();
 
-            GameObject weaponGo = WeaponFactory.Create(WeaponTypes.Sword, true);
+            GameObject weaponGo = WeaponFactory.Create(weaponType);
             Weapon weapon = weaponGo.GetComponent<Weapon>();
-            weapon.WeaponUser = enemy;
-            weapon.Damage /= EnemyDmgDivide; // Make enemies do less damage
+            weapon.EnemyUser = enemy;
+            weapon.Damage /= EnemyDmgDivide; // Make enemies do less damage /= divide
             GameWorld.Instance.Instantiate(weaponGo);
 
             enemy.WeaponGo = weaponGo;
