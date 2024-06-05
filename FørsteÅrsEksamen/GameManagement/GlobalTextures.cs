@@ -13,6 +13,10 @@ namespace DoctorsDungeon.GameManagement
 
         Level1BG,
         Level1FG,
+        Level2BG,
+        Level2FG,
+        Level3BG,
+        Level3FG,
 
         TestLevelBG,
         TestLevelFG,
@@ -60,6 +64,13 @@ namespace DoctorsDungeon.GameManagement
 
                 {TextureNames.Level1BG, content.Load<Texture2D>("World\\Levels\\Level1Under") },
                 {TextureNames.Level1FG, content.Load<Texture2D>("World\\Levels\\Level1Over") },
+
+                {TextureNames.Level2BG, content.Load<Texture2D>("World\\Levels\\Level2Under") },
+                {TextureNames.Level2FG, content.Load<Texture2D>("World\\Levels\\Level2Over") },
+
+                {TextureNames.Level3BG, content.Load<Texture2D>("World\\Levels\\Level3Under") },
+                {TextureNames.Level3FG, content.Load<Texture2D>("World\\Levels\\Level3Over") },
+                
                 {TextureNames.TestLevelBG, content.Load<Texture2D>("World\\Levels\\Test1UnderPlayer") },
                 {TextureNames.TestLevelFG, content.Load<Texture2D>("World\\Levels\\Test1OverPlayer") },
 

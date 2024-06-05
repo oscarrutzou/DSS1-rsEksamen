@@ -92,7 +92,7 @@ namespace DoctorsDungeon.ComponentPattern.Enemies
                 case CharacterState.Attacking:
 
                     // Do nothing if the player has died.
-                    if (Player.State == CharacterState.Dead) return; // Weird bug here
+                    if (Player.State == CharacterState.Dead) return;
 
                     // Update direction towards player insted of moving direction
                     Direction = Vector2.Normalize(playerGo.Transform.Position - GameObject.Transform.Position);

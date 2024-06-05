@@ -8,32 +8,33 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
     {
         public override void Initialize()
         {
-            throw new System.Exception("This next room is not made yet");
+            //throw new System.Exception("This next room is not made yet");
             GridName = "Level2";
-            GridWidth = 40;
-            GridHeight = 28;
+            GridWidth = 21;
+            GridHeight = 27;
 
-            SaveData.Level_Reached = 1;
+            SaveData.Level_Reached = 2;
 
-            BackGroundTexture = TextureNames.Level1BG;
-            ForeGroundTexture = TextureNames.Level1FG;
+            BackGroundTexture = TextureNames.Level2BG;
+            ForeGroundTexture = TextureNames.Level2FG;
 
             base.Initialize();
         }
 
         protected override void SetSpawnPotions()
         {
-            PlayerSpawnPos = new Point(10, 3);
-            EndPointSpawnPos = new Point(33, 2);
-
-            enemySpawnPoints = new() {
-            new Point(10, 21),
-            new Point(25, 21),
-            new Point(37, 12),};
-
-            potionSpawnPoints = new() {
-            new Point(7, 4),
-            new Point(29, 9),};
+            PlayerSpawnPos = new Point(3, 3);
+            EndPointSpawnPos = new Point(5, 10);
+            enemySpawnPoints = new()
+            {
+                new Point(17,8),
+                new Point(4,14),
+                new Point(11,18),
+            };
+            potionSpawnPoints = new()
+            {
+                new Point(18,25),
+            };
         }
     }
 }

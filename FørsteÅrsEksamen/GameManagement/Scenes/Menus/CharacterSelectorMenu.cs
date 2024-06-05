@@ -37,30 +37,21 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
 
         public override void Initialize()
         {
-            //SaveData.SetBaseValues();
-
             classWeaponButton = new();
             classButtons = new();
             weaponButtons = new();
 
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Escape, new CustomCmd(Back));
 
-            // Load Saved classes and
-            //DBMethods.LoadClassAndWeapons();
-            //DBSave.Instance.LoadGame();
-
             base.Initialize();
 
             InitBackButton();
         }
 
-        private Color notOwnedColor = Color.Gray;
-        private Color ownedColor = Color.White;
         private int costAmount = 50;
 
         protected override void InitFirstMenu()
         {
-            //foreach (ClassTypes type in Enum.GetValues(typeof(ClassTypes)))
             foreach (ClassTypes type in classTypesThatAreDone)
             {
                 GameObject btnGo = ButtonFactory.Create($"{type} 50g", true, () => { SelectClass(type); }, TextureNames.LargeBtn);
@@ -178,6 +169,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
 
             // Go into the new scene with a new player.
             GameWorld.Instance.ChangeDungeonScene(SceneNames.DungeonRoom, 1);
+            //GameWorld.Instance.ChangeScene(SceneNames.DungeonRoom3);
         }
 
         private void Back()

@@ -164,7 +164,8 @@ namespace DoctorsDungeon
                 //[SceneNames.LoadingScreen] = new LoadingScreen(),
 
                 [SceneNames.DungeonRoom1] = new Room1Scene(),
-                //[SceneNames.DungeonRoom2] = new Room2Scene(),
+                [SceneNames.DungeonRoom2] = new Room2Scene(),
+                [SceneNames.DungeonRoom3] = new Room3Scene(),
 
                 // Test scenes
                 [SceneNames.WeaponTestScene] = new WeaponTestScene(),
@@ -178,9 +179,9 @@ namespace DoctorsDungeon
         public void ChangeScene(SceneNames sceneName)
         {
             // Is last char of enum a digit (^1 is the same as sceneString.Length - 1)
-            if (char.IsDigit(sceneName.ToString()[^1]))
-                throw new Exception("Dont try and use this method to change between Dungoun Rooms. " +
-                    "Summon the Wizard Oscar:)");
+            //if (char.IsDigit(sceneName.ToString()[^1]))
+            //    throw new Exception("Dont try and use this method to change between Dungoun Rooms. " +
+            //        "Summon the Wizard Oscar:)");
 
             NextScene = sceneName;
         }

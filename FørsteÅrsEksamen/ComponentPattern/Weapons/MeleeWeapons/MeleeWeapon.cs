@@ -10,6 +10,12 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons
     // Erik
     public abstract class MeleeWeapon : Weapon
     {
+        protected float LerpFromTo;
+        protected float TotalLerp;
+        protected float TotalElapsedTime;
+        protected bool IsRotatingBack;
+        protected List<CollisionRectangle> WeaponColliders = new();
+
         private List<GameObject> hitGameObjects = new();
 
         protected MeleeWeapon(GameObject gameObject) : base(gameObject)
@@ -68,6 +74,8 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons
 
         protected override void SetAttackDirection()
         {
+            TotalElapsedTime = 0f;
+       
             hitGameObjects = new();
             if (LeftSide)
             {
@@ -186,5 +194,17 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons
         private Rectangle MakeRec(Vector2 pos, int width, int height, Vector2 scale) => new Rectangle((int)pos.X, (int)pos.Y, width * (int)scale.X, (int)scale.Y * height);
 
         #endregion Weapon Colliders
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            //if (!InputHandler.Instance.DebugMode) return;
+
+            
+            foreach (CollisionRectangle collisionRectangle in WeaponColliders)
+            {
+                Collider.DrawRectangleNoSprite(collisionRectangle.Rectangle, Color.Black, spriteBatch);
+            }
+            base.Draw(spriteBatch);
+        }
     }
 }

@@ -58,7 +58,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
 
             SaveData.CurrentSaveID = id;
 
-            SaveFileTestData saveFile = DB.Instance.LoadGame();
+            SaveFileData saveFile = DB.Instance.LoadGame();
 
             if (saveFile == null) // Creates a new save file
             {
@@ -83,11 +83,11 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
         /// </summary>
         private void ChangeButtonText()
         {
-            List<SaveFileTestData> saveFiles = DB.Instance.LoadAllSaveFiles();
+            List<SaveFileData> saveFiles = DB.Instance.LoadAllSaveFiles();
 
             if (saveFiles.Count == 0) return; // There is no files yet, so we dont change the text.
 
-            foreach (SaveFileTestData saveFile in saveFiles)
+            foreach (SaveFileData saveFile in saveFiles)
             {
                 if (!saveFileButtons.ContainsKey(saveFile.Save_ID)) continue;
 
