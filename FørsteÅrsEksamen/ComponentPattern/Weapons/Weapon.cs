@@ -162,7 +162,7 @@ namespace DoctorsDungeon.ComponentPattern.Weapons
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            //if (!InputHandler.Instance.DebugMode) return;
+            if (!InputHandler.Instance.DebugMode) return;
             Vector2 center = GameObject.Transform.Position - new Vector2(5, 5);
             spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], center, null, Color.Red, GameObject.Transform.Rotation, Vector2.Zero, 10, SpriteEffects.None, 1);
             spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], center, null, Color.Pink, GameObject.Transform.Rotation, Vector2.Zero, 10, SpriteEffects.None, 1);

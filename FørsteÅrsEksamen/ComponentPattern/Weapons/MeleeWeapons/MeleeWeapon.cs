@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
+using DoctorsDungeon.CommandPattern;
 
 namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons
 {
@@ -197,9 +198,9 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            //if (!InputHandler.Instance.DebugMode) return;
-
+            if (!InputHandler.Instance.DebugMode) return;
             
+
             foreach (CollisionRectangle collisionRectangle in WeaponColliders)
             {
                 Collider.DrawRectangleNoSprite(collisionRectangle.Rectangle, Color.Black, spriteBatch);

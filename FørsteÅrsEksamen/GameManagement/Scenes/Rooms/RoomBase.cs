@@ -36,8 +36,8 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
         protected GameObject PlayerGo;
         private Player player;
 
-        protected List<Point> enemySpawnPoints = new();
-        protected List<Point> potionSpawnPoints = new();
+        protected List<Point> EnemySpawnPoints = new();
+        protected List<Point> PotionSpawnPoints = new();
 
         private TransferDoor transferDoor;
         private SpriteRenderer transferDoorSpriteRenderer;
@@ -47,6 +47,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
 
         private List<GameObject> cells = new(); // For debug
 
+        protected Color TextColor = new(250, 249, 246);
         #endregion Properties
 
         public override void Initialize()
@@ -129,12 +130,12 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
         {
             GameObject spawnerGo = new();
             spawner = spawnerGo.AddComponent<Spawner>();
-            enemiesInRoom = spawner.SpawnEnemies(enemySpawnPoints, PlayerGo);
+            enemiesInRoom = spawner.SpawnEnemies(EnemySpawnPoints, PlayerGo);
         }
 
         private void SpawnPotions()
         {
-            spawner.SpawnPotions(potionSpawnPoints, PlayerGo);
+            spawner.SpawnPotions(PotionSpawnPoints, PlayerGo);
         }
 
         private void SetCommands()
@@ -209,24 +210,10 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
             DrawTimer(spriteBatch, leftPos);
 
             leftPos += new Vector2(0, 30);
-            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Player HP: {player.CurrentHealth}/{player.MaxHealth}", leftPos, Color.Red);
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Player HP: {player.CurrentHealth}/{player.MaxHealth}", leftPos, TextColor);
 
             leftPos += new Vector2(0, 30);
             DrawPotion(spriteBatch, leftPos);
-
-            //if (aliveEnemies != null)
-            //{
-            //    foreach (Enemy enemy in aliveEnemies)
-            //    {
-            //        leftPos += new Vector2(0, 30);
-            //        spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Enemy health : {enemy.CurrentHealth} ::: Enemy weapon colliders {enemy.WeaponGo.GetComponent<MeleeWeapon>().hitGameObjects.Count}", leftPos, Color.Red);
-            //    }
-
-
-            //}
-            leftPos += new Vector2(0, 30);
-
-            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Angle: {player.WeaponGo.GetComponent<MeleeWeapon>().angle}", leftPos, Color.Red);
 
             DrawQuest(spriteBatch);
 
@@ -237,12 +224,14 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
         private void DrawQuest(SpriteBatch spriteBatch)
         {
             aliveEnemies = enemiesInRoom.Where(x => x.State != CharacterState.Dead).ToList();
-            int amountToKill = enemySpawnPoints.Count - aliveEnemies.Count;
+            int amountToKill = EnemySpawnPoints.Count - aliveEnemies.Count;
 
-            string text = $"Kill your way through {amountToKill}/{enemySpawnPoints.Count}";
+            string text = $"Kill your way through {amountToKill}/{EnemySpawnPoints.Count}";
             Vector2 size = GlobalTextures.DefaultFont.MeasureString(text);
-            Vector2 pos = GameWorld.Instance.UiCam.TopRight + new Vector2(-size.X - 30, size.Y + 10);
-            spriteBatch.DrawString(GlobalTextures.DefaultFont, text, pos, Color.Red);
+            Vector2 textPos = GameWorld.Instance.UiCam.TopRight + new Vector2(-size.X - 30, size.Y + 10);
+            Vector2 underPos = textPos - new Vector2(45, 35);
+            spriteBatch.Draw(GlobalTextures.Textures[TextureNames.QuestUnder], underPos, null, Color.White, 0f, Vector2.Zero, 6f, SpriteEffects.None, 0f);
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, text, textPos, TextColor, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
         }
 
         private void DrawTimer(SpriteBatch spriteBatch, Vector2 timerPos)
@@ -250,7 +239,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
             TimeSpan time = TimeSpan.FromSeconds(SaveData.Time_Left);
             string minutes = time.Minutes.ToString("D2");
             string seconds = time.Seconds.ToString("D2");
-            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Time Left: {minutes}:{seconds}", timerPos, Color.Red);
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Time Left: {minutes}:{seconds}", timerPos, TextColor);
         }
 
         private void DrawPotion(SpriteBatch spriteBatch, Vector2 intentoryPos)
@@ -265,7 +254,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
                 text = $"Inventory (1/1): {player.ItemInInventory.Name}";
             }
 
-            spriteBatch.DrawString(GlobalTextures.DefaultFont, text, intentoryPos, Color.Red);
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, text, intentoryPos, TextColor);
         }
 
         private void DebugDraw(SpriteBatch spriteBatch)

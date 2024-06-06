@@ -35,8 +35,8 @@ namespace DoctorsDungeon.GameManagement
 
         // UI
         SmallBtn,
-
         LargeBtn,
+        QuestUnder,
     }
 
     // Oscar
@@ -85,6 +85,7 @@ namespace DoctorsDungeon.GameManagement
 
                 {TextureNames.SmallBtn, content.Load<Texture2D>("UI\\SmallButtonIndividuel (1)") },
                 {TextureNames.LargeBtn, content.Load<Texture2D>("UI\\BigButtonIndividuel (1)") },
+                {TextureNames.QuestUnder, content.Load<Texture2D>("UI\\Quest") },
             };
 
             // Load all fonts

@@ -18,7 +18,7 @@ namespace DoctorsDungeon.LiteDB
 
         public static int Level_Reached { get; set; } = 1;
         public static int MaxRooms = 3;
-        public static float Time_Left { get; set; } = 1000f;
+        public static float Time_Left { get; set; } = 120f;
         public static bool HasWon { get; set; }
         public static bool LostByTime;
 
@@ -29,7 +29,7 @@ namespace DoctorsDungeon.LiteDB
         public static void SetBaseValues()
         {
             Currency = 100;
-            Time_Left = 1000f;
+            Time_Left = 120f;
             Level_Reached = 1;
             UnlockedWeapons = new();
             UnlockedClasses = new();

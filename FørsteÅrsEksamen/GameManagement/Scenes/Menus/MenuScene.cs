@@ -97,7 +97,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
 
         protected void DrawMenuText(SpriteBatch spriteBatch, string text, Vector2 position)
         {
-            GuiMethods.DrawTextCentered(spriteBatch, Font, position, text, Color.DarkRed);
+            GuiMethods.DrawTextCentered(spriteBatch, Font, position, text, new Color(250, 249, 246));
         }
     }
 }

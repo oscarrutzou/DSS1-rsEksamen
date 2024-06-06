@@ -210,8 +210,16 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
 
             string currentText = $"Currency: {SaveData.Currency}g";
             Vector2 size = GlobalTextures.DefaultFont.MeasureString(currentText);
-            Vector2 pos = FirstMenuObjects.Last().Transform.Position + new Vector2(size.X / 2 - 30, -size.Y - 60);
-            DrawString(spriteBatch, currentText, pos, Color.DarkRed);
+            Vector2 pos;
+            if (!ShowSecondMenu)
+            {
+                pos = FirstMenuObjects.Last().Transform.Position + new Vector2(size.X / 2 - 30, -size.Y - 60);
+            }
+            else
+            {
+                pos = classWeaponButton[SaveData.SelectedClass].Last().Transform.Position + new Vector2(size.X / 2 - 30, -size.Y - 60);
+            }
+            DrawString(spriteBatch, currentText, pos, new Color(250, 249, 246));
         }
 
         protected void DrawString(SpriteBatch spriteBatch, string text, Vector2 position, Color color)
