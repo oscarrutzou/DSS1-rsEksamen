@@ -37,30 +37,21 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
 
         public override void Initialize()
         {
-            //SaveData.SetBaseValues();
-
             classWeaponButton = new();
             classButtons = new();
             weaponButtons = new();
 
             InputHandler.Instance.AddKeyButtonDownCommand(Keys.Escape, new CustomCmd(Back));
 
-            // Load Saved classes and
-            //DBMethods.LoadClassAndWeapons();
-            //DBSave.Instance.LoadGame();
-
             base.Initialize();
 
             InitBackButton();
         }
 
-        private Color notOwnedColor = Color.Gray;
-        private Color ownedColor = Color.White;
         private int costAmount = 50;
 
         protected override void InitFirstMenu()
         {
-            //foreach (ClassTypes type in Enum.GetValues(typeof(ClassTypes)))
             foreach (ClassTypes type in classTypesThatAreDone)
             {
                 GameObject btnGo = ButtonFactory.Create($"{type} 50g", true, () => { SelectClass(type); }, TextureNames.LargeBtn);
@@ -178,6 +169,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
 
             // Go into the new scene with a new player.
             GameWorld.Instance.ChangeDungeonScene(SceneNames.DungeonRoom, 1);
+            //GameWorld.Instance.ChangeScene(SceneNames.DungeonRoom3);
         }
 
         private void Back()
@@ -218,8 +210,16 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
 
             string currentText = $"Currency: {SaveData.Currency}g";
             Vector2 size = GlobalTextures.DefaultFont.MeasureString(currentText);
-            Vector2 pos = FirstMenuObjects.Last().Transform.Position + new Vector2(size.X / 2 - 30, -size.Y - 60);
-            DrawString(spriteBatch, currentText, pos, Color.DarkRed);
+            Vector2 pos;
+            if (!ShowSecondMenu)
+            {
+                pos = FirstMenuObjects.Last().Transform.Position + new Vector2(size.X / 2 - 30, -size.Y - 60);
+            }
+            else
+            {
+                pos = classWeaponButton[SaveData.SelectedClass].Last().Transform.Position + new Vector2(size.X / 2 - 30, -size.Y - 60);
+            }
+            DrawString(spriteBatch, currentText, pos, new Color(250, 249, 246));
         }
 
         protected void DrawString(SpriteBatch spriteBatch, string text, Vector2 position, Color color)

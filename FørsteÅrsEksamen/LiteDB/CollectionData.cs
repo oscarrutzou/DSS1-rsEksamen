@@ -30,7 +30,7 @@ namespace DoctorsDungeon.LiteDB
         public CellWalkableType Cell_Type { get; set; }
     }
 
-    public class SaveFileTestData
+    public class SaveFileData
     {
         [BsonId]
         public int Save_ID { get; set; }
@@ -39,22 +39,22 @@ namespace DoctorsDungeon.LiteDB
         public DateTime Last_Login { get; set; }
         public List<ClassTypes> Unlocked_Classes { get; set; }
         public List<WeaponTypes> Unlocked_Weapons { get; set; }
-        public RunTestData RunData { get; set; }
+        public RunData RunData { get; set; }
         // Could just sate the rundata id
-        public SaveFileTestData()
+        public SaveFileData()
         {
             Last_Login = DateTime.Now;
         }
     }
 
-    public class RunTestData
+    public class RunData
     {
         public int Room_Reached { get; set; }
         public float Time_Left { get; set; }
-        public PlayerTestData PlayerData { get; set; }
+        public PlayerData PlayerData { get; set; }
     }
 
-    public class PlayerTestData
+    public class PlayerData
     {
         public int Health { get; set; }
         public string Potion_Name { get; set; }

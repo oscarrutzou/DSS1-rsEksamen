@@ -13,7 +13,7 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons
         public Dagger(GameObject gameObject) : base(gameObject)
         {
             AttackSpeed = 3f;
-            Damage = 10;
+            Damage = 17;
             LerpFromTo = MathHelper.Pi;
         }
 

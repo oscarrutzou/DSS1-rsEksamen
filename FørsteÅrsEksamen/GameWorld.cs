@@ -48,6 +48,7 @@ namespace DoctorsDungeon
         {
             SceneData.GenereateGameObjectDicionary();
             Fullscreen();
+            //ResolutionSize(1920, 1080);
             WorldCam = new Camera(true); // Camera that follows the player
             UiCam = new Camera(false); // Camera that is static
 
@@ -129,13 +130,19 @@ namespace DoctorsDungeon
         /// </summary>
         public void Fullscreen()
         {
+            if (GraphicsDevice.DisplayMode.Width > 1920) // To big screen, so dont open in fullscreen
+            {
+                ResolutionSize(1920, 1080);
+                return;
+            }
+
             GfxManager.HardwareModeSwitch = false;
             GfxManager.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
             GfxManager.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
             GfxManager.IsFullScreen = true;
             GfxManager.ApplyChanges();
         }
-
+         
         /// <summary>
         /// Adds the GameObject to the CurrentScene 
         /// </summary>
@@ -164,7 +171,8 @@ namespace DoctorsDungeon
                 //[SceneNames.LoadingScreen] = new LoadingScreen(),
 
                 [SceneNames.DungeonRoom1] = new Room1Scene(),
-                //[SceneNames.DungeonRoom2] = new Room2Scene(),
+                [SceneNames.DungeonRoom2] = new Room2Scene(),
+                [SceneNames.DungeonRoom3] = new Room3Scene(),
 
                 // Test scenes
                 [SceneNames.WeaponTestScene] = new WeaponTestScene(),
@@ -178,9 +186,9 @@ namespace DoctorsDungeon
         public void ChangeScene(SceneNames sceneName)
         {
             // Is last char of enum a digit (^1 is the same as sceneString.Length - 1)
-            if (char.IsDigit(sceneName.ToString()[^1]))
-                throw new Exception("Dont try and use this method to change between Dungoun Rooms. " +
-                    "Summon the Wizard Oscar:)");
+            //if (char.IsDigit(sceneName.ToString()[^1]))
+            //    throw new Exception("Dont try and use this method to change between Dungoun Rooms. " +
+            //        "Summon the Wizard Oscar:)");
 
             NextScene = sceneName;
         }

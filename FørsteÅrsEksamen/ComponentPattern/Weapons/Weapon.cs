@@ -37,13 +37,8 @@ namespace DoctorsDungeon.ComponentPattern.Weapons
 
         protected SpriteRenderer spriteRenderer;
         // Melee weapon
-        protected float LerpFromTo;
-        protected float StartAnimationAngle { get; set; }
-        protected float TotalLerp;
-        protected float TotalElapsedTime;
-        protected bool IsRotatingBack;
-        protected List<CollisionRectangle> WeaponColliders = new();
 
+        protected float StartAnimationAngle { get; set; }
 
         //protected bool EnemyWeapon;
         protected bool Attacking;
@@ -78,7 +73,6 @@ namespace DoctorsDungeon.ComponentPattern.Weapons
             if (Attacking) return;
 
             Attacking = true;
-            TotalElapsedTime = 0f;
 
             SetAttackDirection();
         }
@@ -168,13 +162,7 @@ namespace DoctorsDungeon.ComponentPattern.Weapons
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            //if (!InputHandler.Instance.DebugMode) return;
-
-            foreach (CollisionRectangle collisionRectangle in WeaponColliders)
-            {
-                Collider.DrawRectangleNoSprite(collisionRectangle.Rectangle, Color.Black, spriteBatch);
-            }
-
+            if (!InputHandler.Instance.DebugMode) return;
             Vector2 center = GameObject.Transform.Position - new Vector2(5, 5);
             spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], center, null, Color.Red, GameObject.Transform.Rotation, Vector2.Zero, 10, SpriteEffects.None, 1);
             spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], center, null, Color.Pink, GameObject.Transform.Rotation, Vector2.Zero, 10, SpriteEffects.None, 1);

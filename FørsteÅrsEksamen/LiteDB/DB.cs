@@ -171,13 +171,13 @@ namespace DoctorsDungeon.LiteDB
         }
         #endregion
 
-        public SaveFileTestData LoadGame()
+        public SaveFileData LoadGame()
         {
             using var db = new LiteDatabase(DataBasePath);
 
-            ILiteCollection<SaveFileTestData> saveCollection = db.GetCollection<SaveFileTestData>();
+            ILiteCollection<SaveFileData> saveCollection = db.GetCollection<SaveFileData>();
 
-            SaveFileTestData savedData = saveCollection.FindById(SaveData.CurrentSaveID);
+            SaveFileData savedData = saveCollection.FindById(SaveData.CurrentSaveID);
 
             if (savedData == null) return null;
 
@@ -188,13 +188,13 @@ namespace DoctorsDungeon.LiteDB
             return savedData;
         }
 
-        public SaveFileTestData SaveGame(int currentSaveID)
+        public SaveFileData SaveGame(int currentSaveID)
         {
             using var db = new LiteDatabase(DataBasePath);
 
-            ILiteCollection<SaveFileTestData> saveCollection = db.GetCollection<SaveFileTestData>();
+            ILiteCollection<SaveFileData> saveCollection = db.GetCollection<SaveFileData>();
 
-            SaveFileTestData savedData = saveCollection.FindById(currentSaveID);
+            SaveFileData savedData = saveCollection.FindById(currentSaveID);
 
             if (savedData == null) // No save file
             {
@@ -223,7 +223,7 @@ namespace DoctorsDungeon.LiteDB
             return savedData;
         }
 
-        private SaveFileTestData UpdateRun(SaveFileTestData savedData)
+        private SaveFileData UpdateRun(SaveFileData savedData)
         {
             savedData.RunData.Room_Reached = SaveData.Level_Reached;
             savedData.RunData.Time_Left = SaveData.Time_Left;
@@ -235,7 +235,7 @@ namespace DoctorsDungeon.LiteDB
             return savedData;
         }
 
-        private SaveFileTestData GetNewSaveData(int currentSaveID)
+        private SaveFileData GetNewSaveData(int currentSaveID)
         {
             return new()
             {
@@ -250,9 +250,9 @@ namespace DoctorsDungeon.LiteDB
         {
             using var db = new LiteDatabase(DataBasePath);
 
-            ILiteCollection<SaveFileTestData> saveCollection = db.GetCollection<SaveFileTestData>();
+            ILiteCollection<SaveFileData> saveCollection = db.GetCollection<SaveFileData>();
 
-            SaveFileTestData savedData = saveCollection.FindById(currentSaveID);
+            SaveFileData savedData = saveCollection.FindById(currentSaveID);
 
             GameObject playerGo = new();
 
@@ -263,14 +263,14 @@ namespace DoctorsDungeon.LiteDB
                 SaveData.Player = player;
 
 
-                PlayerTestData playerData = new()
+                PlayerData playerData = new()
                 {
                     Health = player.CurrentHealth,
                     Class_Type = SaveData.SelectedClass,
                     Weapon_Type = SaveData.SelectedWeapon,
                 };
 
-                RunTestData runData = new()
+                RunData runData = new()
                 {
                     Room_Reached = SaveData.Level_Reached,
                     Time_Left = SaveData.Time_Left,
@@ -285,7 +285,7 @@ namespace DoctorsDungeon.LiteDB
             {
                 #region Load Player
                 // First load player
-                PlayerTestData loadPlayerData = savedData.RunData.PlayerData;
+                PlayerData loadPlayerData = savedData.RunData.PlayerData;
                 playerGo = PlayerFactory.Create(loadPlayerData.Class_Type, loadPlayerData.Weapon_Type);
                 Player player = playerGo.GetComponent<Player>();
                 player.CurrentHealth = loadPlayerData.Health;
@@ -311,16 +311,16 @@ namespace DoctorsDungeon.LiteDB
             GameWorld.Instance.Instantiate(playerGo);
         }
 
-        public List<SaveFileTestData> LoadAllSaveFiles()
+        public List<SaveFileData> LoadAllSaveFiles()
         {
-            List<SaveFileTestData> saveFiles = new();
+            List<SaveFileData> saveFiles = new();
 
             using var db = new LiteDatabase(DataBasePath);
-            ILiteCollection<SaveFileTestData> saveCollection = db.GetCollection<SaveFileTestData>();
+            ILiteCollection<SaveFileData> saveCollection = db.GetCollection<SaveFileData>();
 
             for (int i = 1; i <= SaveData.MaxSaveID; i++)
             {
-                SaveFileTestData data = saveCollection.FindById(i);
+                SaveFileData data = saveCollection.FindById(i);
 
                 if (data == null) continue;
 
@@ -334,9 +334,9 @@ namespace DoctorsDungeon.LiteDB
         {
             using var db = new LiteDatabase(DataBasePath);
 
-            ILiteCollection<SaveFileTestData> saveCollection = db.GetCollection<SaveFileTestData>();
+            ILiteCollection<SaveFileData> saveCollection = db.GetCollection<SaveFileData>();
 
-            SaveFileTestData savedData = saveCollection.FindById(currentSaveID);
+            SaveFileData savedData = saveCollection.FindById(currentSaveID);
 
             if (savedData == null) return;
 
@@ -348,9 +348,9 @@ namespace DoctorsDungeon.LiteDB
         {
             using var db = new LiteDatabase(DataBasePath);
 
-            ILiteCollection<SaveFileTestData> saveCollection = db.GetCollection<SaveFileTestData>();
+            ILiteCollection<SaveFileData> saveCollection = db.GetCollection<SaveFileData>();
 
-            SaveFileTestData savedData = saveCollection.FindById(currentSaveID);
+            SaveFileData savedData = saveCollection.FindById(currentSaveID);
 
             if (savedData == null) return;
 
