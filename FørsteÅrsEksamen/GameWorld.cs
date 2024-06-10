@@ -48,7 +48,6 @@ namespace DoctorsDungeon
         {
             SceneData.GenereateGameObjectDicionary();
             Fullscreen();
-            //ResolutionSize(1920, 1080);
             WorldCam = new Camera(true); // Camera that follows the player
             UiCam = new Camera(false); // Camera that is static
 

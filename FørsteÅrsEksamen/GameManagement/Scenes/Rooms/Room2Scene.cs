@@ -8,7 +8,6 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms
     {
         public override void Initialize()
         {
-            //throw new System.Exception("This next room is not made yet");
             GridName = "Level2";
             GridWidth = 21;
             GridHeight = 27;

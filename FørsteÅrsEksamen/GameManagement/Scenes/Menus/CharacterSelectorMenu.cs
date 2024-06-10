@@ -24,7 +24,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
         private List<ClassTypes> classTypesThatAreDone = new()
         {
             ClassTypes.Warrior,
-            ClassTypes.Archer,
+            ClassTypes.Rogue,
         };
 
         private List<WeaponTypes> weaponTypesThatAreDone = new()

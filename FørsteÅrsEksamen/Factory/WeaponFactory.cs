@@ -23,7 +23,7 @@ namespace DoctorsDungeon.Factory
     {
         public static Dictionary<ClassTypes, List<WeaponTypes>> ClassHasWeapons = new()
         {
-            { ClassTypes.Archer, new List<WeaponTypes>(){
+            { ClassTypes.Rogue, new List<WeaponTypes>(){
                 WeaponTypes.Dagger,
                 WeaponTypes.Bow,
                 WeaponTypes.BowFire,
