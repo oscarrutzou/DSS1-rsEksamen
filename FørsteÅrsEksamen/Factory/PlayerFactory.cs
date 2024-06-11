@@ -8,7 +8,7 @@ namespace DoctorsDungeon.Factory
 {
     public enum ClassTypes
     {
-        Archer,
+        Rogue,
         Warrior,
         Mage,
     }
@@ -66,7 +66,7 @@ namespace DoctorsDungeon.Factory
                     playerGo.AddComponent<Warrior>();
                     break;
 
-                case ClassTypes.Archer:
+                case ClassTypes.Rogue:
                     playerGo.AddComponent<Archer>();
                     break;
 
