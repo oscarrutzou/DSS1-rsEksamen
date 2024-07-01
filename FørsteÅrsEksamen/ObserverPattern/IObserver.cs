@@ -1,8 +1,7 @@
-﻿namespace DoctorsDungeon.ObserverPattern
+﻿namespace DoctorsDungeon.ObserverPattern;
+
+// Oscar
+public interface IObserver
 {
-    // Oscar
-    public interface IObserver
-    {
-        public void UpdateObserver();
-    }
+    public void UpdateObserver();
 }

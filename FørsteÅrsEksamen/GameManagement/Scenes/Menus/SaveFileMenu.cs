@@ -6,113 +6,112 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
-namespace DoctorsDungeon.GameManagement.Scenes.Menus
+namespace DoctorsDungeon.GameManagement.Scenes.Menus;
+
+// Erik
+public class SaveFileMenu : MenuScene
 {
-    // Erik
-    public class SaveFileMenu : MenuScene
+    private Dictionary<int, Button> saveFileButtons;
+
+    public override void Initialize()
     {
-        private Dictionary<int, Button> saveFileButtons;
+        base.Initialize();
 
-        public override void Initialize()
+        // Add command to delete save files? Right click
+    }
+
+    private string newSaveFile = "New Save";
+
+    protected override void InitFirstMenu()
+    {
+        saveFileButtons = new Dictionary<int, Button>()
         {
-            base.Initialize();
+            { 1, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(1); }, TextureNames.LargeBtn).GetComponent<Button>() },
+            { 2, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(2); }, TextureNames.LargeBtn).GetComponent<Button>()  },
+            { 3, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(3); }, TextureNames.LargeBtn).GetComponent<Button>()  }
+        };
 
-            // Add command to delete save files? Right click
+        foreach (Button button in saveFileButtons.Values)
+        {
+            //button.ChangeScale(new Vector2(14, 5));
+            FirstMenuObjects.Add(button.GameObject);
         }
 
-        private string newSaveFile = "New Save";
-
-        protected override void InitFirstMenu()
+        GameObject backBtn = ButtonFactory.Create("Back", true, () =>
         {
-            saveFileButtons = new Dictionary<int, Button>()
-            {
-                { 1, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(1); }, TextureNames.LargeBtn).GetComponent<Button>() },
-                { 2, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(2); }, TextureNames.LargeBtn).GetComponent<Button>()  },
-                { 3, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(3); }, TextureNames.LargeBtn).GetComponent<Button>()  }
-            };
+            GameWorld.Instance.ChangeScene(SceneNames.MainMenu);
+        });
 
-            foreach (Button button in saveFileButtons.Values)
-            {
-                //button.ChangeScale(new Vector2(14, 5));
-                FirstMenuObjects.Add(button.GameObject);
-            }
+        FirstMenuObjects.Add(backBtn);
+    }
 
-            GameObject backBtn = ButtonFactory.Create("Back", true, () =>
-            {
-                GameWorld.Instance.ChangeScene(SceneNames.MainMenu);
-            });
+    public override void AfterFirstCleanUp()
+    {
+        GuiMethods.PlaceGameObjectsVertical(FirstMenuObjects, TextPos + new Vector2(0, 75), 25);
 
-            FirstMenuObjects.Add(backBtn);
+        ChangeButtonText();
+    }
+
+    private void MakeNewSaveFile(int id)
+    {
+        SaveData.SetBaseValues();
+
+        SaveData.CurrentSaveID = id;
+
+        SaveFileData saveFile = DB.Instance.LoadGame();
+
+        if (saveFile == null) // Creates a new save file
+        {
+            saveFile = DB.Instance.SaveGame(id); // Makes the save id
         }
 
-        public override void AfterFirstCleanUp()
+        if (saveFile.RunData == null)
         {
-            GuiMethods.PlaceGameObjectsVertical(FirstMenuObjects, TextPos + new Vector2(0, 75), 25);
-
-            ChangeButtonText();
+            // Make a new run after the characterSelector
+            GameWorld.Instance.ChangeScene(SceneNames.CharacterSelectorMenu);
         }
-
-        private void MakeNewSaveFile(int id)
+        else
         {
-            SaveData.SetBaseValues();
-
-            SaveData.CurrentSaveID = id;
-
-            SaveFileData saveFile = DB.Instance.LoadGame();
-
-            if (saveFile == null) // Creates a new save file
-            {
-                saveFile = DB.Instance.SaveGame(id); // Makes the save id
-            }
-
-            if (saveFile.RunData == null)
-            {
-                // Make a new run after the characterSelector
-                GameWorld.Instance.ChangeScene(SceneNames.CharacterSelectorMenu);
-            }
-            else
-            {
-                SaveData.Time_Left = saveFile.RunData.Time_Left;
-                // Loads run
-                GameWorld.Instance.ChangeDungeonScene(SceneNames.DungeonRoom, saveFile.RunData.Room_Reached);
-            }
+            SaveData.Time_Left = saveFile.RunData.Time_Left;
+            // Loads run
+            GameWorld.Instance.ChangeDungeonScene(SceneNames.DungeonRoom, saveFile.RunData.Room_Reached);
         }
+    }
 
-        /// <summary>
-        /// Updates the Button text
-        /// </summary>
-        private void ChangeButtonText()
+    /// <summary>
+    /// Updates the Button text
+    /// </summary>
+    private void ChangeButtonText()
+    {
+        List<SaveFileData> saveFiles = DB.Instance.LoadAllSaveFiles();
+
+        if (saveFiles.Count == 0) return; // There is no files yet, so we dont change the text.
+
+        foreach (SaveFileData saveFile in saveFiles)
         {
-            List<SaveFileData> saveFiles = DB.Instance.LoadAllSaveFiles();
+            if (!saveFileButtons.ContainsKey(saveFile.Save_ID)) continue;
 
-            if (saveFiles.Count == 0) return; // There is no files yet, so we dont change the text.
+            Button saveFileBtn = saveFileButtons[saveFile.Save_ID];
 
-            foreach (SaveFileData saveFile in saveFiles)
-            {
-                if (!saveFileButtons.ContainsKey(saveFile.Save_ID)) continue;
+            saveFileBtn.Text =
+                    $"Save {saveFile.Save_ID}" +
+                    $"\nCurrency {saveFile.Currency}" +
+                    $"\n Last Login {saveFile.Last_Login:MM-dd}"; // Removes .ToString
 
-                Button saveFileBtn = saveFileButtons[saveFile.Save_ID];
+            // Add a delete button next to it.
+            GameObject deleteBtn = ButtonFactory.Create("X", true, () => { DeleteSave(saveFile.Save_ID); });
+            Button delete = deleteBtn.GetComponent<Button>();
+            delete.ChangeScale(new Vector2(2, 6));
+            deleteBtn.Transform.Position = saveFileBtn.GameObject.Transform.Position + new Vector2(180, 0);
 
-                saveFileBtn.Text =
-                        $"Save {saveFile.Save_ID}" +
-                        $"\nCurrency {saveFile.Currency}" +
-                        $"\n Last Login {saveFile.Last_Login:MM-dd}"; // Removes .ToString
-
-                // Add a delete button next to it.
-                GameObject deleteBtn = ButtonFactory.Create("X", true, () => { DeleteSave(saveFile.Save_ID); });
-                Button delete = deleteBtn.GetComponent<Button>();
-                delete.ChangeScale(new Vector2(2, 6));
-                deleteBtn.Transform.Position = saveFileBtn.GameObject.Transform.Position + new Vector2(180, 0);
-
-                GameWorld.Instance.Instantiate(deleteBtn);
-            }
+            GameWorld.Instance.Instantiate(deleteBtn);
         }
+    }
 
-        private void DeleteSave(int saveID)
-        {
-            DB.Instance.DeleteSave(saveID);
+    private void DeleteSave(int saveID)
+    {
+        DB.Instance.DeleteSave(saveID);
 
-            GameWorld.Instance.ChangeScene(SceneNames.SaveFileMenu);
-        }
+        GameWorld.Instance.ChangeScene(SceneNames.SaveFileMenu);
     }
 }

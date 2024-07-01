@@ -1,8 +1,7 @@
-﻿namespace DoctorsDungeon.CommandPattern
+﻿namespace DoctorsDungeon.CommandPattern;
+
+// Oscar
+public interface ICommand
 {
-    // Oscar
-    public interface ICommand
-    {
-        void Execute();
-    }
+    void Execute();
 }

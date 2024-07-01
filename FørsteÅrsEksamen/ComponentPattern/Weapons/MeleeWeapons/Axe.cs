@@ -1,10 +1,9 @@
-﻿namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons
+﻿namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons;
+
+// Erik
+public class Axe : MeleeWeapon
 {
-    // Erik
-    public class Axe : MeleeWeapon
+    public Axe(GameObject gameObject) : base(gameObject)
     {
-        public Axe(GameObject gameObject) : base(gameObject)
-        {
-        }
     }
 }

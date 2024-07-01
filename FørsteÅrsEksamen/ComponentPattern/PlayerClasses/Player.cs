@@ -9,313 +9,312 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Data.Common;
 
-namespace DoctorsDungeon.ComponentPattern.PlayerClasses
+namespace DoctorsDungeon.ComponentPattern.PlayerClasses;
+
+// Stefan
+public abstract class Player : Character, ISubject
 {
-    // Stefan
-    public abstract class Player : Character, ISubject
+    public GameObject HandsGo;
+    public GameObject MovementColliderGo;
+
+    private Vector2 totalMovementInput, velocity, targetVelocity, previousPosition;
+
+    private readonly float turnSpeed = 40f; // Adjust as needed
+
+    protected List<IObserver> observers = new();
+
+    public Potion ItemInInventory { get; set; }
+
+    private Collider movementCollider;
+
+    public WeaponTypes WeaponType;
+    public ClassTypes ClassType;
+
+    private float onDeadTimer;
+    private float timeTillSceneChange = 3f;
+
+    public Player(GameObject gameObject) : base(gameObject)
     {
-        public GameObject HandsGo;
-        public GameObject MovementColliderGo;
+        Speed = 150;
+    }
 
-        private Vector2 totalMovementInput, velocity, targetVelocity, previousPosition;
+    public Player(GameObject gameObject, GameObject handsGo, GameObject movementColliderGo) : base(gameObject)
+    {
+        Speed = 150;
+        this.HandsGo = handsGo;
+        this.MovementColliderGo = movementColliderGo;
+    }
 
-        private readonly float turnSpeed = 40f; // Adjust as needed
+    public override void Awake()
+    {
+        base.Awake();
+        movementCollider = MovementColliderGo.GetComponent<Collider>();
+        Collider.SetCollisionBox(15, 24, new Vector2(0, 30));
+    }
 
-        protected List<IObserver> observers = new();
+    public override void Start()
+    {
+        SpriteRenderer.SetLayerDepth(LayerDepth.Player);
+        SetState(CharacterState.Idle);
+    }
 
-        public Potion ItemInInventory { get; set; }
-
-        private Collider movementCollider;
-
-        public WeaponTypes WeaponType;
-        public ClassTypes ClassType;
-
-        private float onDeadTimer;
-        private float timeTillSceneChange = 3f;
-
-        public Player(GameObject gameObject) : base(gameObject)
+    public override void Update(GameTime gameTime)
+    {
+        if (State != CharacterState.Dead)
         {
-            Speed = 150;
+            CheckForMovement();
         }
 
-        public Player(GameObject gameObject, GameObject handsGo, GameObject movementColliderGo) : base(gameObject)
+        if (Weapon != null)
         {
-            Speed = 150;
-            this.HandsGo = handsGo;
-            this.MovementColliderGo = movementColliderGo;
+            Weapon.MoveWeapon();
         }
 
-        public override void Awake()
+        switch (State)
         {
-            base.Awake();
-            movementCollider = MovementColliderGo.GetComponent<Collider>();
-            Collider.SetCollisionBox(15, 24, new Vector2(0, 30));
+            case CharacterState.Idle:
+                break;
+
+            case CharacterState.Moving:
+                Move(totalMovementInput);
+                break;
+
+            case CharacterState.Attacking:
+                break;
+
+            case CharacterState.Dead:
+                ChangeScene();
+                break;
         }
 
-        public override void Start()
+        totalMovementInput = Vector2.Zero;
+    }
+
+    private void ChangeScene()
+    {
+        onDeadTimer += GameWorld.DeltaTime;
+        if (onDeadTimer >= timeTillSceneChange)
         {
-            SpriteRenderer.SetLayerDepth(LayerDepth.Player);
+            onDeadTimer = 0;
+            SaveData.HasWon = false;
+            DB.Instance.OnChangeSceneEnd();
+        }
+    }
+
+    private void CheckForMovement()
+    {
+        if (totalMovementInput != Vector2.Zero)
+        {
+            totalMovementInput = Vector2.Normalize(totalMovementInput);
+            SetState(CharacterState.Moving);
+        }
+        else
+        {
             SetState(CharacterState.Idle);
         }
+    }
 
-        public override void Update(GameTime gameTime)
+
+
+    // Weapon
+    // need to make a start position that are like 80px from this postion and in a radius around the player
+    // use rotate method to get the ned point. After we have done that, we need to rotate it a bit
+
+    #region Movement
+
+    public void AddInput(Vector2 input) // 0, 1 / 0, -1 / 1,0 / -1, 0
+    {
+        if (input != Vector2.Zero)
         {
-            if (State != CharacterState.Dead)
-            {
-                CheckForMovement();
-            }
-
-            if (Weapon != null)
-            {
-                Weapon.MoveWeapon();
-            }
-
-            switch (State)
-            {
-                case CharacterState.Idle:
-                    break;
-
-                case CharacterState.Moving:
-                    Move(totalMovementInput);
-                    break;
-
-                case CharacterState.Attacking:
-                    break;
-
-                case CharacterState.Dead:
-                    ChangeScene();
-                    break;
-            }
-
-            totalMovementInput = Vector2.Zero;
-        }
-
-        private void ChangeScene()
-        {
-            onDeadTimer += GameWorld.DeltaTime;
-            if (onDeadTimer >= timeTillSceneChange)
-            {
-                onDeadTimer = 0;
-                SaveData.HasWon = false;
-                DB.Instance.OnChangeSceneEnd();
-            }
-        }
-
-        private void CheckForMovement()
-        {
-            if (totalMovementInput != Vector2.Zero)
-            {
-                totalMovementInput = Vector2.Normalize(totalMovementInput);
-                SetState(CharacterState.Moving);
-            }
-            else
-            {
-                SetState(CharacterState.Idle);
-            }
-        }
-
-
-
-        // Weapon
-        // need to make a start position that are like 80px from this postion and in a radius around the player
-        // use rotate method to get the ned point. After we have done that, we need to rotate it a bit
-
-        #region Movement
-
-        public void AddInput(Vector2 input) // 0, 1 / 0, -1 / 1,0 / -1, 0
-        {
-            if (input != Vector2.Zero)
-            {
-                // Ensure the input vector is not a zero vector
-                input.Normalize();
-
-                // Add the normalized input to the total movement
-                totalMovementInput += input;
-            }
-        }
-
-        public void Move(Vector2 input)
-        {
-            InitializeMovement();
-
-            if (input != Vector2.Zero)
-            {
-                ProcessInput(input);
-            }
-
-            UpdateDirection();
-
-            if (GridManager.Instance.CurrentGrid == null) return; // Player can't walk if there is no grid.
-
-            TryMoveInBothDirections();
-
-            UpdatePositionAndNotify();
-        }
-
-        private void InitializeMovement()
-        {
-            targetVelocity = Vector2.Zero;
-            previousPosition = GameObject.Transform.Position;
-        }
-
-        private void ProcessInput(Vector2 input) // 0.77 / 0.77
-        {
+            // Ensure the input vector is not a zero vector
             input.Normalize();
-            targetVelocity = input * Speed * GameWorld.DeltaTime;
 
-            // To fix the error that if all buttons have been pressed, that it sometimes sets the velocity to Nan/Nan
-            if (float.IsNaN(velocity.X))
-            {
-                velocity = Vector2.Zero;
-            }
+            // Add the normalized input to the total movement
+            totalMovementInput += input;
+        }
+    }
 
-            // Interpolate the velocity
-            velocity = Vector2.Lerp(velocity, targetVelocity, turnSpeed * GameWorld.DeltaTime);
-            Direction = velocity;
+    public void Move(Vector2 input)
+    {
+        InitializeMovement();
+
+        if (input != Vector2.Zero)
+        {
+            ProcessInput(input);
         }
 
-        private void TryMoveInBothDirections()
+        UpdateDirection();
+
+        if (GridManager.Instance.CurrentGrid == null) return; // Player can't walk if there is no grid.
+
+        TryMoveInBothDirections();
+
+        UpdatePositionAndNotify();
+    }
+
+    private void InitializeMovement()
+    {
+        targetVelocity = Vector2.Zero;
+        previousPosition = GameObject.Transform.Position;
+    }
+
+    private void ProcessInput(Vector2 input) // 0.77 / 0.77
+    {
+        input.Normalize();
+        targetVelocity = input * Speed * GameWorld.DeltaTime;
+
+        // To fix the error that if all buttons have been pressed, that it sometimes sets the velocity to Nan/Nan
+        if (float.IsNaN(velocity.X))
         {
-            // Separate the movement into X and Y components
-            Vector2 xMovement = new Vector2(velocity.X, 0) * Speed * GameWorld.DeltaTime;
-            Vector2 yMovement = new Vector2(0, velocity.Y) * Speed * GameWorld.DeltaTime;
-
-            bool hasMoved = false;
-            // Try moving along the X axis
-            if (TryMove(xMovement))
-            {
-                // Update the previous position after a successful move
-                previousPosition = GameObject.Transform.Position;
-                hasMoved = true;
-            }
-
-            // Try moving along the Y axis
-            if (TryMove(yMovement))
-            {
-                // Update the previous position after a successful move
-                previousPosition = GameObject.Transform.Position;
-                hasMoved = true;
-            }
-
-            if (!hasMoved) return; // Don't need to set new position, since it's the same.
+            velocity = Vector2.Zero;
         }
 
-        private void UpdatePositionAndNotify()
+        // Interpolate the velocity
+        velocity = Vector2.Lerp(velocity, targetVelocity, turnSpeed * GameWorld.DeltaTime);
+        Direction = velocity;
+    }
+
+    private void TryMoveInBothDirections()
+    {
+        // Separate the movement into X and Y components
+        Vector2 xMovement = new Vector2(velocity.X, 0) * Speed * GameWorld.DeltaTime;
+        Vector2 yMovement = new Vector2(0, velocity.Y) * Speed * GameWorld.DeltaTime;
+
+        bool hasMoved = false;
+        // Try moving along the X axis
+        if (TryMove(xMovement))
         {
-            SetMovement(GameObject.Transform.Position); // So we set the other gameobjects (Hands, Movement Collider...)
-
-            // Updates the grid position
-            GameObject cellGoUnderPlayer = GridManager.Instance.GetCellAtPos(GameObject.Transform.Position);
-            GameObject.Transform.GridPosition = cellGoUnderPlayer.Transform.GridPosition;
-            RoomNr = cellGoUnderPlayer.GetComponent<Cell>().RoomNr;
-
-            Notify();
+            // Update the previous position after a successful move
+            previousPosition = GameObject.Transform.Position;
+            hasMoved = true;
         }
 
-        private bool TryMove(Vector2 movement)
+        // Try moving along the Y axis
+        if (TryMove(yMovement))
         {
-            // Translate the GameObject, and movement collider.
-            TranslateMovement(movement);
-
-            // Get the CollisionBox
-            Rectangle collisionBox = movementCollider.CollisionBox;
-
-            // Check each corner of the CollisionBox
-            Vector2[] corners = new Vector2[]
-            {
-                new Vector2(collisionBox.Left, collisionBox.Top),
-                new Vector2(collisionBox.Right, collisionBox.Top),
-                new Vector2(collisionBox.Right, collisionBox.Bottom),
-                new Vector2(collisionBox.Left, collisionBox.Bottom)
-            };
-
-            foreach (Vector2 corner in corners)
-            {
-                GameObject gridCell = GridManager.Instance.GetCellAtPos(corner);
-
-                if (gridCell == null || gridCell.GetComponent<Cell>().CellWalkableType == CellWalkableType.NotValid)
-                {
-                    // If any corner is in an invalid cell, revert the movement on both player and
-                    SetMovement(previousPosition);
-                    return false;
-                }
-            }
-
-            // If all corners are in valid cells, the movement is successful
-            return true;
+            // Update the previous position after a successful move
+            previousPosition = GameObject.Transform.Position;
+            hasMoved = true;
         }
 
-        /// <summary>
-        /// Adds the movement to the gameobject
-        /// </summary>
-        /// <param name="movement"></param>
-        protected void TranslateMovement(Vector2 movement)
+        if (!hasMoved) return; // Don't need to set new position, since it's the same.
+    }
+
+    private void UpdatePositionAndNotify()
+    {
+        SetMovement(GameObject.Transform.Position); // So we set the other gameobjects (Hands, Movement Collider...)
+
+        // Updates the grid position
+        GameObject cellGoUnderPlayer = GridManager.Instance.GetCellAtPos(GameObject.Transform.Position);
+        GameObject.Transform.GridPosition = cellGoUnderPlayer.Transform.GridPosition;
+        RoomNr = cellGoUnderPlayer.GetComponent<Cell>().RoomNr;
+
+        Notify();
+    }
+
+    private bool TryMove(Vector2 movement)
+    {
+        // Translate the GameObject, and movement collider.
+        TranslateMovement(movement);
+
+        // Get the CollisionBox
+        Rectangle collisionBox = movementCollider.CollisionBox;
+
+        // Check each corner of the CollisionBox
+        Vector2[] corners = new Vector2[]
         {
-            GameObject.Transform.Translate(movement);
-            MovementColliderGo.Transform.Position = GameObject.Transform.Position;
-            HandsGo.Transform.Position = GameObject.Transform.Position;
-            Weapon.MoveWeapon();
-        }
+            new Vector2(collisionBox.Left, collisionBox.Top),
+            new Vector2(collisionBox.Right, collisionBox.Top),
+            new Vector2(collisionBox.Right, collisionBox.Bottom),
+            new Vector2(collisionBox.Left, collisionBox.Bottom)
+        };
 
-        /// <summary>
-        /// Sets the position of the object to the position.
-        /// </summary>
-        /// <param name="position"></param>
-        protected void SetMovement(Vector2 position)
+        foreach (Vector2 corner in corners)
         {
-            GameObject.Transform.Position = position;
-            MovementColliderGo.Transform.Position = GameObject.Transform.Position;
-            HandsGo.Transform.Position = GameObject.Transform.Position;
-            Weapon.MoveWeapon();
-            GameWorld.Instance.WorldCam.Position = GameObject.Transform.Position; //Sets the new position of the world cam
-        }
+            GameObject gridCell = GridManager.Instance.GetCellAtPos(corner);
 
-        #endregion Movement
-
-        #region Item
-
-        public bool CanPickUpItem(Potion item)
-        {
-            if (ItemInInventory == null)
+            if (gridCell == null || gridCell.GetComponent<Cell>().CellWalkableType == CellWalkableType.NotValid)
             {
-                ItemInInventory = item;
-                return true;
-            }
-            else
-            {
+                // If any corner is in an invalid cell, revert the movement on both player and
+                SetMovement(previousPosition);
                 return false;
             }
         }
 
-        public void UseItem()
-        {
-            if (ItemInInventory == null) return;
-
-            ItemInInventory.Use();
-        }
-
-        #endregion Item
-
-        #region Observer Pattern
-
-        public void Attach(IObserver observer)
-        {
-            observers.Add(observer);
-        }
-
-        public void Detach(IObserver observer)
-        {
-            observers.Remove(observer);
-        }
-
-        public void Notify()
-        {
-            foreach (IObserver observer in observers)
-            {
-                observer.UpdateObserver();
-            }
-        }
-
-        #endregion Observer Pattern
+        // If all corners are in valid cells, the movement is successful
+        return true;
     }
+
+    /// <summary>
+    /// Adds the movement to the gameobject
+    /// </summary>
+    /// <param name="movement"></param>
+    protected void TranslateMovement(Vector2 movement)
+    {
+        GameObject.Transform.Translate(movement);
+        MovementColliderGo.Transform.Position = GameObject.Transform.Position;
+        HandsGo.Transform.Position = GameObject.Transform.Position;
+        Weapon.MoveWeapon();
+    }
+
+    /// <summary>
+    /// Sets the position of the object to the position.
+    /// </summary>
+    /// <param name="position"></param>
+    protected void SetMovement(Vector2 position)
+    {
+        GameObject.Transform.Position = position;
+        MovementColliderGo.Transform.Position = GameObject.Transform.Position;
+        HandsGo.Transform.Position = GameObject.Transform.Position;
+        Weapon.MoveWeapon();
+        GameWorld.Instance.WorldCam.Position = GameObject.Transform.Position; //Sets the new position of the world cam
+    }
+
+    #endregion Movement
+
+    #region Item
+
+    public bool CanPickUpItem(Potion item)
+    {
+        if (ItemInInventory == null)
+        {
+            ItemInInventory = item;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public void UseItem()
+    {
+        if (ItemInInventory == null) return;
+
+        ItemInInventory.Use();
+    }
+
+    #endregion Item
+
+    #region Observer Pattern
+
+    public void Attach(IObserver observer)
+    {
+        observers.Add(observer);
+    }
+
+    public void Detach(IObserver observer)
+    {
+        observers.Remove(observer);
+    }
+
+    public void Notify()
+    {
+        foreach (IObserver observer in observers)
+        {
+            observer.UpdateObserver();
+        }
+    }
+
+    #endregion Observer Pattern
 }

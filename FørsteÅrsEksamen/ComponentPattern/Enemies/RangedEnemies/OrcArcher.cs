@@ -2,24 +2,23 @@
 using DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies;
 using DoctorsDungeon.GameManagement;
 
-namespace DoctorsDungeon.ComponentPattern.Enemies.RangedEnemies
+namespace DoctorsDungeon.ComponentPattern.Enemies.RangedEnemies;
+
+//Asser
+
+public class OrcArcher : EnemyMelee
 {
-    //Asser
-
-    public class OrcArcher : EnemyMelee
+    public OrcArcher(GameObject gameObject) : base(gameObject)
     {
-        public OrcArcher(GameObject gameObject) : base(gameObject)
-        {
-            Speed = 300;
-        }
+        Speed = 300;
+    }
 
-        public override void Awake()
-        {
-            base.Awake();
+    public override void Awake()
+    {
+        base.Awake();
 
-            CharacterStateAnimations.Add(CharacterState.Idle, AnimNames.OrcArcherIdle);
-            CharacterStateAnimations.Add(CharacterState.Moving, AnimNames.OrcArcherRun);
-            CharacterStateAnimations.Add(CharacterState.Dead, AnimNames.OrcArcherDeath);
-        }
+        CharacterStateAnimations.Add(CharacterState.Idle, AnimNames.OrcArcherIdle);
+        CharacterStateAnimations.Add(CharacterState.Moving, AnimNames.OrcArcherRun);
+        CharacterStateAnimations.Add(CharacterState.Dead, AnimNames.OrcArcherDeath);
     }
 }

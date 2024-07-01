@@ -5,145 +5,144 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 
-namespace DoctorsDungeon.ComponentPattern.GUI
+namespace DoctorsDungeon.ComponentPattern.GUI;
+
+// Stefan
+public class Button : Component
 {
-    // Stefan
-    public class Button : Component
+    #region Properties
+
+    public Action OnClick;
+    public string Text;
+    private SpriteFont font;
+
+    private SpriteRenderer spriteRenderer;
+    private Collider collider;
+
+    public Color TextColor = Color.Black;
+
+    private Color baseColor;
+    public Color OnHoverColor = new(200, 200, 200);
+    public Color OnMouseDownColor = new(150, 150, 150);
+
+    private Vector2 maxScale;
+    private float clickCooldown = 0.1f; // The delay between button clicks in seconds
+    private float timeSinceLastClick = 0; // The time since the button was last clicked
+    private bool invokeActionOnFullScale;
+    private bool hasPressed;
+
+    private Vector2 scaleUpAmount;
+    private float scaleDownOnClickAmount = 0.95f;
+
+    #endregion Properties
+
+    public Button(GameObject gameObject) : base(gameObject)
     {
-        #region Properties
+        maxScale = GameObject.Transform.Scale;
+        scaleUpAmount = new Vector2(maxScale.X * 0.01f, maxScale.Y * 0.01f);
 
-        public Action OnClick;
-        public string Text;
-        private SpriteFont font;
+        font = GlobalTextures.DefaultFont;
+        GameObject.Type = GameObjectTypes.Gui;
+    }
 
-        private SpriteRenderer spriteRenderer;
-        private Collider collider;
+    public Button(GameObject gameObject, string text, bool invokeActionOnFullScale, Action onClick) : base(gameObject)
+    {
+        maxScale = GameObject.Transform.Scale;
+        scaleUpAmount = new Vector2(maxScale.X * 0.01f, maxScale.Y * 0.01f);
 
-        public Color TextColor = Color.Black;
+        font = GlobalTextures.DefaultFont;
+        this.Text = text;
+        this.invokeActionOnFullScale = invokeActionOnFullScale;
+        this.OnClick = onClick;
+        GameObject.Type = GameObjectTypes.Gui;
+    }
 
-        private Color baseColor;
-        public Color OnHoverColor = new(200, 200, 200);
-        public Color OnMouseDownColor = new(150, 150, 150);
+    public override void Start()
+    {
+        collider = GameObject.GetComponent<Collider>();
+        spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
 
-        private Vector2 maxScale;
-        private float clickCooldown = 0.1f; // The delay between button clicks in seconds
-        private float timeSinceLastClick = 0; // The time since the button was last clicked
-        private bool invokeActionOnFullScale;
-        private bool hasPressed;
+        baseColor = spriteRenderer.Color;
+    }
 
-        private Vector2 scaleUpAmount;
-        private float scaleDownOnClickAmount = 0.95f;
-
-        #endregion Properties
-
-        public Button(GameObject gameObject) : base(gameObject)
+    public override void Update(GameTime gameTime)
+    {
+        if (timeSinceLastClick < clickCooldown)
         {
-            maxScale = GameObject.Transform.Scale;
-            scaleUpAmount = new Vector2(maxScale.X * 0.01f, maxScale.Y * 0.01f);
-
-            font = GlobalTextures.DefaultFont;
-            GameObject.Type = GameObjectTypes.Gui;
+            timeSinceLastClick += GameWorld.DeltaTime;
         }
 
-        public Button(GameObject gameObject, string text, bool invokeActionOnFullScale, Action onClick) : base(gameObject)
+        if (IsMouseOver())
         {
-            maxScale = GameObject.Transform.Scale;
-            scaleUpAmount = new Vector2(maxScale.X * 0.01f, maxScale.Y * 0.01f);
+            if (InputHandler.Instance.MouseState.LeftButton != ButtonState.Released)
+            {
+                spriteRenderer.Color = OnMouseDownColor;
+                return;
+            }
 
-            font = GlobalTextures.DefaultFont;
-            this.Text = text;
-            this.invokeActionOnFullScale = invokeActionOnFullScale;
-            this.OnClick = onClick;
-            GameObject.Type = GameObjectTypes.Gui;
+            spriteRenderer.Color = OnHoverColor;
+        }
+        else
+        {
+            spriteRenderer.Color = baseColor;
         }
 
-        public override void Start()
-        {
-            collider = GameObject.GetComponent<Collider>();
-            spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
+        Vector2 scale = GameObject.Transform.Scale;
 
-            baseColor = spriteRenderer.Color;
+        // Scales up too fast
+        GameObject.Transform.Scale = new Vector2(
+            Math.Min(maxScale.X, scale.X + scaleUpAmount.X),
+            Math.Min(maxScale.Y, scale.Y + scaleUpAmount.Y));
+
+        if (!GameObject.IsEnabled
+            || !invokeActionOnFullScale
+            || !hasPressed
+            || GameObject.Transform.Scale != maxScale) return;
+
+        OnClick?.Invoke();
+        hasPressed = false;
+    }
+
+    public bool IsMouseOver()
+    {
+        if (collider == null) return false;
+        return collider.CollisionBox.Contains(InputHandler.Instance.MouseOnUI.ToPoint());
+    }
+
+    public void ChangeScale(Vector2 scale)
+    {
+        GameObject.Transform.Scale = scale;
+        maxScale = scale;
+        scaleUpAmount = new Vector2(maxScale.X * 0.01f, maxScale.Y * 0.01f);
+    }
+
+    public void OnClickButton()
+    {
+        if (!GameObject.IsEnabled) return;
+
+        GameObject.Transform.Scale = new Vector2(
+            maxScale.X * scaleDownOnClickAmount,
+            maxScale.Y * scaleDownOnClickAmount);
+
+        if (timeSinceLastClick < clickCooldown) return;
+
+        timeSinceLastClick = 0;
+
+        if (invokeActionOnFullScale)
+        {
+            hasPressed = true;
         }
-
-        public override void Update(GameTime gameTime)
+        else
         {
-            if (timeSinceLastClick < clickCooldown)
-            {
-                timeSinceLastClick += GameWorld.DeltaTime;
-            }
-
-            if (IsMouseOver())
-            {
-                if (InputHandler.Instance.MouseState.LeftButton != ButtonState.Released)
-                {
-                    spriteRenderer.Color = OnMouseDownColor;
-                    return;
-                }
-
-                spriteRenderer.Color = OnHoverColor;
-            }
-            else
-            {
-                spriteRenderer.Color = baseColor;
-            }
-
-            Vector2 scale = GameObject.Transform.Scale;
-
-            // Scales up too fast
-            GameObject.Transform.Scale = new Vector2(
-                Math.Min(maxScale.X, scale.X + scaleUpAmount.X),
-                Math.Min(maxScale.Y, scale.Y + scaleUpAmount.Y));
-
-            if (!GameObject.IsEnabled
-                || !invokeActionOnFullScale
-                || !hasPressed
-                || GameObject.Transform.Scale != maxScale) return;
-
             OnClick?.Invoke();
-            hasPressed = false;
         }
+    }
 
-        public bool IsMouseOver()
-        {
-            if (collider == null) return false;
-            return collider.CollisionBox.Contains(InputHandler.Instance.MouseOnUI.ToPoint());
-        }
+    public override void Draw(SpriteBatch spriteBatch)
+    {
+        // If the text is not visible or null, we don't need to do anything
+        if (string.IsNullOrEmpty(Text)) return;
 
-        public void ChangeScale(Vector2 scale)
-        {
-            GameObject.Transform.Scale = scale;
-            maxScale = scale;
-            scaleUpAmount = new Vector2(maxScale.X * 0.01f, maxScale.Y * 0.01f);
-        }
-
-        public void OnClickButton()
-        {
-            if (!GameObject.IsEnabled) return;
-
-            GameObject.Transform.Scale = new Vector2(
-                maxScale.X * scaleDownOnClickAmount,
-                maxScale.Y * scaleDownOnClickAmount);
-
-            if (timeSinceLastClick < clickCooldown) return;
-
-            timeSinceLastClick = 0;
-
-            if (invokeActionOnFullScale)
-            {
-                hasPressed = true;
-            }
-            else
-            {
-                OnClick?.Invoke();
-            }
-        }
-
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-            // If the text is not visible or null, we don't need to do anything
-            if (string.IsNullOrEmpty(Text)) return;
-
-            GuiMethods.DrawTextCentered(spriteBatch, font, GameObject.Transform.Position, Text, TextColor);
-        }
+        GuiMethods.DrawTextCentered(spriteBatch, font, GameObject.Transform.Position, Text, TextColor);
     }
 }

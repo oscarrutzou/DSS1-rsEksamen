@@ -1,6 +1,5 @@
-﻿namespace DoctorsDungeon.GameManagement.Scenes.Menus
+﻿namespace DoctorsDungeon.GameManagement.Scenes.Menus;
+
+public class LoadingScreen
 {
-    public class LoadingScreen
-    {
-    }
 }

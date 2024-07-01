@@ -18,272 +18,271 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DoctorsDungeon.GameManagement.Scenes.Rooms
+namespace DoctorsDungeon.GameManagement.Scenes.Rooms;
+
+// Oscar
+public abstract class RoomBase : Scene
 {
-    // Oscar
-    public abstract class RoomBase : Scene
+    #region Properties
+
+    private PauseMenu pauseMenu;
+
+    protected string GridName;
+    protected int GridWidth, GridHeight;
+    protected TextureNames BackGroundTexture = TextureNames.TestLevelBG;
+    protected TextureNames ForeGroundTexture = TextureNames.TestLevelFG;
+
+    public Point PlayerSpawnPos, EndPointSpawnPos = new(6, 6);
+    protected GameObject PlayerGo;
+    private Player player;
+
+    protected List<Point> EnemySpawnPoints = new();
+    protected List<Point> PotionSpawnPoints = new();
+
+    private TransferDoor transferDoor;
+    private SpriteRenderer transferDoorSpriteRenderer;
+    private List<Enemy> enemiesInRoom = new();
+
+    private Spawner spawner;
+
+    private List<GameObject> cells = new(); // For debug
+
+    protected Color TextColor = new(250, 249, 246);
+    #endregion Properties
+
+    public override void Initialize()
     {
-        #region Properties
+        //GameWorld.Instance.IsMouseVisible = false;
 
-        private PauseMenu pauseMenu;
+        SetSpawnPotions();
 
-        protected string GridName;
-        protected int GridWidth, GridHeight;
-        protected TextureNames BackGroundTexture = TextureNames.TestLevelBG;
-        protected TextureNames ForeGroundTexture = TextureNames.TestLevelFG;
+        // There needs to have been set some stuff before this base.Initialize (Look at Room1 for reference)
+        PlayerGo = null; //Remove this from normal Scene and make another scene that sets all up.
 
-        public Point PlayerSpawnPos, EndPointSpawnPos = new(6, 6);
-        protected GameObject PlayerGo;
-        private Player player;
+        pauseMenu = new PauseMenu();
+        pauseMenu.Initialize();
+        OnFirstCleanUp = pauseMenu.AfterFirstCleanUp;
 
-        protected List<Point> EnemySpawnPoints = new();
-        protected List<Point> PotionSpawnPoints = new();
+        SpawnTexture(BackGroundTexture, LayerDepth.WorldBackground);
+        SpawnTexture(ForeGroundTexture, LayerDepth.WorldForeground);
 
-        private TransferDoor transferDoor;
-        private SpriteRenderer transferDoorSpriteRenderer;
-        private List<Enemy> enemiesInRoom = new();
+        SpawnGrid();
 
-        private Spawner spawner;
+        SpawnAndLoadPlayer();
 
-        private List<GameObject> cells = new(); // For debug
+        SpawnEndPos();
 
-        protected Color TextColor = new(250, 249, 246);
-        #endregion Properties
+        SpawnEnemies();
+        SpawnPotions();
 
-        public override void Initialize()
-        {
-            //GameWorld.Instance.IsMouseVisible = false;
-
-            SetSpawnPotions();
-
-            // There needs to have been set some stuff before this base.Initialize (Look at Room1 for reference)
-            PlayerGo = null; //Remove this from normal Scene and make another scene that sets all up.
-
-            pauseMenu = new PauseMenu();
-            pauseMenu.Initialize();
-            OnFirstCleanUp = pauseMenu.AfterFirstCleanUp;
-
-            SpawnTexture(BackGroundTexture, LayerDepth.WorldBackground);
-            SpawnTexture(ForeGroundTexture, LayerDepth.WorldForeground);
-
-            SpawnGrid();
-
-            SpawnAndLoadPlayer();
-
-            SpawnEndPos();
-
-            SpawnEnemies();
-            SpawnPotions();
-
-            SetCommands();
-        }
-
-        #region Initialize Methods
-
-        protected abstract void SetSpawnPotions();
-
-        private void SpawnTexture(TextureNames textureName, LayerDepth layerDepth)
-        {
-            GameObject backgroundGo = new()
-            {
-                Type = GameObjectTypes.Background
-            };
-            backgroundGo.Transform.Scale = new(4, 4);
-
-            SpriteRenderer spriteRenderer = backgroundGo.AddComponent<SpriteRenderer>();
-            spriteRenderer.SetSprite(textureName);
-            spriteRenderer.SetLayerDepth(layerDepth);
-            spriteRenderer.IsCentered = false;
-
-            GameWorld.Instance.Instantiate(backgroundGo);
-        }
-
-        private void SpawnGrid()
-        {
-            GameObject gridGo = new();
-            Grid grid = gridGo.AddComponent<Grid>(GridName, new Vector2(0, 0), GridWidth, GridHeight);
-            grid.GenerateGrid();
-            GridManager.Instance.SaveLoadGrid(grid);
-        }
-
-        private void SpawnAndLoadPlayer()
-        {
-            DB.Instance.UpdateLoadRun(SaveData.CurrentSaveID);
-
-            PlayerGo = SaveData.Player.GameObject;
-
-            PlayerGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[PlayerSpawnPos].Transform.Position;
-            PlayerGo.Transform.GridPosition = PlayerSpawnPos;
-            GameWorld.Instance.WorldCam.Position = PlayerGo.Transform.Position;
-        }
-
-        private void SpawnEndPos()
-        {
-            GameObject endDoor = TransferDoorFactory.Create();
-            transferDoor = endDoor.GetComponent<TransferDoor>();
-            transferDoorSpriteRenderer = endDoor.GetComponent<SpriteRenderer>();
-            endDoor.Transform.Position = GridManager.Instance.GetCornerPositionOfCell(EndPointSpawnPos);
-            GameWorld.Instance.Instantiate(endDoor);
-        }
-
-        private void SpawnEnemies()
-        {
-            GameObject spawnerGo = new();
-            spawner = spawnerGo.AddComponent<Spawner>();
-            enemiesInRoom = spawner.SpawnEnemies(EnemySpawnPoints, PlayerGo);
-        }
-
-        private void SpawnPotions()
-        {
-            spawner.SpawnPotions(PotionSpawnPoints, PlayerGo);
-        }
-
-        private void SetCommands()
-        {
-            player = PlayerGo.GetComponent<Player>();
-            InputHandler.Instance.AddKeyUpdateCommand(Keys.D, new MoveCmd(player, new Vector2(1, 0)));
-            InputHandler.Instance.AddKeyUpdateCommand(Keys.A, new MoveCmd(player, new Vector2(-1, 0)));
-            InputHandler.Instance.AddKeyUpdateCommand(Keys.W, new MoveCmd(player, new Vector2(0, -1)));
-            InputHandler.Instance.AddKeyUpdateCommand(Keys.S, new MoveCmd(player, new Vector2(0, 1)));
-
-            InputHandler.Instance.AddMouseUpdateCommand(MouseCmdState.Left, new CustomCmd(player.Attack));
-
-            InputHandler.Instance.AddKeyButtonDownCommand(Keys.Escape, new CustomCmd(pauseMenu.TogglePauseMenu));
-
-            InputHandler.Instance.AddKeyButtonDownCommand(Keys.E, new CustomCmd(player.UseItem));
-
-            // For debugging
-            InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, new CustomCmd(player.Attack));
-            InputHandler.Instance.AddKeyButtonDownCommand(Keys.Enter, new CustomCmd(ChangeScene));
-            InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DB.Instance.SaveGrid(GridManager.Instance.CurrentGrid); }));
-        }
-
-        private void ChangeScene()
-        {
-            int newRoomNr = SaveData.Level_Reached + 1;
-            GameWorld.Instance.ChangeDungeonScene(SceneNames.DungeonRoom, newRoomNr);
-        }
-
-        #endregion Initialize Methods
-
-        private List<Enemy> aliveEnemies;
-
-        public override void Update(GameTime gameTime)
-        {
-            SaveData.Time_Left -= GameWorld.DeltaTime;
-
-            if (SaveData.Time_Left <= 0) // Player ran out of Time
-            {
-                SaveData.Time_Left = 0;
-                SaveData.LostByTime = true;
-                player.TakeDamage(1000); // Kills the player
-            }
-
-            // Check if enemies has been killed
-            aliveEnemies = enemiesInRoom.Where(x => x.State != CharacterState.Dead).ToList();
-
-            if (aliveEnemies.Count == 0) // All enemies are dead to
-            {
-                OnAllEnemiesDied();
-            }
-
-            base.Update(gameTime);
-        }
-
-        private void OnAllEnemiesDied()
-        {
-            if (transferDoorSpriteRenderer.ShouldDraw == false) return; // To stop method from being run twice.
-
-            transferDoorSpriteRenderer.ShouldDraw = false;
-            transferDoor.CanTranser = true;
-        }
-
-        #region Draw
-
-        public override void DrawOnScreen(SpriteBatch spriteBatch)
-        {
-            base.DrawOnScreen(spriteBatch);
-
-            pauseMenu.DrawOnScreen(spriteBatch);
-
-            Vector2 leftPos = GameWorld.Instance.UiCam.TopLeft + new Vector2(30, 30);
-            DrawTimer(spriteBatch, leftPos);
-
-            leftPos += new Vector2(0, 30);
-            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Player HP: {player.CurrentHealth}/{player.MaxHealth}", leftPos, TextColor);
-
-            leftPos += new Vector2(0, 30);
-            DrawPotion(spriteBatch, leftPos);
-
-            DrawQuest(spriteBatch);
-
-            if (!InputHandler.Instance.DebugMode) return;
-            DebugDraw(spriteBatch);
-        }
-
-        private void DrawQuest(SpriteBatch spriteBatch)
-        {
-            aliveEnemies = enemiesInRoom.Where(x => x.State != CharacterState.Dead).ToList();
-            int amountToKill = EnemySpawnPoints.Count - aliveEnemies.Count;
-
-            string text = $"Kill your way through {amountToKill}/{EnemySpawnPoints.Count}";
-            Vector2 size = GlobalTextures.DefaultFont.MeasureString(text);
-            Vector2 textPos = GameWorld.Instance.UiCam.TopRight + new Vector2(-size.X - 30, size.Y + 10);
-            Vector2 underPos = textPos - new Vector2(45, 35);
-            spriteBatch.Draw(GlobalTextures.Textures[TextureNames.QuestUnder], underPos, null, Color.White, 0f, Vector2.Zero, 6f, SpriteEffects.None, 0f);
-            spriteBatch.DrawString(GlobalTextures.DefaultFont, text, textPos, TextColor, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
-        }
-
-        private void DrawTimer(SpriteBatch spriteBatch, Vector2 timerPos)
-        {
-            TimeSpan time = TimeSpan.FromSeconds(SaveData.Time_Left);
-            string minutes = time.Minutes.ToString("D2");
-            string seconds = time.Seconds.ToString("D2");
-            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Time Left: {minutes}:{seconds}", timerPos, TextColor);
-        }
-
-        private void DrawPotion(SpriteBatch spriteBatch, Vector2 intentoryPos)
-        {
-            string text;
-            if (player.ItemInInventory == null)
-            {
-                text = "Inventory (0/1):";
-            }
-            else
-            {
-                text = $"Inventory (1/1): {player.ItemInInventory.Name}";
-            }
-
-            spriteBatch.DrawString(GlobalTextures.DefaultFont, text, intentoryPos, TextColor);
-        }
-
-        private void DebugDraw(SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], GameWorld.Instance.UiCam.TopLeft, null, Color.WhiteSmoke, 0f, Vector2.Zero, new Vector2(400, 300), SpriteEffects.None, 0.99f); // Over everything exept text
-
-            Vector2 mousePos = InputHandler.Instance.MouseOnUI;
-
-            DrawString(spriteBatch, $"MousePos UI {mousePos}", GameWorld.Instance.UiCam.TopLeft);
-
-            GameObject cellGo = GridManager.Instance.GetCellAtPos(InputHandler.Instance.MouseInWorld);
-            if (cellGo != null)
-            {
-                Point cellGridPos = cellGo.Transform.GridPosition;
-                DrawString(spriteBatch, $"Cell Point from MousePos: {cellGridPos}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 30));
-            }
-
-            DrawString(spriteBatch, $"PlayerPos {PlayerGo.Transform.Position}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 60));
-            DrawString(spriteBatch, $"Cell GameObjects in scene {cells.Count}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 90));
-            DrawString(spriteBatch, $"LevelNr {GridManager.Instance.LevelNrIndex}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 120));
-            DrawString(spriteBatch, $"Current Level Reached {SaveData.Level_Reached}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 150));
-            DrawString(spriteBatch, $"Player Room Nr {player.RoomNr}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 180));
-        }
-
-        protected void DrawString(SpriteBatch spriteBatch, string text, Vector2 position)
-        {
-            spriteBatch.DrawString(GlobalTextures.DefaultFont, text, position, Color.Black, 0f, Vector2.Zero, 1, SpriteEffects.None, 1f);
-        }
-
-        #endregion Draw
+        SetCommands();
     }
+
+    #region Initialize Methods
+
+    protected abstract void SetSpawnPotions();
+
+    private void SpawnTexture(TextureNames textureName, LayerDepth layerDepth)
+    {
+        GameObject backgroundGo = new()
+        {
+            Type = GameObjectTypes.Background
+        };
+        backgroundGo.Transform.Scale = new(4, 4);
+
+        SpriteRenderer spriteRenderer = backgroundGo.AddComponent<SpriteRenderer>();
+        spriteRenderer.SetSprite(textureName);
+        spriteRenderer.SetLayerDepth(layerDepth);
+        spriteRenderer.IsCentered = false;
+
+        GameWorld.Instance.Instantiate(backgroundGo);
+    }
+
+    private void SpawnGrid()
+    {
+        GameObject gridGo = new();
+        Grid grid = gridGo.AddComponent<Grid>(GridName, new Vector2(0, 0), GridWidth, GridHeight);
+        grid.GenerateGrid();
+        GridManager.Instance.SaveLoadGrid(grid);
+    }
+
+    private void SpawnAndLoadPlayer()
+    {
+        DB.Instance.UpdateLoadRun(SaveData.CurrentSaveID);
+
+        PlayerGo = SaveData.Player.GameObject;
+
+        PlayerGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[PlayerSpawnPos].Transform.Position;
+        PlayerGo.Transform.GridPosition = PlayerSpawnPos;
+        GameWorld.Instance.WorldCam.Position = PlayerGo.Transform.Position;
+    }
+
+    private void SpawnEndPos()
+    {
+        GameObject endDoor = TransferDoorFactory.Create();
+        transferDoor = endDoor.GetComponent<TransferDoor>();
+        transferDoorSpriteRenderer = endDoor.GetComponent<SpriteRenderer>();
+        endDoor.Transform.Position = GridManager.Instance.GetCornerPositionOfCell(EndPointSpawnPos);
+        GameWorld.Instance.Instantiate(endDoor);
+    }
+
+    private void SpawnEnemies()
+    {
+        GameObject spawnerGo = new();
+        spawner = spawnerGo.AddComponent<Spawner>();
+        enemiesInRoom = spawner.SpawnEnemies(EnemySpawnPoints, PlayerGo);
+    }
+
+    private void SpawnPotions()
+    {
+        spawner.SpawnPotions(PotionSpawnPoints, PlayerGo);
+    }
+
+    private void SetCommands()
+    {
+        player = PlayerGo.GetComponent<Player>();
+        InputHandler.Instance.AddKeyUpdateCommand(Keys.D, new MoveCmd(player, new Vector2(1, 0)));
+        InputHandler.Instance.AddKeyUpdateCommand(Keys.A, new MoveCmd(player, new Vector2(-1, 0)));
+        InputHandler.Instance.AddKeyUpdateCommand(Keys.W, new MoveCmd(player, new Vector2(0, -1)));
+        InputHandler.Instance.AddKeyUpdateCommand(Keys.S, new MoveCmd(player, new Vector2(0, 1)));
+
+        InputHandler.Instance.AddMouseUpdateCommand(MouseCmdState.Left, new CustomCmd(player.Attack));
+
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.Escape, new CustomCmd(pauseMenu.TogglePauseMenu));
+
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.E, new CustomCmd(player.UseItem));
+
+        // For debugging
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, new CustomCmd(player.Attack));
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.Enter, new CustomCmd(ChangeScene));
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DB.Instance.SaveGrid(GridManager.Instance.CurrentGrid); }));
+    }
+
+    private void ChangeScene()
+    {
+        int newRoomNr = SaveData.Level_Reached + 1;
+        GameWorld.Instance.ChangeDungeonScene(SceneNames.DungeonRoom, newRoomNr);
+    }
+
+    #endregion Initialize Methods
+
+    private List<Enemy> aliveEnemies;
+
+    public override void Update(GameTime gameTime)
+    {
+        SaveData.Time_Left -= GameWorld.DeltaTime;
+
+        if (SaveData.Time_Left <= 0) // Player ran out of Time
+        {
+            SaveData.Time_Left = 0;
+            SaveData.LostByTime = true;
+            player.TakeDamage(1000); // Kills the player
+        }
+
+        // Check if enemies has been killed
+        aliveEnemies = enemiesInRoom.Where(x => x.State != CharacterState.Dead).ToList();
+
+        if (aliveEnemies.Count == 0) // All enemies are dead to
+        {
+            OnAllEnemiesDied();
+        }
+
+        base.Update(gameTime);
+    }
+
+    private void OnAllEnemiesDied()
+    {
+        if (transferDoorSpriteRenderer.ShouldDraw == false) return; // To stop method from being run twice.
+
+        transferDoorSpriteRenderer.ShouldDraw = false;
+        transferDoor.CanTranser = true;
+    }
+
+    #region Draw
+
+    public override void DrawOnScreen(SpriteBatch spriteBatch)
+    {
+        base.DrawOnScreen(spriteBatch);
+
+        pauseMenu.DrawOnScreen(spriteBatch);
+
+        Vector2 leftPos = GameWorld.Instance.UiCam.TopLeft + new Vector2(30, 30);
+        DrawTimer(spriteBatch, leftPos);
+
+        leftPos += new Vector2(0, 30);
+        spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Player HP: {player.CurrentHealth}/{player.MaxHealth}", leftPos, TextColor);
+
+        leftPos += new Vector2(0, 30);
+        DrawPotion(spriteBatch, leftPos);
+
+        DrawQuest(spriteBatch);
+
+        if (!InputHandler.Instance.DebugMode) return;
+        DebugDraw(spriteBatch);
+    }
+
+    private void DrawQuest(SpriteBatch spriteBatch)
+    {
+        aliveEnemies = enemiesInRoom.Where(x => x.State != CharacterState.Dead).ToList();
+        int amountToKill = EnemySpawnPoints.Count - aliveEnemies.Count;
+
+        string text = $"Kill your way through {amountToKill}/{EnemySpawnPoints.Count}";
+        Vector2 size = GlobalTextures.DefaultFont.MeasureString(text);
+        Vector2 textPos = GameWorld.Instance.UiCam.TopRight + new Vector2(-size.X - 30, size.Y + 10);
+        Vector2 underPos = textPos - new Vector2(45, 35);
+        spriteBatch.Draw(GlobalTextures.Textures[TextureNames.QuestUnder], underPos, null, Color.White, 0f, Vector2.Zero, 6f, SpriteEffects.None, 0f);
+        spriteBatch.DrawString(GlobalTextures.DefaultFont, text, textPos, TextColor, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
+    }
+
+    private void DrawTimer(SpriteBatch spriteBatch, Vector2 timerPos)
+    {
+        TimeSpan time = TimeSpan.FromSeconds(SaveData.Time_Left);
+        string minutes = time.Minutes.ToString("D2");
+        string seconds = time.Seconds.ToString("D2");
+        spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Time Left: {minutes}:{seconds}", timerPos, TextColor);
+    }
+
+    private void DrawPotion(SpriteBatch spriteBatch, Vector2 intentoryPos)
+    {
+        string text;
+        if (player.ItemInInventory == null)
+        {
+            text = "Inventory (0/1):";
+        }
+        else
+        {
+            text = $"Inventory (1/1): {player.ItemInInventory.Name}";
+        }
+
+        spriteBatch.DrawString(GlobalTextures.DefaultFont, text, intentoryPos, TextColor);
+    }
+
+    private void DebugDraw(SpriteBatch spriteBatch)
+    {
+        spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], GameWorld.Instance.UiCam.TopLeft, null, Color.WhiteSmoke, 0f, Vector2.Zero, new Vector2(400, 300), SpriteEffects.None, 0.99f); // Over everything exept text
+
+        Vector2 mousePos = InputHandler.Instance.MouseOnUI;
+
+        DrawString(spriteBatch, $"MousePos UI {mousePos}", GameWorld.Instance.UiCam.TopLeft);
+
+        GameObject cellGo = GridManager.Instance.GetCellAtPos(InputHandler.Instance.MouseInWorld);
+        if (cellGo != null)
+        {
+            Point cellGridPos = cellGo.Transform.GridPosition;
+            DrawString(spriteBatch, $"Cell Point from MousePos: {cellGridPos}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 30));
+        }
+
+        DrawString(spriteBatch, $"PlayerPos {PlayerGo.Transform.Position}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 60));
+        DrawString(spriteBatch, $"Cell GameObjects in scene {cells.Count}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 90));
+        DrawString(spriteBatch, $"LevelNr {GridManager.Instance.LevelNrIndex}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 120));
+        DrawString(spriteBatch, $"Current Level Reached {SaveData.Level_Reached}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 150));
+        DrawString(spriteBatch, $"Player Room Nr {player.RoomNr}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 180));
+    }
+
+    protected void DrawString(SpriteBatch spriteBatch, string text, Vector2 position)
+    {
+        spriteBatch.DrawString(GlobalTextures.DefaultFont, text, position, Color.Black, 0f, Vector2.Zero, 1, SpriteEffects.None, 1f);
+    }
+
+    #endregion Draw
 }
