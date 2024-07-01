@@ -90,7 +90,7 @@ public abstract class Weapon : Component
     {
         if (PlayingSound || AttackSoundNames == null || AttackSoundNames.Length == 0) return;
 
-        GlobalSounds.PlayRandomizedSound(AttackSoundNames, 1, 1f, true);
+        GlobalSounds.PlayRandomizedSound(AttackSoundNames, 5, 1f, true);
         PlayingSound = true;
     }
 

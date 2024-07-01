@@ -48,6 +48,7 @@ public class GameWorld : Game
     {
         SceneData.GenereateGameObjectDicionary();
         Fullscreen();
+
         WorldCam = new Camera(true); // Camera that follows the player
         UiCam = new Camera(false); // Camera that is static
 
@@ -115,7 +116,7 @@ public class GameWorld : Game
         base.Draw(gameTime);
     }
 
-    public void ResolutionSize(int width, int height)
+    public void SetResolutionSize(int width, int height)
     {
         GfxManager.HardwareModeSwitch = true;
         GfxManager.PreferredBackBufferWidth = width;
@@ -131,7 +132,7 @@ public class GameWorld : Game
     {
         if (GraphicsDevice.DisplayMode.Width > 1920) // To big screen, so dont open in fullscreen
         {
-            ResolutionSize(1920, 1080);
+            SetResolutionSize(1920, 1080);
             return;
         }
 

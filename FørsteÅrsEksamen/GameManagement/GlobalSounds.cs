@@ -20,7 +20,7 @@ public static class GlobalSounds
     public static Dictionary<SoundNames, SoundEffect> Sounds { get; private set; }
 
     private static Dictionary<SoundNames, List<SoundEffectInstance>> soundInstancesPool;
-    private static int maxInstanceOfOneSound = 2; // There can only be 2 of the same sounds playing, otherwise it wont play.
+    private static int maxInstanceOfOneSound = 5; // There can only be 2 of the same sounds playing, otherwise it wont play.
     //private static int maxInstanceOfGunSound = 10;
 
     public static bool InMenu { get; set; } = true;

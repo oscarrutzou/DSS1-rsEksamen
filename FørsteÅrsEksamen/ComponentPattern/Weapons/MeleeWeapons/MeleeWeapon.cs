@@ -34,7 +34,6 @@ public abstract class MeleeWeapon : Weapon
         if (Attacking)
         {
             PlayAttackSound();
-
             TotalElapsedTime += GameWorld.DeltaTime * AttackSpeed; // To change the speed of the animation, change the attackspeed.
             AttackAnimation();
 
@@ -94,7 +93,11 @@ public abstract class MeleeWeapon : Weapon
 
     private void AttackAnimation()
     {
-        if (TotalElapsedTime >= 1f) // Should be half the time the animation takes
+        // Should be half the time the animation takes!!! change the attack sound to hit play on the way back
+        // Change this so you can take in a method and that is what it uses to attack with
+        // With spears it should be rotated so it fits with the hand, and then it stabs. 
+        // Particles and visual effects
+        if (TotalElapsedTime >= 1.0f)
         {
             TotalElapsedTime = 0f; // Reset totalElapsedTime
             IsRotatingBack = true;
@@ -105,7 +108,6 @@ public abstract class MeleeWeapon : Weapon
                 spriteRenderer.SpriteEffects = SpriteEffects.None;
             else if (spriteRenderer.SpriteEffects == SpriteEffects.None)
                 spriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
-
         }
 
         // Play with some other methods, for different weapons, to make them feel slow or fast https://easings.net/
@@ -115,7 +117,7 @@ public abstract class MeleeWeapon : Weapon
         if (!IsRotatingBack)
         {
             // Down attack
-            easedTime = BaseMath.EaseInOutBack(TotalElapsedTime);
+            easedTime = BaseMath.EaseInOutBack(TotalElapsedTime); // This need to be dependent on the time a attack should take.
             GameObject.Transform.Rotation = MathHelper.Lerp(StartAnimationAngle, finalLerp, easedTime);
         }
         else
@@ -199,7 +201,6 @@ public abstract class MeleeWeapon : Weapon
     public override void Draw(SpriteBatch spriteBatch)
     {
         if (!InputHandler.Instance.DebugMode) return;
-        
 
         foreach (CollisionRectangle collisionRectangle in WeaponColliders)
         {
