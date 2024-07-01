@@ -23,7 +23,7 @@ public class Astar
         ResetCells(); // Gets the Cells ready
 
         open = new HashSet<GameObject>(); // Cells to check
-        closed = new HashSet<GameObject>(); // Checkes cells
+        closed = new HashSet<GameObject>(); // Checked cells
         if (!cells.ContainsKey(start) || !cells.ContainsKey(goal)) //Makes sure the cell start and end isnt the same
         {
             return null;
@@ -51,7 +51,7 @@ public class Astar
             // Gets the Cell component
             Cell newCurCell = curCellGo.GetComponent<Cell>();
 
-            // Checks if its on the Goal grid position, if its is, we have found the path
+            // Checks if its on the Goal grid position, if it is, we have found the path
             if (newCurCell.GameObject.Transform.GridPosition.X == goal.X && newCurCell.GameObject.Transform.GridPosition.Y == goal.Y)
             {
                 // Path found!
