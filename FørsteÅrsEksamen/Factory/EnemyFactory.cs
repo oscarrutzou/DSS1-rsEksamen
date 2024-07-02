@@ -22,7 +22,6 @@ public enum EnemyTypes
 public static class EnemyFactory
 {
     private static Random random = new();
-    private static int EnemyDmgDivide = 2; // Should be in weapon 
 
     //public static GameObject CreateWithRandomType()
     //{
@@ -57,7 +56,6 @@ public static class EnemyFactory
         GameObject weaponGo = WeaponFactory.Create(weaponType);
         Weapon weapon = weaponGo.GetComponent<Weapon>();
         weapon.EnemyUser = enemy;
-        weapon.Damage /= EnemyDmgDivide; // Make enemies do less damage /= divide
         GameWorld.Instance.Instantiate(weaponGo);
 
         enemy.WeaponGo = weaponGo;

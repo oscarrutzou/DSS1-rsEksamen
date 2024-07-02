@@ -1,4 +1,5 @@
 ﻿using DoctorsDungeon.GameManagement;
+using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
 
 namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons;
@@ -8,9 +9,6 @@ public class Sword : MeleeWeapon
 {
     public Sword(GameObject gameObject) : base(gameObject)
     {
-        AttackSpeed = 1.7f;
-        Damage = 25;
-        LerpFromTo = MathHelper.Pi;
     }
 
     public override void Start()
@@ -19,6 +17,13 @@ public class Sword : MeleeWeapon
         {
             SoundNames.SwipeSlow1,
         };
+
+        Animations = new()
+        {
+            { WeaponAnimTypes.Light, new WeaponAnimation(1.5f, MathHelper.Pi, 25, BaseMath.EaseInOutBack, WeaponAnimTypes.Light)},
+        };
+
+        CurrentAnim = WeaponAnimTypes.Light;
     }
 
     protected override void PlayerWeaponSprite()

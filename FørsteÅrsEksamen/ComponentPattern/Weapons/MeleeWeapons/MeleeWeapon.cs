@@ -11,13 +11,14 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons;
 // Erik
 public abstract class MeleeWeapon : Weapon
 {
-    protected float LerpFromTo;
-    protected float TotalLerp;
+    protected float FinalLerp; 
     protected float TotalElapsedTime;
     protected bool IsRotatingBack;
     protected List<CollisionRectangle> WeaponColliders = new();
 
     private List<GameObject> hitGameObjects = new();
+
+    private float enemyWeakness = 2.0f; // What to divide with, to make enemie attacks weaker.
 
     protected MeleeWeapon(GameObject gameObject) : base(gameObject)
     {
@@ -26,15 +27,20 @@ public abstract class MeleeWeapon : Weapon
     public void DealDamage(GameObject damageGo)
     {
         Character damageGoHealth = damageGo.GetComponent<Character>();
-        damageGoHealth.TakeDamage(Damage);
+
+        // Float so we can divide with enemy weakness
+        float damage = Animations[CurrentAnim].Damage; 
+        if (EnemyUser != null)
+            damage /= enemyWeakness; 
+
+        damageGoHealth.TakeDamage((int)damage);
     }
 
     public override void Update(GameTime gameTime)
     {
         if (Attacking)
         {
-            PlayAttackSound();
-            TotalElapsedTime += GameWorld.DeltaTime * AttackSpeed; // To change the speed of the animation, change the attackspeed.
+            TotalElapsedTime += GameWorld.DeltaTime; 
             AttackAnimation();
 
             CheckCollisionAndDmg();
@@ -80,25 +86,23 @@ public abstract class MeleeWeapon : Weapon
         if (LeftSide)
         {
             // Left
-            TotalLerp = -LerpFromTo;
+            FinalLerp = -Animations[CurrentAnim].AmountOfRotation;
         }
         else
         {
             // Right
-            TotalLerp = LerpFromTo;
+            FinalLerp = Animations[CurrentAnim].AmountOfRotation;
         }
     }
 
     #region Weapon Colliders
-
+    
     private void AttackAnimation()
     {
-        // Should be half the time the animation takes!!! change the attack sound to hit play on the way back
-        // Change this so you can take in a method and that is what it uses to attack with
-        // With spears it should be rotated so it fits with the hand, and then it stabs. 
-        // Particles and visual effects
-        if (TotalElapsedTime >= 1.0f)
+        if (TotalElapsedTime >= TimeBeforeNewDirection)
         {
+            PlayAttackSound();
+
             TotalElapsedTime = 0f; // Reset totalElapsedTime
             IsRotatingBack = true;
             hitGameObjects = new(); // Reset hit gameobjects so we can hit when it goes back again
@@ -110,21 +114,21 @@ public abstract class MeleeWeapon : Weapon
                 spriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
         }
 
-        // Play with some other methods, for different weapons, to make them feel slow or fast https://easings.net/
+        float normalizedTime = TotalElapsedTime / TimeBeforeNewDirection;
+
         float easedTime; // maybe switch between them.
-        float finalLerp = StartAnimationAngle + TotalLerp;
+        float finalLerp = StartAnimationAngle + FinalLerp;
 
         if (!IsRotatingBack)
         {
             // Down attack
-            easedTime = BaseMath.EaseInOutBack(TotalElapsedTime); // This need to be dependent on the time a attack should take.
+            easedTime = Animations[CurrentAnim].AnimationMethod(normalizedTime);
             GameObject.Transform.Rotation = MathHelper.Lerp(StartAnimationAngle, finalLerp, easedTime);
         }
         else
         {
             //Up attack
-            easedTime = BaseMath.EaseInOutBack(TotalElapsedTime);
-            //easedTime = EaseInOutBack(totalElapsedTime); // Feels heavy
+            easedTime = Animations[CurrentAnim].AnimationMethod(normalizedTime);
             GameObject.Transform.Rotation = MathHelper.Lerp(finalLerp, StartAnimationAngle, easedTime);
         }
 
@@ -132,7 +136,6 @@ public abstract class MeleeWeapon : Weapon
         {
             IsRotatingBack = false;
             Attacking = false;
-            PlayingSound = false;
         }
     }
 

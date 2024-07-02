@@ -1,10 +1,6 @@
 ﻿using DoctorsDungeon.GameManagement;
+using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons;
 
@@ -12,9 +8,6 @@ public class Dagger : MeleeWeapon
 {
     public Dagger(GameObject gameObject) : base(gameObject)
     {
-        AttackSpeed = 3f;
-        Damage = 17;
-        LerpFromTo = MathHelper.Pi;
     }
 
     public override void Start()
@@ -24,6 +17,13 @@ public class Dagger : MeleeWeapon
             SoundNames.SwipeFast1,
             SoundNames.SwipeFast2,
         };
+
+        Animations = new()
+        {
+            { WeaponAnimTypes.Light, new WeaponAnimation(0.6f, MathHelper.Pi, 15, BaseMath.EaseOutExpo, WeaponAnimTypes.Light)},
+        };
+
+        CurrentAnim = WeaponAnimTypes.Light;
     }
 
     protected override void PlayerWeaponSprite()

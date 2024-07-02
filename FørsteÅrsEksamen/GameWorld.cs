@@ -44,6 +44,10 @@ public class GameWorld : Game
         Window.Title = "Doctor's Dungeon";
     }
 
+
+    //_graphics.SynchronizeWithVerticalRetrace = false; //Vsync
+    //IsFixedTimeStep = true;
+    //TargetElapsedTime = TimeSpan.FromMilliseconds(1000.0f / 60);
     protected override void Initialize()
     {
         SceneData.GenereateGameObjectDicionary();

@@ -92,13 +92,13 @@ public abstract class Enemy : Character
             case CharacterState.Attacking:
 
                 // Do nothing if the player has died.
-                if (Player.State == CharacterState.Dead) return;
+                //if (Player.State == CharacterState.Dead) return;
 
-                // Update direction towards player insted of moving direction
-                Direction = Vector2.Normalize(playerGo.Transform.Position - GameObject.Transform.Position);
-                Weapon.MoveWeapon();
-                UpdateDirection();
-                Attack();
+                //// Update direction towards player insted of moving direction
+                //Direction = Vector2.Normalize(playerGo.Transform.Position - GameObject.Transform.Position);
+                //Weapon.MoveWeapon();
+                //UpdateDirection();
+                //Attack();
                 break;
 
             case CharacterState.Dead:
@@ -202,7 +202,14 @@ public abstract class Enemy : Character
 
         if (path.Count == 1 && Vector2.Distance(position, nextTarget) < threshold)
         {
-            SetState(CharacterState.Attacking);
+            //SetState(CharacterState.Attacking);
+            // Tried something so it keeps walking when attacking.
+            // Still has the problem with the player being faster so they can run away. 
+            // Buuttt it fixed some of the problem with the player being able to hit and run to win
+            Direction = Vector2.Normalize(playerGo.Transform.Position - GameObject.Transform.Position);
+            Attack();
+            //Weapon.MoveWeapon();
+
             ResetCellColor(path[0]); // Debug
 
             path = null;

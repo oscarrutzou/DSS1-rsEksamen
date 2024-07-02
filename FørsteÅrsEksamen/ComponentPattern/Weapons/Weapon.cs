@@ -20,6 +20,48 @@ public class CollisionRectangle
     public Vector2 StartRelativePos;
 }
 
+
+public enum WeaponAnimTypes
+{
+    Light, 
+    Medium,
+    Heavy,
+    // Maybe special or something
+}
+
+public delegate float AnimationFunction(float x);
+
+// Play with some other methods, for different weapons, to make them feel slow or fast https://easings.net/
+public class WeaponAnimation
+{
+    public float TotalTime;
+    public float AmountOfRotation;
+    public int Repeats;
+    public int Damage;
+    public AnimationFunction AnimationMethod; // Delegate field
+    public WeaponAnimTypes NextAnimation;
+
+    public WeaponAnimation(float totalTime, 
+                           float amountOfRotation,
+                           int damage,
+                           AnimationFunction animationMethod,
+                           WeaponAnimTypes nextAnimation,
+                           int repeats = 1)
+    {
+        TotalTime = totalTime;
+        AmountOfRotation = amountOfRotation;
+        Damage = damage;
+        AnimationMethod = animationMethod; // Assign the delegate
+        NextAnimation = nextAnimation;
+        Repeats = repeats;
+    }
+
+    public float CalculateAnimation(float x)
+    {
+        return AnimationMethod(x);
+    }
+}
+
 // Erik
 
 // Notes for what to add or change to the Weapon.
@@ -29,22 +71,23 @@ public class CollisionRectangle
 // A really nice to have to so make a trail behind the weapon when it swings:D Would be fun to make
 public abstract class Weapon : Component
 {
-    public int Damage = 10;
+
+    protected Dictionary<WeaponAnimTypes, WeaponAnimation> Animations;
+    protected WeaponAnimTypes CurrentAnim;
+
     public Player PlayerUser { get; set; }
     public Enemy EnemyUser { get; set; }
 
-    protected float AttackSpeed;
 
     protected SpriteRenderer spriteRenderer;
-    // Melee weapon
 
     protected float StartAnimationAngle { get; set; }
 
-    //protected bool EnemyWeapon;
     protected bool Attacking;
 
-    protected SoundNames[] AttackSoundNames;
-    protected bool PlayingSound;
+    // A lot of this data is being copied on many different weapons, even though it has the same data.
+    // Could use a GlobalPool or something that contains data, that are the same and wont be changed on each object
+    protected SoundNames[] AttackSoundNames; 
 
     protected Vector2 StartPosOffset = new(40, 20);
 
@@ -68,11 +111,17 @@ public abstract class Weapon : Component
         }
     }
 
+    protected float TimeBeforeNewDirection;
     public void StartAttack()
     {
         if (Attacking) return;
 
         Attacking = true;
+
+        // Also needs to contain code to change what anim gets played
+        TimeBeforeNewDirection = Animations[CurrentAnim].TotalTime / 2;
+        
+        PlayAttackSound();
 
         SetAttackDirection();
     }
@@ -88,10 +137,9 @@ public abstract class Weapon : Component
 
     protected void PlayAttackSound()
     {
-        if (PlayingSound || AttackSoundNames == null || AttackSoundNames.Length == 0) return;
+        if (AttackSoundNames == null || AttackSoundNames.Length == 0) return;
 
         GlobalSounds.PlayRandomizedSound(AttackSoundNames, 5, 1f, true);
-        PlayingSound = true;
     }
 
     private Vector2 lastOffSetPos, startRelativePos = new(0, 60), startRelativeOffsetPos = new Vector2(0, -20);
@@ -132,7 +180,7 @@ public abstract class Weapon : Component
         if (angle > 0.5 * MathHelper.Pi && angle < 1.5 * MathHelper.Pi)
         {
             spriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
-            StartAnimationAngle = angle + MathHelper.Pi;
+            StartAnimationAngle = angle + MathHelper.Pi; // This need to be changed if the StartLerp is not Pi
 
             LeftSide = true;
         }
