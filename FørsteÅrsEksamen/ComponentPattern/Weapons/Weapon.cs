@@ -62,8 +62,12 @@ public class WeaponAnimation
     }
 }
 
-// Erik
+// NexAnim 
+// A weapon will always have a light attack. It goes though the enum, enum.default = first in.
+// Need to save how many that attack has been picked, with how many times it should repeat
+// Could do it with a int that
 
+// Erik
 // Notes for what to add or change to the Weapon.
 // Only happen on attack. Also add hands. Remove it from the player and use 2 hands.
 // The hands should be given and made before making the weapon, as a part of which hands we should use.
@@ -74,7 +78,7 @@ public abstract class Weapon : Component
 
     protected Dictionary<WeaponAnimTypes, WeaponAnimation> Animations;
     protected WeaponAnimTypes CurrentAnim;
-
+    protected int CurrentAnimRepeats;
     public Player PlayerUser { get; set; }
     public Enemy EnemyUser { get; set; }
 
@@ -118,12 +122,25 @@ public abstract class Weapon : Component
 
         Attacking = true;
 
-        // Also needs to contain code to change what anim gets played
+        ChangeWeaponAttacks();
+        MoveWeapon(true);
+
         TimeBeforeNewDirection = Animations[CurrentAnim].TotalTime / 2;
-        
+
         PlayAttackSound();
 
         SetAttackDirection();
+    }
+
+    private void ChangeWeaponAttacks()
+    {
+        if (CurrentAnimRepeats == Animations[CurrentAnim].Repeats) // Change animation
+        {
+            CurrentAnimRepeats = 0; // Reset variable
+            CurrentAnim = Animations[CurrentAnim].NextAnimation;
+        }
+
+        CurrentAnimRepeats++;
     }
 
     protected virtual void PlayerWeaponSprite()
@@ -145,7 +162,7 @@ public abstract class Weapon : Component
     private Vector2 lastOffSetPos, startRelativePos = new(0, 60), startRelativeOffsetPos = new Vector2(0, -20);
     public float angle; // Public for test
     protected bool LeftSide;
-    public void MoveWeapon()
+    public void MoveWeapon(bool moveOnlyAngle = false)
     {
         Vector2 userPos;
         if (EnemyUser != null)
@@ -153,7 +170,7 @@ public abstract class Weapon : Component
         else
             userPos = PlayerUser.GameObject.Transform.Position;
 
-        if (Attacking)
+        if (Attacking && !moveOnlyAngle)
         {
             // Lock the offset
             GameObject.Transform.Position = userPos + lastOffSetPos;
@@ -173,20 +190,29 @@ public abstract class Weapon : Component
             angle += 2 * MathHelper.Pi;
         }
 
-        lastOffSetPos = BaseMath.Rotate(startRelativePos, angle - MathHelper.PiOver2) + startRelativeOffsetPos;
-        GameObject.Transform.Position = userPos + lastOffSetPos;
+        if (!moveOnlyAngle)
+        {
+            lastOffSetPos = BaseMath.Rotate(startRelativePos, angle - MathHelper.PiOver2) + startRelativeOffsetPos;
+            GameObject.Transform.Position = userPos + lastOffSetPos;
+        }
 
         // Set the StartAnimationAngle based on the adjusted angle
         if (angle > 0.5 * MathHelper.Pi && angle < 1.5 * MathHelper.Pi)
         {
             spriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
-            StartAnimationAngle = angle + MathHelper.Pi; // This need to be changed if the StartLerp is not Pi
+            StartAnimationAngle = angle + MathHelper.Pi;
 
             LeftSide = true;
         }
         else
         {
+            //if (Animations[CurrentAnim].AmountOfRotation != MathHelper.Pi)
+            //{
+            //    angle += Animations[CurrentAnim].AmountOfRotation / 2;
+            //}
+
             StartAnimationAngle = angle;
+            
             LeftSide = false;
             spriteRenderer.SpriteEffects = SpriteEffects.None;
         }

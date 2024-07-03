@@ -9,7 +9,7 @@ using DoctorsDungeon.CommandPattern;
 namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons;
 
 // Erik
-public abstract class MeleeWeapon : Weapon
+public abstract class MeleeWeapon : Weapon 
 {
     protected float FinalLerp; 
     protected float TotalElapsedTime;
@@ -48,7 +48,47 @@ public abstract class MeleeWeapon : Weapon
 
         UpdateCollisionBoxesPos(GameObject.Transform.Rotation);
     }
+    private void AttackAnimation()
+    {
+        if (!IsRotatingBack && TotalElapsedTime >= TimeBeforeNewDirection)
+        {
+            PlayAttackSound();
 
+            TotalElapsedTime = 0f; // Reset totalElapsedTime
+            IsRotatingBack = true;
+            hitGameObjects = new(); // Reset hit gameobjects so we can hit when it goes back again
+
+            // Makes the weapon flip when rotating back
+            if (spriteRenderer.SpriteEffects == SpriteEffects.FlipHorizontally)
+                spriteRenderer.SpriteEffects = SpriteEffects.None;
+            else if (spriteRenderer.SpriteEffects == SpriteEffects.None)
+                spriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
+        }
+
+        float normalizedTime = TotalElapsedTime / TimeBeforeNewDirection;
+
+        float easedTime; // maybe switch between them.
+        float finalLerp = StartAnimationAngle + FinalLerp;
+
+        if (!IsRotatingBack)
+        {
+            // Down attack
+            easedTime = Animations[CurrentAnim].AnimationMethod(normalizedTime);
+            GameObject.Transform.Rotation = MathHelper.Lerp(StartAnimationAngle, finalLerp, easedTime);
+        }
+        else
+        {
+            //Up attack
+            easedTime = Animations[CurrentAnim].AnimationMethod(normalizedTime);
+            GameObject.Transform.Rotation = MathHelper.Lerp(finalLerp, StartAnimationAngle, easedTime);
+        }
+
+        if (Math.Abs(GameObject.Transform.Rotation - StartAnimationAngle) < 0.1f && IsRotatingBack)
+        {
+            IsRotatingBack = false;
+            Attacking = false;
+        }
+    }
     public void CheckCollisionAndDmg()
     {
         GameObjectTypes type;
@@ -97,47 +137,7 @@ public abstract class MeleeWeapon : Weapon
 
     #region Weapon Colliders
     
-    private void AttackAnimation()
-    {
-        if (TotalElapsedTime >= TimeBeforeNewDirection)
-        {
-            PlayAttackSound();
 
-            TotalElapsedTime = 0f; // Reset totalElapsedTime
-            IsRotatingBack = true;
-            hitGameObjects = new(); // Reset hit gameobjects so we can hit when it goes back again
-
-            // Makes the weapon flip when rotating back
-            if (spriteRenderer.SpriteEffects == SpriteEffects.FlipHorizontally)
-                spriteRenderer.SpriteEffects = SpriteEffects.None;
-            else if (spriteRenderer.SpriteEffects == SpriteEffects.None)
-                spriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
-        }
-
-        float normalizedTime = TotalElapsedTime / TimeBeforeNewDirection;
-
-        float easedTime; // maybe switch between them.
-        float finalLerp = StartAnimationAngle + FinalLerp;
-
-        if (!IsRotatingBack)
-        {
-            // Down attack
-            easedTime = Animations[CurrentAnim].AnimationMethod(normalizedTime);
-            GameObject.Transform.Rotation = MathHelper.Lerp(StartAnimationAngle, finalLerp, easedTime);
-        }
-        else
-        {
-            //Up attack
-            easedTime = Animations[CurrentAnim].AnimationMethod(normalizedTime);
-            GameObject.Transform.Rotation = MathHelper.Lerp(finalLerp, StartAnimationAngle, easedTime);
-        }
-
-        if (Math.Abs(GameObject.Transform.Rotation - StartAnimationAngle) < 0.1f && IsRotatingBack)
-        {
-            IsRotatingBack = false;
-            Attacking = false;
-        }
-    }
 
     private void UpdateCollisionBoxesPos(float rotation)
     {
