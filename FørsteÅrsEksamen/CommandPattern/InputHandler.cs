@@ -4,6 +4,8 @@ using DoctorsDungeon.LiteDB;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading;
 
 namespace DoctorsDungeon.CommandPattern;
 
@@ -44,14 +46,6 @@ public class InputHandler
         SetBaseKeys();
     }
 
-    public void StartInputThread()
-    {
-        while (true)
-        {
-            Update();
-        }
-    }
-
     private void SetBaseKeys()
     {
         AddMouseButtonDownCommand(MouseCmdState.Left, new CheckButtonCmd());
@@ -69,8 +63,6 @@ public class InputHandler
         AddKeyButtonDownCommand(Keys.U, new CustomCmd(() => { DB.Instance.SaveGame(SaveData.CurrentSaveID); }));
         AddKeyButtonDownCommand(Keys.Z, new CustomCmd(() => { GridManager.Instance.ChangeSelectedDraw(DrawMapSelecter.DrawRoomColliders); }));
         AddKeyButtonDownCommand(Keys.X, new CustomCmd(() => { GridManager.Instance.ChangeSelectedDraw(DrawMapSelecter.DrawBlackedOutRooms); }));
-
-
     }
 
     #region Command
@@ -183,7 +175,7 @@ public class InputHandler
     private KeyboardState previousKeyState;
     private MouseState previousMouseState;
 
-    private void Update()
+    public void Update()
     {
         KeyState = Keyboard.GetState();
         MouseState = Mouse.GetState();

@@ -65,23 +65,13 @@ public abstract class Player : Character, ISubject
             CheckForMovement();
         }
 
-        if (Weapon != null)
-        {
-            Weapon.MoveWeapon();
-        }
+        Weapon?.MoveWeapon();
 
         switch (State)
         {
-            case CharacterState.Idle:
-                break;
-
             case CharacterState.Moving:
                 Move(totalMovementInput);
                 break;
-
-            case CharacterState.Attacking:
-                break;
-
             case CharacterState.Dead:
                 ChangeScene();
                 break;
@@ -105,7 +95,6 @@ public abstract class Player : Character, ISubject
     {
         if (totalMovementInput != Vector2.Zero)
         {
-            totalMovementInput = Vector2.Normalize(totalMovementInput);
             SetState(CharacterState.Moving);
         }
         else
@@ -114,23 +103,16 @@ public abstract class Player : Character, ISubject
         }
     }
 
-
-
-    // Weapon
-    // need to make a start position that are like 80px from this postion and in a radius around the player
-    // use rotate method to get the ned point. After we have done that, we need to rotate it a bit
-
     #region Movement
-
     public void AddInput(Vector2 input) // 0, 1 / 0, -1 / 1,0 / -1, 0
     {
+        // Ensure the input vector is not a zero vector, will cause Nan/Nan in the vector
         if (input != Vector2.Zero)
         {
-            // Ensure the input vector is not a zero vector
-            input.Normalize();
-
             // Add the normalized input to the total movement
             totalMovementInput += input;
+
+            totalMovementInput.Normalize();
         }
     }
 

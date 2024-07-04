@@ -19,7 +19,7 @@ public abstract class Enemy : Character
     public Player Player;
     private SpriteRenderer weaponSpriteRenderer;
 
-    private List<GameObject> path;
+    public List<GameObject> path { get; private set; }
     private Vector2 nextTarget;
     private Point targetPoint;
     private readonly float threshold = 10f;
@@ -30,12 +30,13 @@ public abstract class Enemy : Character
     public Enemy(GameObject gameObject) : base(gameObject)
     {
         Speed = 250;
-        astar = new Astar();
     }
 
     public override void Awake()
     {
         base.Awake();
+
+        astar = new Astar();
 
         if (WeaponGo != null)
         {
@@ -57,6 +58,7 @@ public abstract class Enemy : Character
 
     public override void Start()
     {
+        astar.Start(GameObject);
         SpriteRenderer.SetLayerDepth(LayerDepth.EnemyUnder);
 
         SetState(CharacterState.Idle);
@@ -109,7 +111,13 @@ public abstract class Enemy : Character
     {
         if (Player.CollisionNr != CollisionNr && !hasBeenAwoken || State == CharacterState.Dead) return; // Cant move if the player isnt in the same room.
 
-        if (playerGo.Transform.GridPosition != targetPoint)
+        // Very precise but that is not needed in the start
+        //if (playerGo.Transform.GridPosition != targetPoint)
+        Point playerPos = playerGo.Transform.GridPosition;
+        int precise = 3; 
+        // If X is more that z cells away, it should start a new target. The same with Y
+        if (Math.Abs(playerPos.X - targetPoint.X) >= precise ||
+            Math.Abs(playerPos.Y - targetPoint.Y) >= precise)
         {
             targetPoint = playerGo.Transform.GridPosition;
             hasBeenAwoken = true;
@@ -136,16 +144,18 @@ public abstract class Enemy : Character
     }
 
     #region PathFinding
-
+    Random rnd = new();
     private void SetPath()
     {
         ResetPathColor(); // For debugging
 
         path = null; // We cant use the previous path
-
         // Create a new thread to find the path 
         Thread thread = new(() =>
         {
+            // Sleep for a little time, so the threads dont start at the same time
+            Thread.Sleep(rnd.Next(1, 20)); 
+
             path = astar.FindPath(GameObject.Transform.GridPosition, targetPoint);
             if (State == CharacterState.Dead) // Bug happened because this path got returned just as it died
             {

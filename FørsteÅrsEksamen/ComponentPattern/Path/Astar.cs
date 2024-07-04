@@ -1,7 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using DoctorsDungeon.ComponentPattern.Enemies;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace DoctorsDungeon.ComponentPattern.Path;
 
@@ -14,6 +16,13 @@ public class Astar
     private HashSet<GameObject> open;
     private HashSet<GameObject> closed;
 
+    private Enemy enemy;
+    public void Start(GameObject go)
+    {
+        enemy = go.GetComponent<Enemy>();  
+    }
+    int amount;
+    int lastThread;
     public List<GameObject> FindPath(Point start, Point goal)
     {
         gridDem = Cell.dimension * Cell.Scale;
@@ -54,6 +63,7 @@ public class Astar
             // Checks if its on the Goal grid position, if it is, we have found the path
             if (newCurCell.GameObject.Transform.GridPosition.X == goal.X && newCurCell.GameObject.Transform.GridPosition.Y == goal.Y)
             {
+                amount++;
                 // Path found!
                 return RetracePath(cells[start], cells[goal]);
             }
@@ -90,14 +100,7 @@ public class Astar
 
         return null;
     }
-
-    /*
-    Can also use the Euclidean distance to get the H
-    float first = Math.Abs(end.gridPosition.X - next.gridPosition.X);
-    float second = Math.Abs(end.gridPosition.Y - next.gridPosition.Y);
-    float priority = newCost + (float)Math.Sqrt(Math.Pow(first, 2) + Math.Pow(second, 2)); // Euclidean distance
-    */
-    List<GameObject> path = new();
+    
     /// <summary>
     /// Reverses the found path, by going though each GameObject and finding its Parent.
     /// </summary>
@@ -106,14 +109,14 @@ public class Astar
     /// <returns></returns>
     private List<GameObject> RetracePath(GameObject startPoint, GameObject endPoint)
     {
-        path.Clear();
+        List<GameObject> path = new();
         GameObject currentNode = endPoint;
 
         while (currentNode != startPoint)
         {
             if (currentNode == null) continue;
             path.Add(currentNode);
-            currentNode = currentNode.GetComponent<Cell>().Parent;
+            currentNode = currentNode.GetComponent<Cell>().Parent; 
         }
         path.Add(startPoint);
         path.Reverse();

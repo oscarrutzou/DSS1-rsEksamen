@@ -69,11 +69,11 @@ public class GameWorld : Game
         CurrentScene = Scenes[SceneNames.MainMenu];
         CurrentScene.Initialize(); // Starts the main menu
 
-        Thread inputThread = new(InputHandler.Instance.StartInputThread)
-        {
-            IsBackground = true // Stops the thread when main thread closes
-        };
-        inputThread.Start();
+        //Thread inputThread = new(InputHandler.Instance.StartInputThread)
+        //{
+        //    IsBackground = true // Stops the thread when main thread closes
+        //};
+        //inputThread.Start();
 
         base.Initialize();
     }
@@ -88,6 +88,8 @@ public class GameWorld : Game
         DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
         GlobalSounds.MusicUpdate(); // Updates the Music in the game, not SFX
+
+        InputHandler.Instance.Update();
 
         CurrentScene.Update(gameTime); // Updates all gameobjects and their componetents in the scene
 

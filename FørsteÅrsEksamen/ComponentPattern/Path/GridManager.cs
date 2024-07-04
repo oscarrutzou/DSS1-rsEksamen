@@ -260,6 +260,7 @@ public class GridManager
 
         foreach (GameObject go in CurrentGrid.Cells.Values)
         {
+            
             Cell cell = go.GetComponent<Cell>();
             
             CheckCellIsDiscovered(cell);
@@ -273,7 +274,7 @@ public class GridManager
 
         if (PlayerDiscoveredRoomNmbers.Contains(cell.RoomNr) && cell.RoomNr != -1)
         {
-            //go.IsEnabled = false;
+            go.IsEnabled = false;
             sr.ShouldDraw = false;
             sr.Color = Color.AliceBlue;
         }

@@ -73,7 +73,7 @@ public abstract class RoomBase : Scene
         SpawnEndPos();
 
         SpawnEnemies();
-        SpawnPotions();
+        //SpawnPotions();
 
         SetCommands();
 
