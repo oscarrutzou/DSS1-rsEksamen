@@ -1,5 +1,6 @@
 ﻿using DoctorsDungeon.CommandPattern;
 using DoctorsDungeon.ComponentPattern;
+using DoctorsDungeon.ComponentPattern.Path;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -78,6 +79,7 @@ public abstract class Scene
     {
         OnFirstCleanUp = null; // For extra safety
         InputHandler.Instance.RemoveAllExeptBaseCommands();
+        GridManager.Instance.ResetGridManager();
     }
 
     /// <summary>

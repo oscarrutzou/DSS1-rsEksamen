@@ -47,7 +47,7 @@ public abstract class Character : Component
     protected int Speed { get; set; }
     public int CurrentHealth = 100;
     public int MaxHealth = 100;
-    public int RoomNr { get; set; }
+    public int CollisionNr { get; set; }
 
     #endregion Properties
 

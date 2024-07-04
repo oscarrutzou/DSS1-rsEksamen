@@ -18,23 +18,23 @@ public static class CellFactory
         cellGo.AddComponent<Cell>(grid, gridPos);
 
         SpriteRenderer sr = cellGo.AddComponent<SpriteRenderer>();
-        sr.SetLayerDepth(LayerDepth.WorldBackground);
+        sr.SetLayerDepth(LayerDepth.Cells);
         sr.SetSprite(TextureNames.Cell);
 
         return cellGo;
     }
 
-    public static GameObject Create(Grid grid, Point gridPos, CellWalkableType cellType, int roomNr)
+    public static GameObject Create(Grid grid, Point gridPos, CellWalkableType cellType, int collisionNr, int roomNr)
     {
         GameObject cellGo = new()
         {
             Type = GameObjectTypes.Cell
         };
 
-        cellGo.AddComponent<Cell>(grid, gridPos, cellType, roomNr);
+        cellGo.AddComponent<Cell>(grid, gridPos, cellType, collisionNr, roomNr);
 
         SpriteRenderer sr = cellGo.AddComponent<SpriteRenderer>();
-        sr.SetLayerDepth(LayerDepth.WorldBackground);
+        sr.SetLayerDepth(LayerDepth.Cells);
         sr.SetSprite(TextureNames.Cell);
 
         return cellGo;

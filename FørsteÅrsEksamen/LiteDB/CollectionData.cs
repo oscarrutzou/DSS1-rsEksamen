@@ -26,7 +26,9 @@ public class CellData
     public Guid Cell_ID { get; set; }
 
     public int[] PointPosition { get; set; }
-    public int Room_Nr { get; set; }
+    public int CollisionNr { get; set; }
+    public int RoomNr { get; set; }
+
     public CellWalkableType Cell_Type { get; set; }
 }
 

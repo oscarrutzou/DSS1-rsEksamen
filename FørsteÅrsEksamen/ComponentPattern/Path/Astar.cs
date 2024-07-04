@@ -97,7 +97,7 @@ public class Astar
     float second = Math.Abs(end.gridPosition.Y - next.gridPosition.Y);
     float priority = newCost + (float)Math.Sqrt(Math.Pow(first, 2) + Math.Pow(second, 2)); // Euclidean distance
     */
-
+    List<GameObject> path = new();
     /// <summary>
     /// Reverses the found path, by going though each GameObject and finding its Parent.
     /// </summary>
@@ -106,7 +106,7 @@ public class Astar
     /// <returns></returns>
     private List<GameObject> RetracePath(GameObject startPoint, GameObject endPoint)
     {
-        List<GameObject> path = new List<GameObject>();
+        path.Clear();
         GameObject currentNode = endPoint;
 
         while (currentNode != startPoint)

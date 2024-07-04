@@ -23,6 +23,8 @@ public enum LayerDepth
 
     WorldForeground,
 
+    Cells,
+
     UI,
     Button,
     Text,

@@ -76,6 +76,8 @@ public abstract class RoomBase : Scene
         SpawnPotions();
 
         SetCommands();
+
+        GridManager.Instance.SetCellsVisibility();
     }
 
     #region Initialize Methods
@@ -259,24 +261,42 @@ public abstract class RoomBase : Scene
 
     private void DebugDraw(SpriteBatch spriteBatch)
     {
-        spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], GameWorld.Instance.UiCam.TopLeft, null, Color.WhiteSmoke, 0f, Vector2.Zero, new Vector2(400, 300), SpriteEffects.None, 0.99f); // Over everything exept text
+        spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], GameWorld.Instance.UiCam.TopLeft, null, Color.WhiteSmoke, 0f, Vector2.Zero, new Vector2(450, 350), SpriteEffects.None, 0.99f); // Over everything exept text
 
         Vector2 mousePos = InputHandler.Instance.MouseOnUI;
 
-        DrawString(spriteBatch, $"MousePos UI {mousePos}", GameWorld.Instance.UiCam.TopLeft);
+        Vector2 startPos = GameWorld.Instance.UiCam.TopLeft;
+        Vector2 offset = new Vector2(0, 30);
+
+        DrawString(spriteBatch, $"MousePos UI {mousePos}", startPos);
 
         GameObject cellGo = GridManager.Instance.GetCellAtPos(InputHandler.Instance.MouseInWorld);
         if (cellGo != null)
         {
+            startPos += offset;    
             Point cellGridPos = cellGo.Transform.GridPosition;
-            DrawString(spriteBatch, $"Cell Point from MousePos: {cellGridPos}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 30));
+            DrawString(spriteBatch, $"Cell Point from MousePos: {cellGridPos}", startPos);
         }
+        startPos += offset;
+        DrawString(spriteBatch, $"PlayerPos {PlayerGo.Transform.Position}", startPos);
 
-        DrawString(spriteBatch, $"PlayerPos {PlayerGo.Transform.Position}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 60));
-        DrawString(spriteBatch, $"Cell GameObjects in scene {cells.Count}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 90));
-        DrawString(spriteBatch, $"LevelNr {GridManager.Instance.LevelNrIndex}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 120));
-        DrawString(spriteBatch, $"Current Level Reached {SaveData.Level_Reached}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 150));
-        DrawString(spriteBatch, $"Player Room Nr {player.RoomNr}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 180));
+        startPos += offset;
+        DrawString(spriteBatch, $"Player Room Nr {player.CollisionNr}", startPos);
+
+        startPos += offset;
+        DrawString(spriteBatch, $"Cell GameObjects in scene {cells.Count}", startPos);
+
+        startPos += offset;
+        DrawString(spriteBatch, $"Current Level Reached {SaveData.Level_Reached}", startPos);
+
+        startPos += offset;
+        DrawString(spriteBatch, $"Grid Current Draw {GridManager.Instance.CurrentDrawSelected.ToString()}", startPos);
+
+        startPos += offset;
+        DrawString(spriteBatch, $"Grid Collision Nr {GridManager.Instance.ColliderNrIndex}", startPos);
+
+        startPos += offset;
+        DrawString(spriteBatch, $"Grid Room Nr {GridManager.Instance.RoomNrIndex}", startPos);
     }
 
     protected void DrawString(SpriteBatch spriteBatch, string text, Vector2 position)

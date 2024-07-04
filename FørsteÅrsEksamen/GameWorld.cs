@@ -1,5 +1,6 @@
 ﻿using DoctorsDungeon.CommandPattern;
 using DoctorsDungeon.ComponentPattern;
+using DoctorsDungeon.ComponentPattern.Path;
 using DoctorsDungeon.GameManagement;
 using DoctorsDungeon.GameManagement.Scenes;
 using DoctorsDungeon.GameManagement.Scenes.Menus;
@@ -245,6 +246,7 @@ public class GameWorld : Game
         WorldCam.Position = Vector2.Zero; // Resets world cam position
         CurrentScene = Scenes[NextScene.Value]; // Changes to new scene
         CurrentScene.Initialize(); // Starts the new scene
+
         NextScene = null;
     }
 

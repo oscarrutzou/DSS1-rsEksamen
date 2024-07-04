@@ -94,7 +94,8 @@ public class DB
             {
                 Cell_ID = oldCellData.Cell_ID,
                 PointPosition = oldCellData.PointPosition,
-                Room_Nr = cell.RoomNr,
+                CollisionNr = cell.CollisionNr,
+                RoomNr = cell.RoomNr,
                 Cell_Type = cell.CellWalkableType,
             };
 
@@ -134,7 +135,8 @@ public class DB
             {
                 Cell_ID = Guid.NewGuid(), // A unique key
                 PointPosition = new int[] { gridpos.X, gridpos.Y },
-                Room_Nr = cell.RoomNr,
+                CollisionNr = cell.CollisionNr,
+                RoomNr = cell.RoomNr,
                 Cell_Type = cell.CellWalkableType,
             };
 
@@ -162,7 +164,7 @@ public class DB
         foreach (CellData cellData in savedGrid.Cells)
         {
             Point gridPos = new(cellData.PointPosition[0], cellData.PointPosition[1]);
-            GameObject cellGo = CellFactory.Create(grid, gridPos, cellData.Cell_Type, cellData.Room_Nr); // Create the cell object
+            GameObject cellGo = CellFactory.Create(grid, gridPos, cellData.Cell_Type, cellData.CollisionNr, cellData.RoomNr); // Create the cell object
             grid.Cells.Add(gridPos, cellGo); // Adds to Cell Dict so we can use it later.
             cellGo.IsEnabled = InputHandler.Instance.DebugMode;
             GameWorld.Instance.Instantiate(cellGo); //Spawn it into the world.

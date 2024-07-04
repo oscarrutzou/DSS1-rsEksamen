@@ -57,8 +57,8 @@ public class InputHandler
         AddMouseButtonDownCommand(MouseCmdState.Left, new CheckButtonCmd());
 
         // For debugging
-        AddKeyButtonDownCommand(Keys.Q, new CustomCmd(() => { GridManager.Instance.ChangeRoomNrIndex(-1); }));
-        AddKeyButtonDownCommand(Keys.E, new CustomCmd(() => { GridManager.Instance.ChangeRoomNrIndex(1); }));
+        AddKeyButtonDownCommand(Keys.Q, new CustomCmd(() => { GridManager.Instance.ChangeNumberIndex(-1); }));
+        AddKeyButtonDownCommand(Keys.E, new CustomCmd(() => { GridManager.Instance.ChangeNumberIndex(1); }));
 
         AddMouseUpdateCommand(MouseCmdState.Left, new CustomCmd(() => { GridManager.Instance.DrawOnCells(); }));
         AddMouseUpdateCommand(MouseCmdState.Right, new CustomCmd(() => { GridManager.Instance.SetDefaultOnCell(); }));
@@ -67,6 +67,10 @@ public class InputHandler
         AddKeyButtonDownCommand(Keys.I, new CustomCmd(() => { GridManager.Instance.ShowHideGrid(); }));
 
         AddKeyButtonDownCommand(Keys.U, new CustomCmd(() => { DB.Instance.SaveGame(SaveData.CurrentSaveID); }));
+        AddKeyButtonDownCommand(Keys.Z, new CustomCmd(() => { GridManager.Instance.ChangeSelectedDraw(DrawMapSelecter.DrawRoomColliders); }));
+        AddKeyButtonDownCommand(Keys.X, new CustomCmd(() => { GridManager.Instance.ChangeSelectedDraw(DrawMapSelecter.DrawBlackedOutRooms); }));
+
+
     }
 
     #region Command

@@ -25,8 +25,10 @@ public class Cell : Component
     /// <summary>
     /// Used when selecting which room is active on each grid. Base is -1, so they dont count as a room
     /// </summary>
+    public int CollisionNr { get; set; } = -1;
     public int RoomNr { get; set; } = -1;
 
+    public bool ShouldDraw { get; set; }
     // For the Astar algortihm
     public CellWalkableType CellWalkableType;
 
@@ -35,6 +37,8 @@ public class Cell : Component
     public int G;
     public int H;
     public int F => G + H;
+
+    public Color NotDiscoveredColor = Color.Black;
 
     /// <summary>
     /// Parent is for the Astar, not the GameObject that is attached as "GameObject".
@@ -67,13 +71,14 @@ public class Cell : Component
                           point.Y * dimension * Scale + dimension * Scale / 2);
     }
 
-    public Cell(GameObject gameObject, Grid grid, Point point, CellWalkableType type, int roomNr) : base(gameObject)
+    public Cell(GameObject gameObject, Grid grid, Point point, CellWalkableType type, int collisionNr, int roomNr) : base(gameObject)
     {
         GameObject.Transform.GridPosition = point;
         GameObject.Transform.Scale = new(Scale, Scale);
 
         CellWalkableType = type;
-        this.RoomNr = roomNr;
+        CollisionNr = collisionNr;
+        RoomNr = roomNr;
 
         // Centers the position of the cell.
         GameObject.Transform.Position = grid.StartPostion
@@ -103,16 +108,21 @@ public class Cell : Component
     {
         if (spriteRenderer == null) return;
 
-        GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, GameObject.Transform.Position, RoomNr.ToString(), Color.HotPink);
+        if (!InputHandler.Instance.DebugMode) return;
+        Vector2 offset = new Vector2(10, 0);
+        GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, GameObject.Transform.Position - offset, RoomNr.ToString(), Color.Yellow);
+        GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, GameObject.Transform.Position + offset, CollisionNr.ToString(), Color.HotPink);
     }
 
     public void ChangeCellWalkalbeType(CellWalkableType cellWalkableType)
     {
         if (spriteRenderer == null) return;
 
+        if (GridManager.Instance.CurrentDrawSelected == DrawMapSelecter.DrawBlackedOutRooms) return;
+
         if (InputHandler.Instance.DebugMode)
         {
-            if (RoomNr == -1) GameObject.IsEnabled = false;
+            if (CollisionNr == -1) GameObject.IsEnabled = false;
             else GameObject.IsEnabled = true;
         }
 

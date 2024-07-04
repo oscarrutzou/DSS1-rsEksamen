@@ -2,8 +2,16 @@
 using DoctorsDungeon.ComponentPattern.GUI;
 using DoctorsDungeon.LiteDB;
 using Microsoft.Xna.Framework;
+using SharpDX.Direct3D9;
+using System.Collections.Generic;
 
 namespace DoctorsDungeon.ComponentPattern.Path;
+
+public enum DrawMapSelecter
+{
+    DrawRoomColliders,
+    DrawBlackedOutRooms,
+}
 
 public class GridManager
 {
@@ -30,12 +38,27 @@ public class GridManager
 
     public bool DrawRoomNr { get; set; }
 
+    private int colliderNrIndex = 1;
     private int roomNrIndex = 1;
 
     /// <summary>
     /// For the room index on the cells, right now there is a limit of 10 rooms.
     /// </summary>
-    public int LevelNrIndex
+    public int ColliderNrIndex
+    {
+        get { return colliderNrIndex; }
+        set
+        {
+            if (value == 0 || value > 10) return;
+
+            if (colliderNrIndex != value)
+            {
+                colliderNrIndex = value;
+            }
+        }
+    }
+
+    public int RoomNrIndex
     {
         get { return roomNrIndex; }
         set
@@ -49,13 +72,39 @@ public class GridManager
         }
     }
 
+    public DrawMapSelecter CurrentDrawSelected = DrawMapSelecter.DrawBlackedOutRooms;
+
+    public List<int> PlayerDiscoveredRoomNmbers = new(); 
 
     #endregion Parameters
 
-    public void ChangeRoomNrIndex(int addToCurrentRoomNr)
+    public void ResetGridManager()
+    {
+        PlayerDiscoveredRoomNmbers = new();
+    }
+
+    public void ChangeNumberIndex(int addToNumber)
     {
         if (!InputHandler.Instance.DebugMode) return;
-        LevelNrIndex += addToCurrentRoomNr;
+
+
+        if (CurrentDrawSelected == DrawMapSelecter.DrawRoomColliders)
+        {
+            ColliderNrIndex += addToNumber;
+        }
+        else if (CurrentDrawSelected == DrawMapSelecter.DrawBlackedOutRooms)
+        {
+            RoomNrIndex += addToNumber;
+        }
+    }
+
+    public void AddVisitedRoomNumbers(int roomNr)
+    {
+        if (!PlayerDiscoveredRoomNmbers.Contains(roomNr))
+        {
+            PlayerDiscoveredRoomNmbers.Add(roomNr);
+            ShouldDrawCells();
+        }
     }
 
     public void SaveLoadGrid(Grid grid)
@@ -83,7 +132,14 @@ public class GridManager
         GameObject cellGo = GetCellAtPos(InputHandler.Instance.MouseInWorld);
         if (cellGo == null) return;
 
-        SetCellProperties(cellGo, CellWalkableType.FullValid, LevelNrIndex); // Move the is walkable out of this
+        if (CurrentDrawSelected == DrawMapSelecter.DrawRoomColliders)
+        {
+            SetCollisionCellProperties(cellGo, CellWalkableType.FullValid, ColliderNrIndex); // Move the is walkable out of this
+        }
+        else if (CurrentDrawSelected == DrawMapSelecter.DrawBlackedOutRooms)
+        {
+            SetRoomCellProperties(cellGo, RoomNrIndex);
+        }
     }
 
     public void SetDefaultOnCell()
@@ -94,14 +150,36 @@ public class GridManager
         GameObject cellGo = GetCellAtPos(InputHandler.Instance.MouseInWorld);
         if (cellGo == null) return;
 
-        SetCellProperties(cellGo, CellWalkableType.NotValid, -1);
+        if (CurrentDrawSelected == DrawMapSelecter.DrawRoomColliders)
+        {
+            SetCollisionCellProperties(cellGo, CellWalkableType.NotValid, -1);
+        }
+        else if (CurrentDrawSelected == DrawMapSelecter.DrawBlackedOutRooms)
+        {
+            SetRoomCellProperties(cellGo, -1);
+        }
     }
 
-    private void SetCellProperties(GameObject cellGo, CellWalkableType walkableType, int roomNr)
+    public void ChangeSelectedDraw(DrawMapSelecter selected)
+    {
+        CurrentDrawSelected = selected;
+        
+        ShouldDrawCells();
+    }
+
+    private void SetCollisionCellProperties(GameObject cellGo, CellWalkableType walkableType, int collisionNr)
+    {
+        Cell cell = cellGo.GetComponent<Cell>();
+        cell.CollisionNr = collisionNr;
+        cell.ChangeCellWalkalbeType(walkableType);
+    }
+
+    private void SetRoomCellProperties(GameObject cellGo, int roomNr)
     {
         Cell cell = cellGo.GetComponent<Cell>();
         cell.RoomNr = roomNr;
-        cell.ChangeCellWalkalbeType(walkableType);
+
+        CheckCellIsDiscovered(cell);
     }
 
     public void DeleteDrawnGrid()
@@ -159,11 +237,51 @@ public class GridManager
 
         foreach (GameObject go in CurrentGrid.Cells.Values)
         {
-            // Set all to getting draw if the bool is true.
-            //go.GetComponent<SpriteRenderer>().ShouldDraw = InputHandler.Instance.DebugMode;
-            go.IsEnabled = InputHandler.Instance.DebugMode;
             Cell cell = go.GetComponent<Cell>();
-            cell.ChangeCellWalkalbeType(cell.CellWalkableType); // Only draw the ones that have a room.
+            
+            if (CurrentDrawSelected == DrawMapSelecter.DrawRoomColliders)
+            {
+                if (InputHandler.Instance.DebugMode)
+                {
+                    if (cell.CollisionNr == -1) go.IsEnabled = false;
+                    else go.IsEnabled = true;
+                }
+            }
+            else if (CurrentDrawSelected == DrawMapSelecter.DrawBlackedOutRooms)
+            {
+                CheckCellIsDiscovered(cell);
+            }
+        }
+    }
+
+    public void SetCellsVisibility()
+    {
+        if (CurrentGrid == null) throw new System.Exception("You have to have a grid to change the cells");
+
+        foreach (GameObject go in CurrentGrid.Cells.Values)
+        {
+            Cell cell = go.GetComponent<Cell>();
+            
+            CheckCellIsDiscovered(cell);
+        }
+    }
+
+    private void CheckCellIsDiscovered(Cell cell)
+    {
+        GameObject go = cell.GameObject;
+        SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
+
+        if (PlayerDiscoveredRoomNmbers.Contains(cell.RoomNr) && cell.RoomNr != -1)
+        {
+            //go.IsEnabled = false;
+            sr.ShouldDraw = false;
+            sr.Color = Color.AliceBlue;
+        }
+        else
+        {
+            go.IsEnabled = true;
+            sr.ShouldDraw = true;
+            sr.Color = cell.NotDiscoveredColor;
         }
     }
 

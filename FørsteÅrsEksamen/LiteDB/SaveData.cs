@@ -7,12 +7,12 @@ namespace DoctorsDungeon.LiteDB;
 // Oscar
 public static class SaveData
 {
-    private const int StartCurrency = 100;
-    private static float StartTimeLeft = 120f;
+    private const int StartCurrency = 10000;
+    private static float StartTimeLeft = 12000f;
 
     public static int CurrentSaveID = 1; //Gets set by player and determins loaded data
     public const int MaxSaveID = 3;
-    public static int Currency = 100; // Start currency is 100
+    public static int Currency; 
 
     // Save what classes and weapons are unlocked
     public static List<WeaponTypes> UnlockedWeapons { get; set; } = new();

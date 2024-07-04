@@ -27,7 +27,6 @@ public abstract class Enemy : Character
     private bool hasBeenAwoken;
 
     #endregion Properties
-
     public Enemy(GameObject gameObject) : base(gameObject)
     {
         Speed = 250;
@@ -40,7 +39,7 @@ public abstract class Enemy : Character
 
         if (WeaponGo != null)
         {
-            weaponSpriteRenderer = WeaponGo.GetComponent<SpriteRenderer>();
+            weaponSpriteRenderer = WeaponGo.GetComponent<SpriteRenderer>();  
         }
 
         Collider.SetCollisionBox(15, 27, new Vector2(0, 15));
@@ -66,11 +65,11 @@ public abstract class Enemy : Character
         GameObject currentCellGo = grid.GetCellGameObjectFromPoint(GameObject.Transform.GridPosition);
         GameObject.Transform.Position = currentCellGo.Transform.Position;
         Cell cell = currentCellGo.GetComponent<Cell>();
-        RoomNr = cell.RoomNr;
+        CollisionNr = cell.CollisionNr;
 
         Weapon.MoveWeapon();
 
-        if (Player.RoomNr == RoomNr) SetPath(); // We know that the player the targetPoint has been set
+        if (Player.CollisionNr == CollisionNr) SetPath(); // We know that the player the targetPoint has been set
     }
 
     public override void Update(GameTime gameTime)
@@ -108,7 +107,7 @@ public abstract class Enemy : Character
 
     private void PlayerMovedInRoom()
     {
-        if (Player.RoomNr != RoomNr && !hasBeenAwoken || State == CharacterState.Dead) return; // Cant move if the player isnt in the same room.
+        if (Player.CollisionNr != CollisionNr && !hasBeenAwoken || State == CharacterState.Dead) return; // Cant move if the player isnt in the same room.
 
         if (playerGo.Transform.GridPosition != targetPoint)
         {
@@ -137,6 +136,7 @@ public abstract class Enemy : Character
     }
 
     #region PathFinding
+
     private void SetPath()
     {
         ResetPathColor(); // For debugging
@@ -221,7 +221,7 @@ public abstract class Enemy : Character
     private void UpdateRoomNr(GameObject cellGo)
     {
         Cell cell = cellGo.GetComponent<Cell>();
-        RoomNr = cell.RoomNr;
+        CollisionNr = cell.CollisionNr;
     }
 
     private void ResetPathColor()

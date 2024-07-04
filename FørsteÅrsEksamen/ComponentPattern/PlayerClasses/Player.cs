@@ -207,7 +207,9 @@ public abstract class Player : Character, ISubject
         // Updates the grid position
         GameObject cellGoUnderPlayer = GridManager.Instance.GetCellAtPos(GameObject.Transform.Position);
         GameObject.Transform.GridPosition = cellGoUnderPlayer.Transform.GridPosition;
-        RoomNr = cellGoUnderPlayer.GetComponent<Cell>().RoomNr;
+        Cell cellUnderPlayer = cellGoUnderPlayer.GetComponent<Cell>();
+        CollisionNr = cellUnderPlayer.CollisionNr;
+        GridManager.Instance.AddVisitedRoomNumbers(cellUnderPlayer.RoomNr);
 
         Notify();
     }
