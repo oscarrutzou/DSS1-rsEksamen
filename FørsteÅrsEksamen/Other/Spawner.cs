@@ -32,6 +32,11 @@ public class Spawner : Component
             GameWorld.Instance.Instantiate(enemyGo);
         }
 
+        foreach (Enemy enemy in enemies)
+        {
+            enemy.SetStartEnemyRefs(enemies); 
+        }
+
         return enemies;
     }
 

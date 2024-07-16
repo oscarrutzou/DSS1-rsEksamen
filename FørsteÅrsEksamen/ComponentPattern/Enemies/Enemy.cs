@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,13 +16,13 @@ public abstract class Enemy : Character
     #region Properties
     private Grid grid;
     private Astar astar;
-    private GameObject playerGo;
+    private GameObject playerGo; 
     public Player Player;
     private SpriteRenderer weaponSpriteRenderer;
 
-    public List<GameObject> path { get; private set; }
+    public List<GameObject> Path { get; private set; }
     private Vector2 nextTarget;
-    private Point targetPoint;
+    public Point TargetPoint;
     private readonly float threshold = 10f;
 
     private bool hasBeenAwoken;
@@ -31,7 +32,6 @@ public abstract class Enemy : Character
     {
         Speed = 250;
     }
-
     public override void Awake()
     {
         base.Awake();
@@ -51,14 +51,20 @@ public abstract class Enemy : Character
         this.playerGo = playerGo;
         Player = playerGo.GetComponent<Player>();
 
-        targetPoint = playerGo.Transform.GridPosition;
+        TargetPoint = playerGo.Transform.GridPosition;
         grid = GridManager.Instance.CurrentGrid;
         GameObject.Transform.GridPosition = gridPos;
     }
 
+    private List<Enemy> enemyList = new();
+    public void SetStartEnemyRefs(List<Enemy> enemies)
+    {
+        enemyList = enemies.Where(enemy => enemy != this).ToList();
+    }
+
     public override void Start()
     {
-        astar.Start(GameObject);
+        astar.Start(this, enemyList);
         SpriteRenderer.SetLayerDepth(LayerDepth.EnemyUnder);
 
         SetState(CharacterState.Idle);
@@ -111,15 +117,13 @@ public abstract class Enemy : Character
     {
         if (Player.CollisionNr != CollisionNr && !hasBeenAwoken || State == CharacterState.Dead) return; // Cant move if the player isnt in the same room.
 
-        // Very precise but that is not needed in the start
-        //if (playerGo.Transform.GridPosition != targetPoint)
         Point playerPos = playerGo.Transform.GridPosition;
         int precise = 3; 
         // If X is more that z cells away, it should start a new target. The same with Y
-        if (Math.Abs(playerPos.X - targetPoint.X) >= precise ||
-            Math.Abs(playerPos.Y - targetPoint.Y) >= precise)
+        if (Math.Abs(playerPos.X - TargetPoint.X) >= precise ||
+            Math.Abs(playerPos.Y - TargetPoint.Y) >= precise)
         {
-            targetPoint = playerGo.Transform.GridPosition;
+            TargetPoint = playerGo.Transform.GridPosition;
             hasBeenAwoken = true;
             SetPath();
         }
@@ -145,63 +149,89 @@ public abstract class Enemy : Character
 
     #region PathFinding
     Random rnd = new();
+    bool setPathRunning;
     private void SetPath()
     {
         ResetPathColor(); // For debugging
 
-        path = null; // We cant use the previous path
+        Path = null; // We cant use the previous path
         // Create a new thread to find the path 
-        Thread thread = new(() =>
+        Path = astar.FindPath(GameObject.Transform.GridPosition, TargetPoint);
+        if (State == CharacterState.Dead) // Bug happened because this path got returned just as it died
         {
-            // Sleep for a little time, so the threads dont start at the same time
-            Thread.Sleep(rnd.Next(1, 20)); 
+            setPathRunning = false;
+            return;
+        }
+        if (Path != null && Path.Count > 0)
+        {
+            // If a new path is being set, set the next target to the enemy's current position
+            SetState(CharacterState.Moving);
+            if (GameObject.Transform.Position != Path[0].Transform.Position)
+            {
+                nextTarget = GameObject.Transform.Position;
+            }
+            else
+            {
+                SetNextTargetPos(Path[0]);
+            }
+        }
+        //if (setPathRunning) return;
 
-            path = astar.FindPath(GameObject.Transform.GridPosition, targetPoint);
-            if (State == CharacterState.Dead) // Bug happened because this path got returned just as it died
-            {
-                return;
-            }
-            if (path != null && path.Count > 0)
-            {
-                // If a new path is being set, set the next target to the enemy's current position
-                SetState(CharacterState.Moving);
-                if (GameObject.Transform.Position != path[0].Transform.Position)
-                {
-                    nextTarget = GameObject.Transform.Position;
-                }
-                else
-                {
-                    SetNextTargetPos(path[0]);
-                }
-            }
-        });
-        thread.IsBackground = true;
-        thread.Start();
+        //Thread thread = new(() =>
+        //{
+        //    setPathRunning = true;
+        //    // Sleep for a little time, so the threads dont start at the same time
+        //    Thread.Sleep(rnd.Next(1, 20)); 
+
+        //    path = astar.FindPath(GameObject.Transform.GridPosition, targetPoint);
+        //    if (State == CharacterState.Dead) // Bug happened because this path got returned just as it died
+        //    {
+        //        setPathRunning = false;
+        //        return;
+        //    }
+        //    if (path != null && path.Count > 0)
+        //    {
+        //        // If a new path is being set, set the next target to the enemy's current position
+        //        SetState(CharacterState.Moving);
+        //        if (GameObject.Transform.Position != path[0].Transform.Position)
+        //        {
+        //            nextTarget = GameObject.Transform.Position;
+        //        }
+        //        else
+        //        {
+        //            SetNextTargetPos(path[0]);
+        //        }
+        //    }
+
+        //    setPathRunning = false;
+        //});
+        //thread.IsBackground = true;
+        //thread.Start();
     }
 
     private void UpdatePathing()
     {
-        if (path == null)
+        if (Path == null)
             return;
         Vector2 position = GameObject.Transform.Position;
 
         if (Vector2.Distance(position, nextTarget) < threshold)
         {
-            if (path.Count > 2)
+            if (Path.Count > 2)
             {
-                GameObject.Transform.GridPosition = path[0].Transform.GridPosition;
-                UpdateRoomNr(path[0]);
-                ResetCellColor(path[0]);
-                path.RemoveAt(0);
-                SetNextTargetPos(path[0]);
+                GameObject.Transform.GridPosition = Path[0].Transform.GridPosition;
+                UpdateRoomNr(Path[0]);
+                ResetCellColor(Path[0]);
+                Path.RemoveAt(0);
+                SetNextTargetPos(Path[0]);
             }
-            else if (path.Count == 2) // Stops the path.
+            else if (Path.Count == 2) // Stops the path.
             {
-                GameObject.Transform.GridPosition = path[0].Transform.GridPosition;
-                UpdateRoomNr(path[0]);
-                SetNextTargetPos(path[0]);
-                ResetCellColor(path[0]);
-                path.RemoveAt(0);
+                GameObject.Transform.GridPosition = Path[0].Transform.GridPosition;
+                UpdateRoomNr(Path[0]);
+                SetNextTargetPos(Path[0]);
+                ResetCellColor(Path[0]);
+                Path.RemoveAt(0);
             }
         }
 
@@ -210,19 +240,19 @@ public abstract class Enemy : Character
         GameObject.Transform.Translate(Direction * Speed * GameWorld.DeltaTime);
         Weapon.MoveWeapon();
 
-        if (path.Count <= 3) // Attack before reaching the player, to put pressure on them
+        if (Path.Count <= 3) // Attack before reaching the player, to put pressure on them
         {
             Direction = Vector2.Normalize(playerGo.Transform.Position - GameObject.Transform.Position);
             Attack();
         }
 
-        if (path.Count == 1 && Vector2.Distance(position, nextTarget) < threshold)
+        if (Path.Count == 1 && Vector2.Distance(position, nextTarget) < threshold)
         {
             SetState(CharacterState.Attacking); // Close so would always attack
     
-            ResetCellColor(path[0]); // Debug
+            ResetCellColor(Path[0]); // Debug
 
-            path = null;
+            Path = null;
         }
 
         UpdateDirection();
@@ -236,9 +266,9 @@ public abstract class Enemy : Character
 
     private void ResetPathColor()
     {
-        if (path != null)
+        if (Path != null)
         {
-            foreach (GameObject cellGo in path)
+            foreach (GameObject cellGo in Path)
             {
                 ResetCellColor(cellGo);
             }

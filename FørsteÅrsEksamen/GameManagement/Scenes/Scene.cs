@@ -45,11 +45,7 @@ public abstract class Scene
     {
         CleanUp();
 
-        if (OnFirstCleanUp != null)
-        {
-            OnFirstCleanUp();
-            OnFirstCleanUp = null;
-        }
+        OnFirstCleanUp?.Invoke();
 
         if (GameWorld.IsPaused) return;
 

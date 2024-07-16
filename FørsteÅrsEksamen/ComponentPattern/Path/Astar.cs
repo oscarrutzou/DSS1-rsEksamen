@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 
 namespace DoctorsDungeon.ComponentPattern.Path;
 
@@ -11,24 +10,36 @@ namespace DoctorsDungeon.ComponentPattern.Path;
 public class Astar
 {
     private Dictionary<Point, GameObject> cells;
-    private Grid grid;
     private int gridDem;
     private HashSet<GameObject> open;
     private HashSet<GameObject> closed;
 
-    private Enemy enemy;
-    public void Start(GameObject go)
+    private Enemy thisEnemy;
+    private List<Enemy> otherEnemies; // So we can take into account the other enemies paths.
+    public void Start(Enemy enemy, List<Enemy> enemyList)
     {
-        enemy = go.GetComponent<Enemy>();  
+        otherEnemies = enemyList;
+        this.thisEnemy = enemy; 
+
+        gridDem = Cell.dimension * Cell.Scale;
+        cells = GridManager.Instance.CurrentGrid.Cells.ToDictionary(
+            entry => entry.Key,
+            entry => entry.Value
+        );
     }
-    int amount;
-    int lastThread;
+
+    private Point start;
+
     public List<GameObject> FindPath(Point start, Point goal)
     {
-        gridDem = Cell.dimension * Cell.Scale;
-        grid = GridManager.Instance.CurrentGrid;
-        cells = grid.Cells; // Assign existing grid
+        // Maybe check if the found path is the same as any of the others here.
+        Point newPoint = GetNewPointIfOcupated();
+        if (newPoint != new Point(-1, -1))
+        {
+            goal = newPoint;
+        }
 
+        this.start = start;
         ResetCells(); // Gets the Cells ready
 
         open = new HashSet<GameObject>(); // Cells to check
@@ -63,7 +74,6 @@ public class Astar
             // Checks if its on the Goal grid position, if it is, we have found the path
             if (newCurCell.GameObject.Transform.GridPosition.X == goal.X && newCurCell.GameObject.Transform.GridPosition.Y == goal.Y)
             {
-                amount++;
                 // Path found!
                 return RetracePath(cells[start], cells[goal]);
             }
@@ -100,7 +110,7 @@ public class Astar
 
         return null;
     }
-    
+    List<GameObject> path = new();
     /// <summary>
     /// Reverses the found path, by going though each GameObject and finding its Parent.
     /// </summary>
@@ -109,15 +119,22 @@ public class Astar
     /// <returns></returns>
     private List<GameObject> RetracePath(GameObject startPoint, GameObject endPoint)
     {
-        List<GameObject> path = new();
+        path.Clear();
         GameObject currentNode = endPoint;
 
-        while (currentNode != startPoint)
+        int amount = 0;
+        while (currentNode != startPoint && amount < 20)
         {
-            if (currentNode == null) continue;
+            amount++;
+
+            if (currentNode == null)
+            {
+                continue;
+            }
             path.Add(currentNode);
             currentNode = currentNode.GetComponent<Cell>().Parent; 
         }
+
         path.Add(startPoint);
         path.Reverse();
 
@@ -131,11 +148,8 @@ public class Astar
 
     private void ResetCells()
     {
-        foreach (GameObject cell in grid.Cells.Values)
+        foreach (GameObject cell in cells.Values)
         {
-            //cell.Color = cell.baseColor;
-            //cell.GetComponent<SpriteRenderer>().
-            //cell.Discovered = false;
             cell.GetComponent<Cell>().Parent = null;
         }
     }
@@ -150,6 +164,84 @@ public class Astar
             return 14 * dstY + 10 * (dstX - dstY);
         }
         return 14 * dstX + 10 * (dstY - dstX);
+    }
+
+    private Point GetNewPointIfOcupated()
+    {
+        Point retPoint = new Point(-1, -1);
+        List<GameObject> availableTargets = new();
+
+        bool shouldChange = false;
+        foreach (Enemy otherEnemy in otherEnemies)
+        {
+            if (otherEnemy.TargetPoint != thisEnemy.TargetPoint) continue;
+            shouldChange = true;
+        }
+
+        if (!shouldChange)
+        {
+            return retPoint;
+        }
+
+        List<GameObject> targetPointNeighbors = GetNeighbors(thisEnemy.TargetPoint);
+
+
+        foreach (GameObject neighborGo in targetPointNeighbors)
+        {
+            bool pointBeingUsed = false;
+            
+            foreach (Enemy otherEnemy in otherEnemies)
+            {
+                if (neighborGo.Transform.GridPosition == otherEnemy.TargetPoint)
+                {
+                    pointBeingUsed = true;
+                    break;
+                }
+            }
+
+            if (!pointBeingUsed)
+            {
+                availableTargets.Add(neighborGo);
+            }
+        }
+
+        GameObject closestTarget = null;
+        float closestDistance = float.MaxValue;
+        Vector2 thisPosition = thisEnemy.GameObject.Transform.Position;
+
+        foreach (GameObject availableTarget in availableTargets)
+        {
+            float distance = Vector2.Distance(thisPosition, availableTarget.Transform.Position);
+            if (distance < closestDistance)
+            {
+                closestDistance = distance;
+                closestTarget = availableTarget;
+            }
+        }
+
+        retPoint = closestTarget.Transform.GridPosition;
+        // First check if the targetpath is the same as other enemy
+        // get neighbors around of the normal targetpath.
+        // Then take a distance check on the not used neighbors to find the closest one. 
+        // If there is none neighbors just dont change the targetpath, so it stacks.
+        // Lastly change the targetpath
+
+        // Return newPoint(-1,-1) if there isnt a need to change the targetpath.
+
+        // In enemy script after the astar, change the target point to the astar target point. 
+
+
+        // Enemies and player should maybe have their sprite go up and down, or left and right when walking? 
+        // and attacking. 
+
+        // Should also have red color and maybe a outline that gets showed for a quick second?
+        // For outline just use Asesprite, and either delete the normal sprite or have it black and white
+        // Then when attacked, it changes sprite and the color of the sprite, and changes back to normal after
+
+        // Like so it just gets drawn in the character when taking damage.
+        // Could also just have a component that handles TakeDamage, and shows the outline? 
+
+        return retPoint;
     }
 
     /// <summary>
