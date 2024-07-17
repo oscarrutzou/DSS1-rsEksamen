@@ -1,12 +1,9 @@
 ﻿using DoctorsDungeon.ComponentPattern.Path;
 using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace DoctorsDungeon.ComponentPattern.Enemies;
 
@@ -14,9 +11,10 @@ namespace DoctorsDungeon.ComponentPattern.Enemies;
 public abstract class Enemy : Character
 {
     #region Properties
+
     private Grid grid;
     private Astar astar;
-    private GameObject playerGo; 
+    private GameObject playerGo;
     public Player Player;
     private SpriteRenderer weaponSpriteRenderer;
 
@@ -28,10 +26,12 @@ public abstract class Enemy : Character
     private bool hasBeenAwoken;
 
     #endregion Properties
+
     public Enemy(GameObject gameObject) : base(gameObject)
     {
         Speed = 250;
     }
+
     public override void Awake()
     {
         base.Awake();
@@ -40,7 +40,7 @@ public abstract class Enemy : Character
 
         if (WeaponGo != null)
         {
-            weaponSpriteRenderer = WeaponGo.GetComponent<SpriteRenderer>();  
+            weaponSpriteRenderer = WeaponGo.GetComponent<SpriteRenderer>();
         }
 
         Collider.SetCollisionBox(15, 27, new Vector2(0, 15));
@@ -57,6 +57,7 @@ public abstract class Enemy : Character
     }
 
     private List<Enemy> enemyList = new();
+
     public void SetStartEnemyRefs(List<Enemy> enemies)
     {
         enemyList = enemies.Where(enemy => enemy != this).ToList();
@@ -118,7 +119,7 @@ public abstract class Enemy : Character
         if (Player.CollisionNr != CollisionNr && !hasBeenAwoken || State == CharacterState.Dead) return; // Cant move if the player isnt in the same room.
 
         Point playerPos = playerGo.Transform.GridPosition;
-        int precise = 3; 
+        int precise = 3;
         // If X is more that z cells away, it should start a new target. The same with Y
         if (Math.Abs(playerPos.X - TargetPoint.X) >= precise ||
             Math.Abs(playerPos.Y - TargetPoint.Y) >= precise)
@@ -148,13 +149,15 @@ public abstract class Enemy : Character
     }
 
     #region PathFinding
-    Random rnd = new();
+
+    private Random rnd = new();
+
     private void SetPath()
     {
         //ResetPathColor(); // For debugging
 
         Path = null; // We cant use the previous path
-        // Create a new thread to find the path 
+        // Create a new thread to find the path
         Path = astar.FindPath(GameObject.Transform.GridPosition, TargetPoint);
         // Bug happened because this path got returned just as it died
         if (State == CharacterState.Dead) return;
@@ -175,6 +178,7 @@ public abstract class Enemy : Character
     }
 
     private int stopWalkingBeforeReachTarget = 2;
+
     private void UpdatePathing()
     {
         if (Path == null)
@@ -215,7 +219,7 @@ public abstract class Enemy : Character
         if (Path.Count == 1 && Vector2.Distance(position, nextTarget) < threshold)
         {
             SetState(CharacterState.Attacking); // Close so would always attack
-    
+
             //ResetCellColor(Path[0]); // Debug
 
             Path = null;

@@ -5,5 +5,4 @@ public class BowFire : RangedWeapon
     public BowFire(GameObject gameObject) : base(gameObject)
     {
     }
-
 }

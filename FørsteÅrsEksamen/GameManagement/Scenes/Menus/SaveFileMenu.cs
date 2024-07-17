@@ -3,7 +3,6 @@ using DoctorsDungeon.ComponentPattern.GUI;
 using DoctorsDungeon.Factory.Gui;
 using DoctorsDungeon.LiteDB;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 namespace DoctorsDungeon.GameManagement.Scenes.Menus;

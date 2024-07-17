@@ -76,7 +76,7 @@ public class CharacterSelectorMenu : MenuScene
             if (!DB.Instance.RemoveCurrency(costAmount)) return;
 
             DB.Instance.UnlockClass(type);
-            
+
             classButtons[type].Text = $"{type}";
         }
 

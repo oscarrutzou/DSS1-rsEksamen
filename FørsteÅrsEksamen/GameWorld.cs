@@ -1,6 +1,5 @@
 ﻿using DoctorsDungeon.CommandPattern;
 using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.Path;
 using DoctorsDungeon.GameManagement;
 using DoctorsDungeon.GameManagement.Scenes;
 using DoctorsDungeon.GameManagement.Scenes.Menus;
@@ -11,8 +10,6 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-
 
 namespace DoctorsDungeon;
 
@@ -26,8 +23,8 @@ public class GameWorld : Game
     public Dictionary<SceneNames, Scene> Scenes { get; private set; }
 
     public Scene CurrentScene;
-    public Camera WorldCam { get; private set; } // Follows player 
-    public Camera UiCam { get; private set; } //Static on the ui 
+    public Camera WorldCam { get; private set; } // Follows player
+    public Camera UiCam { get; private set; } //Static on the ui
     public static float DeltaTime { get; private set; }
     public GraphicsDeviceManager GfxManager { get; private set; }
 
@@ -35,7 +32,7 @@ public class GameWorld : Game
     public static readonly object GameobjectDeleteLock = new();
 
     public SceneNames? NextScene { get; private set; } = null;
-    public bool ShowBG { get; set; } = true; // If we should show our background 
+    public bool ShowBG { get; set; } = true; // If we should show our background
 
     private SpriteBatch _spriteBatch;
     private GameObject menuBackground;
@@ -47,7 +44,6 @@ public class GameWorld : Game
         IsMouseVisible = true;
         Window.Title = "Doctor's Dungeon";
     }
-
 
     //_graphics.SynchronizeWithVerticalRetrace = false; //Vsync
     //IsFixedTimeStep = true;
@@ -152,9 +148,9 @@ public class GameWorld : Game
         GfxManager.IsFullScreen = true;
         GfxManager.ApplyChanges();
     }
-     
+
     /// <summary>
-    /// Adds the GameObject to the CurrentScene 
+    /// Adds the GameObject to the CurrentScene
     /// </summary>
     /// <param name="go"></param>
     public void Instantiate(GameObject go) => CurrentScene.Instantiate(go);

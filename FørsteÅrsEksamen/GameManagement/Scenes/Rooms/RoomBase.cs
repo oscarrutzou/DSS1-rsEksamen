@@ -4,8 +4,6 @@ using DoctorsDungeon.ComponentPattern;
 using DoctorsDungeon.ComponentPattern.Enemies;
 using DoctorsDungeon.ComponentPattern.Path;
 using DoctorsDungeon.ComponentPattern.PlayerClasses;
-using DoctorsDungeon.ComponentPattern.Weapons;
-using DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons;
 using DoctorsDungeon.ComponentPattern.WorldObjects;
 using DoctorsDungeon.Factory;
 using DoctorsDungeon.GameManagement.Scenes.Menus;
@@ -49,6 +47,7 @@ public abstract class RoomBase : Scene
     private List<GameObject> cells = new(); // For debug
 
     protected Color TextColor = new(250, 249, 246);
+
     #endregion Properties
 
     public override void Initialize()
@@ -171,7 +170,6 @@ public abstract class RoomBase : Scene
 
     #endregion Initialize Methods
 
-
     public override void Update(GameTime gameTime)
     {
         SaveData.Time_Left -= GameWorld.DeltaTime;
@@ -275,7 +273,7 @@ public abstract class RoomBase : Scene
         GameObject cellGo = GridManager.Instance.GetCellAtPos(InputHandler.Instance.MouseInWorld);
         if (cellGo != null)
         {
-            startPos += offset;    
+            startPos += offset;
             Point cellGridPos = cellGo.Transform.GridPosition;
             DrawString(spriteBatch, $"Cell Point from MousePos: {cellGridPos}", startPos);
         }

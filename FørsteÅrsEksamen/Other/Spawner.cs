@@ -34,7 +34,7 @@ public class Spawner : Component
 
         foreach (Enemy enemy in enemies)
         {
-            enemy.SetStartEnemyRefs(enemies); 
+            enemy.SetStartEnemyRefs(enemies);
         }
 
         return enemies;

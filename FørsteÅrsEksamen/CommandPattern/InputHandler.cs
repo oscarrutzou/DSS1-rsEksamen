@@ -4,8 +4,6 @@ using DoctorsDungeon.LiteDB;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
 
 namespace DoctorsDungeon.CommandPattern;
 
@@ -58,7 +56,6 @@ public class InputHandler
 
         AddMouseUpdateCommand(MouseCmdState.Left, new CustomCmd(() => { GridManager.Instance.DrawOnCells(); }));
         AddMouseUpdateCommand(MouseCmdState.Right, new CustomCmd(() => { GridManager.Instance.SetDefaultOnCell(); }));
-        
 
         AddKeyButtonDownCommand(Keys.I, new CustomCmd(() => { GridManager.Instance.ShowHideGrid(); }));
 

@@ -25,7 +25,7 @@ public enum GameObjectTypes
 }
 
 // Oscar
-public class GameObject: ICloneable
+public class GameObject : ICloneable
 {
     private Dictionary<Type, Component> components = new Dictionary<Type, Component>();
     public Transform Transform { get; private set; } = new Transform();

@@ -29,7 +29,6 @@ public static class EnemyFactory
     //    int randomClassIndex = random.Next(enemyValue.Length);
     //    EnemyTypes randomType = (EnemyTypes)enemyValue.GetValue(randomClassIndex);
 
-
     //    Array weaponValue = Enum.GetValues(typeof(WeaponTypes));
     //    int randomWeaponIndex = random.Next(weaponValue.Length);
     //    WeaponTypes randomWeapon = (WeaponTypes)weaponValue.GetValue(randomWeaponIndex);

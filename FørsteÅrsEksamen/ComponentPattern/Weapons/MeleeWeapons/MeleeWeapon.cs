@@ -1,17 +1,17 @@
-﻿using DoctorsDungeon.GameManagement.Scenes;
+﻿using DoctorsDungeon.CommandPattern;
+using DoctorsDungeon.GameManagement.Scenes;
 using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework.Graphics;
-using DoctorsDungeon.CommandPattern;
 
 namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons;
 
 // Erik
-public abstract class MeleeWeapon : Weapon 
+public abstract class MeleeWeapon : Weapon
 {
-    protected float FinalLerp; 
+    protected float FinalLerp;
     protected float TotalElapsedTime;
     protected bool IsRotatingBack;
     protected List<CollisionRectangle> WeaponColliders = new();
@@ -29,9 +29,9 @@ public abstract class MeleeWeapon : Weapon
         Character damageGoHealth = damageGo.GetComponent<Character>();
 
         // Float so we can divide with enemy weakness
-        float damage = Animations[CurrentAnim].Damage; 
+        float damage = Animations[CurrentAnim].Damage;
         if (EnemyUser != null)
-            damage /= enemyWeakness; 
+            damage /= enemyWeakness;
 
         damageGoHealth.TakeDamage((int)damage);
     }
@@ -40,7 +40,7 @@ public abstract class MeleeWeapon : Weapon
     {
         if (Attacking)
         {
-            TotalElapsedTime += GameWorld.DeltaTime; 
+            TotalElapsedTime += GameWorld.DeltaTime;
             AttackAnimation();
 
             CheckCollisionAndDmg();
@@ -48,6 +48,7 @@ public abstract class MeleeWeapon : Weapon
 
         UpdateCollisionBoxesPos(GameObject.Transform.Rotation);
     }
+
     private void AttackAnimation()
     {
         if (!IsRotatingBack && TotalElapsedTime >= TimeBeforeNewDirection)
@@ -89,6 +90,7 @@ public abstract class MeleeWeapon : Weapon
             Attacking = false;
         }
     }
+
     public void CheckCollisionAndDmg()
     {
         GameObjectTypes type;
@@ -121,7 +123,7 @@ public abstract class MeleeWeapon : Weapon
     protected override void SetAttackDirection()
     {
         TotalElapsedTime = 0f;
-   
+
         hitGameObjects = new();
         if (LeftSide)
         {
@@ -136,18 +138,16 @@ public abstract class MeleeWeapon : Weapon
     }
 
     #region Weapon Colliders
-    
-
 
     private void UpdateCollisionBoxesPos(float rotation)
     {
         foreach (CollisionRectangle collisionRectangle in WeaponColliders)
         {
             // Calculate the position relative to the center of the weapon
-            Vector2 relativePos = collisionRectangle.StartRelativePos; 
+            Vector2 relativePos = collisionRectangle.StartRelativePos;
 
             // Rotate the relative position
-            Vector2 newPos = BaseMath.Rotate(relativePos, rotation); 
+            Vector2 newPos = BaseMath.Rotate(relativePos, rotation);
 
             // Set the collision rectangle position based on the rotated relative position
             collisionRectangle.Rectangle.X = (int)(GameObject.Transform.Position.X + newPos.X) - collisionRectangle.Rectangle.Width / 2;

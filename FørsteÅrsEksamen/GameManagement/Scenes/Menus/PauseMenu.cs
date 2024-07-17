@@ -1,5 +1,4 @@
-﻿using DoctorsDungeon.CommandPattern;
-using DoctorsDungeon.ComponentPattern;
+﻿using DoctorsDungeon.ComponentPattern;
 using DoctorsDungeon.ComponentPattern.GUI;
 using DoctorsDungeon.Factory.Gui;
 using Microsoft.Xna.Framework.Graphics;

@@ -16,10 +16,14 @@ public class Astar
     private List<GameObject> path = new();
     private Enemy thisEnemy;
     private List<Enemy> otherEnemies; // So we can take into account the other enemies paths.
+
+    private Point start;
+    private Random rnd = new();
+
     public void Start(Enemy enemy, List<Enemy> enemyList)
     {
         otherEnemies = enemyList;
-        this.thisEnemy = enemy; 
+        thisEnemy = enemy;
 
         gridDem = Cell.dimension * Cell.Scale;
         cells = GridManager.Instance.CurrentGrid.Cells.ToDictionary(
@@ -27,8 +31,6 @@ public class Astar
             entry => entry.Value
         );
     }
-
-    private Point start;
 
     public List<GameObject> FindPath(Point start, Point goal)
     {
@@ -106,6 +108,7 @@ public class Astar
 
         return null;
     }
+
     /// <summary>
     /// Reverses the found path, by going though each GameObject and finding its Parent.
     /// </summary>
@@ -125,9 +128,9 @@ public class Astar
             if (currentNode == null)
             {
                 continue;
-            } 
+            }
             path.Add(currentNode);
-            currentNode = currentNode.GetComponent<Cell>().Parent; 
+            currentNode = currentNode.GetComponent<Cell>().Parent;
         }
 
         path.Add(startPoint);
@@ -156,7 +159,6 @@ public class Astar
         return 14 * dstX + 10 * (dstY - dstX);
     }
 
-    Random rnd = new();
     private Point GetNewPointIfOcupated()
     {
         Point retPoint = new Point(-1, -1);
@@ -200,8 +202,6 @@ public class Astar
 
         return retPoint;
     }
-
-   
 
     /// <summary>
     /// Gets the neighbors in all 8 directions from the point
@@ -254,4 +254,4 @@ public class Astar
         }
         return temp;
     }
-}    
+}

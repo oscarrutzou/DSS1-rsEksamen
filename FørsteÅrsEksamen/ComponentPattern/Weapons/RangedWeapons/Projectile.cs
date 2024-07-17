@@ -79,7 +79,6 @@ public class Projectile : Component
         }
     }
 
-
     public override void OnCollisionEnter(Collider collider)
     {
         if (collider.GameObject.GetComponent<Enemy>() != null)

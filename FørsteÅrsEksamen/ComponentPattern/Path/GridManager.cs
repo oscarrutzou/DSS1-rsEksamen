@@ -2,7 +2,6 @@
 using DoctorsDungeon.ComponentPattern.GUI;
 using DoctorsDungeon.LiteDB;
 using Microsoft.Xna.Framework;
-using SharpDX.Direct3D9;
 using System.Collections.Generic;
 
 namespace DoctorsDungeon.ComponentPattern.Path;
@@ -74,20 +73,19 @@ public class GridManager
 
     public DrawMapSelecter CurrentDrawSelected = DrawMapSelecter.DrawBlackedOutRooms;
 
-    public List<int> PlayerDiscoveredRoomNmbers = new(); 
+    public List<int> PlayerDiscoveredRoomNmbers = new();
 
     #endregion Parameters
 
     public void ResetGridManager()
     {
         // Make a new list, and populate 1, so the player can see the first room.
-        PlayerDiscoveredRoomNmbers = new() {1};
+        PlayerDiscoveredRoomNmbers = new() { 1 };
     }
 
     public void ChangeNumberIndex(int addToNumber)
     {
         if (!InputHandler.Instance.DebugMode) return;
-
 
         if (CurrentDrawSelected == DrawMapSelecter.DrawRoomColliders)
         {
@@ -164,7 +162,7 @@ public class GridManager
     public void ChangeSelectedDraw(DrawMapSelecter selected)
     {
         CurrentDrawSelected = selected;
-        
+
         ShouldDrawCells();
     }
 
@@ -239,7 +237,7 @@ public class GridManager
         foreach (GameObject go in CurrentGrid.Cells.Values)
         {
             Cell cell = go.GetComponent<Cell>();
-            
+
             if (CurrentDrawSelected == DrawMapSelecter.DrawRoomColliders)
             {
                 if (InputHandler.Instance.DebugMode)
@@ -261,9 +259,8 @@ public class GridManager
 
         foreach (GameObject go in CurrentGrid.Cells.Values)
         {
-            
             Cell cell = go.GetComponent<Cell>();
-            
+
             CheckCellIsDiscovered(cell);
         }
     }
@@ -288,5 +285,4 @@ public class GridManager
     }
 
     #endregion Return Methods
-
 }

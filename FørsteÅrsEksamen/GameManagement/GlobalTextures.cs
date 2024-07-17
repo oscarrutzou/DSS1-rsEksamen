@@ -20,13 +20,11 @@ public enum TextureNames
 
     TestLevelBG,
     TestLevelFG,
-    
-    
+
     WoodSword,
     BoneSword,
     WoodDagger,
     BoneDagger,
-
 
     WoodArrow,
 
@@ -35,6 +33,7 @@ public enum TextureNames
 
     // UI
     SmallBtn,
+
     LargeBtn,
     QuestUnder,
 }
@@ -70,7 +69,7 @@ public static class GlobalTextures
 
             {TextureNames.Level3BG, content.Load<Texture2D>("World\\Levels\\Level3Under") },
             {TextureNames.Level3FG, content.Load<Texture2D>("World\\Levels\\Level3Over") },
-            
+
             {TextureNames.TestLevelBG, content.Load<Texture2D>("World\\Levels\\Test1UnderPlayer") },
             {TextureNames.TestLevelFG, content.Load<Texture2D>("World\\Levels\\Test1OverPlayer") },
 

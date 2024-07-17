@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
 
 namespace DoctorsDungeon.ComponentPattern.Weapons;
 
@@ -20,10 +19,9 @@ public class CollisionRectangle
     public Vector2 StartRelativePos;
 }
 
-
 public enum WeaponAnimTypes
 {
-    Light, 
+    Light,
     Medium,
     Heavy,
     // Maybe special or something
@@ -41,7 +39,7 @@ public class WeaponAnimation
     public AnimationFunction AnimationMethod; // Delegate field
     public WeaponAnimTypes NextAnimation;
 
-    public WeaponAnimation(float totalTime, 
+    public WeaponAnimation(float totalTime,
                            float amountOfRotation,
                            int damage,
                            AnimationFunction animationMethod,
@@ -62,7 +60,7 @@ public class WeaponAnimation
     }
 }
 
-// NexAnim 
+// NexAnim
 // A weapon will always have a light attack. It goes though the enum, enum.default = first in.
 // Need to save how many that attack has been picked, with how many times it should repeat
 // Could do it with a int that
@@ -75,13 +73,11 @@ public class WeaponAnimation
 // A really nice to have to so make a trail behind the weapon when it swings:D Would be fun to make
 public abstract class Weapon : Component
 {
-
     protected Dictionary<WeaponAnimTypes, WeaponAnimation> Animations;
     protected WeaponAnimTypes CurrentAnim;
     protected int CurrentAnimRepeats;
     public Player PlayerUser { get; set; }
     public Enemy EnemyUser { get; set; }
-
 
     protected SpriteRenderer spriteRenderer;
 
@@ -91,7 +87,7 @@ public abstract class Weapon : Component
 
     // A lot of this data is being copied on many different weapons, even though it has the same data.
     // Could use a GlobalPool or something that contains data, that are the same and wont be changed on each object
-    protected SoundNames[] AttackSoundNames; 
+    protected SoundNames[] AttackSoundNames;
 
     protected Vector2 StartPosOffset = new(40, 20);
 
@@ -116,6 +112,7 @@ public abstract class Weapon : Component
     }
 
     protected float TimeBeforeNewDirection;
+
     public void StartAttack()
     {
         if (Attacking) return;
@@ -162,6 +159,7 @@ public abstract class Weapon : Component
     private Vector2 lastOffSetPos, startRelativePos = new(0, 60), startRelativeOffsetPos = new Vector2(0, -20);
     public float angle; // Public for test
     protected bool LeftSide;
+
     public void MoveWeapon(bool moveOnlyAngle = false)
     {
         Vector2 userPos;
@@ -212,7 +210,7 @@ public abstract class Weapon : Component
             //}
 
             StartAnimationAngle = angle;
-            
+
             LeftSide = false;
             spriteRenderer.SpriteEffects = SpriteEffects.None;
         }

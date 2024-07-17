@@ -14,7 +14,7 @@ public static class SaveData
 
     public static int CurrentSaveID = 1; //Gets set by player and determins loaded data
     public const int MaxSaveID = 3;
-    public static int Currency; 
+    public static int Currency;
 
     // Save what classes and weapons are unlocked
     public static List<WeaponTypes> UnlockedWeapons { get; set; } = new();

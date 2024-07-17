@@ -5,9 +5,7 @@ using DoctorsDungeon.Factory;
 using DoctorsDungeon.LiteDB;
 using DoctorsDungeon.ObserverPattern;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using System.Data.Common;
 
 namespace DoctorsDungeon.ComponentPattern.PlayerClasses;
 
@@ -72,6 +70,7 @@ public abstract class Player : Character, ISubject
             case CharacterState.Moving:
                 Move(totalMovementInput);
                 break;
+
             case CharacterState.Dead:
                 ChangeScene();
                 break;
@@ -104,6 +103,7 @@ public abstract class Player : Character, ISubject
     }
 
     #region Movement
+
     public void AddInput(Vector2 input) // 0, 1 / 0, -1 / 1,0 / -1, 0
     {
         // Ensure the input vector is not a zero vector, will cause Nan/Nan in the vector

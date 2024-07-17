@@ -5,5 +5,4 @@ public class MagicStaffFire : RangedWeapon
     public MagicStaffFire(GameObject gameObject) : base(gameObject)
     {
     }
-
 }

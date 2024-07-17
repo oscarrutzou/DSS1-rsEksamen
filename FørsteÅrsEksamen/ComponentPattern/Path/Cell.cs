@@ -26,9 +26,11 @@ public class Cell : Component
     /// Used when selecting which room is active on each grid. Base is -1, so they dont count as a room
     /// </summary>
     public int CollisionNr { get; set; } = -1;
+
     public int RoomNr { get; set; } = -1;
 
     public bool ShouldDraw { get; set; }
+
     // For the Astar algortihm
     public CellWalkableType CellWalkableType;
 

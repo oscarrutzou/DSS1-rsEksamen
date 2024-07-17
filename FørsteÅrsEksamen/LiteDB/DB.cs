@@ -18,6 +18,7 @@ namespace DoctorsDungeon.LiteDB;
 public class DB
 {
     #region Start
+
     private static DB instance;
 
     // Used a singleton so we can get the path when we first use our database
@@ -44,9 +45,11 @@ public class DB
 
         return Path.Combine(path, "LiteDB.db");
     }
-    #endregion
+
+    #endregion Start
 
     #region Grid
+
     public void SaveGrid(Grid grid)
     {
         if (grid == null) return;
@@ -172,7 +175,8 @@ public class DB
 
         return gridGo;
     }
-    #endregion
+
+    #endregion Grid
 
     public SaveFileData LoadGame()
     {
@@ -265,7 +269,7 @@ public class DB
             playerGo = PlayerFactory.Create(SaveData.SelectedClass, SaveData.SelectedWeapon);
             Player player = playerGo.GetComponent<Player>();
             SaveData.Player = player;
-            
+
             // Could ekstrakt here, to make code more readable
             PlayerData playerData = new()
             {
@@ -288,6 +292,7 @@ public class DB
         else
         {
             #region Load Player
+
             // First load player
             PlayerData loadPlayerData = savedData.RunData.PlayerData;
             playerGo = PlayerFactory.Create(loadPlayerData.Class_Type, loadPlayerData.Weapon_Type);
@@ -305,7 +310,8 @@ public class DB
             }
 
             SaveData.Player = player;
-            #endregion
+
+            #endregion Load Player
 
             savedData = UpdateRun(savedData);
 
@@ -363,8 +369,8 @@ public class DB
         SaveData.SetBaseValues();
     }
 
-
     #region Extra Methods
+
     public void UnlockClass(ClassTypes classType)
     {
         if (SaveData.UnlockedClasses.Contains(classType)) return;
@@ -437,6 +443,5 @@ public class DB
         GameWorld.Instance.ChangeScene(SceneNames.EndMenu);
     }
 
-    #endregion
-
+    #endregion Extra Methods
 }

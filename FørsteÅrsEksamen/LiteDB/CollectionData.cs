@@ -3,9 +3,6 @@ using DoctorsDungeon.Factory;
 using LiteDB;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DoctorsDungeon.LiteDB;
 
@@ -42,6 +39,7 @@ public class SaveFileData
     public List<ClassTypes> Unlocked_Classes { get; set; }
     public List<WeaponTypes> Unlocked_Weapons { get; set; }
     public RunData RunData { get; set; }
+
     public SaveFileData()
     {
         Last_Login = DateTime.Now;

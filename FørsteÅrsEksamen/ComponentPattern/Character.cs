@@ -128,7 +128,7 @@ public abstract class Character : Component
     {
         if (Weapon == null) return;
         Weapon.MoveWeapon(); // Should maybe wait till it has reached towards the new direction
-        if (Weapon == null) return; 
+        if (Weapon == null) return;
         Weapon.StartAttack();
     }
 
