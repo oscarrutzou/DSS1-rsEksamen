@@ -50,6 +50,8 @@ public class InputHandler
     {
         AddMouseButtonDownCommand(MouseCmdState.Left, new CheckButtonCmd());
 
+        if (!GameWorld.DebugAndCheats) return;
+
         // For debugging
         AddKeyButtonDownCommand(Keys.Q, new CustomCmd(() => { GridManager.Instance.ChangeNumberIndex(-1); }));
         AddKeyButtonDownCommand(Keys.E, new CustomCmd(() => { GridManager.Instance.ChangeNumberIndex(1); }));

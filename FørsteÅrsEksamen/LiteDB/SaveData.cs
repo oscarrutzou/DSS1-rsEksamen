@@ -7,8 +7,10 @@ namespace DoctorsDungeon.LiteDB;
 // Oscar
 public static class SaveData
 {
-    private const int StartCurrency = 10000;
-    private static float StartTimeLeft = 12000f;
+    private const int StartCurrency = 100; // Normal 100
+    private static float StartTimeLeft = 120f; // Normal 120f
+
+    private const int CheatMultiplier = 100;
 
     public static int CurrentSaveID = 1; //Gets set by player and determins loaded data
     public const int MaxSaveID = 3;
@@ -33,6 +35,11 @@ public static class SaveData
     {
         Currency = StartCurrency;
         Time_Left = StartTimeLeft;
+        if (GameWorld.DebugAndCheats)
+        {
+            Currency *= CheatMultiplier;
+            Time_Left *= CheatMultiplier;
+        }
         Level_Reached = 1;
         UnlockedWeapons = new();
         UnlockedClasses = new();

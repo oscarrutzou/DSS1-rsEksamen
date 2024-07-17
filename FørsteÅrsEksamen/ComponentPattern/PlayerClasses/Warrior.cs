@@ -8,7 +8,7 @@ public class Warrior : Player
     public Warrior(GameObject gameObject) : base(gameObject)
     {
         Speed = 150;
-        MaxHealth = 125;
+        MaxHealth = 100;
         CurrentHealth = MaxHealth;
     }
 

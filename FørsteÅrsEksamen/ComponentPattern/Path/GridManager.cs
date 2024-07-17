@@ -80,7 +80,8 @@ public class GridManager
 
     public void ResetGridManager()
     {
-        PlayerDiscoveredRoomNmbers = new();
+        // Make a new list, and populate 1, so the player can see the first room.
+        PlayerDiscoveredRoomNmbers = new() {1};
     }
 
     public void ChangeNumberIndex(int addToNumber)

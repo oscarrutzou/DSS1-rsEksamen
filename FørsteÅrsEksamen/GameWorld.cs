@@ -20,6 +20,9 @@ namespace DoctorsDungeon;
 public class GameWorld : Game
 {
     public static GameWorld Instance;
+
+    public static bool DebugAndCheats = false;
+
     public Dictionary<SceneNames, Scene> Scenes { get; private set; }
 
     public Scene CurrentScene;

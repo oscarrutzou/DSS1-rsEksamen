@@ -12,7 +12,9 @@ public static class GuiMethods
 {
     public static void PlaceGameObjectsVertical(List<GameObject> list, Vector2 startPos, int spaceBetween, bool center = false)
     {
-        int buttonHeight = list[0].GetComponent<Collider>().CollisionBox.Height;
+        Collider colReference = list[0].GetComponent<Collider>();
+        Button btnScaleReference = list[0].GetComponent<Button>();
+        int buttonHeight = colReference.StartCollisionHeight * (int)btnScaleReference.MaxScale.Y;
 
         if (center)
         {
@@ -37,7 +39,9 @@ public static class GuiMethods
     public static void PlaceGameObjectsHorizontal(List<GameObject> list, Vector2 startPos, int spaceBetween, bool center = true)
     {
         // Calculate the width of a button
-        int buttonWidth = list[0].GetComponent<Collider>().CollisionBox.Width;
+        Collider colReference = list[0].GetComponent<Collider>();
+        Button btnScaleReference = list[0].GetComponent<Button>();
+        int buttonWidth = colReference.StartCollisionWidth * (int)btnScaleReference.MaxScale.X;
 
         if (center)
         {

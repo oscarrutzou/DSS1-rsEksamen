@@ -25,7 +25,7 @@ public class Button : Component
     public Color OnHoverColor = new(200, 200, 200);
     public Color OnMouseDownColor = new(150, 150, 150);
 
-    private Vector2 maxScale;
+    public Vector2 MaxScale { get; private set; }
     private float clickCooldown = 0.1f; // The delay between button clicks in seconds
     private float timeSinceLastClick = 0; // The time since the button was last clicked
     private bool invokeActionOnFullScale;
@@ -38,8 +38,8 @@ public class Button : Component
 
     public Button(GameObject gameObject) : base(gameObject)
     {
-        maxScale = GameObject.Transform.Scale;
-        scaleUpAmount = new Vector2(maxScale.X * 0.01f, maxScale.Y * 0.01f);
+        MaxScale = GameObject.Transform.Scale;
+        scaleUpAmount = new Vector2(MaxScale.X * 0.01f, MaxScale.Y * 0.01f);
 
         font = GlobalTextures.DefaultFont;
         GameObject.Type = GameObjectTypes.Gui;
@@ -47,8 +47,8 @@ public class Button : Component
 
     public Button(GameObject gameObject, string text, bool invokeActionOnFullScale, Action onClick) : base(gameObject)
     {
-        maxScale = GameObject.Transform.Scale;
-        scaleUpAmount = new Vector2(maxScale.X * 0.01f, maxScale.Y * 0.01f);
+        MaxScale = GameObject.Transform.Scale;
+        scaleUpAmount = new Vector2(MaxScale.X * 0.01f, MaxScale.Y * 0.01f);
 
         font = GlobalTextures.DefaultFont;
         this.Text = text;
@@ -91,13 +91,13 @@ public class Button : Component
 
         // Scales up too fast
         GameObject.Transform.Scale = new Vector2(
-            Math.Min(maxScale.X, scale.X + scaleUpAmount.X),
-            Math.Min(maxScale.Y, scale.Y + scaleUpAmount.Y));
+            Math.Min(MaxScale.X, scale.X + scaleUpAmount.X),
+            Math.Min(MaxScale.Y, scale.Y + scaleUpAmount.Y));
 
         if (!GameObject.IsEnabled
             || !invokeActionOnFullScale
             || !hasPressed
-            || GameObject.Transform.Scale != maxScale) return;
+            || GameObject.Transform.Scale != MaxScale) return;
 
         OnClick?.Invoke();
         hasPressed = false;
@@ -112,8 +112,8 @@ public class Button : Component
     public void ChangeScale(Vector2 scale)
     {
         GameObject.Transform.Scale = scale;
-        maxScale = scale;
-        scaleUpAmount = new Vector2(maxScale.X * 0.01f, maxScale.Y * 0.01f);
+        MaxScale = scale;
+        scaleUpAmount = new Vector2(MaxScale.X * 0.01f, MaxScale.Y * 0.01f);
     }
 
     public void OnClickButton()
@@ -121,8 +121,8 @@ public class Button : Component
         if (!GameObject.IsEnabled) return;
 
         GameObject.Transform.Scale = new Vector2(
-            maxScale.X * scaleDownOnClickAmount,
-            maxScale.Y * scaleDownOnClickAmount);
+            MaxScale.X * scaleDownOnClickAmount,
+            MaxScale.Y * scaleDownOnClickAmount);
 
         if (timeSinceLastClick < clickCooldown) return;
 

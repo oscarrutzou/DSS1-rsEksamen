@@ -13,9 +13,12 @@ public static class ButtonFactory
         GameObject roomBtn = new();
         roomBtn.Transform.Scale = new(6, 6);
         roomBtn.Type = GameObjectTypes.Gui;
-        roomBtn.AddComponent<SpriteRenderer>().SetSprite(textureName);
+        SpriteRenderer sr = roomBtn.AddComponent<SpriteRenderer>();
+        sr.SetSprite(textureName);
         roomBtn.AddComponent<Animator>();
-        roomBtn.AddComponent<Collider>();
+        Collider col = roomBtn.AddComponent<Collider>();
+        col.SetCollisionBox(sr.Sprite.Width, sr.Sprite.Height);
+
         roomBtn.AddComponent<Button>(text, invokeActionOnFullScale, onClick);
 
         return roomBtn;

@@ -18,7 +18,7 @@ public abstract class MeleeWeapon : Weapon
 
     private List<GameObject> hitGameObjects = new();
 
-    private float enemyWeakness = 200.0f; // What to divide with, to make enemie attacks weaker.
+    private float enemyWeakness = 2.5f; // What to divide with, to make enemie attacks weaker.
 
     protected MeleeWeapon(GameObject gameObject) : base(gameObject)
     {

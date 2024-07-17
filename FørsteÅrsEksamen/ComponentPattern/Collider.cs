@@ -11,7 +11,9 @@ public class Collider : Component
     private SpriteRenderer spriteRenderer;
     private Animator animator;
     private Texture2D texture;
-    private int collisionWidth, collisionHeight; //If not set, use the sprite width and height
+    public int StartCollisionWidth { get; private set; }
+    public int StartCollisionHeight { get; private set; } //If not set, use the sprite width and height
+
     private Vector2 offset;
 
     public Color DebugColor = Color.Red;
@@ -24,13 +26,13 @@ public class Collider : Component
             Vector2 pos = GameObject.Transform.Position;
             if (animator != null && animator.CurrentAnimation != null)
             {
-                width = collisionWidth > 0 ? collisionWidth : animator.CurrentAnimation.FrameDimensions;
-                height = collisionHeight > 0 ? collisionHeight : animator.CurrentAnimation.FrameDimensions;
+                width = StartCollisionWidth > 0 ? StartCollisionWidth : animator.CurrentAnimation.FrameDimensions;
+                height = StartCollisionHeight > 0 ? StartCollisionHeight : animator.CurrentAnimation.FrameDimensions;
             }
             else
             {
-                width = collisionWidth > 0 ? collisionWidth : spriteRenderer.Sprite.Width;
-                height = collisionHeight > 0 ? collisionHeight : spriteRenderer.Sprite.Height;
+                width = StartCollisionWidth > 0 ? StartCollisionWidth : spriteRenderer.Sprite.Width;
+                height = StartCollisionHeight > 0 ? StartCollisionHeight : spriteRenderer.Sprite.Height;
             }
 
             width *= (int)GameObject.Transform.Scale.X;
@@ -75,14 +77,14 @@ public class Collider : Component
     /// <param name="height"></param>
     public void SetCollisionBox(int width, int height)
     {
-        collisionWidth = width;
-        collisionHeight = height;
+        StartCollisionWidth = width;
+        StartCollisionHeight = height;
     }
 
     public void SetCollisionBox(int width, int height, Vector2 offset)
     {
-        collisionWidth = width;
-        collisionHeight = height;
+        StartCollisionWidth = width;
+        StartCollisionHeight = height;
         this.offset = offset;
     }
 
@@ -92,8 +94,8 @@ public class Collider : Component
     public void ResetCustomCollsionBox()
     {
         offset = Vector2.Zero;
-        collisionHeight = 0;
-        collisionWidth = 0;
+        StartCollisionHeight = 0;
+        StartCollisionWidth = 0;
     }
 
     /// <summary>
