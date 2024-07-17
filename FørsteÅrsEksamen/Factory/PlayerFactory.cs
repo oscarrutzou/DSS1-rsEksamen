@@ -52,6 +52,12 @@ public static class PlayerFactory
         player.WeaponType = weaponType;
         player.ClassType = playerClass;
 
+        if (GameWorld.DebugAndCheats)
+        {
+            player.MaxHealth = 20000;
+            player.CurrentHealth = player.MaxHealth;
+        }
+
         // Set the reference to this player.
         SaveData.Player = player;
 
