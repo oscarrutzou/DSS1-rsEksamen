@@ -13,7 +13,7 @@ public class Astar
     private int gridDem;
     private HashSet<GameObject> open;
     private HashSet<GameObject> closed;
-
+    private List<GameObject> path = new();
     private Enemy thisEnemy;
     private List<Enemy> otherEnemies; // So we can take into account the other enemies paths.
     public void Start(Enemy enemy, List<Enemy> enemyList)
@@ -110,7 +110,6 @@ public class Astar
 
         return null;
     }
-    List<GameObject> path = new();
     /// <summary>
     /// Reverses the found path, by going though each GameObject and finding its Parent.
     /// </summary>
@@ -130,7 +129,7 @@ public class Astar
             if (currentNode == null)
             {
                 continue;
-            }
+            } 
             path.Add(currentNode);
             currentNode = currentNode.GetComponent<Cell>().Parent; 
         }
@@ -138,10 +137,10 @@ public class Astar
         path.Add(startPoint);
         path.Reverse();
 
-        foreach (GameObject go in path)
-        {
-            go.GetComponent<SpriteRenderer>().Color = Color.Aqua;
-        }
+        //foreach (GameObject go in path)
+        //{
+        //    go.GetComponent<SpriteRenderer>().Color = Color.Aqua;
+        //}
 
         return path;
     }
@@ -166,6 +165,7 @@ public class Astar
         return 14 * dstX + 10 * (dstY - dstX);
     }
 
+    Random rnd = new();
     private Point GetNewPointIfOcupated()
     {
         Point retPoint = new Point(-1, -1);
@@ -178,71 +178,78 @@ public class Astar
             shouldChange = true;
         }
 
-        if (!shouldChange)
-        {
-            return retPoint;
-        }
+        if (!shouldChange) return retPoint;
 
         List<GameObject> targetPointNeighbors = GetNeighbors(thisEnemy.TargetPoint);
 
-
         foreach (GameObject neighborGo in targetPointNeighbors)
         {
-            bool pointBeingUsed = false;
-            
+            bool cellBeingUsed = false;
+
             foreach (Enemy otherEnemy in otherEnemies)
             {
-                if (neighborGo.Transform.GridPosition == otherEnemy.TargetPoint)
-                {
-                    pointBeingUsed = true;
-                    break;
-                }
+                if (neighborGo.Transform.GridPosition != otherEnemy.TargetPoint) continue;
+
+                cellBeingUsed = true;
+                break;
             }
 
-            if (!pointBeingUsed)
-            {
-                availableTargets.Add(neighborGo);
-            }
+            if (!cellBeingUsed) availableTargets.Add(neighborGo);
         }
 
         GameObject closestTarget = null;
-        float closestDistance = float.MaxValue;
-        Vector2 thisPosition = thisEnemy.GameObject.Transform.Position;
 
-        foreach (GameObject availableTarget in availableTargets)
-        {
-            float distance = Vector2.Distance(thisPosition, availableTarget.Transform.Position);
-            if (distance < closestDistance)
-            {
-                closestDistance = distance;
-                closestTarget = availableTarget;
-            }
-        }
+        closestTarget = availableTargets[rnd.Next(0, availableTargets.Count)];
 
         retPoint = closestTarget.Transform.GridPosition;
-        // First check if the targetpath is the same as other enemy
-        // get neighbors around of the normal targetpath.
-        // Then take a distance check on the not used neighbors to find the closest one. 
-        // If there is none neighbors just dont change the targetpath, so it stacks.
-        // Lastly change the targetpath
-
-        // Return newPoint(-1,-1) if there isnt a need to change the targetpath.
-
-        // In enemy script after the astar, change the target point to the astar target point. 
-
-
-        // Enemies and player should maybe have their sprite go up and down, or left and right when walking? 
-        // and attacking. 
-
-        // Should also have red color and maybe a outline that gets showed for a quick second?
-        // For outline just use Asesprite, and either delete the normal sprite or have it black and white
-        // Then when attacked, it changes sprite and the color of the sprite, and changes back to normal after
-
-        // Like so it just gets drawn in the character when taking damage.
-        // Could also just have a component that handles TakeDamage, and shows the outline? 
+        thisEnemy.TargetPoint = retPoint;
 
         return retPoint;
+        // To select one of the targets, to spread out the enemies. Dosent take into account the classes
+        // Also have the bug where if the target is on the other side of the player, it will stop inside the player
+        // This is caused since the enemy only follows to a certain point and stop a bit before the end target. 
+
+        // Need to find a way to stop the path from going though the point where the player is, 
+        // since that causes the enemy to stop inside the player.
+        // Could then search for distance or something.
+        // The debug stuff(paths n stuff) is very lackluster too, so maybe there should be used some time for that?
+
+        // There should also be something so if the enemy dosent move or something, it tries again to find a path
+        // So it always are going to be after the player
     }
+    //Vector2 thisPosition = thisEnemy.GameObject.Transform.Position;
+    //float closestDistance = float.MaxValue;
+    //foreach (GameObject availableTarget in availableTargets)
+    //{
+    //    float distance = Vector2.Distance(thisPosition, availableTarget.Transform.Position);
+    //    if (distance < closestDistance)
+    //    {
+    //        closestDistance = distance;
+    //        closestTarget = availableTarget;
+    //    }
+    //}
+
+    // First check if the targetpath is the same as other enemy
+    // get neighbors around of the normal targetpath.
+    // Then take a distance check on the not used neighbors to find the closest one. 
+    // If there is none neighbors just dont change the targetpath, so it stacks.
+    // Lastly change the targetpath
+
+    // Return newPoint(-1,-1) if there isnt a need to change the targetpath.
+
+    // In enemy script after the astar, change the target point to the astar target point. 
+
+
+    // Enemies and player should maybe have their sprite go up and down, or left and right when walking? 
+    // and attacking. 
+
+    // Should also have red color and maybe a outline that gets showed for a quick second?
+    // For outline just use Asesprite, and either delete the normal sprite or have it black and white
+    // Then when attacked, it changes sprite and the color of the sprite, and changes back to normal after
+
+    // Like so it just gets drawn in the character when taking damage.
+    // Could also just have a component that handles TakeDamage, and shows the outline? 
+
 
     /// <summary>
     /// Gets the neighbors in all 8 directions from the point

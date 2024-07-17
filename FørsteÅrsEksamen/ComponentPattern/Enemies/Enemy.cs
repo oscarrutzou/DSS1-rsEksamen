@@ -149,66 +149,32 @@ public abstract class Enemy : Character
 
     #region PathFinding
     Random rnd = new();
-    bool setPathRunning;
     private void SetPath()
     {
-        ResetPathColor(); // For debugging
+        //ResetPathColor(); // For debugging
 
         Path = null; // We cant use the previous path
         // Create a new thread to find the path 
         Path = astar.FindPath(GameObject.Transform.GridPosition, TargetPoint);
-        if (State == CharacterState.Dead) // Bug happened because this path got returned just as it died
+        // Bug happened because this path got returned just as it died
+        if (State == CharacterState.Dead) return;
+
+        // If there has been found no path. Maybe here it could check astar again?
+        if (Path == null || Path.Count == 0) return;
+
+        // If a new path is being set, set the next target to the enemy's current position
+        SetState(CharacterState.Moving);
+        if (GameObject.Transform.Position != Path[0].Transform.Position)
         {
-            setPathRunning = false;
-            return;
+            nextTarget = GameObject.Transform.Position;
         }
-        if (Path != null && Path.Count > 0)
+        else
         {
-            // If a new path is being set, set the next target to the enemy's current position
-            SetState(CharacterState.Moving);
-            if (GameObject.Transform.Position != Path[0].Transform.Position)
-            {
-                nextTarget = GameObject.Transform.Position;
-            }
-            else
-            {
-                SetNextTargetPos(Path[0]);
-            }
+            SetNextTargetPos(Path[0]);
         }
-        //if (setPathRunning) return;
-
-        //Thread thread = new(() =>
-        //{
-        //    setPathRunning = true;
-        //    // Sleep for a little time, so the threads dont start at the same time
-        //    Thread.Sleep(rnd.Next(1, 20)); 
-
-        //    path = astar.FindPath(GameObject.Transform.GridPosition, targetPoint);
-        //    if (State == CharacterState.Dead) // Bug happened because this path got returned just as it died
-        //    {
-        //        setPathRunning = false;
-        //        return;
-        //    }
-        //    if (path != null && path.Count > 0)
-        //    {
-        //        // If a new path is being set, set the next target to the enemy's current position
-        //        SetState(CharacterState.Moving);
-        //        if (GameObject.Transform.Position != path[0].Transform.Position)
-        //        {
-        //            nextTarget = GameObject.Transform.Position;
-        //        }
-        //        else
-        //        {
-        //            SetNextTargetPos(path[0]);
-        //        }
-        //    }
-
-        //    setPathRunning = false;
-        //});
-        //thread.IsBackground = true;
-        //thread.Start();
     }
 
+    private int stopWalkingBeforeReachTarget = 2;
     private void UpdatePathing()
     {
         if (Path == null)
@@ -217,7 +183,7 @@ public abstract class Enemy : Character
 
         if (Vector2.Distance(position, nextTarget) < threshold)
         {
-            if (Path.Count > 2)
+            if (Path.Count > stopWalkingBeforeReachTarget)
             {
                 GameObject.Transform.GridPosition = Path[0].Transform.GridPosition;
                 UpdateRoomNr(Path[0]);
@@ -225,7 +191,7 @@ public abstract class Enemy : Character
                 Path.RemoveAt(0);
                 SetNextTargetPos(Path[0]);
             }
-            else if (Path.Count == 2) // Stops the path.
+            else if (Path.Count == stopWalkingBeforeReachTarget) // Stops the path.
             {
                 GameObject.Transform.GridPosition = Path[0].Transform.GridPosition;
                 UpdateRoomNr(Path[0]);
@@ -250,7 +216,7 @@ public abstract class Enemy : Character
         {
             SetState(CharacterState.Attacking); // Close so would always attack
     
-            ResetCellColor(Path[0]); // Debug
+            //ResetCellColor(Path[0]); // Debug
 
             Path = null;
         }
