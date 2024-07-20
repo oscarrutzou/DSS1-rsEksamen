@@ -32,6 +32,7 @@ public class Spawner : Component
             GameWorld.Instance.Instantiate(enemyGo);
         }
 
+        // The enemies need to have references to each other. Need to be changed if there are many enemies
         foreach (Enemy enemy in enemies)
         {
             enemy.SetStartEnemyRefs(enemies);

@@ -18,13 +18,23 @@ public abstract class Enemy : Character
     public Player Player;
     private SpriteRenderer weaponSpriteRenderer;
 
+    private List<Enemy> enemyList = new();
+    /// <summary>
+    /// Astar path with a list of Cell GameObjects. Gets set in astar
+    /// </summary>
     public List<GameObject> Path { get; private set; }
+    private GameObject playerTarget;
     private Vector2 nextTarget;
     public Point TargetPoint;
-    private readonly float threshold = 10f;
+    private readonly float thresholdToTargetCell = 10f; // For distance check
+    /// <summary>
+    /// The frequency of new paths
+    /// </summary>
+    public int CellPlayerMoveBeforeNewTarget = 3;       
 
     private bool hasBeenAwoken;
 
+    private Random rnd = new();
     #endregion Properties
 
     public Enemy(GameObject gameObject) : base(gameObject)
@@ -46,17 +56,18 @@ public abstract class Enemy : Character
         Collider.SetCollisionBox(15, 27, new Vector2(0, 15));
     }
 
+
     public void SetStartPosition(GameObject playerGo, Point gridPos)
     {
         this.playerGo = playerGo;
         Player = playerGo.GetComponent<Player>();
 
         TargetPoint = playerGo.Transform.GridPosition;
+        // Make this better or remove the couple of Get functions in the grid.
+        playerTarget = GridManager.Instance.CurrentGrid.GetCellFromPoint(gridPos).GameObject; 
         grid = GridManager.Instance.CurrentGrid;
         GameObject.Transform.GridPosition = gridPos;
     }
-
-    private List<Enemy> enemyList = new();
 
     public void SetStartEnemyRefs(List<Enemy> enemies)
     {
@@ -119,10 +130,10 @@ public abstract class Enemy : Character
         if (Player.CollisionNr != CollisionNr && !hasBeenAwoken || State == CharacterState.Dead) return; // Cant move if the player isnt in the same room.
 
         Point playerPos = playerGo.Transform.GridPosition;
-        int precise = 3;
+
         // If X is more that z cells away, it should start a new target. The same with Y
-        if (Math.Abs(playerPos.X - TargetPoint.X) >= precise ||
-            Math.Abs(playerPos.Y - TargetPoint.Y) >= precise)
+        if (Math.Abs(playerPos.X - TargetPoint.X) >= CellPlayerMoveBeforeNewTarget ||
+            Math.Abs(playerPos.Y - TargetPoint.Y) >= CellPlayerMoveBeforeNewTarget)
         {
             TargetPoint = playerGo.Transform.GridPosition;
             hasBeenAwoken = true;
@@ -132,25 +143,26 @@ public abstract class Enemy : Character
 
     private void CheckLayerDepth()
     {
+        // Offset for layerdepth, so the enemies are not figting for which is shown.
+        float offSet = GameObject.Transform.GridPosition.Y / 10_000f; 
         if (GameObject.Transform.Position.Y < playerGo.Transform.Position.Y)
         {
-            SpriteRenderer.SetLayerDepth(LayerDepth.EnemyUnder);
+            SpriteRenderer.SetLayerDepth(LayerDepth.EnemyUnder, offSet);
 
             if (weaponSpriteRenderer == null) return;
-            weaponSpriteRenderer.SetLayerDepth(LayerDepth.EnemyUnderWeapon);
+            weaponSpriteRenderer.SetLayerDepth(LayerDepth.EnemyUnderWeapon, offSet);
         }
         else
         {
-            SpriteRenderer.SetLayerDepth(LayerDepth.EnemyOver);
+            SpriteRenderer.SetLayerDepth(LayerDepth.EnemyOver, offSet);
 
             if (weaponSpriteRenderer == null) return;
-            weaponSpriteRenderer.SetLayerDepth(LayerDepth.EnemyOverWeapon);
+            weaponSpriteRenderer.SetLayerDepth(LayerDepth.EnemyOverWeapon, offSet);
         }
     }
 
     #region PathFinding
 
-    private Random rnd = new();
 
     private void SetPath()
     {
@@ -177,7 +189,14 @@ public abstract class Enemy : Character
         }
     }
 
-    private int stopWalkingBeforeReachTarget = 2;
+    private int distanceStopFromTarget = 2; // The amount of distance the enemy has to the player
+
+    public bool PointUnitsApart(Point first, Point second, int targetDistance)
+    {
+        //double distance = Math.Sqrt(Math.Pow(second.X - first.X, 2) + Math.Pow(second.Y - first.Y, 2));
+        double distance = Math.Abs(first.X - second.X) + Math.Abs(first.Y - second.Y);
+        return distance >= targetDistance;
+    }
 
     private void UpdatePathing()
     {
@@ -185,22 +204,36 @@ public abstract class Enemy : Character
             return;
         Vector2 position = GameObject.Transform.Position;
 
-        if (Vector2.Distance(position, nextTarget) < threshold)
+        if (Vector2.Distance(position, nextTarget) < thresholdToTargetCell)
         {
-            if (Path.Count > stopWalkingBeforeReachTarget)
+            bool enemyOnPath = false;
+            foreach (Enemy enemy in enemyList)
+            {
+                if (Path.Count <= 1) break;
+
+                // Checks the pos of the enemy, both if there already on the grid position or if they are moving
+                // Make the bool true, to keep going on the path, so not to have multiple enemies in one spot.
+                if (enemy.GameObject.Transform.GridPosition != Path[1].Transform.GridPosition ||
+                    enemy.Path != null && enemy.Path.Count > 0 && enemy.Path[^1].Transform.GridPosition == Path[1].Transform.GridPosition)
+                {
+                    enemyOnPath = true;
+                    break;
+                }
+            }
+
+            if (Path.Count > distanceStopFromTarget || enemyOnPath) // If the second last in the path is the target, it should not stop inside the player
             {
                 GameObject.Transform.GridPosition = Path[0].Transform.GridPosition;
                 UpdateRoomNr(Path[0]);
-                ResetCellColor(Path[0]);
                 Path.RemoveAt(0);
                 SetNextTargetPos(Path[0]);
+                
             }
-            else if (Path.Count == stopWalkingBeforeReachTarget) // Stops the path.
+            else if (Path.Count == distanceStopFromTarget) // Stops the path.
             {
                 GameObject.Transform.GridPosition = Path[0].Transform.GridPosition;
                 UpdateRoomNr(Path[0]);
                 SetNextTargetPos(Path[0]);
-                ResetCellColor(Path[0]);
                 Path.RemoveAt(0);
             }
         }
@@ -216,12 +249,9 @@ public abstract class Enemy : Character
             Attack();
         }
 
-        if (Path.Count == 1 && Vector2.Distance(position, nextTarget) < threshold)
+        if (Path.Count == 1 && Vector2.Distance(position, nextTarget) < thresholdToTargetCell)
         {
             SetState(CharacterState.Attacking); // Close so would always attack
-
-            //ResetCellColor(Path[0]); // Debug
-
             Path = null;
         }
 
@@ -234,27 +264,9 @@ public abstract class Enemy : Character
         CollisionNr = cell.CollisionNr;
     }
 
-    private void ResetPathColor()
-    {
-        if (Path != null)
-        {
-            foreach (GameObject cellGo in Path)
-            {
-                ResetCellColor(cellGo);
-            }
-        }
-    }
-
-    private void ResetCellColor(GameObject cellGo)
-    {
-        Cell cell = cellGo.GetComponent<Cell>();
-        cell.ChangeCellWalkalbeType(cell.CellWalkableType); // Dont change the type, but makes it draw the color of the debug, to the correct color.
-    }
-
     private void SetNextTargetPos(GameObject cellGo)
     {
         nextTarget = cellGo.Transform.Position + new Vector2(0, -Cell.dimension * Cell.Scale / 2);
     }
-
     #endregion PathFinding
 }

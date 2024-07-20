@@ -66,10 +66,15 @@ public class SpriteRenderer : Component
         animator = GameObject.GetComponent<Animator>();
     }
 
-    public void SetLayerDepth(LayerDepth layerName)
+    /// <summary>
+    /// How to change the layer that the sprites gets drawn on. Remember there are both the World Cam and UI Cam
+    /// </summary>
+    /// <param name="layerName"></param>
+    /// <param name="offSet">Should be very small like 0.0001 to not mess the layers up</param>
+    public void SetLayerDepth(LayerDepth layerName, float offSet = 0)
     {
         LayerName = layerName;
-        LayerDepth = (float)LayerName / (Enum.GetNames(typeof(LayerDepth)).Length - 1);
+        LayerDepth = ((float)LayerName / (Enum.GetNames(typeof(LayerDepth)).Length - 1)) + offSet;
     }
 
     public override void Draw(SpriteBatch spriteBatch)

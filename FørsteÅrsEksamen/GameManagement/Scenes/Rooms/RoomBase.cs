@@ -301,7 +301,7 @@ public abstract class RoomBase : Scene
 
     protected void DrawString(SpriteBatch spriteBatch, string text, Vector2 position)
     {
-        spriteBatch.DrawString(GlobalTextures.DefaultFont, text, position, Color.Black, 0f, Vector2.Zero, 1, SpriteEffects.None, 1f);
+        spriteBatch.DrawString(GlobalTextures.DefaultFont, text, position, Color.Pink, 0f, Vector2.Zero, 1, SpriteEffects.None, 1f);
     }
 
     #endregion Draw

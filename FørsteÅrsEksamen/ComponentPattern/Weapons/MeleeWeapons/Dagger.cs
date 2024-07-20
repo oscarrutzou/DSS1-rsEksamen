@@ -25,6 +25,11 @@ public class Dagger : MeleeWeapon
         };
 
         CurrentAnim = WeaponAnimTypes.Light;
+
+        if (EnemyUser != null)
+        {
+            EnemyUser.CellPlayerMoveBeforeNewTarget = 2;
+        }
     }
 
     protected override void PlayerWeaponSprite()

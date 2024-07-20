@@ -18,7 +18,7 @@ public class GameWorld : Game
 {
     public static GameWorld Instance;
 
-    public static bool DebugAndCheats = false;
+    public static bool DebugAndCheats = true;
 
     public Dictionary<SceneNames, Scene> Scenes { get; private set; }
 
@@ -65,7 +65,7 @@ public class GameWorld : Game
 
         SpawnBG(); // The background that dont get deleted
 
-        CurrentScene = Scenes[SceneNames.MainMenu];
+        CurrentScene = Scenes[SceneNames.WeaponTestScene];
         CurrentScene.Initialize(); // Starts the main menu
 
         //Thread inputThread = new(InputHandler.Instance.StartInputThread)

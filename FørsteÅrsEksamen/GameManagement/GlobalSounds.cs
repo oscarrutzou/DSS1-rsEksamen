@@ -35,7 +35,7 @@ public static class GlobalSounds
     private static int musicVolDivide = 4; //Makes the song less loud by dividing the real volume
     private static Random rnd = new();
     public static float MusicVolume = 0.0f;
-    public static float SfxVolume = 0.5f;
+    public static float SfxVolume = 0.0f;
     private static bool musicCountDown;
     private static bool sfxCountDown;
 
