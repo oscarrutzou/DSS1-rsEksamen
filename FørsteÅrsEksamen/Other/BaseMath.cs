@@ -53,4 +53,9 @@ public static class BaseMath
     {
         return x == 1 ? 1 : 1 - (float)Math.Pow(2, -10 * x);
     }
+
+    public static float EaseInOutQuad(float x)
+    {
+        return x < 0.5 ? 2 * x * x : 1 - MathF.Pow(-2 * x + 2, 2) / 2;
+    }
 }

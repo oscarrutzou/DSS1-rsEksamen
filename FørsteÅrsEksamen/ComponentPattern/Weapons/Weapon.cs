@@ -83,6 +83,9 @@ public abstract class Weapon : Component
 
     protected float StartAnimationAngle { get; set; }
 
+    protected float TotalElapsedTime;
+    protected float EnemyWeakness = 2.5f; // What to divide with, to make enemie attacks weaker.
+
     protected bool Attacking;
 
     // A lot of this data is being copied on many different weapons, even though it has the same data.
@@ -129,6 +132,7 @@ public abstract class Weapon : Component
         SetAttackDirection();
     }
 
+ 
     private void ChangeWeaponAttacks()
     {
         if (CurrentAnimRepeats == Animations[CurrentAnim].Repeats) // Change animation
@@ -180,8 +184,6 @@ public abstract class Weapon : Component
         else
             angle = GetAngleToMousePlayer();
 
-        // Can use lerp from the wanted move point, so its not as fast
-
         // Adjust the angle to be in the range of 0 to 2π
         if (angle < 0)
         {
@@ -204,11 +206,6 @@ public abstract class Weapon : Component
         }
         else
         {
-            //if (Animations[CurrentAnim].AmountOfRotation != MathHelper.Pi)
-            //{
-            //    angle += Animations[CurrentAnim].AmountOfRotation / 2;
-            //}
-
             StartAnimationAngle = angle;
 
             LeftSide = false;
@@ -217,6 +214,14 @@ public abstract class Weapon : Component
 
         GameObject.Transform.Rotation = StartAnimationAngle;
     }
+
+
+    /* Lock når angle 0 og den lige har attacked
+      * Efter når den er færdig atttacking:
+      *      Check new angle, og lerp fra gammel til ny angle
+      *      Hold attack locked imens
+      *      Når den rammer omkring ny angle, åben attack.
+     */
 
     private float GetAngleToMousePlayer()
     {

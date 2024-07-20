@@ -12,13 +12,11 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons;
 public abstract class MeleeWeapon : Weapon
 {
     protected float FinalLerp;
-    protected float TotalElapsedTime;
     protected bool IsRotatingBack;
     protected List<CollisionRectangle> WeaponColliders = new();
 
     private List<GameObject> hitGameObjects = new();
 
-    private float enemyWeakness = 2.5f; // What to divide with, to make enemie attacks weaker.
 
     protected MeleeWeapon(GameObject gameObject) : base(gameObject)
     {
@@ -31,13 +29,14 @@ public abstract class MeleeWeapon : Weapon
         // Float so we can divide with enemy weakness
         float damage = Animations[CurrentAnim].Damage;
         if (EnemyUser != null)
-            damage /= enemyWeakness;
+            damage /= EnemyWeakness;
 
         damageGoHealth.TakeDamage((int)damage);
     }
 
     public override void Update(GameTime gameTime)
     {
+        base.Update(gameTime);
         if (Attacking)
         {
             TotalElapsedTime += GameWorld.DeltaTime;
@@ -90,6 +89,8 @@ public abstract class MeleeWeapon : Weapon
             Attacking = false;
         }
     }
+
+
 
     public void CheckCollisionAndDmg()
     {
