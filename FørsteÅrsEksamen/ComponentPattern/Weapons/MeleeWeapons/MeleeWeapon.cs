@@ -36,7 +36,6 @@ public abstract class MeleeWeapon : Weapon
 
     public override void Update(GameTime gameTime)
     {
-        base.Update(gameTime);
         if (Attacking)
         {
             TotalElapsedTime += GameWorld.DeltaTime;
@@ -50,6 +49,9 @@ public abstract class MeleeWeapon : Weapon
 
     private void AttackAnimation()
     {
+        // First rotate current angle to start angle of the anim, before attacking
+        // Animations[CurrentAnim].AmountOfRotation;
+
         if (!IsRotatingBack && TotalElapsedTime >= TimeBeforeNewDirection)
         {
             PlayAttackSound();
@@ -87,6 +89,7 @@ public abstract class MeleeWeapon : Weapon
         {
             IsRotatingBack = false;
             Attacking = false;
+            finnishedAttack = true;
         }
     }
 

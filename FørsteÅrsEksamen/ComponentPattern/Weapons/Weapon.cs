@@ -73,8 +73,8 @@ public class WeaponAnimation
 // A really nice to have to so make a trail behind the weapon when it swings:D Would be fun to make
 public abstract class Weapon : Component
 {
-    protected Dictionary<WeaponAnimTypes, WeaponAnimation> Animations;
-    protected WeaponAnimTypes CurrentAnim;
+    public Dictionary<WeaponAnimTypes, WeaponAnimation> Animations;
+    public WeaponAnimTypes CurrentAnim;
     protected int CurrentAnimRepeats;
     public Player PlayerUser { get; set; }
     public Enemy EnemyUser { get; set; }
@@ -121,6 +121,7 @@ public abstract class Weapon : Component
         if (Attacking) return;
 
         Attacking = true;
+        finnishedAttack = false;
 
         ChangeWeaponAttacks();
         MoveWeapon(true);
@@ -132,7 +133,6 @@ public abstract class Weapon : Component
         SetAttackDirection();
     }
 
- 
     private void ChangeWeaponAttacks()
     {
         if (CurrentAnimRepeats == Animations[CurrentAnim].Repeats) // Change animation
@@ -141,7 +141,27 @@ public abstract class Weapon : Component
             CurrentAnim = Animations[CurrentAnim].NextAnimation;
         }
 
+        rot = Animations[CurrentAnim].AmountOfRotation;
+
+
         CurrentAnimRepeats++;
+
+        if (CurrentAnimRepeats == Animations[CurrentAnim].Repeats) 
+        {
+            NextAnim = Animations[CurrentAnim].NextAnimation;
+            rotAfterAnim = Animations[NextAnim].AmountOfRotation;
+        }
+    }
+    protected float rot, rotAfterAnim;
+    public WeaponAnimTypes NextAnim;
+
+    private float GetNewAttackAnimationAngle()
+    {
+        if (rot == MathHelper.Pi)
+        {
+            rot = 0f;
+        }
+        return rot;
     }
 
     protected virtual void PlayerWeaponSprite()
@@ -199,13 +219,26 @@ public abstract class Weapon : Component
         // Set the StartAnimationAngle based on the adjusted angle
         if (angle > 0.5 * MathHelper.Pi && angle < 1.5 * MathHelper.Pi)
         {
+  
             spriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
             StartAnimationAngle = angle + MathHelper.Pi;
+
+            // Husk rot + angle + pi
 
             LeftSide = true;
         }
         else
         {
+            if (finnishedAttack)
+            {
+                if (rotAfterAnim != MathHelper.Pi)
+                    angle += rotAfterAnim / 4;
+            }
+            else
+            {
+                angle += GetNewAttackAnimationAngle() / 4;
+            }
+            
             StartAnimationAngle = angle;
 
             LeftSide = false;
@@ -215,6 +248,7 @@ public abstract class Weapon : Component
         GameObject.Transform.Rotation = StartAnimationAngle;
     }
 
+    protected bool finnishedAttack;
 
     /* Lock når angle 0 og den lige har attacked
       * Efter når den er færdig atttacking:

@@ -101,7 +101,12 @@ public class GameWorld : Game
     {
         CurrentScene.DrawSceenColor();
 
-        //Draw in world objects. Uses pixel perfect and a WorldCam, that can be moved around
+        //Draw in world objects. Uses
+        //
+        //
+        //
+        //
+        //xel perfect and a WorldCam, that can be moved around
         _spriteBatch.Begin(sortMode: SpriteSortMode.FrontToBack, BlendState.AlphaBlend,
             SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise,
             transformMatrix: WorldCam.GetMatrix());

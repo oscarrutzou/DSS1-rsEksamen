@@ -20,8 +20,8 @@ public class Dagger : MeleeWeapon
 
         Animations = new()
         {
-            { WeaponAnimTypes.Light, new WeaponAnimation(0.7f, MathHelper.Pi, 15, BaseMath.EaseOutBack, WeaponAnimTypes.Medium, 2)},
-            { WeaponAnimTypes.Medium, new WeaponAnimation(1.2f, MathHelper.Pi, 30, BaseMath.EaseOutExpo, WeaponAnimTypes.Light)},
+            { WeaponAnimTypes.Light, new WeaponAnimation(2.7f, MathHelper.PiOver4 * 3, 15, BaseMath.EaseInOutQuad, WeaponAnimTypes.Medium, 2)},
+            { WeaponAnimTypes.Medium, new WeaponAnimation(3.2f, MathHelper.Pi, 30, BaseMath.EaseInOutQuad, WeaponAnimTypes.Light)},
         };
 
         CurrentAnim = WeaponAnimTypes.Light;
