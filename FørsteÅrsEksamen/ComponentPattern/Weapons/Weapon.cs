@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace DoctorsDungeon.ComponentPattern.Weapons;
 
@@ -93,6 +94,14 @@ public abstract class Weapon : Component
     protected SoundNames[] AttackSoundNames;
 
     protected Vector2 StartPosOffset = new(40, 20);
+    private Vector2 lastOffSetPos, startRelativePos = new(0, 60), startRelativeOffsetPos = new Vector2(0, -20);
+    public float angle; // Public for test
+    protected bool LeftSide;
+    protected float TimeBeforeNewDirection;
+    protected float animRotation, nextAnimRotation;
+    public WeaponAnimTypes NextAnim { get; private set; }
+    protected bool FinnishedAttack;
+
 
     protected Weapon(GameObject gameObject) : base(gameObject)
     {
@@ -114,14 +123,13 @@ public abstract class Weapon : Component
         }
     }
 
-    protected float TimeBeforeNewDirection;
 
     public void StartAttack()
     {
         if (Attacking) return;
 
         Attacking = true;
-        finnishedAttack = false;
+        FinnishedAttack = false;
 
         ChangeWeaponAttacks();
         MoveWeapon(true);
@@ -133,6 +141,15 @@ public abstract class Weapon : Component
         SetAttackDirection();
     }
 
+    public override void Start()
+    {
+        animRotation = Animations[CurrentAnim].AmountOfRotation;
+
+        NextAnim = CurrentAnim;
+
+        nextAnimRotation = Animations[NextAnim].AmountOfRotation;
+    }
+
     private void ChangeWeaponAttacks()
     {
         if (CurrentAnimRepeats == Animations[CurrentAnim].Repeats) // Change animation
@@ -141,28 +158,23 @@ public abstract class Weapon : Component
             CurrentAnim = Animations[CurrentAnim].NextAnimation;
         }
 
-        rot = Animations[CurrentAnim].AmountOfRotation;
-
+        animRotation = Animations[CurrentAnim].AmountOfRotation;
 
         CurrentAnimRepeats++;
 
+        // The animations to make sure that animation can lerp to the next starting angle.
         if (CurrentAnimRepeats == Animations[CurrentAnim].Repeats) 
         {
             NextAnim = Animations[CurrentAnim].NextAnimation;
-            rotAfterAnim = Animations[NextAnim].AmountOfRotation;
         }
-    }
-    protected float rot, rotAfterAnim;
-    public WeaponAnimTypes NextAnim;
-
-    private float GetNewAttackAnimationAngle()
-    {
-        if (rot == MathHelper.Pi)
+        else // The Animation is the same
         {
-            rot = 0f;
+            NextAnim = CurrentAnim;
         }
-        return rot;
+
+        nextAnimRotation = Animations[NextAnim].AmountOfRotation;
     }
+
 
     protected virtual void PlayerWeaponSprite()
     { }
@@ -179,10 +191,6 @@ public abstract class Weapon : Component
 
         GlobalSounds.PlayRandomizedSound(AttackSoundNames, 5, 1f, true);
     }
-
-    private Vector2 lastOffSetPos, startRelativePos = new(0, 60), startRelativeOffsetPos = new Vector2(0, -20);
-    public float angle; // Public for test
-    protected bool LeftSide;
 
     public void MoveWeapon(bool moveOnlyAngle = false)
     {
@@ -219,38 +227,100 @@ public abstract class Weapon : Component
         // Set the StartAnimationAngle based on the adjusted angle
         if (angle > 0.5 * MathHelper.Pi && angle < 1.5 * MathHelper.Pi)
         {
-  
-            spriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
-            StartAnimationAngle = angle + MathHelper.Pi;
+            angle += MathHelper.Pi;
+            untouchedAngle = angle;
 
-            // Husk rot + angle + pi
+            SetAngleToFitWithNextAnimation(true);
 
             LeftSide = true;
+            spriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
         }
         else
         {
-            if (finnishedAttack)
-            {
-                if (rotAfterAnim != MathHelper.Pi)
-                    angle += rotAfterAnim / 4;
-            }
-            else
-            {
-                angle += GetNewAttackAnimationAngle() / 4;
-            }
-            
-            StartAnimationAngle = angle;
+            untouchedAngle = angle;
+
+            SetAngleToFitWithNextAnimation(false);
 
             LeftSide = false;
             spriteRenderer.SpriteEffects = SpriteEffects.None;
         }
 
+        StartAnimationAngle = angle;
+
         GameObject.Transform.Rotation = StartAnimationAngle;
     }
 
-    protected bool finnishedAttack;
+    private float untouchedAngle;
+    protected void SetStartAngleToNextAnim()
+    {
+        // If the rotation is the same dont do anything
+        if (nextAnimRotation == animRotation) return;
 
-    /* Lock når angle 0 og den lige har attacked
+        float leftOver = nextAnimRotation - MathHelper.Pi;
+
+        // Resets angle
+        angle = untouchedAngle;
+
+        if (LeftSide)
+        {
+            FinalLerp = -nextAnimRotation;
+
+            if (leftOver < 0)
+                angle -= nextAnimRotation / divideBy;
+            else
+                angle += leftOver / 2;
+        }
+        else
+        {
+            FinalLerp = nextAnimRotation;
+
+            if (leftOver < 0)
+                angle += nextAnimRotation / divideBy;
+            else
+                angle -= leftOver / 2;
+        }
+
+        StartAnimationAngle = angle;
+    }
+
+    int divideBy = 4;
+    protected float FinalLerp { get; set; }
+
+    private void SetAngleToFitWithNextAnimation(bool isLeft)
+    {
+        float curRot;
+
+        if (FinnishedAttack)
+        {
+            curRot = nextAnimRotation;
+        }
+        else
+        {
+            curRot = animRotation;
+        }
+
+        float leftOver = curRot - MathHelper.Pi;
+
+        if (isLeft)
+        {
+            if (leftOver < 0)
+                angle -= curRot / divideBy;
+            else
+                angle += leftOver / 2;
+        }
+        else
+        {
+            if (leftOver < 0)
+                angle += curRot / divideBy;
+            else
+                angle -= leftOver / 2;
+        }
+    }
+    /* 
+     * Light = 1 start, slut 3
+     * Med = 0 start
+     * 
+     * Lock når angle 0 og den lige har attacked
       * Efter når den er færdig atttacking:
       *      Check new angle, og lerp fra gammel til ny angle
       *      Hold attack locked imens

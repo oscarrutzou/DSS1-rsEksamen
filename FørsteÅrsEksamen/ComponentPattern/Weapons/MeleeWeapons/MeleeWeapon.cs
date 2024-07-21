@@ -11,7 +11,6 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons;
 // Erik
 public abstract class MeleeWeapon : Weapon
 {
-    protected float FinalLerp;
     protected bool IsRotatingBack;
     protected List<CollisionRectangle> WeaponColliders = new();
 
@@ -47,6 +46,7 @@ public abstract class MeleeWeapon : Weapon
         UpdateCollisionBoxesPos(GameObject.Transform.Rotation);
     }
 
+    private float rotateBackStartRotation;
     private void AttackAnimation()
     {
         // First rotate current angle to start angle of the anim, before attacking
@@ -59,6 +59,10 @@ public abstract class MeleeWeapon : Weapon
             TotalElapsedTime = 0f; // Reset totalElapsedTime
             IsRotatingBack = true;
             hitGameObjects = new(); // Reset hit gameobjects so we can hit when it goes back again
+            
+            SetStartAngleToNextAnim(); // Changes the StartAnimationAngle so it rotates to the next animation start, insted of snapping to the place after
+            // Need to also set the new start point
+            rotateBackStartRotation = GameObject.Transform.Rotation;
 
             // Makes the weapon flip when rotating back
             if (spriteRenderer.SpriteEffects == SpriteEffects.FlipHorizontally)
@@ -70,26 +74,29 @@ public abstract class MeleeWeapon : Weapon
         float normalizedTime = TotalElapsedTime / TimeBeforeNewDirection;
 
         float easedTime; // maybe switch between them.
-        float finalLerp = StartAnimationAngle + FinalLerp;
+        float finalLerp = StartAnimationAngle;
 
         if (!IsRotatingBack)
         {
+            finalLerp += FinalLerp; // The first rotation
             // Down attack
             easedTime = Animations[CurrentAnim].AnimationMethod(normalizedTime);
             GameObject.Transform.Rotation = MathHelper.Lerp(StartAnimationAngle, finalLerp, easedTime);
         }
         else
         {
+            // Second rotation to rotate to the start of the next rotation
+            // Den rammer  final lerp, men den er 10 mens rotation kun er 9, og teleporterr til 10. Må starte fra den nye.
             //Up attack
             easedTime = Animations[CurrentAnim].AnimationMethod(normalizedTime);
-            GameObject.Transform.Rotation = MathHelper.Lerp(finalLerp, StartAnimationAngle, easedTime);
+            GameObject.Transform.Rotation = MathHelper.Lerp(rotateBackStartRotation, StartAnimationAngle, easedTime);
         }
 
         if (Math.Abs(GameObject.Transform.Rotation - StartAnimationAngle) < 0.1f && IsRotatingBack)
         {
             IsRotatingBack = false;
             Attacking = false;
-            finnishedAttack = true;
+            FinnishedAttack = true;
         }
     }
 

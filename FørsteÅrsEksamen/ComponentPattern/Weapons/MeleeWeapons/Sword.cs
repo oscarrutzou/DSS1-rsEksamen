@@ -24,6 +24,8 @@ public class Sword : MeleeWeapon
         };
 
         CurrentAnim = WeaponAnimTypes.Light;
+
+        base.Start();
     }
 
     protected override void PlayerWeaponSprite()

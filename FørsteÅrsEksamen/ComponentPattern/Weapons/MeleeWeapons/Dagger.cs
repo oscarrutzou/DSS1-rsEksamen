@@ -21,7 +21,7 @@ public class Dagger : MeleeWeapon
         Animations = new()
         {
             { WeaponAnimTypes.Light, new WeaponAnimation(2.7f, MathHelper.PiOver4 * 3, 15, BaseMath.EaseInOutQuad, WeaponAnimTypes.Medium, 2)},
-            { WeaponAnimTypes.Medium, new WeaponAnimation(3.2f, MathHelper.Pi, 30, BaseMath.EaseInOutQuad, WeaponAnimTypes.Light)},
+            { WeaponAnimTypes.Medium, new WeaponAnimation(3.2f, MathHelper.PiOver4 * 6, 30, BaseMath.EaseInOutQuad, WeaponAnimTypes.Light)},
         };
 
         CurrentAnim = WeaponAnimTypes.Light;
@@ -30,6 +30,8 @@ public class Dagger : MeleeWeapon
         {
             EnemyUser.CellPlayerMoveBeforeNewTarget = 2;
         }
+        
+        base.Start();
     }
 
     protected override void PlayerWeaponSprite()
