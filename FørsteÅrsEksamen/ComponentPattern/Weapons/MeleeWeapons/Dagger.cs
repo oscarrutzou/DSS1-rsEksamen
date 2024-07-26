@@ -20,8 +20,8 @@ public class Dagger : MeleeWeapon
 
         Animations = new()
         {
-            { WeaponAnimTypes.Light, new WeaponAnimation(2.7f, MathHelper.PiOver4 * 3, 15, BaseMath.EaseInOutQuad, WeaponAnimTypes.Medium, 2)},
-            { WeaponAnimTypes.Medium, new WeaponAnimation(3.2f, MathHelper.PiOver4 * 6, 30, BaseMath.EaseInOutQuad, WeaponAnimTypes.Light)},
+            { WeaponAnimTypes.Light, new WeaponAnimation(0.85f, MathHelper.PiOver4 * 3, 15, BaseMath.EaseOutQuart, WeaponAnimTypes.Medium, 2)},
+            { WeaponAnimTypes.Medium, new WeaponAnimation(1.2f, MathHelper.PiOver4 * 6, 30, BaseMath.EaseInOutQuint, WeaponAnimTypes.Light)},
         };
 
         CurrentAnim = WeaponAnimTypes.Light;
@@ -36,13 +36,13 @@ public class Dagger : MeleeWeapon
 
     protected override void PlayerWeaponSprite()
     {
-        spriteRenderer.SetSprite(TextureNames.WoodDagger);
-        SetStartColliders(new Vector2(7.5f, 21), 5, 5, 4, 3); // Gets set in each of the weapons insted of here.
+        SpriteRenderer.SetSprite(TextureNames.WoodDagger);
+        SetStartColliders(new Vector2(7.5f, 21), 5, 5, 2, 3); // Gets set in each of the weapons insted of here.
     }
 
     protected override void EnemyWeaponSprite()
     {
-        spriteRenderer.SetSprite(TextureNames.BoneDagger);
-        SetStartColliders(new Vector2(7.5f, 21), 5, 5, 4, 3); // Gets set in each of the weapons insted of here.
+        SpriteRenderer.SetSprite(TextureNames.BoneDagger);
+        SetStartColliders(new Vector2(7.5f, 21), 5, 5, 2, 3); // Gets set in each of the weapons insted of here.
     }
 }

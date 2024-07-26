@@ -20,67 +20,20 @@ public class CollisionRectangle
     public Vector2 StartRelativePos;
 }
 
-public enum WeaponAnimTypes
-{
-    Light,
-    Medium,
-    Heavy,
-    // Maybe special or something
-}
-
-public delegate float AnimationFunction(float x);
-
-// Play with some other methods, for different weapons, to make them feel slow or fast https://easings.net/
-public class WeaponAnimation
-{
-    public float TotalTime;
-    public float AmountOfRotation;
-    public int Repeats;
-    public int Damage;
-    public AnimationFunction AnimationMethod; // Delegate field
-    public WeaponAnimTypes NextAnimation;
-
-    public WeaponAnimation(float totalTime,
-                           float amountOfRotation,
-                           int damage,
-                           AnimationFunction animationMethod,
-                           WeaponAnimTypes nextAnimation,
-                           int repeats = 1)
-    {
-        TotalTime = totalTime;
-        AmountOfRotation = amountOfRotation;
-        Damage = damage;
-        AnimationMethod = animationMethod; // Assign the delegate
-        NextAnimation = nextAnimation;
-        Repeats = repeats;
-    }
-
-    public float CalculateAnimation(float x)
-    {
-        return AnimationMethod(x);
-    }
-}
-
-// NexAnim
-// A weapon will always have a light attack. It goes though the enum, enum.default = first in.
-// Need to save how many that attack has been picked, with how many times it should repeat
-// Could do it with a int that
-
-// Erik
-// Notes for what to add or change to the Weapon.
 // Only happen on attack. Also add hands. Remove it from the player and use 2 hands.
 // The hands should be given and made before making the weapon, as a part of which hands we should use.
 // Use the clenched hand for the one for the weapon and relaxed hand for the other.
 // A really nice to have to so make a trail behind the weapon when it swings:D Would be fun to make
 public abstract class Weapon : Component
 {
+    #region Parameters
     public Dictionary<WeaponAnimTypes, WeaponAnimation> Animations;
     public WeaponAnimTypes CurrentAnim;
     protected int CurrentAnimRepeats;
     public Player PlayerUser { get; set; }
     public Enemy EnemyUser { get; set; }
 
-    protected SpriteRenderer spriteRenderer;
+    public SpriteRenderer SpriteRenderer { get; set; }
 
     protected float StartAnimationAngle { get; set; }
 
@@ -101,7 +54,10 @@ public abstract class Weapon : Component
     protected float animRotation, nextAnimRotation;
     public WeaponAnimTypes NextAnim { get; private set; }
     protected bool FinnishedAttack;
-
+    private float untouchedAngle;
+    int divideBy = 4;
+    protected float FinalLerp { get; set; }
+    #endregion
 
     protected Weapon(GameObject gameObject) : base(gameObject)
     {
@@ -109,9 +65,9 @@ public abstract class Weapon : Component
 
     public override void Awake()
     {
-        spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
-        spriteRenderer.SetLayerDepth(LayerDepth.PlayerWeapon); // Should not matter?
-        spriteRenderer.IsCentered = false;
+        SpriteRenderer = GameObject.GetComponent<SpriteRenderer>();
+        SpriteRenderer.SetLayerDepth(LayerDepth.PlayerWeapon); // Should not matter?
+        SpriteRenderer.IsCentered = false;
 
         if (EnemyUser != null)
         {
@@ -123,16 +79,16 @@ public abstract class Weapon : Component
         }
     }
 
-
     public void StartAttack()
     {
         if (Attacking) return;
 
+        MoveWeaponAndAngle();
+        
         Attacking = true;
         FinnishedAttack = false;
 
         ChangeWeaponAttacks();
-        MoveWeapon(true);
 
         TimeBeforeNewDirection = Animations[CurrentAnim].TotalTime / 2;
 
@@ -192,7 +148,7 @@ public abstract class Weapon : Component
         GlobalSounds.PlayRandomizedSound(AttackSoundNames, 5, 1f, true);
     }
 
-    public void MoveWeapon(bool moveOnlyAngle = false)
+    public void MoveWeaponAndAngle()
     {
         Vector2 userPos;
         if (EnemyUser != null)
@@ -200,7 +156,7 @@ public abstract class Weapon : Component
         else
             userPos = PlayerUser.GameObject.Transform.Position;
 
-        if (Attacking && !moveOnlyAngle)
+        if (Attacking)
         {
             // Lock the offset
             GameObject.Transform.Position = userPos + lastOffSetPos;
@@ -218,39 +174,38 @@ public abstract class Weapon : Component
             angle += 2 * MathHelper.Pi;
         }
 
-        if (!moveOnlyAngle)
-        {
-            lastOffSetPos = BaseMath.Rotate(startRelativePos, angle - MathHelper.PiOver2) + startRelativeOffsetPos;
-            GameObject.Transform.Position = userPos + lastOffSetPos;
-        }
+        lastOffSetPos = BaseMath.Rotate(startRelativePos, angle - MathHelper.PiOver2) + startRelativeOffsetPos;
+        GameObject.Transform.Position = userPos + lastOffSetPos;
 
-        // Set the StartAnimationAngle based on the adjusted angle
-        if (angle > 0.5 * MathHelper.Pi && angle < 1.5 * MathHelper.Pi)
-        {
-            angle += MathHelper.Pi;
-            untouchedAngle = angle;
 
-            SetAngleToFitWithNextAnimation(true);
-
-            LeftSide = true;
-            spriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
-        }
-        else
-        {
-            untouchedAngle = angle;
-
-            SetAngleToFitWithNextAnimation(false);
-
-            LeftSide = false;
-            spriteRenderer.SpriteEffects = SpriteEffects.None;
-        }
+        SetAngleToCorrectSide();
 
         StartAnimationAngle = angle;
 
         GameObject.Transform.Rotation = StartAnimationAngle;
     }
 
-    private float untouchedAngle;
+    private void SetAngleToCorrectSide()
+    {
+        if (angle > 0.5 * MathHelper.Pi && angle < 1.5 * MathHelper.Pi)
+        {
+            angle += MathHelper.Pi;
+            untouchedAngle = angle;
+
+            LeftSide = true;
+            SetAngleToFitWithNextAnimation();
+            SpriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
+        }
+        else
+        {
+            untouchedAngle = angle;
+
+            LeftSide = false;
+            SetAngleToFitWithNextAnimation();
+            SpriteRenderer.SpriteEffects = SpriteEffects.None;
+        }
+    }
+
     protected void SetStartAngleToNextAnim()
     {
         // If the rotation is the same dont do anything
@@ -261,32 +216,15 @@ public abstract class Weapon : Component
         // Resets angle
         angle = untouchedAngle;
 
-        if (LeftSide)
-        {
-            FinalLerp = -nextAnimRotation;
-
-            if (leftOver < 0)
-                angle -= nextAnimRotation / divideBy;
-            else
-                angle += leftOver / 2;
-        }
-        else
-        {
-            FinalLerp = nextAnimRotation;
-
-            if (leftOver < 0)
-                angle += nextAnimRotation / divideBy;
-            else
-                angle -= leftOver / 2;
-        }
+        FinalLerp = LeftSide ? -nextAnimRotation : nextAnimRotation;
+        AddLeftOverToAngle(LeftSide, leftOver, nextAnimRotation);
 
         StartAnimationAngle = angle;
     }
 
-    int divideBy = 4;
-    protected float FinalLerp { get; set; }
 
-    private void SetAngleToFitWithNextAnimation(bool isLeft)
+
+    private void SetAngleToFitWithNextAnimation()
     {
         float curRot;
 
@@ -301,31 +239,14 @@ public abstract class Weapon : Component
 
         float leftOver = curRot - MathHelper.Pi;
 
-        if (isLeft)
-        {
-            if (leftOver < 0)
-                angle -= curRot / divideBy;
-            else
-                angle += leftOver / 2;
-        }
-        else
-        {
-            if (leftOver < 0)
-                angle += curRot / divideBy;
-            else
-                angle -= leftOver / 2;
-        }
+        AddLeftOverToAngle(LeftSide, leftOver, curRot);
     }
-    /* 
-     * Light = 1 start, slut 3
-     * Med = 0 start
-     * 
-     * Lock når angle 0 og den lige har attacked
-      * Efter når den er færdig atttacking:
-      *      Check new angle, og lerp fra gammel til ny angle
-      *      Hold attack locked imens
-      *      Når den rammer omkring ny angle, åben attack.
-     */
+
+    private void AddLeftOverToAngle(bool leftSide, float leftOver, float rotation)
+    {
+        angle += leftSide ? (leftOver < 0 ? -rotation / divideBy : leftOver / 2) :
+                            (leftOver < 0 ? rotation / divideBy : -leftOver / 2);
+    }
 
     private float GetAngleToMousePlayer()
     {

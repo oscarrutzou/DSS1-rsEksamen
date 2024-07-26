@@ -49,6 +49,10 @@ public abstract class Character : Component
     public int MaxHealth = 100;
     public int CollisionNr { get; set; }
 
+    private float damageTimerTotal = 0.2f;
+    private float damageTimer;
+    private Color damageTakenColor = Color.Red;
+
     #endregion Properties
 
     public Character(GameObject gameObject) : base(gameObject)
@@ -64,7 +68,7 @@ public abstract class Character : Component
         if (WeaponGo != null)
         {
             Weapon = WeaponGo.GetComponent<Weapon>();
-            Weapon.MoveWeapon();
+            Weapon.MoveWeaponAndAngle();
         }
     }
 
@@ -107,6 +111,11 @@ public abstract class Character : Component
         }
     }
 
+    public override void Update(GameTime gameTime)
+    {
+        HandleOnDamage();
+    }
+
     /// <summary>
     /// Updates the direction of which way the sprite should draw. Remember to set the direction!
     /// </summary>
@@ -127,7 +136,7 @@ public abstract class Character : Component
     public void Attack()
     {
         if (Weapon == null) return;
-        Weapon.MoveWeapon(); // Should maybe wait till it has reached towards the new direction
+        Weapon.MoveWeaponAndAngle(); // Should maybe wait till it has reached towards the new direction
         if (Weapon == null) return;
         Weapon.StartAttack();
     }
@@ -139,7 +148,11 @@ public abstract class Character : Component
         if (newHealth < 0) CurrentHealth = 0;
         else CurrentHealth = newHealth;
 
-        if (CurrentHealth > 0) return;
+        if (CurrentHealth > 0)
+        {
+            OnDamageTaken();
+            return;
+        }
 
         Die();
     }
@@ -152,6 +165,29 @@ public abstract class Character : Component
 
         // Remove hands
         SpriteRenderer.Color = Color.LightPink;
+    }
+
+
+
+    private void OnDamageTaken()
+    {
+        damageTimer = damageTimerTotal;
+        SpriteRenderer.Color = damageTakenColor;
+        Weapon.SpriteRenderer.Color = damageTakenColor;
+    }
+
+    private void HandleOnDamage()
+    {
+        if (damageTimer <= 0) return;
+
+        damageTimer -= GameWorld.DeltaTime;
+
+        // Count down
+        if (damageTimer <= 0)
+        {
+            SpriteRenderer.Color = Color.White;
+            Weapon.SpriteRenderer.Color = Color.White;
+        }
     }
 
     public override void Draw(SpriteBatch spriteBatch)

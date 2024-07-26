@@ -54,8 +54,26 @@ public static class BaseMath
         return x == 1 ? 1 : 1 - (float)Math.Pow(2, -10 * x);
     }
 
+    /// <summary>
+    /// A method that makes a smooth transition
+    /// </summary>
+    /// <param name="x"></param>
+    /// <returns></returns>
     public static float EaseInOutQuad(float x)
     {
         return x < 0.5 ? 2 * x * x : 1 - MathF.Pow(-2 * x + 2, 2) / 2;
+    }
+
+    public static float EaseOutQuart(float x)
+    {
+        return 1 - MathF.Pow(1 - x, 4);
+    }
+    public static float EaseOutCubic(float x)
+    {
+        return 1 - MathF.Pow(1 - x, 3);
+    }
+    public static float EaseInOutQuint(float x)
+    {
+        return x < 0.5 ? 16 * x * x * x * x * x : 1 - MathF.Pow(-2 * x + 2, 5) / 2;
     }
 }

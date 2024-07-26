@@ -87,13 +87,15 @@ public abstract class Enemy : Character
         Cell cell = currentCellGo.GetComponent<Cell>();
         CollisionNr = cell.CollisionNr;
 
-        Weapon.MoveWeapon();
+        Weapon.MoveWeaponAndAngle();
 
         if (Player.CollisionNr == CollisionNr) SetPath(); // We know that the player the targetPoint has been set
     }
 
     public override void Update(GameTime gameTime)
     {
+        base.Update(gameTime);
+
         CheckLayerDepth(); // Make sure the enemy is drawn correctly.
 
         //To make a new path towards the player, if they have moved.
@@ -115,7 +117,7 @@ public abstract class Enemy : Character
 
                 // Update direction towards player insted of moving direction
                 Direction = Vector2.Normalize(playerGo.Transform.Position - GameObject.Transform.Position);
-                Weapon.MoveWeapon();
+                Weapon.MoveWeaponAndAngle();
                 UpdateDirection();
                 Attack();
                 break;
@@ -241,7 +243,7 @@ public abstract class Enemy : Character
         Direction = Vector2.Normalize(nextTarget - position);
 
         GameObject.Transform.Translate(Direction * Speed * GameWorld.DeltaTime);
-        Weapon.MoveWeapon();
+        Weapon.MoveWeaponAndAngle();
 
         if (Path.Count <= 3) // Attack before reaching the player, to put pressure on them
         {

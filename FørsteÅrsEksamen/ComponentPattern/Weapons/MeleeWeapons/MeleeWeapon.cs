@@ -65,10 +65,10 @@ public abstract class MeleeWeapon : Weapon
             rotateBackStartRotation = GameObject.Transform.Rotation;
 
             // Makes the weapon flip when rotating back
-            if (spriteRenderer.SpriteEffects == SpriteEffects.FlipHorizontally)
-                spriteRenderer.SpriteEffects = SpriteEffects.None;
-            else if (spriteRenderer.SpriteEffects == SpriteEffects.None)
-                spriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
+            if (SpriteRenderer.SpriteEffects == SpriteEffects.FlipHorizontally)
+                SpriteRenderer.SpriteEffects = SpriteEffects.None;
+            else if (SpriteRenderer.SpriteEffects == SpriteEffects.None)
+                SpriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
         }
 
         float normalizedTime = TotalElapsedTime / TimeBeforeNewDirection;
@@ -95,7 +95,7 @@ public abstract class MeleeWeapon : Weapon
         if (Math.Abs(GameObject.Transform.Rotation - StartAnimationAngle) < 0.1f && IsRotatingBack)
         {
             IsRotatingBack = false;
-            Attacking = false;
+            Attacking = false; 
             FinnishedAttack = true;
         }
     }
@@ -176,8 +176,8 @@ public abstract class MeleeWeapon : Weapon
     /// <param name="amountOfColliders"></param>
     protected void SetStartColliders(Vector2 origin, int width, int height, int heightFromOriginToHandle, int amountOfColliders)
     {
-        spriteRenderer.OriginOffSet = origin;
-        spriteRenderer.DrawPosOffSet = -origin;
+        SpriteRenderer.OriginOffSet = origin;
+        SpriteRenderer.DrawPosOffSet = -origin;
         AddWeaponColliders(width, height, heightFromOriginToHandle, amountOfColliders);
     }
 

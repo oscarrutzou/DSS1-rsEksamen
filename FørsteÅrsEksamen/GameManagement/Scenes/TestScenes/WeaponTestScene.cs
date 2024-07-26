@@ -27,7 +27,7 @@ public class WeaponTestScene : Scene
     MeleeWeapon weapon;
     private void MakePlayer()
     {
-        playerGo = PlayerFactory.Create(ClassTypes.Rogue, WeaponTypes.Dagger);
+        playerGo = PlayerFactory.Create(ClassTypes.Rogue, WeaponTypes.Sword);
         player = playerGo.GetComponent<Player>();
         weapon = player.WeaponGo.GetComponent<MeleeWeapon>();
 

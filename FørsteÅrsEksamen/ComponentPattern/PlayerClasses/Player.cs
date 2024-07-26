@@ -58,12 +58,17 @@ public abstract class Player : Character, ISubject
 
     public override void Update(GameTime gameTime)
     {
+        base.Update(gameTime);
+
+        SpriteRenderer.Rotation += GameWorld.DeltaTime * 0.5f;
+        //SpriteRenderer.OriginOffSet = Vector2.Zero;
+
         if (State != CharacterState.Dead)
         {
             CheckForMovement();
         }
 
-        Weapon?.MoveWeapon();
+        Weapon?.MoveWeaponAndAngle();
 
         switch (State)
         {
@@ -162,13 +167,13 @@ public abstract class Player : Character, ISubject
         Vector2 xMovement = new Vector2(velocity.X, 0) * Speed * GameWorld.DeltaTime;
         Vector2 yMovement = new Vector2(0, velocity.Y) * Speed * GameWorld.DeltaTime;
 
-        bool hasMoved = false;
+        //bool hasMoved = false;
         // Try moving along the X axis
         if (TryMove(xMovement))
         {
             // Update the previous position after a successful move
             previousPosition = GameObject.Transform.Position;
-            hasMoved = true;
+            //hasMoved = true;
         }
 
         // Try moving along the Y axis
@@ -176,10 +181,9 @@ public abstract class Player : Character, ISubject
         {
             // Update the previous position after a successful move
             previousPosition = GameObject.Transform.Position;
-            hasMoved = true;
+            //hasMoved = true;
         }
 
-        if (!hasMoved) return; // Don't need to set new position, since it's the same.
     }
 
     private void UpdatePositionAndNotify()
@@ -238,7 +242,7 @@ public abstract class Player : Character, ISubject
         GameObject.Transform.Translate(movement);
         MovementColliderGo.Transform.Position = GameObject.Transform.Position;
         HandsGo.Transform.Position = GameObject.Transform.Position;
-        Weapon.MoveWeapon();
+        Weapon.MoveWeaponAndAngle();
     }
 
     /// <summary>
@@ -250,7 +254,7 @@ public abstract class Player : Character, ISubject
         GameObject.Transform.Position = position;
         MovementColliderGo.Transform.Position = GameObject.Transform.Position;
         HandsGo.Transform.Position = GameObject.Transform.Position;
-        Weapon.MoveWeapon();
+        Weapon.MoveWeaponAndAngle();
         GameWorld.Instance.WorldCam.Position = GameObject.Transform.Position; //Sets the new position of the world cam
     }
 
