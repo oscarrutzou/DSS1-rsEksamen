@@ -1,4 +1,5 @@
-﻿using DoctorsDungeon.LiteDB;
+﻿using DoctorsDungeon.Factory;
+using DoctorsDungeon.LiteDB;
 using Microsoft.Xna.Framework;
 
 namespace DoctorsDungeon.GameManagement.Scenes.Rooms;
@@ -33,5 +34,10 @@ public class Room1Scene : RoomBase
         PotionSpawnPoints = new() {
         new Point(7, 4),
         new Point(29, 9),};
+
+        MiscGameObjectsInRoom = new()
+        {
+            { new Point(13, 5), TraningDummyFactory.Create() }
+        };
     }
 }

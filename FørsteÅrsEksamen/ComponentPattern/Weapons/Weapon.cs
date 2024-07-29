@@ -26,7 +26,7 @@ public class CollisionRectangle
 // A really nice to have to so make a trail behind the weapon when it swings:D Would be fun to make
 public abstract class Weapon : Component
 {
-    #region Parameters
+    #region Properties
     public Dictionary<WeaponAnimTypes, WeaponAnimation> Animations;
     public WeaponAnimTypes CurrentAnim;
     protected int CurrentAnimRepeats;
@@ -221,8 +221,6 @@ public abstract class Weapon : Component
 
         StartAnimationAngle = angle;
     }
-
-
 
     private void SetAngleToFitWithNextAnimation()
     {

@@ -33,10 +33,11 @@ public abstract class Character : Component
     protected Animator Animator;
     protected Collider Collider;
     protected Weapon Weapon;
+    protected Health Health;
 
     protected Dictionary<CharacterState, AnimNames> CharacterStateAnimations = new();
-    protected Vector2 SmallSpriteOffset = new(0, -32); // Move the animation up a bit so it looks like it walks correctly.
-    protected Vector2 LargeSpriteOffSet = new(0, -96); // Move the animation up more since its a 64x64 insted of 32x32 canvans, for the Run and Death.
+    public static Vector2 SmallSpriteOffset = new(0, -32); // Move the animation up a bit so it looks like it walks correctly.
+    public static Vector2 LargeSpriteOffSet = new(0, -96); // Move the animation up more since its a 64x64 insted of 32x32 canvans, for the Run and Death.
 
     public CharacterState State { get; protected set; } = CharacterState.Moving; // We use the method SetState, to we can change the animations and other variables.
     public Vector2 Direction { get; protected set; }
@@ -46,14 +47,7 @@ public abstract class Character : Component
     protected float AttackCooldown = 2f;
 
     protected int Speed { get; set; }
-    //public int CurrentHealth = 100;
-    //public int MaxHealth = 100;
     public int CollisionNr { get; set; }
-
-    protected Health Health;
-    //private float damageTimerTotal = 0.2f;
-    //private float damageTimer;
-    //private Color damageTakenColor = Color.Red;
 
     #endregion Properties
 

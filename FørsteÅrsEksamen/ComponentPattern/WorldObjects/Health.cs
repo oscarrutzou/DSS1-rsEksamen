@@ -24,7 +24,7 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
         public Action OnDamageTaken;
         public Action OnZeroHealth;
         public Action OnResetColor;
-
+        public Action<int> AmountDamageTaken;
         public Health(GameObject gameObject) : base(gameObject)
         {
         }
@@ -58,9 +58,12 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
             return true;
         }
 
+
         public void TakeDamage(int damage)
         {
             if (CurrentHealth <= 0) return; // Already dead
+
+            AmountDamageTaken?.Invoke(damage);
 
             int newHealth = CurrentHealth - damage;
 
@@ -70,12 +73,12 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
             if (CurrentHealth > 0)
             {
                 DamageTaken();
-                OnDamageTaken(); // For specific behavor when Damage taken
+                OnDamageTaken?.Invoke(); // For specific behavor when Damage taken
                 return;
             }
 
             ResetColor();
-            OnZeroHealth();
+            OnZeroHealth?.Invoke();
         }
 
         private void DamageTaken()

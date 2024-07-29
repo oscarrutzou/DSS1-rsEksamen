@@ -37,6 +37,7 @@ public abstract class RoomBase : Scene
 
     protected List<Point> EnemySpawnPoints = new();
     protected List<Point> PotionSpawnPoints = new();
+    protected Dictionary<Point, GameObject> MiscGameObjectsInRoom = new();
 
     private TransferDoor transferDoor;
     private SpriteRenderer transferDoorSpriteRenderer;
@@ -75,6 +76,7 @@ public abstract class RoomBase : Scene
 
         SpawnEnemies();
         SpawnPotions();
+        CenterMiscItems();
 
         SetCommands();
 
@@ -139,6 +141,15 @@ public abstract class RoomBase : Scene
     private void SpawnPotions()
     {
         spawner.SpawnPotions(PotionSpawnPoints, PlayerGo);
+    }
+
+    private void CenterMiscItems()
+    {
+        foreach (Point point in MiscGameObjectsInRoom.Keys)
+        {
+            GameObject go = MiscGameObjectsInRoom[point];
+            go.Transform.Position = GridManager.Instance.CurrentGrid.GetCellFromPoint(point).GameObject.Transform.Position;
+        }
     }
 
     private void SetCommands()
