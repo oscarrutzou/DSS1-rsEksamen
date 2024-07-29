@@ -2,6 +2,7 @@
 
 using DoctorsDungeon.ComponentPattern.Particles.BirthModifiers;
 using DoctorsDungeon.ComponentPattern.Particles.Modifiers;
+using DoctorsDungeon.ComponentPattern.Particles.Origins;
 using DoctorsDungeon.ObjectPoolPattern;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -23,6 +24,8 @@ namespace DoctorsDungeon.ComponentPattern.Particles
         public string Name { get; set; }
         public float ParticlesPerSecond;
         public float LinearDamping { get; set; }
+        public Origin Origin { get; set; } = new PointOrigin();
+
         public double TotalSeconds { get; set; }
         protected Interval Speed;
 

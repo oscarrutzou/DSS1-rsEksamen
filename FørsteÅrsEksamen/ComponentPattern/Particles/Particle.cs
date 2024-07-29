@@ -1,10 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static DoctorsDungeon.ComponentPattern.Particles.Emitter;
 
 namespace DoctorsDungeon.ComponentPattern.Particles
 {
@@ -14,6 +9,11 @@ namespace DoctorsDungeon.ComponentPattern.Particles
         public double MaxAge { get; set; }
         public Vector2 Velocity { get; set; }
         public float RotationVelocity { get; set; }
+        public Vector2 Position
+        {
+            get { return GameObject.Transform.Position; }
+            set { GameObject.Transform.Position = value; }
+        }
         public Vector2 Scale
         {
             get { return GameObject.Transform.Scale; }
@@ -29,10 +29,24 @@ namespace DoctorsDungeon.ComponentPattern.Particles
             }
         }
 
+        private Color nextColor;
         public Color Color
         {
-            get { return spriteRenderer.Color; }
-            set { spriteRenderer.Color = value; }
+            get 
+            {
+                if (spriteRenderer == null) return nextColor;
+                return spriteRenderer.Color; 
+            }
+            set 
+            { 
+                if (spriteRenderer == null)
+                {
+                    nextColor = value;
+                    return;
+                }
+                nextColor = value;
+                spriteRenderer.Color = value; 
+            }
         }
         private SpriteRenderer spriteRenderer;
 

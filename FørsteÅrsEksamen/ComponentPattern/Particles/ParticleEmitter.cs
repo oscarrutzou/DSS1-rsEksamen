@@ -1,5 +1,6 @@
 ﻿using DoctorsDungeon.ComponentPattern.Particles.BirthModifiers;
 using DoctorsDungeon.ComponentPattern.Particles.Modifiers;
+using DoctorsDungeon.ComponentPattern.Particles.Origins;
 using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using DoctorsDungeon.GameManagement;
 using DoctorsDungeon.Other;
@@ -64,8 +65,6 @@ namespace DoctorsDungeon.ComponentPattern.Particles
                 {
                     go.Transform.Position += (p.Velocity * (float)GameWorld.DeltaTime);
 
-                    //p.Velocity += (BaseMath.Gravity * (float)GameWorld.DeltaTime;
-
                     p.Velocity *= dampening;
                     go.Transform.Rotation += p.RotationVelocity;
 
@@ -90,6 +89,9 @@ namespace DoctorsDungeon.ComponentPattern.Particles
 
         public void AddParticle()
         {
+            OriginData data = Origin.GetPosition(this);
+            if (data == null) return;
+
             GameObject go = ParticlePool.GetObjectAndMake();
 
             if (go == null) return;
@@ -99,12 +101,12 @@ namespace DoctorsDungeon.ComponentPattern.Particles
 
             Matrix matrix = Matrix.CreateRotationZ((float)Direction.GetValue());
 
-            go.Transform.Position = Position;
+            particle.Position = Position;
 
             particle.Velocity = new Vector2((float)Speed.GetValue(), 0);
             particle.Velocity = Vector2.Transform(particle.Velocity, matrix);
-            //particle.Position = Position + data.Position;
-            //if (Origin.UseColorData) particle.Color = data.Color;
+            particle.Position = Position + data.Position;
+            if (Origin.UseColorData) particle.Color = data.Color;
             particle.RotationVelocity = (float)RotationVelocity.GetValue();
             go.Transform.Rotation = (float)Rotation.GetValue();
             particle.MaxAge = MaxAge.GetValue();

@@ -9,6 +9,7 @@ namespace DoctorsDungeon.ComponentPattern.Particles
         public double MaxAge { get; set; }
         public Vector2 Velocity { get; set; }
         public float RotationVelocity { get; set; }
+        public Vector2 Position { get; set; }
         public Vector2 Scale { get; set; }
         public double Alpha { get; set; } 
         public Color Color { get; set; } 

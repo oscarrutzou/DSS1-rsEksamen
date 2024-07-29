@@ -3,6 +3,8 @@ using DoctorsDungeon.CommandPattern.Commands;
 using DoctorsDungeon.ComponentPattern;
 using DoctorsDungeon.ComponentPattern.Particles;
 using DoctorsDungeon.ComponentPattern.Particles.BirthModifiers;
+using DoctorsDungeon.ComponentPattern.Particles.Modifiers;
+using DoctorsDungeon.ComponentPattern.Particles.Origins;
 using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using DoctorsDungeon.ComponentPattern.Weapons;
 using DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons;
@@ -41,10 +43,16 @@ public class WeaponTestScene : Scene
     ParticleEmitter emitter;
     private void MakeEmitters()
     {
-        GameObject go = EmitterFactory.CreateParticleEmitter("Dust Cloud", new Vector2(200, -200), new Interval(50, 150), new Interval(-Math.PI, Math.PI), 400, new Interval(1000, 2000), 200);
+        GameObject go = EmitterFactory.CreateParticleEmitter("Dust Cloud", new Vector2(200, -200), new Interval(50, 100), new Interval(-MathHelper.Pi, 0), 1000, new Interval(2000, 3000), 1000);
 
         emitter = go.GetComponent<ParticleEmitter>();
         emitter.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel));
+        emitter.AddModifier(new ColorRangeModifier(Color.Blue, Color.LightYellow, Color.Yellow, Color.Orange, Color.Transparent));
+
+        emitter.AddBirthModifier(new ScaleBirthModifier(new Interval(10, 15)));
+        emitter.AddModifier(new ScaleModifier(5));
+        //emitter.Origin = new FairyDustAnimatedOrigin(new Rectangle((int)GameWorld.Instance.WorldCam.TopLeft.X, (int)GameWorld.Instance.WorldCam.TopLeft.Y, 1920, 1080));
+        emitter.Origin = new RectangleOrigin(100, 100);
 
         emitter.StartEmitter();
 
