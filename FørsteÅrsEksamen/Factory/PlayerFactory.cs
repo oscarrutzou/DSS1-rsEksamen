@@ -1,6 +1,7 @@
 ﻿using DoctorsDungeon.ComponentPattern;
 using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using DoctorsDungeon.ComponentPattern.Weapons;
+using DoctorsDungeon.ComponentPattern.WorldObjects;
 using DoctorsDungeon.LiteDB;
 using Microsoft.Xna.Framework;
 
@@ -42,6 +43,8 @@ public static class PlayerFactory
         player.HandsGo = hands;
         player.MovementColliderGo = movementColliderGo;
 
+        Health health = playerGo.AddComponent<Health>();
+
         //Weapon
         GameObject weaponGo = WeaponFactory.Create(weaponType);
         weaponGo.GetComponent<Weapon>().PlayerUser = player;
@@ -54,8 +57,7 @@ public static class PlayerFactory
 
         if (GameWorld.DebugAndCheats)
         {
-            player.MaxHealth = 20000;
-            player.CurrentHealth = player.MaxHealth;
+            health.MaxHealth = 20000;
         }
 
         // Set the reference to this player.

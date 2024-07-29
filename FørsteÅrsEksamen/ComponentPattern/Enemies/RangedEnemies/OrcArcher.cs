@@ -17,6 +17,8 @@ public class OrcArcher : EnemyMelee
     {
         base.Awake();
 
+        Health.MaxHealth = 80;
+
         CharacterStateAnimations.Add(CharacterState.Idle, AnimNames.OrcArcherIdle);
         CharacterStateAnimations.Add(CharacterState.Moving, AnimNames.OrcArcherRun);
         CharacterStateAnimations.Add(CharacterState.Dead, AnimNames.OrcArcherDeath);

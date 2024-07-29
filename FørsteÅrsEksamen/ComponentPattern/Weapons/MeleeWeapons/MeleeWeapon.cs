@@ -1,4 +1,5 @@
 ﻿using DoctorsDungeon.CommandPattern;
+using DoctorsDungeon.ComponentPattern.WorldObjects;
 using DoctorsDungeon.GameManagement.Scenes;
 using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
@@ -23,14 +24,14 @@ public abstract class MeleeWeapon : Weapon
 
     public void DealDamage(GameObject damageGo)
     {
-        Character damageGoHealth = damageGo.GetComponent<Character>();
+        Health health = damageGo.GetComponent<Health>();
 
         // Float so we can divide with enemy weakness
         float damage = Animations[CurrentAnim].Damage;
         if (EnemyUser != null)
             damage /= EnemyWeakness;
 
-        damageGoHealth.TakeDamage((int)damage);
+        health.TakeDamage((int)damage);
     }
 
     public override void Update(GameTime gameTime)
@@ -49,9 +50,9 @@ public abstract class MeleeWeapon : Weapon
     private float rotateBackStartRotation;
     private void AttackAnimation()
     {
-        // First rotate current angle to start angle of the anim, before attacking
-        // Animations[CurrentAnim].AmountOfRotation;
+        // This should be changed to another animation method if its a stab attack
 
+        // First rotate current angle to start angle of the anim, before attacking
         if (!IsRotatingBack && TotalElapsedTime >= TimeBeforeNewDirection)
         {
             PlayAttackSound();
@@ -72,7 +73,6 @@ public abstract class MeleeWeapon : Weapon
         }
 
         float normalizedTime = TotalElapsedTime / TimeBeforeNewDirection;
-
         float easedTime; // maybe switch between them.
         float finalLerp = StartAnimationAngle;
 
@@ -86,7 +86,6 @@ public abstract class MeleeWeapon : Weapon
         else
         {
             // Second rotation to rotate to the start of the next rotation
-            // Den rammer  final lerp, men den er 10 mens rotation kun er 9, og teleporterr til 10. Må starte fra den nye.
             //Up attack
             easedTime = Animations[CurrentAnim].AnimationMethod(normalizedTime);
             GameObject.Transform.Rotation = MathHelper.Lerp(rotateBackStartRotation, StartAnimationAngle, easedTime);
@@ -99,8 +98,6 @@ public abstract class MeleeWeapon : Weapon
             FinnishedAttack = true;
         }
     }
-
-
 
     public void CheckCollisionAndDmg()
     {
@@ -218,7 +215,7 @@ public abstract class MeleeWeapon : Weapon
 
         foreach (CollisionRectangle collisionRectangle in WeaponColliders)
         {
-            Collider.DrawRectangleNoSprite(collisionRectangle.Rectangle, Color.Black, spriteBatch);
+            Collider.DrawRectangleNoSprite(collisionRectangle.Rectangle, Color.OrangeRed, spriteBatch);
         }
         base.Draw(spriteBatch);
     }

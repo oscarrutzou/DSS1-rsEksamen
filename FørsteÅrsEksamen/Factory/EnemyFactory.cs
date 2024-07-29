@@ -3,6 +3,7 @@ using DoctorsDungeon.ComponentPattern.Enemies;
 using DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies;
 using DoctorsDungeon.ComponentPattern.Enemies.RangedEnemies;
 using DoctorsDungeon.ComponentPattern.Weapons;
+using DoctorsDungeon.ComponentPattern.WorldObjects;
 using Microsoft.Xna.Framework;
 using System;
 
@@ -46,6 +47,7 @@ public static class EnemyFactory
         enemyGo.AddComponent<SpriteRenderer>();
         enemyGo.AddComponent<Animator>();
         enemyGo.AddComponent<Collider>();
+        enemyGo.AddComponent<Health>();
 
         enemyGo = AddEnemyComponent(enemyGo, enemyType);
 

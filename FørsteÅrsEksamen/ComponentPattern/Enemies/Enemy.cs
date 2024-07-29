@@ -94,8 +94,6 @@ public abstract class Enemy : Character
 
     public override void Update(GameTime gameTime)
     {
-        base.Update(gameTime);
-
         CheckLayerDepth(); // Make sure the enemy is drawn correctly.
 
         //To make a new path towards the player, if they have moved.

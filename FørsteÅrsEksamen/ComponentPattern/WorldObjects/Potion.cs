@@ -6,10 +6,10 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects;
 // Asser
 public class Potion : Component
 {
-    protected SpriteRenderer SpriteRenderer;
-    protected Collider Collider, PlayerCollider;
-    protected Player Player;
-
+    private SpriteRenderer spriteRenderer;
+    private Collider collider, playerCollider;
+    private Player player;
+    private Health health;
     private GameObject playerGo;
 
     public string Name = "Health Potion";
@@ -27,24 +27,25 @@ public class Potion : Component
     public override void Awake()
     {
         base.Awake();
-        Collider = GameObject.GetComponent<Collider>();
-        Collider.SetCollisionBox(10, 15);
-        SpriteRenderer = GameObject.GetComponent<SpriteRenderer>();
-        PlayerCollider = playerGo.GetComponent<Collider>();
-        Player = playerGo.GetComponent<Player>();
+        collider = GameObject.GetComponent<Collider>();
+        collider.SetCollisionBox(10, 15);
+        spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
+        playerCollider = playerGo.GetComponent<Collider>();
+        player = playerGo.GetComponent<Player>();
+        health = playerGo.GetComponent<Health>();
     }
 
     public override void Update(GameTime gameTime)
     {
-        OnCollisionEnter(Collider);
+        OnCollisionEnter(collider);
     }
 
     public override void OnCollisionEnter(Collider collider)
     {
         // Skal kun fjerne item ved player position, ikke alle items.
-        if (collider.CollisionBox.Intersects(PlayerCollider.CollisionBox))
+        if (collider.CollisionBox.Intersects(playerCollider.CollisionBox))
         {
-            if (Player.CanPickUpItem(this))
+            if (player.CanPickUpItem(this))
             {
                 GameObject.IsEnabled = false;
             }
@@ -53,16 +54,8 @@ public class Potion : Component
 
     public void Use()
     {
-        if (Player.CurrentHealth == Player.MaxHealth) return;
-
-        Player.CurrentHealth += healAmount;
-
-        if (Player.CurrentHealth > Player.MaxHealth)
-        {
-            Player.CurrentHealth = Player.MaxHealth;
-        }
-
-        Player.ItemInInventory = null;
+        if (!health.AddHealth(healAmount)) return; // Already full health
+        player.ItemInInventory = null;
         GameWorld.Instance.Destroy(GameObject);
     }
 }

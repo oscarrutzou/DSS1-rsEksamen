@@ -65,7 +65,7 @@ public class GameWorld : Game
 
         SpawnBG(); // The background that dont get deleted
 
-        CurrentScene = Scenes[SceneNames.WeaponTestScene];
+        CurrentScene = Scenes[SceneNames.MainMenu];
         CurrentScene.Initialize(); // Starts the main menu
 
         base.Initialize();

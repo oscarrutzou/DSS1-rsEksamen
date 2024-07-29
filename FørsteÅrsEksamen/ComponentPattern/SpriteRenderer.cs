@@ -94,14 +94,6 @@ public class SpriteRenderer : Component
         drawPos += OriginOffSet + DrawPosOffSet;
 
         float rot = GameObject.Transform.Rotation;
-        //if (Rotation != 0)
-        //{
-        //    Origin = Vector2.Zero;
-        //    rot = Rotation;
-        //    drawPos = Vector2.Zero;
-        //    // Need to have a center point, that should be a origin at the feet. 
-        //    // This is very it should rotate from. How to do that is another question 
-        //} 
 
         //Draws the sprite, and if there is a sourcerectangle set, then it uses that.
         spriteBatch.Draw(Sprite, drawPos, SourceRectangle == Rectangle.Empty ? null : SourceRectangle, Color, rot, Origin, GameObject.Transform.Scale, SpriteEffects, LayerDepth);

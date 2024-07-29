@@ -58,9 +58,7 @@ public abstract class Player : Character, ISubject
 
     public override void Update(GameTime gameTime)
     {
-        base.Update(gameTime);
-
-        SpriteRenderer.Rotation += GameWorld.DeltaTime * 0.5f;
+        //SpriteRenderer.Rotation += GameWorld.DeltaTime * 0.5f;
         //SpriteRenderer.OriginOffSet = Vector2.Zero;
 
         if (State != CharacterState.Dead)

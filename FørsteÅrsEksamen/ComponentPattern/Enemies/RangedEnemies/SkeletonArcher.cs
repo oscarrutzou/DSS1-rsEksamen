@@ -16,8 +16,10 @@ public class SkeletonArcher : EnemyMelee
     {
         base.Awake();
 
-        CharacterStateAnimations.Add(CharacterState.Idle, AnimNames.OrcBaseIdle);
-        CharacterStateAnimations.Add(CharacterState.Moving, AnimNames.OrcBaseRun);
-        CharacterStateAnimations.Add(CharacterState.Dead, AnimNames.OrcBaseDeath);
+        Health.MaxHealth = 100;
+
+        CharacterStateAnimations.Add(CharacterState.Idle, AnimNames.SkeletonArcherIdle);
+        CharacterStateAnimations.Add(CharacterState.Moving, AnimNames.SkeletonArcherRun);
+        CharacterStateAnimations.Add(CharacterState.Dead, AnimNames.SkeletonArcherDeath);
     }
 }

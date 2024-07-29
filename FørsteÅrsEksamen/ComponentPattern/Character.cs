@@ -1,5 +1,6 @@
 ﻿using DoctorsDungeon.CommandPattern;
 using DoctorsDungeon.ComponentPattern.Weapons;
+using DoctorsDungeon.ComponentPattern.WorldObjects;
 using DoctorsDungeon.GameManagement;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -45,13 +46,14 @@ public abstract class Character : Component
     protected float AttackCooldown = 2f;
 
     protected int Speed { get; set; }
-    public int CurrentHealth = 100;
-    public int MaxHealth = 100;
+    //public int CurrentHealth = 100;
+    //public int MaxHealth = 100;
     public int CollisionNr { get; set; }
 
-    private float damageTimerTotal = 0.2f;
-    private float damageTimer;
-    private Color damageTakenColor = Color.Red;
+    protected Health Health;
+    //private float damageTimerTotal = 0.2f;
+    //private float damageTimer;
+    //private Color damageTakenColor = Color.Red;
 
     #endregion Properties
 
@@ -65,11 +67,21 @@ public abstract class Character : Component
         Animator = GameObject.GetComponent<Animator>();
         Collider = GameObject.GetComponent<Collider>();
 
+        Health = GameObject.GetComponent<Health>();
+        SetActionInHealth();
+
         if (WeaponGo != null)
         {
             Weapon = WeaponGo.GetComponent<Weapon>();
             Weapon.MoveWeaponAndAngle();
         }
+    }
+
+    private void SetActionInHealth()
+    {
+        Health.OnDamageTaken += OnDamageTaken;
+        Health.OnZeroHealth += OnDie;
+        Health.OnResetColor += OnResetColor;
     }
 
     // This is not a abstract method since we only need to set it in the Player and Enemy class, and not in its subclasses
@@ -111,11 +123,6 @@ public abstract class Character : Component
         }
     }
 
-    public override void Update(GameTime gameTime)
-    {
-        HandleOnDamage();
-    }
-
     /// <summary>
     /// Updates the direction of which way the sprite should draw. Remember to set the direction!
     /// </summary>
@@ -141,23 +148,7 @@ public abstract class Character : Component
         Weapon.StartAttack();
     }
 
-    public void TakeDamage(int damage)
-    {
-        int newHealth = CurrentHealth - damage;
-
-        if (newHealth < 0) CurrentHealth = 0;
-        else CurrentHealth = newHealth;
-
-        if (CurrentHealth > 0)
-        {
-            OnDamageTaken();
-            return;
-        }
-
-        Die();
-    }
-
-    public virtual void Die()
+    private void OnDie()
     {
         SetState(CharacterState.Dead);
         GameWorld.Instance.Destroy(WeaponGo);
@@ -167,27 +158,14 @@ public abstract class Character : Component
         SpriteRenderer.Color = Color.LightPink;
     }
 
-
-
     private void OnDamageTaken()
     {
-        damageTimer = damageTimerTotal;
-        SpriteRenderer.Color = damageTakenColor;
-        Weapon.SpriteRenderer.Color = damageTakenColor;
+        Weapon.SpriteRenderer.Color = Health.DamageTakenColor;
     }
 
-    private void HandleOnDamage()
+    private void OnResetColor()
     {
-        if (damageTimer <= 0) return;
-
-        damageTimer -= GameWorld.DeltaTime;
-
-        // Count down
-        if (damageTimer <= 0)
-        {
-            SpriteRenderer.Color = Color.White;
-            Weapon.SpriteRenderer.Color = Color.White;
-        }
+        Weapon.SpriteRenderer.Color = Color.White;
     }
 
     public override void Draw(SpriteBatch spriteBatch)

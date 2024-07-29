@@ -237,7 +237,9 @@ public class DB
 
         // Update player
         string potionName = SaveData.Player.ItemInInventory == null ? string.Empty : SaveData.Player.ItemInInventory.Name;
-        savedData.RunData.PlayerData.Health = SaveData.Player.CurrentHealth;
+
+        Health playerHealth = SaveData.Player.GameObject.GetComponent<Health>();
+        savedData.RunData.PlayerData.Health = playerHealth.CurrentHealth;
         savedData.RunData.PlayerData.Potion_Name = potionName;
         return savedData;
     }
@@ -270,10 +272,12 @@ public class DB
             Player player = playerGo.GetComponent<Player>();
             SaveData.Player = player;
 
+            Health playerHealth = playerGo.GetComponent<Health>();
+
             // Could ekstrakt here, to make code more readable
             PlayerData playerData = new()
             {
-                Health = player.CurrentHealth,
+                Health = playerHealth.CurrentHealth,
                 Class_Type = SaveData.SelectedClass,
                 Weapon_Type = SaveData.SelectedWeapon,
             };
@@ -297,7 +301,9 @@ public class DB
             PlayerData loadPlayerData = savedData.RunData.PlayerData;
             playerGo = PlayerFactory.Create(loadPlayerData.Class_Type, loadPlayerData.Weapon_Type);
             Player player = playerGo.GetComponent<Player>();
-            player.CurrentHealth = loadPlayerData.Health;
+            Health playerHealth = playerGo.GetComponent<Health>();
+
+            playerHealth.CurrentHealth = loadPlayerData.Health;
 
             if (loadPlayerData.Potion_Name != null)
             {

@@ -33,6 +33,7 @@ public abstract class RoomBase : Scene
     public Point PlayerSpawnPos, EndPointSpawnPos = new(6, 6);
     protected GameObject PlayerGo;
     private Player player;
+    private Health playerHealth;
 
     protected List<Point> EnemySpawnPoints = new();
     protected List<Point> PotionSpawnPoints = new();
@@ -143,6 +144,7 @@ public abstract class RoomBase : Scene
     private void SetCommands()
     {
         player = PlayerGo.GetComponent<Player>();
+        playerHealth = PlayerGo.GetComponent<Health>();
         InputHandler.Instance.AddKeyUpdateCommand(Keys.D, new MoveCmd(player, new Vector2(1, 0)));
         InputHandler.Instance.AddKeyUpdateCommand(Keys.A, new MoveCmd(player, new Vector2(-1, 0)));
         InputHandler.Instance.AddKeyUpdateCommand(Keys.W, new MoveCmd(player, new Vector2(0, -1)));
@@ -178,7 +180,7 @@ public abstract class RoomBase : Scene
         {
             SaveData.Time_Left = 0;
             SaveData.LostByTime = true;
-            player.TakeDamage(1000); // Kills the player
+            playerHealth.TakeDamage(1000); // Kills the player
         }
 
         // Check if enemies has been killed
@@ -212,7 +214,7 @@ public abstract class RoomBase : Scene
         DrawTimer(spriteBatch, leftPos);
 
         leftPos += new Vector2(0, 30);
-        spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Player HP: {player.CurrentHealth}/{player.MaxHealth}", leftPos, TextColor);
+        spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Player HP: {playerHealth.CurrentHealth}/{playerHealth.MaxHealth}", leftPos, TextColor);
 
         leftPos += new Vector2(0, 30);
         DrawPotion(spriteBatch, leftPos);

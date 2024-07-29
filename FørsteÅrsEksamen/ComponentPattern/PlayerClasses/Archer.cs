@@ -8,13 +8,12 @@ public class Archer : Player
     public Archer(GameObject gameObject) : base(gameObject)
     {
         Speed = 175;
-        MaxHealth = 80;
-        CurrentHealth = MaxHealth;
     }
 
     public override void Awake()
     {
         base.Awake();
+        Health.MaxHealth = 80;
 
         CharacterStateAnimations.Add(CharacterState.Idle, AnimNames.ArcherIdle);
         CharacterStateAnimations.Add(CharacterState.Moving, AnimNames.ArcherRun);
