@@ -43,16 +43,16 @@ public class WeaponTestScene : Scene
     ParticleEmitter emitter;
     private void MakeEmitters()
     {
-        GameObject go = EmitterFactory.CreateParticleEmitter("Dust Cloud", new Vector2(200, -200), new Interval(50, 100), new Interval(-MathHelper.Pi, 0), 1000, new Interval(2000, 3000), 1000);
+        GameObject go = EmitterFactory.CreateParticleEmitter("Dust Cloud", new Vector2(200, -200), new Interval(1, 1), new Interval(-MathHelper.Pi, 0), 1000, new Interval(200000, 300000), 1, new Interval(-0.01f, 0.01));
 
         emitter = go.GetComponent<ParticleEmitter>();
-        emitter.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel));
+        emitter.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel4x4));
         emitter.AddModifier(new ColorRangeModifier(Color.Blue, Color.LightYellow, Color.Yellow, Color.Orange, Color.Transparent));
 
-        emitter.AddBirthModifier(new ScaleBirthModifier(new Interval(10, 15)));
-        emitter.AddModifier(new ScaleModifier(5));
+        emitter.AddBirthModifier(new ScaleBirthModifier(new Interval(4, 4)));
+        //emitter.AddModifier(new ScaleModifier(4, 10));
         //emitter.Origin = new FairyDustAnimatedOrigin(new Rectangle((int)GameWorld.Instance.WorldCam.TopLeft.X, (int)GameWorld.Instance.WorldCam.TopLeft.Y, 1920, 1080));
-        emitter.Origin = new RectangleOrigin(100, 100);
+        //emitter.Origin = new RectangleOrigin(100, 100);
 
         emitter.StartEmitter();
 
@@ -73,11 +73,11 @@ public class WeaponTestScene : Scene
         Vector2 pos = GameWorld.Instance.UiCam.TopLeft;
         Vector2 offset = new Vector2(0, 30);
 
-        pos += offset;
-        DrawString(spriteBatch, $"Current anim: {weapon.CurrentAnim} | Rot: {weapon.Animations[weapon.CurrentAnim].AmountOfRotation}", pos);
+        //pos += offset;
+        //DrawString(spriteBatch, $"Current anim: {weapon.CurrentAnim} | Rot: {weapon.Animations[weapon.CurrentAnim].AmountOfRotation}", pos);
 
-        pos += offset;
-        DrawString(spriteBatch, $"Next anim: {weapon.NextAnim} | Rot: {weapon.Animations[weapon.NextAnim].AmountOfRotation}", pos);
+        //pos += offset;
+        //DrawString(spriteBatch, $"Next anim: {weapon.NextAnim} | Rot: {weapon.Animations[weapon.NextAnim].AmountOfRotation}", pos);
 
         pos += offset;
         DrawString(spriteBatch, $"Active count: {emitter.ParticlePool.Active.Count}", pos);

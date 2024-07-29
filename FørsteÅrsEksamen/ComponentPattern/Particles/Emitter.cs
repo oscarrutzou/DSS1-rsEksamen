@@ -47,7 +47,7 @@ namespace DoctorsDungeon.ComponentPattern.Particles
         {
         }
 
-        public Emitter(GameObject gameObject, string name, Vector2 pos, Interval speed, Interval direction, float particlesPerSecond, Interval maxAge, int maxAmount) : base(gameObject)
+        public Emitter(GameObject gameObject, string name, Vector2 pos, Interval speed, Interval direction, float particlesPerSecond, Interval maxAge, int maxAmount, Interval rotationVelocity = null) : base(gameObject)
         {
             Name = name;
             Position = pos;
@@ -56,6 +56,15 @@ namespace DoctorsDungeon.ComponentPattern.Particles
             ParticlesPerSecond = particlesPerSecond;
             MaxAge = maxAge;
             ParticlePool.MaxAmount = maxAmount;
+
+            if (rotationVelocity != null)
+            {
+                RotationVelocity = rotationVelocity;
+            }
+            else
+            {
+                RotationVelocity = new Interval(-0.1f, 0.1f);
+            }
         }
 
         public virtual void AddModifier(Modifier modifier)

@@ -19,7 +19,7 @@ namespace DoctorsDungeon.ComponentPattern.Particles
         {
         }
 
-        public ParticleEmitter(GameObject gameObject, string name, Vector2 pos, Interval speed, Interval direction, float particlesPerSecond, Interval maxAge, int maxAmount) : base(gameObject, name, pos, speed, direction, particlesPerSecond, maxAge, maxAmount)
+        public ParticleEmitter(GameObject gameObject, string name, Vector2 pos, Interval speed, Interval direction, float particlesPerSecond, Interval maxAge, int maxAmount, Interval rotationVelocity = null) : base(gameObject, name, pos, speed, direction, particlesPerSecond, maxAge, maxAmount, rotationVelocity)
         {
         }
 
@@ -93,15 +93,12 @@ namespace DoctorsDungeon.ComponentPattern.Particles
             if (data == null) return;
 
             GameObject go = ParticlePool.GetObjectAndMake();
-
             if (go == null) return;
 
             IParticle particle = go.GetComponent<Particle>();
             SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
 
             Matrix matrix = Matrix.CreateRotationZ((float)Direction.GetValue());
-
-            particle.Position = Position;
 
             particle.Velocity = new Vector2((float)Speed.GetValue(), 0);
             particle.Velocity = Vector2.Transform(particle.Velocity, matrix);
@@ -111,7 +108,22 @@ namespace DoctorsDungeon.ComponentPattern.Particles
             go.Transform.Rotation = (float)Rotation.GetValue();
             particle.MaxAge = MaxAge.GetValue();
             particle.Age = 0;
-            sr.Sprite = GlobalTextures.Textures[TextureNames.Pixel];
+
+            sr.Sprite = GlobalTextures.Textures[TextureNames.Pixel4x4]; // If there is no other Textures in the BirthModifiers
+
+            // Should make it so the the offset is always different, and have older paricles under the newer.
+            // Get the current timestamp
+            double timestamp = DateTime.Now.ToOADate();
+
+            // Normalize the timestamp to [0, 1]
+            double normalizedValue = (timestamp - DateTime.MinValue.ToOADate()) /
+                                     (DateTime.MaxValue.ToOADate() - DateTime.MinValue.ToOADate());
+
+            // Scale the normalized value to [0.001, 0.005]
+            double result = 0.001 + normalizedValue * 0.004;
+
+            sr.SetLayerDepth(LayerDepth.EnemyOver, (float)result);
+
 
             foreach (BirthModifier m in BirthModifiers) m.Execute(this, go, particle);
         }

@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using DoctorsDungeon.GameManagement;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace DoctorsDungeon.ComponentPattern.Particles
@@ -59,6 +61,12 @@ namespace DoctorsDungeon.ComponentPattern.Particles
             spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
             spriteRenderer.Color = Color;
         }
-    
+
+        //public override void Draw(SpriteBatch spriteBatch)
+        //{
+        //    int dem = spriteRenderer.Sprite.Width * (int)Scale.X;
+        //    Rectangle rectangle = new Rectangle((int)Position.X, (int)Position.Y, dem, dem);
+        //    Collider.DrawRectangleNoSprite(rectangle, Color.HotPink, spriteBatch);
+        //}
     }
 }

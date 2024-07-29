@@ -8,6 +8,7 @@ public enum TextureNames
 {
     Cell,
     Pixel,
+    Pixel4x4,
     SpaceBG1,
     SpaceBG2,
 
@@ -57,6 +58,7 @@ public static class GlobalTextures
         {
             {TextureNames.Cell, content.Load<Texture2D>("World\\16x16White") },
             {TextureNames.Pixel, content.Load<Texture2D>("World\\Pixel") },
+            {TextureNames.Pixel4x4, content.Load<Texture2D>("World\\4x4Pixel") },
 
             {TextureNames.SpaceBG1, content.Load<Texture2D>("World\\Backgrounds\\Space Background1") },
             {TextureNames.SpaceBG2, content.Load<Texture2D>("World\\Backgrounds\\Space Background2") },
