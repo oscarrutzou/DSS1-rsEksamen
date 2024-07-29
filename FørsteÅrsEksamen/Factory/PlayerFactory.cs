@@ -21,8 +21,6 @@ public static class PlayerFactory
     {
         GameObject playerGo = new GameObject();
 
-        playerGo.Transform.Scale = new Vector2(4, 4);
-
         playerGo.Type = GameObjectTypes.Player;
 
         playerGo.AddComponent<SpriteRenderer>();
@@ -89,7 +87,6 @@ public static class PlayerFactory
     private static GameObject CreateHands()
     {
         GameObject go = new();
-        go.Transform.Scale = new(4, 4);
         go.AddComponent<SpriteRenderer>();
         go.AddComponent<Animator>();
         return go;
@@ -98,7 +95,6 @@ public static class PlayerFactory
     private static GameObject CreatePlayerMovementCollider()
     {
         GameObject go = new();
-        go.Transform.Scale = new(4, 4);
         go.AddComponent<SpriteRenderer>().SetLayerDepth(LayerDepth.Player);
         Collider collider = go.AddComponent<Collider>();
 

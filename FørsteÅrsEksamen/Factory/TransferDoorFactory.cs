@@ -10,7 +10,6 @@ public static class TransferDoorFactory
     public static GameObject Create()
     {
         GameObject go = new();
-        go.Transform.Scale = new(4, 4);
 
         SpriteRenderer sr = go.AddComponent<SpriteRenderer>();
         sr.SetLayerDepth(LayerDepth.BackgroundDecoration);

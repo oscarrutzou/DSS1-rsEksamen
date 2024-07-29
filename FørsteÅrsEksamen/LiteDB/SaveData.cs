@@ -8,7 +8,7 @@ namespace DoctorsDungeon.LiteDB;
 public static class SaveData
 {
     private const int StartCurrency = 100; // Normal 100
-    private static float StartTimeLeft = 120f; // Normal 120f
+    private static double StartTimeLeft = 120f; // Normal 120f
 
     private const int CheatMultiplier = 100;
 
@@ -23,7 +23,7 @@ public static class SaveData
 
     public static int Level_Reached { get; set; } = 1;
     public const int MaxRooms = 3;
-    public static float Time_Left { get; set; } = StartTimeLeft;
+    public static double Time_Left { get; set; } = StartTimeLeft;
     public static bool HasWon { get; set; }
     public static bool LostByTime;
 

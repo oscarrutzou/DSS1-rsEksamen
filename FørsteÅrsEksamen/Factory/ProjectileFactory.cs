@@ -10,7 +10,6 @@ public static class ProjectileFactory
     public static GameObject Create()
     {
         GameObject arrow = new GameObject();
-        arrow.Transform.Scale = new Vector2(4, 4f);
         arrow.AddComponent<SpriteRenderer>();
 
         arrow.AddComponent<Projectile>();

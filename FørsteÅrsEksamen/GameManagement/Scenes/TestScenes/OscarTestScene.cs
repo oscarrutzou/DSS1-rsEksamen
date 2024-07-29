@@ -51,7 +51,6 @@ public class OscarTestScene : Scene, IObserver
     {
         GameObject go = new();
         go.Type = GameObjectTypes.Background;
-        go.Transform.Scale = new(4, 4);
 
         SpriteRenderer spriteRenderer = go.AddComponent<SpriteRenderer>();
         spriteRenderer.SetSprite(TextureNames.TestLevelBG);

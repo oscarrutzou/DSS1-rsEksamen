@@ -34,7 +34,7 @@ public abstract class MeleeWeapon : Weapon
         health.TakeDamage((int)damage);
     }
 
-    public override void Update(GameTime gameTime)
+    public override void Update()
     {
         if (Attacking)
         {
@@ -72,7 +72,7 @@ public abstract class MeleeWeapon : Weapon
                 SpriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
         }
 
-        float normalizedTime = TotalElapsedTime / TimeBeforeNewDirection;
+        float normalizedTime = (float)TotalElapsedTime / (float)TimeBeforeNewDirection;
         float easedTime; // maybe switch between them.
         float finalLerp = StartAnimationAngle;
 

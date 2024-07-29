@@ -43,7 +43,6 @@ public static class EnemyFactory
     {
         GameObject enemyGo = new GameObject();
         enemyGo.Type = GameObjectTypes.Enemy;
-        enemyGo.Transform.Scale = new Vector2(4, 4);
         enemyGo.AddComponent<SpriteRenderer>();
         enemyGo.AddComponent<Animator>();
         enemyGo.AddComponent<Collider>();
@@ -93,7 +92,6 @@ public static class EnemyFactory
     private static GameObject CreateHands()
     {
         GameObject go = new();
-        go.Transform.Scale = new(4, 4);
         go.AddComponent<SpriteRenderer>();
         go.AddComponent<Animator>();
         return go;

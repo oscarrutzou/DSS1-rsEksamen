@@ -93,7 +93,6 @@ public abstract class RoomBase : Scene
         {
             Type = GameObjectTypes.Background
         };
-        backgroundGo.Transform.Scale = new(4, 4);
 
         SpriteRenderer spriteRenderer = backgroundGo.AddComponent<SpriteRenderer>();
         spriteRenderer.SetSprite(textureName);

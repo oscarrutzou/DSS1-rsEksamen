@@ -15,7 +15,7 @@ public class ProjectilePool : ObjectPool
     {
     }
 
-    public override GameObject CreateObject()
+    public override GameObject CreateObject(params object[] args)
     {
         return ProjectileFactory.Create();
     }

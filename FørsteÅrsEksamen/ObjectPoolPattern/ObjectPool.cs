@@ -1,4 +1,5 @@
 ﻿using DoctorsDungeon.ComponentPattern;
+using System;
 using System.Collections.Generic;
 
 namespace DoctorsDungeon.ObjectPoolPattern;
@@ -6,31 +7,72 @@ namespace DoctorsDungeon.ObjectPoolPattern;
 // Stefan
 public abstract class ObjectPool
 {
-    public List<GameObject> active = new List<GameObject>();
+    public List<GameObject> Active = new List<GameObject>();
 
-    public Stack<GameObject> inactive { get; protected set; } = new Stack<GameObject>();
-    public int maxAmount = 10;
+    public Stack<GameObject> InActive { get; protected set; } = new Stack<GameObject>();
+    public int MaxAmount = 10;
+
+    public virtual GameObject GetObjectAndMake()
+    {
+        if (Active.Count == MaxAmount)
+        {
+            // Already reached the maximum number of active objects
+            return null;
+        }
+
+        GameObject go;
+
+        if (InActive.Count == 0)
+        {
+            go = CreateObject();
+
+        }
+        else
+        {
+            go = InActive.Pop();
+        }
+
+        Active.Add(go);
+        GameWorld.Instance.Instantiate(go);
+
+        return go;
+    }
+
 
     public virtual GameObject GetObject()
     {
-        if (inactive.Count == 0)
+        if (InActive.Count == 0) return null; // There is no more objects to take from
+
+        GameObject go = InActive.Pop();
+        Active.Add(go);
+        GameWorld.Instance.Instantiate(go);
+
+        return go;
+    }
+
+    public virtual GameObject AddObject()
+    {
+        if ((Active.Count + InActive.Count) < MaxAmount) // Limits the amount of objects created
         {
             return CreateObject();
         }
-        GameObject go = inactive.Pop();
-        active.Add(go);
-        return go;
+        return null;
     }
 
     public virtual void ReleaseObject(GameObject gameObject)
     {
-        active.Remove(gameObject);
-        inactive.Push(gameObject);
+        Active.Remove(gameObject);
+        InActive.Push(gameObject);
         GameWorld.Instance.Destroy(gameObject); //Removes gameobject
         CleanUp(gameObject);
     }
 
-    public abstract GameObject CreateObject();
+    public void ReleaseAllObjects()
+    {
 
-    public abstract void CleanUp(GameObject gameObject);
+    }
+
+    public abstract GameObject CreateObject(params object[] args);
+
+    public virtual void CleanUp(GameObject gameObject) { }
 }

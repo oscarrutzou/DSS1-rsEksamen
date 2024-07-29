@@ -7,8 +7,8 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects;
 public class TransferDoor : Component
 {
     private Collider collider, playerCollider;
-    private float timer;
-    private float timeTillActivation = 2f;
+    private double timer;
+    private double timeTillActivation = 2f;
 
     // Open sprite
     // Close dont draw sprite:)
@@ -24,7 +24,7 @@ public class TransferDoor : Component
         collider = GameObject.GetComponent<Collider>();
     }
 
-    public override void Update(GameTime gameTime)
+    public override void Update()
     {
         OnCollisionEnter(collider);
     }

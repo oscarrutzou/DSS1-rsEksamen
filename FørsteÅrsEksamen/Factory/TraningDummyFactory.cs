@@ -9,7 +9,6 @@ namespace DoctorsDungeon.Factory
         public static GameObject Create()
         {
             GameObject go = new GameObject();
-            go.Transform.Scale = new Vector2(4, 4);
             go.Type = GameObjectTypes.Enemy;
             go.AddComponent<SpriteRenderer>();
             go.AddComponent<Animator>();

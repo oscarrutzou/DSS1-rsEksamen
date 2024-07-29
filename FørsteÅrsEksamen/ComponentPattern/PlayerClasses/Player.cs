@@ -5,6 +5,7 @@ using DoctorsDungeon.Factory;
 using DoctorsDungeon.LiteDB;
 using DoctorsDungeon.ObserverPattern;
 using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 
 namespace DoctorsDungeon.ComponentPattern.PlayerClasses;
@@ -28,8 +29,8 @@ public abstract class Player : Character, ISubject
     public WeaponTypes WeaponType;
     public ClassTypes ClassType;
 
-    private float onDeadTimer;
-    private float timeTillSceneChange = 3f;
+    private double onDeadTimer;
+    private double timeTillSceneChange = 3f;
 
     public Player(GameObject gameObject) : base(gameObject)
     {
@@ -56,7 +57,7 @@ public abstract class Player : Character, ISubject
         SetState(CharacterState.Idle);
     }
 
-    public override void Update(GameTime gameTime)
+    public override void Update()
     {
         //SpriteRenderer.Rotation += GameWorld.DeltaTime * 0.5f;
         //SpriteRenderer.OriginOffSet = Vector2.Zero;
@@ -146,7 +147,7 @@ public abstract class Player : Character, ISubject
     private void ProcessInput(Vector2 input) // 0.77 / 0.77
     {
         input.Normalize();
-        targetVelocity = input * Speed * GameWorld.DeltaTime;
+        targetVelocity = input * Speed * (float)GameWorld.DeltaTime;
 
         // To fix the error that if all buttons have been pressed, that it sometimes sets the velocity to Nan/Nan
         if (float.IsNaN(velocity.X))
@@ -155,15 +156,15 @@ public abstract class Player : Character, ISubject
         }
 
         // Interpolate the velocity
-        velocity = Vector2.Lerp(velocity, targetVelocity, turnSpeed * GameWorld.DeltaTime);
+        velocity = Vector2.Lerp(velocity, targetVelocity, turnSpeed * (float)GameWorld.DeltaTime);
         Direction = velocity;
     }
 
     private void TryMoveInBothDirections()
     {
         // Separate the movement into X and Y components
-        Vector2 xMovement = new Vector2(velocity.X, 0) * Speed * GameWorld.DeltaTime;
-        Vector2 yMovement = new Vector2(0, velocity.Y) * Speed * GameWorld.DeltaTime;
+        Vector2 xMovement = new Vector2(velocity.X, 0) * Speed * (float)GameWorld.DeltaTime;
+        Vector2 yMovement = new Vector2(0, velocity.Y) * Speed * (float)GameWorld.DeltaTime;
 
         //bool hasMoved = false;
         // Try moving along the X axis

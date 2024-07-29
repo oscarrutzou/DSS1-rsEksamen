@@ -12,7 +12,7 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
     public class Health : Component
     {
         private float damageTimerTotal = 0.2f;
-        private float damageTimer;
+        private double damageTimer;
         public Color DamageTakenColor { get; private set; } = Color.Red;
         private SpriteRenderer spriteRenderer;
 
@@ -39,7 +39,7 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
             CurrentHealth = MaxHealth;
         }
 
-        public override void Update(GameTime gameTime)
+        public override void Update()
         {
             HandleOnDamage();
         }

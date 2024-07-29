@@ -92,7 +92,7 @@ public abstract class Enemy : Character
         if (Player.CollisionNr == CollisionNr) SetPath(); // We know that the player the targetPoint has been set
     }
 
-    public override void Update(GameTime gameTime)
+    public override void Update()
     {
         CheckLayerDepth(); // Make sure the enemy is drawn correctly.
 
@@ -240,7 +240,7 @@ public abstract class Enemy : Character
 
         Direction = Vector2.Normalize(nextTarget - position);
 
-        GameObject.Transform.Translate(Direction * Speed * GameWorld.DeltaTime);
+        GameObject.Transform.Translate(Direction * Speed * (float)GameWorld.DeltaTime);
         Weapon.MoveWeaponAndAngle();
 
         if (Path.Count <= 3) // Attack before reaching the player, to put pressure on them

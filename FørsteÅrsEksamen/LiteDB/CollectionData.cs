@@ -49,7 +49,7 @@ public class SaveFileData
 public class RunData
 {
     public int Room_Reached { get; set; }
-    public float Time_Left { get; set; }
+    public double Time_Left { get; set; }
     public PlayerData PlayerData { get; set; }
 }
 

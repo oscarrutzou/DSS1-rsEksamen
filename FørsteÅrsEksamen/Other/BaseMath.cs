@@ -6,6 +6,10 @@ namespace DoctorsDungeon.Other;
 // Oscar
 public static class BaseMath
 {
+
+    public const float GravityScale = 20.0f;
+    public static Vector2 Gravity { get; set; } = new Vector2(0, 10.0f * GravityScale);
+
     public static Vector2 Rotate(Vector2 position, float rotation)
     {
         float cos = (float)Math.Cos(rotation);
@@ -75,5 +79,10 @@ public static class BaseMath
     public static float EaseInOutQuint(float x)
     {
         return x < 0.5 ? 16 * x * x * x * x * x : 1 - MathF.Pow(-2 * x + 2, 5) / 2;
+    }
+
+    public static float Clamp(float a, float low, float high)
+    {
+        return Math.Max(low, Math.Min(a, high));
     }
 }

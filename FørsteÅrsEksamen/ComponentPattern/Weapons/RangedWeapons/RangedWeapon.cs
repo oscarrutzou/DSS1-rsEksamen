@@ -8,16 +8,16 @@ public abstract class RangedWeapon : Weapon
 {
     private GameObject projectile;
     private bool canShoot = true;
-    private float lastShot = 0;
-    private float shootTimer = 0.5f;
+    private double lastShot = 0;
+    private double shootTimer = 0.5f;
 
     protected RangedWeapon(GameObject gameObject) : base(gameObject)
     {
     }
 
-    public override void Update(GameTime gameTime)
+    public override void Update()
     {
-        base.Update(gameTime);
+        base.Update();
         lastShot += GameWorld.DeltaTime;
 
         if (lastShot > shootTimer)

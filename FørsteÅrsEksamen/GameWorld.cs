@@ -25,7 +25,7 @@ public class GameWorld : Game
     public Scene CurrentScene;
     public Camera WorldCam { get; private set; } // Follows player
     public Camera UiCam { get; private set; } //Static on the ui
-    public static float DeltaTime { get; private set; }
+    public static double DeltaTime { get; private set; }
     public GraphicsDeviceManager GfxManager { get; private set; }
 
     public static bool IsPaused = false;
@@ -65,7 +65,7 @@ public class GameWorld : Game
 
         SpawnBG(); // The background that dont get deleted
 
-        CurrentScene = Scenes[SceneNames.MainMenu];
+        CurrentScene = Scenes[SceneNames.WeaponTestScene];
         CurrentScene.Initialize(); // Starts the main menu
 
         base.Initialize();
@@ -78,7 +78,7 @@ public class GameWorld : Game
 
     protected override void Update(GameTime gameTime)
     {
-        DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        DeltaTime = gameTime.ElapsedGameTime.TotalSeconds;
 
         GlobalSounds.MusicUpdate(); // Updates the Music in the game, not SFX
 
@@ -249,7 +249,6 @@ public class GameWorld : Game
     private void SpawnBG()
     {
         menuBackground = new();
-        menuBackground.Transform.Scale = new(4, 4);
         menuBackground.Type = GameObjectTypes.Background;
         SpriteRenderer sr = menuBackground.AddComponent<SpriteRenderer>();
         sr.SetLayerDepth(LayerDepth.WorldBackground);

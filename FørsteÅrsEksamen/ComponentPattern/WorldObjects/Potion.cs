@@ -35,7 +35,7 @@ public class Potion : Component
         health = playerGo.GetComponent<Health>();
     }
 
-    public override void Update(GameTime gameTime)
+    public override void Update()
     {
         OnCollisionEnter(collider);
     }

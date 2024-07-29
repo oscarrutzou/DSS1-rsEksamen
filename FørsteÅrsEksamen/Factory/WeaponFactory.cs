@@ -63,7 +63,6 @@ public static class WeaponFactory
     {
         GameObject weaponGo = new();
         weaponGo.Type = GameObjectTypes.Weapon;
-        weaponGo.Transform.Scale = new Vector2(4, 4);
         weaponGo.AddComponent<SpriteRenderer>();
         AddClassComponent(weaponGo, type);
 

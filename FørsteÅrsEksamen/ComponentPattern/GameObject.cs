@@ -21,6 +21,8 @@ public enum GameObjectTypes
     Projectile,
     Gui,
     Items,
+    Particle,
+    Emitter,
     Default, //Not set
 }
 
@@ -139,7 +141,7 @@ public class GameObject : ICloneable
         if (!IsEnabled) return;
         foreach (var component in components.Values)
         {
-            component.Update(gameTime);
+            component.Update();
         }
     }
 

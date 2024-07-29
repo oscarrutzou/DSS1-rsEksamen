@@ -37,7 +37,7 @@ public abstract class Weapon : Component
 
     protected float StartAnimationAngle { get; set; }
 
-    protected float TotalElapsedTime;
+    protected double TotalElapsedTime;
     protected float EnemyWeakness = 2.5f; // What to divide with, to make enemie attacks weaker.
 
     protected bool Attacking;
@@ -50,7 +50,7 @@ public abstract class Weapon : Component
     private Vector2 lastOffSetPos, startRelativePos = new(0, 60), startRelativeOffsetPos = new Vector2(0, -20);
     public float angle; // Public for test
     protected bool LeftSide;
-    protected float TimeBeforeNewDirection;
+    protected double TimeBeforeNewDirection;
     protected float animRotation, nextAnimRotation;
     public WeaponAnimTypes NextAnim { get; private set; }
     protected bool FinnishedAttack;

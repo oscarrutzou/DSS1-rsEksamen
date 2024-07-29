@@ -17,7 +17,7 @@ public class Animator : Component
     private bool isLooping, hasPlayedAnim;
     public int CurrentIndex { get; private set; }
     public int MaxFrames;
-    private float timeElapsed, frameDuration;
+    private double timeElapsed, frameDuration;
 
     public Animator(GameObject gameObject) : base(gameObject)
     {
@@ -32,7 +32,7 @@ public class Animator : Component
             throw new Exception($"No spriteRenderer on gameObject, and therefore its not possible to Animate");
     }
 
-    public override void Update(GameTime gameTime)
+    public override void Update()
     {
         if (CurrentAnimation == null) return;
 

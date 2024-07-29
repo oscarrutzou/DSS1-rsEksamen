@@ -26,8 +26,8 @@ public class Button : Component
     public Color OnMouseDownColor = new(150, 150, 150);
 
     public Vector2 MaxScale { get; private set; }
-    private float clickCooldown = 0.1f; // The delay between button clicks in seconds
-    private float timeSinceLastClick = 0; // The time since the button was last clicked
+    private double clickCooldown = 0.1f; // The delay between button clicks in seconds
+    private double timeSinceLastClick = 0; // The time since the button was last clicked
     private bool invokeActionOnFullScale;
     private bool hasPressed;
 
@@ -65,7 +65,7 @@ public class Button : Component
         baseColor = spriteRenderer.Color;
     }
 
-    public override void Update(GameTime gameTime)
+    public override void Update()
     {
         if (timeSinceLastClick < clickCooldown)
         {

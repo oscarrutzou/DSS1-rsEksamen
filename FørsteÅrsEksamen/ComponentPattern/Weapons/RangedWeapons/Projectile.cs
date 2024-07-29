@@ -50,12 +50,12 @@ public class Projectile : Component
         GameObject.Transform.Rotation = angle;
     }
 
-    public override void Update(GameTime gameTime)
+    public override void Update()
     {
-        Move(gameTime);
+        Move();
     }
 
-    private void Move(GameTime gameTime)
+    private void Move(  )
     {
         //if (targetPos == Vector2.Zero) return;
 
@@ -68,8 +68,8 @@ public class Projectile : Component
 
         //}
 
-        float distance = speed * GameWorld.DeltaTime;
-        Vector2 step = direction * distance;
+        double distance = speed * GameWorld.DeltaTime;
+        Vector2 step = direction * (float)distance;
 
         GameObject.Transform.Position += step;
 
