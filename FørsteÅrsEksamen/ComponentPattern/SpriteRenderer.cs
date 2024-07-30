@@ -1,4 +1,5 @@
-﻿using DoctorsDungeon.GameManagement;
+﻿using DoctorsDungeon.ComponentPattern.GUI;
+using DoctorsDungeon.GameManagement;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -29,6 +30,26 @@ public enum LayerDepth
     Button,
     Text,
     CollisionDebug,
+    Size, // So we just can take LayerDepth.
+}
+
+public class TextOnSprite: ICloneable
+{
+    public string Text { get; set; }
+    public float TextScale = 1;
+    public bool IsCentered = true;
+    public Color TextColor = Color.Red;
+
+    public object Clone()
+    {
+        return new TextOnSprite
+        {
+            Text = this.Text,
+            TextScale = this.TextScale,
+            IsCentered = this.IsCentered,
+            TextColor = this.TextColor
+        };
+    }
 }
 
 // Oscar
@@ -37,13 +58,17 @@ public class SpriteRenderer : Component
     #region Properties
 
     public Texture2D Sprite { get; set; }
-
+    public TextOnSprite TextOnSprite { get; set; }
     public Color Color { get; set; } = Color.White;
     public Vector2 Origin { get; set; }
     public Vector2 OriginOffSet { get; set; }
     public Vector2 DrawPosOffSet { get; set; }
-    public bool ShouldDraw = true;
+    public bool ShouldDrawSprite = true;
+    public bool ShouldDrawText = true;
     public bool IsCentered = true;
+    /// <summary>
+    /// A rotation for the sprite only, not the GameObject itself
+    /// </summary>
     public float Rotation;
     public LayerDepth LayerName { get; private set; } = ComponentPattern.LayerDepth.Default;
     public SpriteEffects SpriteEffects { get; set; } = SpriteEffects.None;
@@ -67,6 +92,9 @@ public class SpriteRenderer : Component
         animator = GameObject.GetComponent<Animator>();
     }
 
+    // Maybe do something with the Y of the GameObject transform, and maybe each SpriteRendere have a list
+    // of the layers that they can be behind or infront. So something that never should be behind the object, cant be
+    
     /// <summary>
     /// How to change the layer that the sprites gets drawn on. Remember there are both the World Cam and UI Cam
     /// </summary>
@@ -75,13 +103,24 @@ public class SpriteRenderer : Component
     public void SetLayerDepth(LayerDepth layerName, float offSet = 0)
     {
         LayerName = layerName;
-        LayerDepth = ((float)LayerName / (Enum.GetNames(typeof(LayerDepth)).Length - 1)) + offSet;
+        LayerDepth = ((float)LayerName / (Enum.GetNames(typeof(LayerDepth)).Length)) + offSet;
     }
 
     public override void Draw(SpriteBatch spriteBatch)
     {
-        if (Sprite == null || !ShouldDraw) return;
+        if (TextOnSprite != null)
+        {
+            DrawText(spriteBatch);
+        }
 
+        if (Sprite != null && ShouldDrawSprite)
+        {
+            DrawSprite(spriteBatch);
+        }
+    }
+
+    private void DrawSprite(SpriteBatch spriteBatch)
+    {
         Origin = IsCentered ? new Vector2(Sprite.Width / 2, Sprite.Height / 2) : OriginOffSet;
 
         drawPos = GameObject.Transform.Position;
@@ -93,10 +132,22 @@ public class SpriteRenderer : Component
 
         drawPos += OriginOffSet + DrawPosOffSet;
 
-        float rot = GameObject.Transform.Rotation;
-
         //Draws the sprite, and if there is a sourcerectangle set, then it uses that.
-        spriteBatch.Draw(Sprite, drawPos, SourceRectangle == Rectangle.Empty ? null : SourceRectangle, Color, rot, Origin, GameObject.Transform.Scale, SpriteEffects, LayerDepth);
+        spriteBatch.Draw(Sprite, drawPos, SourceRectangle == Rectangle.Empty ? null : SourceRectangle, Color, GameObject.Transform.Rotation, Origin, GameObject.Transform.Scale, SpriteEffects, LayerDepth);
+    }
+
+    private void DrawText(SpriteBatch spriteBatch)
+    {
+        spriteBatch.DrawString(
+                    GlobalTextures.DefaultFont, 
+                    TextOnSprite.Text, 
+                    GameObject.Transform.Position, 
+                    TextOnSprite.TextColor,
+                    GameObject.Transform.Rotation,
+                    Vector2.Zero,
+                    TextOnSprite.TextScale,
+                    SpriteEffects.None,
+                    LayerDepth);
     }
 
     public void SetSprite(TextureNames spriteName)

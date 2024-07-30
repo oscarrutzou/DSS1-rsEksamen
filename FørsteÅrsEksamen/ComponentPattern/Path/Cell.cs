@@ -112,8 +112,8 @@ public class Cell : Component
 
         if (!InputHandler.Instance.DebugMode) return;
         Vector2 offset = new Vector2(10, 0);
-        GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, GameObject.Transform.Position - offset, RoomNr.ToString(), Color.Yellow);
-        GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, GameObject.Transform.Position + offset, CollisionNr.ToString(), Color.HotPink);
+        GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, GameObject.Transform.Position - offset, RoomNr.ToString(), Color.Yellow, Vector2.Zero);
+        GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, GameObject.Transform.Position + offset, CollisionNr.ToString(), Color.HotPink, Vector2.Zero);
     }
 
     public void ChangeCellWalkalbeType(CellWalkableType cellWalkableType)

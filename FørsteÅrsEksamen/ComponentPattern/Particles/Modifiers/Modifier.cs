@@ -9,5 +9,6 @@ namespace DoctorsDungeon.ComponentPattern.Particles.Modifiers
     public abstract class Modifier
     {
         public abstract void Execute(Emitter e, double seconds, IParticle p);
+        public virtual void OnReset(Emitter e, IParticle p) { }
     }
 }

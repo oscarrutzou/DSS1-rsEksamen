@@ -21,8 +21,12 @@ namespace DoctorsDungeon.ComponentPattern.Particles
             get { return GameObject.Transform.Position; }
             set { GameObject.Transform.Position = value; }
         }
+        public LayerDepth LayerName { get; set; }
+        protected GameObject FollowObject { get; private set; }
+        protected Vector2 FollowObjectOffset { get; private set; }
         public string Name { get; set; }
-        public float ParticlesPerSecond;
+        public float MaxParticlesPerSecond { get; set; }
+        public float ParticlesPerSecond { get; set; }
         public float LinearDamping { get; set; }
         public Origin Origin { get; set; } = new PointOrigin();
 
@@ -32,14 +36,17 @@ namespace DoctorsDungeon.ComponentPattern.Particles
         protected List<Modifier> Modifiers { get; set; } = new();
         protected List<BirthModifier> BirthModifiers { get; set; } = new();
         protected Interval MaxAge;
-        protected EmitterState State = EmitterState.INIT;
+        public EmitterState State = EmitterState.INIT;
         protected double ReleaseTime = 0;
         protected Interval Direction;
-        protected Interval Rotation = new Interval(-Math.PI, Math.PI);
-        protected Interval RotationVelocity = new Interval(-0.1f, 0.1f);
+        protected Interval Rotation;
+        protected Interval RotationVelocity;
 
         private double _stopTime;
         private float _stopCount;
+
+        private readonly double timeBeforeStopping;
+        public double Timer;
 
         public ParticlePool ParticlePool { get; set; } = new();
 
@@ -47,15 +54,40 @@ namespace DoctorsDungeon.ComponentPattern.Particles
         {
         }
 
-        public Emitter(GameObject gameObject, string name, Vector2 pos, Interval speed, Interval direction, float particlesPerSecond, Interval maxAge, int maxAmount, Interval rotationVelocity = null) : base(gameObject)
+        /// <summary>
+        /// A emitter that uses particles, modifiers and origins to change animations
+        /// </summary>
+        /// <param name="gameObject"></param>
+        /// <param name="name"></param>
+        /// <param name="pos"></param>
+        /// <param name="speed"></param>
+        /// <param name="direction"></param>
+        /// <param name="particlesPerSecond"></param>
+        /// <param name="maxAge"></param>
+        /// <param name="maxAmount"></param>
+        /// <param name="timeBeforeStop">If the time is not set, the emitter will not stop</param>
+        /// <param name="rotationVelocity"></param>
+        public Emitter(GameObject gameObject, string name, Vector2 pos, Interval speed, Interval direction, float particlesPerSecond, Interval maxAge, int maxAmount, double timeBeforeStop = -1, Interval rotation = null, Interval rotationVelocity = null) : base(gameObject)
         {
             Name = name;
             Position = pos;
             Speed = speed;
             Direction = direction;
-            ParticlesPerSecond = particlesPerSecond;
+            MaxParticlesPerSecond = particlesPerSecond;
+            ParticlesPerSecond = MaxParticlesPerSecond;
             MaxAge = maxAge;
             ParticlePool.MaxAmount = maxAmount;
+
+            timeBeforeStopping = timeBeforeStop;
+
+            if (rotation != null)
+            {
+                Rotation = rotation;
+            }
+            else
+            {
+                Rotation = new(-Math.PI, Math.PI);
+            }
 
             if (rotationVelocity != null)
             {
@@ -77,10 +109,25 @@ namespace DoctorsDungeon.ComponentPattern.Particles
             BirthModifiers.Add(modifier);
         }
 
+        public void FollowGameObject(GameObject gameObject, Vector2 offset)
+        {
+            FollowObject = gameObject;
+            FollowObjectOffset = offset;
+        }
+
+        protected TextOnSprite TextOnSprite;
+        public void SetParticleText(TextOnSprite textOnSprite)
+        {
+            TextOnSprite = textOnSprite;
+            //foreach ()
+        }
+
         public void StartEmitter()
         {
             ReleaseTime = 0;
+            ParticlesPerSecond = MaxParticlesPerSecond;
             State = EmitterState.RUNNING;
+            Timer = 0; // Reset timer to be able to start and stop the emitter again
         }
 
         public void StopEmitter()
@@ -99,6 +146,20 @@ namespace DoctorsDungeon.ComponentPattern.Particles
 
         public override void Update()
         {
+            if (FollowObject != null)
+            {
+                Position = FollowObject.Transform.Position + FollowObjectOffset;
+            }
+
+            if (State == EmitterState.RUNNING && timeBeforeStopping != -1)
+            {
+                Timer += GameWorld.DeltaTime;
+
+                if (Timer < timeBeforeStopping) return; // Dont do anything if the timer is not there yet
+
+                StopEmitter();
+            }
+
             if (State == EmitterState.STOPPING)
             {
                 _stopTime += GameWorld.DeltaTime;
@@ -106,9 +167,9 @@ namespace DoctorsDungeon.ComponentPattern.Particles
                 if (ParticlesPerSecond <= 0)
                 {
                     State = EmitterState.STOPPED;
+                    //ResetAllModifiers();
                 }
             }
         }
-
     }
 }

@@ -14,8 +14,8 @@ public class Warrior : Player
     {
         base.Awake();
 
-        Health.MaxHealth = 100;
-        
+        Health.SetHealth(100);
+
         CharacterStateAnimations.Add(CharacterState.Idle, AnimNames.KnightIdle);
         CharacterStateAnimations.Add(CharacterState.Moving, AnimNames.KnightRun);
         CharacterStateAnimations.Add(CharacterState.Dead, AnimNames.KnightDeath);

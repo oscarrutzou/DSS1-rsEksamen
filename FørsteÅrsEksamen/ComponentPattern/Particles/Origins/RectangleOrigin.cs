@@ -12,8 +12,6 @@ namespace DoctorsDungeon.ComponentPattern.Particles.Origins
         private readonly int _height;
         private static Random rand = new Random();
 
-        public override bool UseColorData => false;
-
         public RectangleOrigin(int width, int height, bool edge = false)
         {
             _edge = edge;

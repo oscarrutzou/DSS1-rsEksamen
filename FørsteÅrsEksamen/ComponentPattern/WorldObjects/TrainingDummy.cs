@@ -21,6 +21,7 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
         private SpriteRenderer spriteRenderer;
         private Health health;
         private Animator animator;
+        private Collider collider;
 
         private int totalDmgTaken;
 
@@ -40,7 +41,11 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
             spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
             health = GameObject.GetComponent<Health>();
             animator = GameObject.GetComponent<Animator>();
-            health.MaxHealth = 10_000_000;
+            collider = GameObject.GetComponent<Collider>();
+
+            collider.SetCollisionBox(15, 27, new Vector2(0, 19));
+            health.SetHealth(100_000_000);
+
             health.AmountDamageTaken += AmountDamageTaken;
         }
 

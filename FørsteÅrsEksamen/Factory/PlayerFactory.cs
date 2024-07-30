@@ -55,7 +55,7 @@ public static class PlayerFactory
 
         if (GameWorld.DebugAndCheats)
         {
-            health.MaxHealth = 20000;
+            health.SetHealth(999_999);
         }
 
         // Set the reference to this player.

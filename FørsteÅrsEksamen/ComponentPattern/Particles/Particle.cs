@@ -50,6 +50,12 @@ namespace DoctorsDungeon.ComponentPattern.Particles
                 spriteRenderer.Color = value; 
             }
         }
+
+        public TextOnSprite TextOnSprite { get; set; } = new TextOnSprite()
+        {
+            Text = "Test"
+        };
+
         private SpriteRenderer spriteRenderer;
 
         public Particle(GameObject gameObject) : base(gameObject)
@@ -60,13 +66,15 @@ namespace DoctorsDungeon.ComponentPattern.Particles
         {
             spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
             spriteRenderer.Color = Color;
+
+            spriteRenderer.TextOnSprite = TextOnSprite;
         }
 
         //public override void Draw(SpriteBatch spriteBatch)
         //{
         //    int dem = spriteRenderer.Sprite.Width * (int)Scale.X;
-        //    Rectangle rectangle = new Rectangle((int)Position.X, (int)Position.Y, dem, dem);
-        //    Collider.DrawRectangleNoSprite(rectangle, Color.HotPink, spriteBatch);
+        //    Rectangle spriteRec = new Rectangle((int)Position.X, (int)Position.Y, dem, dem);
+        //    Collider.DrawRectangleNoSprite(spriteRec, Color.HotPink, spriteBatch);
         //}
     }
 }

@@ -16,14 +16,15 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
         public Color DamageTakenColor { get; private set; } = Color.Red;
         private SpriteRenderer spriteRenderer;
 
-        public int MaxHealth;
+        public int MaxHealth { get; private set; } = -1;
+
         /// <summary>
         /// Gets set in Start of Health component
         /// </summary>
-        public int CurrentHealth;
-        public Action OnDamageTaken;
-        public Action OnZeroHealth;
-        public Action OnResetColor;
+        public int CurrentHealth { get; private set; } = -1;
+        public Action OnDamageTaken { get; set; }
+        public Action OnZeroHealth { get; set; }
+        public Action OnResetColor { get; set; }
         public Action<int> AmountDamageTaken;
         public Health(GameObject gameObject) : base(gameObject)
         {
@@ -36,12 +37,30 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
 
         public override void Start()
         {
+            if (CurrentHealth != -1) return; // Current health has already been set e.g in the DB, where we load the Player
             CurrentHealth = MaxHealth;
         }
 
         public override void Update()
         {
             HandleOnDamage();
+        }
+
+        public void SetHealth(int maxhealth, int currenthealth = -1)
+        {
+            if (MaxHealth != -1) return; // Already have set maxHealth like in cheats
+
+            MaxHealth = maxhealth;
+            
+            if (currenthealth != -1)
+            {
+                CurrentHealth = currenthealth;
+            }
+            else
+            {
+                CurrentHealth = MaxHealth;
+            }
+
         }
 
         public bool AddHealth(int addHealth)
@@ -73,7 +92,6 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
             if (CurrentHealth > 0)
             {
                 DamageTaken();
-                OnDamageTaken?.Invoke(); // For specific behavor when Damage taken
                 return;
             }
 
@@ -85,6 +103,7 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
         {
             damageTimer = damageTimerTotal;
             spriteRenderer.Color = DamageTakenColor;
+            OnDamageTaken?.Invoke(); // For specific behavor when Damage taken
         }
 
         private void ResetColor()

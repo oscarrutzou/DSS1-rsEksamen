@@ -16,7 +16,7 @@ public class SkeletonArcher : EnemyMelee
     {
         base.Awake();
 
-        Health.MaxHealth = 100;
+        Health.SetHealth(100);
 
         CharacterStateAnimations.Add(CharacterState.Idle, AnimNames.SkeletonArcherIdle);
         CharacterStateAnimations.Add(CharacterState.Moving, AnimNames.SkeletonArcherRun);

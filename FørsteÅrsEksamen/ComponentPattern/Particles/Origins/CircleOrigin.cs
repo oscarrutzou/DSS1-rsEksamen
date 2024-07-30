@@ -17,8 +17,6 @@ namespace DoctorsDungeon.ComponentPattern.Particles.Origins
             _radius = radius;
         }
 
-        public override bool UseColorData => false;
-
         public override OriginData GetPosition(Emitter e)
         {
             Matrix rotation = Matrix.CreateRotationZ((float)angle.GetValue());

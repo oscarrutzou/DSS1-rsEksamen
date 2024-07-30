@@ -14,7 +14,7 @@ public class OrcWarrior : EnemyMelee
     {
         base.Awake();
 
-        Health.MaxHealth = 100;
+        Health.SetHealth(100);
 
         CharacterStateAnimations.Add(CharacterState.Idle, AnimNames.OrcWarriorIdle);
         CharacterStateAnimations.Add(CharacterState.Moving, AnimNames.OrcWarriorRun);

@@ -12,14 +12,13 @@ namespace DoctorsDungeon.ComponentPattern.Particles
 {
     public class ParticleEmitter : Emitter
     {
-
         List<GameObject> particleToBeReleased = new();
 
         public ParticleEmitter(GameObject gameObject) : base(gameObject)
         {
         }
 
-        public ParticleEmitter(GameObject gameObject, string name, Vector2 pos, Interval speed, Interval direction, float particlesPerSecond, Interval maxAge, int maxAmount, Interval rotationVelocity = null) : base(gameObject, name, pos, speed, direction, particlesPerSecond, maxAge, maxAmount, rotationVelocity)
+        public ParticleEmitter(GameObject gameObject, string name, Vector2 pos, Interval speed, Interval direction, float particlesPerSecond, Interval maxAge, int maxAmount, double timeBeforeStop = -1, Interval rotation = null, Interval rotationVelocity = null) : base(gameObject, name, pos, speed, direction, particlesPerSecond, maxAge, maxAmount, timeBeforeStop, rotation, rotationVelocity)
         {
         }
 
@@ -67,6 +66,9 @@ namespace DoctorsDungeon.ComponentPattern.Particles
 
                     p.Velocity *= dampening;
                     go.Transform.Rotation += p.RotationVelocity;
+                    //go.Transform.Rotation = MathHelper.PiOver4 * 1f;
+
+                    //go.Transform.Position = BaseMath.Rotate(GameObject.Transform.Position, go.Transform.Rotation);
 
                     foreach (Modifier m in Modifiers)
                     {
@@ -83,7 +85,7 @@ namespace DoctorsDungeon.ComponentPattern.Particles
             if (CanDestroy())
             {
                 ParticlePool.ReleaseAllObjects();
-                GameWorld.Instance.Destroy(GameObject);
+                //GameWorld.Instance.Destroy(GameObject);
             }
         }
 
@@ -101,15 +103,28 @@ namespace DoctorsDungeon.ComponentPattern.Particles
             Matrix matrix = Matrix.CreateRotationZ((float)Direction.GetValue());
 
             particle.Velocity = new Vector2((float)Speed.GetValue(), 0);
+
             particle.Velocity = Vector2.Transform(particle.Velocity, matrix);
+
             particle.Position = Position + data.Position;
-            if (Origin.UseColorData) particle.Color = data.Color;
+
             particle.RotationVelocity = (float)RotationVelocity.GetValue();
+            
             go.Transform.Rotation = (float)Rotation.GetValue();
+            
             particle.MaxAge = MaxAge.GetValue();
+            
             particle.Age = 0;
 
+            if (TextOnSprite != null)
+            {
+                particle.TextOnSprite = (TextOnSprite)TextOnSprite.Clone(); // Sets the new particle to have the same Text
+            }
+
             sr.Sprite = GlobalTextures.Textures[TextureNames.Pixel4x4]; // If there is no other Textures in the BirthModifiers
+
+
+            sr.ShouldDrawSprite = false;
 
             // Should make it so the the offset is always different, and have older paricles under the newer.
             // Get the current timestamp
@@ -120,9 +135,9 @@ namespace DoctorsDungeon.ComponentPattern.Particles
                                      (DateTime.MaxValue.ToOADate() - DateTime.MinValue.ToOADate());
 
             // Scale the normalized value to [0.001, 0.005]
-            double result = 0.001 + normalizedValue * 0.004;
+            double result = -0.001 - normalizedValue * 0.004;
 
-            sr.SetLayerDepth(LayerDepth.EnemyOver, (float)result);
+            sr.SetLayerDepth(LayerName, (float)result);
 
 
             foreach (BirthModifier m in BirthModifiers) m.Execute(this, go, particle);

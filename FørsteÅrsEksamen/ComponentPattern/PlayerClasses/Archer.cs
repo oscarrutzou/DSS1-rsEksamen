@@ -13,7 +13,7 @@ public class Archer : Player
     public override void Awake()
     {
         base.Awake();
-        Health.MaxHealth = 80;
+        Health.SetHealth(80);
 
         CharacterStateAnimations.Add(CharacterState.Idle, AnimNames.ArcherIdle);
         CharacterStateAnimations.Add(CharacterState.Moving, AnimNames.ArcherRun);

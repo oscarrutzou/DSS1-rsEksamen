@@ -12,6 +12,7 @@ namespace DoctorsDungeon.ComponentPattern.Particles
         public Vector2 Position { get; set; }
         public Vector2 Scale { get; set; }
         public double Alpha { get; set; } 
-        public Color Color { get; set; } 
+        public Color Color { get; set; }
+        public TextOnSprite TextOnSprite { get; set; }
     }
 }

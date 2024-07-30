@@ -97,6 +97,6 @@ public abstract class MenuScene : Scene
 
     protected void DrawMenuText(SpriteBatch spriteBatch, string text, Vector2 position)
     {
-        GuiMethods.DrawTextCentered(spriteBatch, Font, position, text, new Color(250, 249, 246));
+        GuiMethods.DrawTextCentered(spriteBatch, Font, position, text, new Color(250, 249, 246), Vector2.Zero);
     }
 }

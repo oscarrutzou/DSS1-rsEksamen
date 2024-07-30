@@ -10,6 +10,5 @@ namespace DoctorsDungeon.ComponentPattern.Particles.Origins
     {
         public abstract OriginData GetPosition(Emitter e);
 
-        public abstract bool UseColorData { get; }
     }
 }

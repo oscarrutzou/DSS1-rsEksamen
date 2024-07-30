@@ -2,6 +2,7 @@
 using DoctorsDungeon.GameManagement.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -63,7 +64,7 @@ public static class GuiMethods
     /// <summary>
     /// <para>Can take and divide the text and center each part of the text.</para>
     /// </summary>
-    public static void DrawTextCentered(SpriteBatch spriteBatch, SpriteFont font, Vector2 position, string text, Color textColor)
+    public static void DrawTextCentered(SpriteBatch spriteBatch, SpriteFont font, Vector2 position, string text, Color textColor, Vector2 origin, float rot = 0f, float scale = 1f, SpriteEffects spriteEffects = SpriteEffects.None, float layer = 1)
     {
         if (string.IsNullOrEmpty(text)) return;
 
@@ -72,7 +73,7 @@ public static class GuiMethods
 
         if (lines.Length == 1) // Only one line so can make a easier and fast way to draw it, if we have another method for 1 line
         {
-            DrawSingleLineCentered(spriteBatch, font, position, text, textColor);
+            DrawSingleLineCentered(spriteBatch, font, position, text, textColor, origin, rot, scale, spriteEffects, layer);
             return;
         }
 
@@ -105,30 +106,29 @@ public static class GuiMethods
                                    lines[i],
                                    linePosition,
                                    textColor,
-                                   0,
-                                   Vector2.Zero,
-                                   1f,
-                                   SpriteEffects.None,
-                                   1);
+                                   rot,
+                                   origin,
+                                   scale,
+                                   spriteEffects,
+                                   layer);
         }
     }
 
-    private static void DrawSingleLineCentered(SpriteBatch spriteBatch, SpriteFont font, Vector2 position, string text, Color textColor)
+    private static void DrawSingleLineCentered(SpriteBatch spriteBatch, SpriteFont font, Vector2 position, string text, Color textColor, Vector2 origin, float rot = 0f, float scale = 1f, SpriteEffects spriteEffects = SpriteEffects.None, float layer = 1)
     {
         Vector2 lineSize = font.MeasureString(text);
 
-        // Calculate the position to center the text based on the size of the longest line and total height
-        Vector2 textPosition = position - new Vector2(lineSize.X / 2, lineSize.Y / 2);
+        Vector2 center = position - new Vector2(lineSize.X / 2, lineSize.Y / 2);
 
         spriteBatch.DrawString(font,
                    text,
-                   textPosition,
+                   center,
                    textColor,
-                   0,
-                   Vector2.Zero,
-                   1f,
-                   SpriteEffects.None,
-                   1);
+                   rot,
+                   origin,
+                   scale,
+                   spriteEffects,
+                   layer);
     }
 
     public static bool IsMouseOverUI()

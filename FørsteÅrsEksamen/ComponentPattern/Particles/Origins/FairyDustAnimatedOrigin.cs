@@ -14,8 +14,6 @@ namespace DoctorsDungeon.ComponentPattern.Particles.Origins
         private readonly float _minDist;
         private readonly double _speed;
 
-        public override bool UseColorData => false;
-
         public FairyDustAnimatedOrigin(Rectangle screen, float minDist = 250.0f, double speed = 1.0d)
         {
             _screen = screen;

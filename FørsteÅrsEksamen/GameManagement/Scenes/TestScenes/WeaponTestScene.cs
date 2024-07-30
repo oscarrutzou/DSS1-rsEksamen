@@ -40,29 +40,47 @@ public class WeaponTestScene : Scene
         GameWorld.Instance.WorldCam.Position = playerGo.Transform.Position;
         GameWorld.Instance.Instantiate(playerGo);
     }
+
     ParticleEmitter emitter;
+
     private void MakeEmitters()
     {
-        GameObject go = EmitterFactory.CreateParticleEmitter("Dust Cloud", new Vector2(200, -200), new Interval(1, 1), new Interval(-MathHelper.Pi, 0), 1000, new Interval(200000, 300000), 1, new Interval(-0.01f, 0.01));
+        GameObject go = EmitterFactory.CreateParticleEmitter("Dust Cloud", new Vector2(200, -200), new Interval(100, 150), new Interval(-MathHelper.Pi, 0), 20, new Interval(2000, 2000), 1000, -1, new Interval(-MathHelper.Pi, 0), new Interval(-0.01, 0.01));
 
         emitter = go.GetComponent<ParticleEmitter>();
+        emitter.FollowGameObject(playerGo, new Vector2(0, 25));
+        emitter.LayerName = LayerDepth.EnemyUnder;
         emitter.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel4x4));
-        emitter.AddModifier(new ColorRangeModifier(Color.Blue, Color.LightYellow, Color.Yellow, Color.Orange, Color.Transparent));
+        emitter.AddModifier(new ColorRangeModifier(new Color[] { Color.DarkGray, Color.Moccasin, Color.Transparent }, new Color[] { Color.Yellow, Color.Transparent }));
 
         emitter.AddBirthModifier(new ScaleBirthModifier(new Interval(4, 4)));
+        //emitter.AddModifier(new GravityModifier());
         //emitter.AddModifier(new ScaleModifier(4, 10));
-        //emitter.Origin = new FairyDustAnimatedOrigin(new Rectangle((int)GameWorld.Instance.WorldCam.TopLeft.X, (int)GameWorld.Instance.WorldCam.TopLeft.Y, 1920, 1080));
-        //emitter.Origin = new RectangleOrigin(100, 100);
 
-        emitter.StartEmitter();
+
+        //emitter.Origin = new FairyDustAnimatedOrigin(new Rectangle((int)GameWorld.Instance.WorldCam.TopLeft.X, (int)GameWorld.Instance.WorldCam.TopLeft.Y, 1920, 1080));
+        emitter.Origin = new RectangleOrigin(500, 500);
+
 
         GameWorld.Instance.Instantiate(go);
     }
 
-
+    int nmb = 100;
     private void SetCommands()
     {
         InputHandler.Instance.AddMouseButtonDownCommand(MouseCmdState.Right, new CustomCmd(player.Attack));
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.V, new CustomCmd(emitter.StartEmitter));
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.B, new CustomCmd(emitter.StopEmitter));
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.N, new CustomCmd(() => 
+        {
+            nmb++;
+            emitter.SetParticleText(new TextOnSprite()
+            {
+                Text = nmb.ToString()
+            }); 
+        }));
+
+
         InputHandler.Instance.AddKeyButtonDownCommand(Keys.Escape, new CustomCmd(GameWorld.Instance.Exit));
     }
 
@@ -83,6 +101,8 @@ public class WeaponTestScene : Scene
         DrawString(spriteBatch, $"Active count: {emitter.ParticlePool.Active.Count}", pos);
         pos += offset;
         DrawString(spriteBatch, $"In Active count: {emitter.ParticlePool.InActive.Count}", pos);
+        pos += offset;
+        DrawString(spriteBatch, $"Time modifier: {emitter.Timer}", pos);
     }
 
     protected void DrawString(SpriteBatch spriteBatch, string text, Vector2 position)

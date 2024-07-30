@@ -273,13 +273,13 @@ public class GridManager
         if (PlayerDiscoveredRoomNmbers.Contains(cell.RoomNr) && cell.RoomNr != -1)
         {
             go.IsEnabled = false;
-            sr.ShouldDraw = false;
+            sr.ShouldDrawSprite = false;
             sr.Color = Color.AliceBlue;
         }
         else
         {
             go.IsEnabled = true;
-            sr.ShouldDraw = true;
+            sr.ShouldDrawSprite = true;
             sr.Color = cell.NotDiscoveredColor;
         }
     }

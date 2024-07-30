@@ -143,6 +143,6 @@ public class Button : Component
         // If the text is not visible or null, we don't need to do anything
         if (string.IsNullOrEmpty(Text)) return;
 
-        GuiMethods.DrawTextCentered(spriteBatch, font, GameObject.Transform.Position, Text, TextColor);
+        GuiMethods.DrawTextCentered(spriteBatch, font, GameObject.Transform.Position, Text, TextColor, Vector2.Zero);
     }
 }

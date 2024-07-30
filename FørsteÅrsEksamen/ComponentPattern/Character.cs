@@ -1,4 +1,9 @@
 ﻿using DoctorsDungeon.CommandPattern;
+using DoctorsDungeon.ComponentPattern.Particles.BirthModifiers;
+using DoctorsDungeon.ComponentPattern.Particles.Modifiers;
+using DoctorsDungeon.ComponentPattern.Particles.Origins;
+using DoctorsDungeon.ComponentPattern.Particles;
+using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using DoctorsDungeon.ComponentPattern.Weapons;
 using DoctorsDungeon.ComponentPattern.WorldObjects;
 using DoctorsDungeon.GameManagement;
@@ -69,6 +74,8 @@ public abstract class Character : Component
             Weapon = WeaponGo.GetComponent<Weapon>();
             Weapon.MoveWeaponAndAngle();
         }
+
+        MakeEmitters();
     }
 
     private void SetActionInHealth()
@@ -87,6 +94,15 @@ public abstract class Character : Component
     {
         if (State == newState) return; // Dont change the state to the same and reset the animation
         State = newState;
+
+        //if (State == CharacterState.Moving)
+        //{
+        //    emitterDustCloud.StartEmitter();
+        //}
+        //else
+        //{
+        //    emitterDustCloud.StopEmitter();
+        //}
 
         switch (State)
         {
@@ -132,6 +148,8 @@ public abstract class Character : Component
             DirectionState = AnimationDirectionState.Left;
             SpriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
         }
+
+
     }
 
     public void Attack()
@@ -150,6 +168,10 @@ public abstract class Character : Component
 
         // Remove hands
         SpriteRenderer.Color = Color.LightPink;
+
+        Health.OnDamageTaken -= OnDamageTaken;
+        Health.OnZeroHealth -= OnDie;
+        Health.OnResetColor -= OnResetColor;
     }
 
     private void OnDamageTaken()
@@ -164,8 +186,42 @@ public abstract class Character : Component
 
     public override void Draw(SpriteBatch spriteBatch)
     {
+        emitterDustCloud.LayerName = SpriteRenderer.LayerName;
+        emitterDustCloud.SetParticleText(new TextOnSprite() { Text = AttackTimer.ToString() });
+
         if (!InputHandler.Instance.DebugMode) return;
         Vector2 center = GameObject.Transform.Position - new Vector2(5, 5);
         spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], center, null, Color.DarkRed, 0f, Vector2.Zero, 10, SpriteEffects.None, 1);
+    }
+
+
+    private void MakeEmitters()
+    {
+        DustWalkEmitter();
+    }
+
+    ParticleEmitter emitterDustCloud;
+    private void DustWalkEmitter()
+    {
+        GameObject go = EmitterFactory.CreateParticleEmitter("Dust Cloud", new Vector2(200, -200), new Interval(180, 200), new Interval(-MathHelper.Pi, 0), 20, new Interval(500, 800), 50);
+
+        emitterDustCloud = go.GetComponent<ParticleEmitter>();
+        emitterDustCloud.FollowGameObject(GameObject, new Vector2(0, 25));
+        emitterDustCloud.LayerName = LayerDepth.EnemyUnder;
+        emitterDustCloud.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel4x4));
+        emitterDustCloud.AddModifier(new ColorRangeModifier(new Color[] { Color.DarkGray, Color.Moccasin, Color.Transparent }));
+
+        emitterDustCloud.AddBirthModifier(new ScaleBirthModifier(new Interval(4, 4)));
+        emitterDustCloud.AddModifier(new GravityModifier());
+        //emitter.AddModifier(new ScaleModifier(4, 10));
+
+
+        //emitter.Origin = new FairyDustAnimatedOrigin(new Rectangle((int)GameWorld.Instance.WorldCam.TopLeft.X, (int)GameWorld.Instance.WorldCam.TopLeft.Y, 1920, 1080));
+        //emitter.Origin = new RectangleOrigin(50, 50);
+
+
+        emitterDustCloud.StartEmitter();
+
+        GameWorld.Instance.Instantiate(go);
     }
 }

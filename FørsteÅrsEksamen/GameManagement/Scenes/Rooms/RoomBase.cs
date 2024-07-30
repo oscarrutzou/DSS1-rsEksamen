@@ -206,9 +206,9 @@ public abstract class RoomBase : Scene
 
     private void OnAllEnemiesDied()
     {
-        if (transferDoorSpriteRenderer.ShouldDraw == false) return; // To stop method from being run twice.
+        if (transferDoorSpriteRenderer.ShouldDrawSprite == false) return; // To stop method from being run twice.
 
-        transferDoorSpriteRenderer.ShouldDraw = false;
+        transferDoorSpriteRenderer.ShouldDrawSprite = false;
         transferDoor.CanTranser = true;
     }
 
