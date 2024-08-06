@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using static System.Net.Mime.MediaTypeNames;
+using SharpDX.X3DAudio;
 
 namespace DoctorsDungeon.ComponentPattern;
 
@@ -211,17 +212,11 @@ public abstract class Character : Component
 
     private void DustWalkEmitter()
     {
-        GameObject go = EmitterFactory.CreateParticleEmitter("Text Damage Taken", new Vector2(200, -200), new Interval(50, 100), new Interval(-MathHelper.Pi, 0), 0, new Interval(400, 600), 100, -1, new Interval(-0.5f, 0.5f), new Interval(-0.001f, 0.001f));
-
+        GameObject go = EmitterFactory.TextDamageEmitter(DamageTakenAmountTextColor, GameObject, new Vector2(-20, -95), new RectangleOrigin(50, 5));
         DamageTakenEmitter = go.GetComponent<ParticleEmitter>();
-        DamageTakenEmitter.FollowGameObject(GameObject, new Vector2(-20, -95));
-        DamageTakenEmitter.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel4x4));
-        DamageTakenEmitter.AddModifier(new ColorRangeModifier(new Color[] { Color.Transparent }, DamageTakenAmountTextColor));
-        DamageTakenEmitter.AddModifier(new ScaleModifier(2, 1));
-        //DamageTakenEmitter.AddModifier(new GravityModifier());
-
-        DamageTakenEmitter.Origin = new RectangleOrigin(50, 5);
 
         GameWorld.Instance.Instantiate(go);
     }
+
+
 }

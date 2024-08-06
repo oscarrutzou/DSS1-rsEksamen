@@ -15,9 +15,11 @@ public abstract class MeleeWeapon : Weapon
     protected bool IsRotatingBack;
     protected List<CollisionRectangle> WeaponColliders = new();
 
-    private List<GameObject> hitGameObjects = new();
+    private List<GameObject> hitGameObjects { get; set; } = new();
 
-
+    private float rotateBackStartRotation;
+    private double resetHitObjectsTimer, timeBeforeCanHitAfterRotatingBack = 0.3;
+    private bool firstResetHittedObjects, secondResetHittedObjects;
     protected MeleeWeapon(GameObject gameObject) : base(gameObject)
     {
     }
@@ -47,7 +49,7 @@ public abstract class MeleeWeapon : Weapon
         UpdateCollisionBoxesPos(GameObject.Transform.Rotation);
     }
 
-    private float rotateBackStartRotation;
+
     private void AttackAnimation()
     {
         // This should be changed to another animation method if its a stab attack
@@ -59,8 +61,9 @@ public abstract class MeleeWeapon : Weapon
 
             TotalElapsedTime = 0f; // Reset totalElapsedTime
             IsRotatingBack = true;
-            hitGameObjects = new(); // Reset hit gameobjects so we can hit when it goes back again
-            
+            //hitGameObjects = new(); // Reset hit gameobjects so we can hit when it goes back again
+            secondResetHittedObjects = false;
+
             SetStartAngleToNextAnim(); // Changes the StartAnimationAngle so it rotates to the next animation start, insted of snapping to the place after
             // Need to also set the new start point
             rotateBackStartRotation = GameObject.Transform.Rotation;
@@ -71,6 +74,8 @@ public abstract class MeleeWeapon : Weapon
             else if (SpriteRenderer.SpriteEffects == SpriteEffects.None)
                 SpriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
         }
+
+        ResetHittedGameObjects();
 
         float normalizedTime = (float)TotalElapsedTime / (float)TimeBeforeNewDirection;
         float easedTime; // maybe switch between them.
@@ -98,7 +103,7 @@ public abstract class MeleeWeapon : Weapon
             FinnishedAttack = true;
         }
     }
-
+    
     public void CheckCollisionAndDmg()
     {
         GameObjectTypes type;
@@ -128,21 +133,46 @@ public abstract class MeleeWeapon : Weapon
         }
     }
 
+    private void ResetHittedGameObjects()
+    {
+        // Reset GameObjects when Rotate down
+        if (!IsRotatingBack && !firstResetHittedObjects)
+        {
+            resetHitObjectsTimer += GameWorld.DeltaTime;
+            if (resetHitObjectsTimer > timeBeforeCanHitAfterRotatingBack)
+            {
+                hitGameObjects = new();
+                firstResetHittedObjects = true;
+                resetHitObjectsTimer = 0;
+            }
+        }
+
+        // Reset GameObjects when Rotate back
+        if (IsRotatingBack && !secondResetHittedObjects)
+        {
+            resetHitObjectsTimer += GameWorld.DeltaTime;
+            if (resetHitObjectsTimer > timeBeforeCanHitAfterRotatingBack)
+            {
+                hitGameObjects = new();
+                secondResetHittedObjects = true;
+                resetHitObjectsTimer = 0;
+            }
+        }
+    }
+
     protected override void SetAttackDirection()
     {
         TotalElapsedTime = 0f;
 
-        hitGameObjects = new();
+        firstResetHittedObjects = false;
+        resetHitObjectsTimer = 0;
+
+        timeBeforeCanHitAfterRotatingBack = Math.Max(0.15f, TimeBeforeNewDirection / 3); 
+
         if (LeftSide)
-        {
-            // Left
             FinalLerp = -Animations[CurrentAnim].AmountOfRotation;
-        }
         else
-        {
-            // Right
             FinalLerp = Animations[CurrentAnim].AmountOfRotation;
-        }
     }
 
     #region Weapon Colliders

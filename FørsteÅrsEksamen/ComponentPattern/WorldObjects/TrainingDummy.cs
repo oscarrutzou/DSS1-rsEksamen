@@ -1,6 +1,10 @@
-﻿using DoctorsDungeon.GameManagement;
+﻿using DoctorsDungeon.ComponentPattern.Particles.Origins;
+using DoctorsDungeon.ComponentPattern.Particles;
+using DoctorsDungeon.GameManagement;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Graphics;
+using DoctorsDungeon.ComponentPattern.GUI;
 
 namespace DoctorsDungeon.ComponentPattern.WorldObjects
 {
@@ -11,6 +15,7 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
         private Health health;
         private Animator animator;
         private Collider collider;
+        private ParticleEmitter damageTakenEmitter;
 
         private int totalDmgTaken;
 
@@ -35,7 +40,10 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
             collider.SetCollisionBox(15, 27, new Vector2(0, 19));
             health.SetHealth(100_000_000);
 
+            MakeEmitters();
+        
             health.AmountDamageTaken += AmountDamageTaken;
+            health.AmountDamageTaken += OnDamageTakenText;
         }
 
         public override void Start()
@@ -43,6 +51,15 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
             spriteRenderer.SetLayerDepth(LayerDepth.EnemyUnder);
             animator.PlayAnimation(AnimNames.SkeletonMageIdle);
             spriteRenderer.OriginOffSet = Character.SmallSpriteOffset;
+
+        }
+
+        private void MakeEmitters()
+        {
+            GameObject textDamageEmitterGo = EmitterFactory.TextDamageEmitter(new Color[] { Color.OrangeRed, Color.DarkRed, Color.Transparent }, GameObject, new Vector2(-20, -95), new RectangleOrigin(50, 5));
+            damageTakenEmitter = textDamageEmitterGo.GetComponent<ParticleEmitter>();
+
+            GameWorld.Instance.Instantiate(textDamageEmitterGo);
         }
 
         private void AmountDamageTaken(int damage)
@@ -52,6 +69,15 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
             DamageAccumulated += damage;
             damageHistoryAmount.Enqueue(damage); // Add timestamp to history
             damageHistoryTime.Enqueue(elapsedTime); // Add timestamp to history
+
+            // Need to show Damage Accumulated somewhere, maybe at the feet
+        }
+
+        private void OnDamageTakenText(int damage)
+        {
+            damageTakenEmitter.LayerName = LayerDepth.PlayerWeapon;
+            damageTakenEmitter.SetParticleText(new TextOnSprite() { Text = damage.ToString() });
+            damageTakenEmitter.EmitParticles();
         }
 
         public override void Update() 
@@ -65,6 +91,14 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
                 damageHistoryTime.Dequeue();
                 DamageAccumulated -= damageHistoryAmount.Dequeue();
             }
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            Vector2 pos = GameObject.Transform.Position + new Vector2(-45, 25);
+            int dps = DamageAccumulated / (int)trackingTime;
+            string text = $"DPS: {dps}";
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, text, pos, Color.Beige, 0f, Vector2.Zero, 1, SpriteEffects.None, 1);
         }
     }
 }

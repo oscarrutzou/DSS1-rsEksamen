@@ -50,7 +50,7 @@ public abstract class Weapon : Component
     private Vector2 lastOffSetPos, startRelativePos = new(0, 60), startRelativeOffsetPos = new Vector2(0, -20);
     public float angle; // Public for test
     protected bool LeftSide;
-    protected double TimeBeforeNewDirection;
+    protected double TimeBeforeNewDirection { get; set;}
     protected float animRotation, nextAnimRotation;
     public WeaponAnimTypes NextAnim { get; private set; }
     protected bool FinnishedAttack;
