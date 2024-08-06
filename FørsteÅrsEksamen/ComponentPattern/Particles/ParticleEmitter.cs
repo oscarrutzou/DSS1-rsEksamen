@@ -132,7 +132,7 @@ namespace DoctorsDungeon.ComponentPattern.Particles
             // Scale the normalized value to [0.001, 0.005]
             double result = -0.001 - normalizedValue * 0.004;
 
-            sr.SetLayerDepth(LayerName, (float)result);
+            sr.SetLayerDepth(LayerName, Math.Abs((float)result));
 
             foreach (BirthModifier m in BirthModifiers) m.Execute(this, go, particle);
         }

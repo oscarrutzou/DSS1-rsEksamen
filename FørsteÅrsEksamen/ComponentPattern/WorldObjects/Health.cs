@@ -101,7 +101,7 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
         private void DamageTaken()
         {
             damageTimer = damageTimerTotal;
-            spriteRenderer.Color = DamageTakenColor;
+            //spriteRenderer.Color = DamageTakenColor;
             OnDamageTaken?.Invoke(); // For specific behavor when Damage taken
         }
 

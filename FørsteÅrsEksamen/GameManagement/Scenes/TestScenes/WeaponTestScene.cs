@@ -126,9 +126,9 @@ public class WeaponTestScene : Scene
         //DrawString(spriteBatch, $"Next anim: {weapon.NextAnim} | Rot: {weapon.Animations[weapon.NextAnim].AmountOfRotation}", pos);
 
         pos += offset;
-        DrawString(spriteBatch, $"Active count: {player.damageTakenEmitter.ParticlePool.Active.Count}", pos);
+        DrawString(spriteBatch, $"Active count: {player.DamageTakenEmitter.ParticlePool.Active.Count}", pos);
         pos += offset;
-        DrawString(spriteBatch, $"In Active count: {player.damageTakenEmitter.ParticlePool.InActive.Count}", pos);
+        DrawString(spriteBatch, $"In Active count: {player.DamageTakenEmitter.ParticlePool.InActive.Count}", pos);
     }
 
     protected void DrawString(SpriteBatch spriteBatch, string text, Vector2 position)

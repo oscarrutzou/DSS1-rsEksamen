@@ -81,9 +81,9 @@ public abstract class Character : Component
 
     private void SetActionInHealth()
     {
-        Health.OnDamageTaken += OnDamageTaken;
         Health.OnZeroHealth += OnDie;
-        Health.OnResetColor += OnResetColor;
+        //Health.OnDamageTaken += OnDamageTaken;
+        //Health.OnResetColor += OnResetColor;
     }
 
     // This is not a abstract method since we only need to set it in the Player and Enemy class, and not in its subclasses
@@ -168,9 +168,9 @@ public abstract class Character : Component
         // Remove hands
         SpriteRenderer.Color = Color.LightPink;
 
-        Health.OnDamageTaken -= OnDamageTaken;
+        //Health.OnDamageTaken -= OnDamageTaken;
+        //Health.OnResetColor -= OnResetColor;
         Health.OnZeroHealth -= OnDie;
-        Health.OnResetColor -= OnResetColor;
     }
 
     private void OnDamageTaken()
@@ -185,7 +185,6 @@ public abstract class Character : Component
 
     public override void Draw(SpriteBatch spriteBatch)
     {
-        //damageTakenEmitter.LayerName = SpriteRenderer.LayerName;
 
         if (!InputHandler.Instance.DebugMode) return;
         Vector2 center = GameObject.Transform.Position - new Vector2(5, 5);
@@ -202,48 +201,26 @@ public abstract class Character : Component
 
     private void OnDamageTakenText(int damage)
     {
-        // Remove the active from the emitter, so that it dosent think it still owns them.
-        damageTakenEmitter.SetParticleText(new TextOnSprite() { Text = damage.ToString() });
-        damageTakenEmitter.EmitParticles();
-
-        /* Take damage
-         * Sets text
-         * Starts Emitter
-         * Emitter releases 1 particle
-         * Waits for particle to end
-         * But finnishes and turns off before particle disappears
-         * 
-         * Need to be able to see how many it has been hit, then release only one particle for each of those hits
-         * Could be like the training dummy that saves the previous hits
-         * Cant just turn down release per second since that makes the emitter count up to 1 only after it has been started
-         * 
-         * Could make the emitter forget the previous emitted so it only shows one again
-         *      but this makes it so we have to change a bit in the update of the particle emitter
-         * 
-         * Cant make the max amount bigger
-         * 
-         * Can change the amount of time showed + emitter alive timer the same, to make the emitter work.
-         *      But this makes it so we cant have more than one hit text on the character.
-         *      And we have to show it for a very short time.
-         *      
-         * Need to make a method that ingnores the particles per second (maybe just 0 when createParticleEmitter)
-         * A method that need to emit a single particle from the pool.
-        */
+        DamageTakenEmitter.LayerName = LayerDepth.PlayerWeapon;
+        DamageTakenEmitter.SetParticleText(new TextOnSprite() { Text = damage.ToString() });
+        DamageTakenEmitter.EmitParticles();
     }
 
-    public ParticleEmitter damageTakenEmitter;
+    public ParticleEmitter DamageTakenEmitter { get; private set; }
+    protected Color[] DamageTakenAmountTextColor = new Color[] { Color.OrangeRed, Color.DarkRed, Color.Transparent };
+
     private void DustWalkEmitter()
     {
-        GameObject go = EmitterFactory.CreateParticleEmitter("Text Damage Taken", new Vector2(200, -200), new Interval(180, 200), new Interval(-MathHelper.Pi, 0), 0, new Interval(500, 700), 100, -1, new Interval(-1f, 1f), new Interval(-0.001f, 0.001f));
+        GameObject go = EmitterFactory.CreateParticleEmitter("Text Damage Taken", new Vector2(200, -200), new Interval(50, 100), new Interval(-MathHelper.Pi, 0), 0, new Interval(400, 600), 100, -1, new Interval(-0.5f, 0.5f), new Interval(-0.001f, 0.001f));
 
-        damageTakenEmitter = go.GetComponent<ParticleEmitter>();
-        damageTakenEmitter.FollowGameObject(GameObject, new Vector2(0, 25));
-        damageTakenEmitter.LayerName = LayerDepth.Text;
-        damageTakenEmitter.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel4x4));
-        damageTakenEmitter.AddModifier(new ColorRangeModifier(new Color[] { Color.DarkGray, Color.Moccasin, Color.Transparent }, new Color[] { Color.DarkRed, Color.Red, Color.OrangeRed, Color.Transparent }));
+        DamageTakenEmitter = go.GetComponent<ParticleEmitter>();
+        DamageTakenEmitter.FollowGameObject(GameObject, new Vector2(-20, -95));
+        DamageTakenEmitter.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel4x4));
+        DamageTakenEmitter.AddModifier(new ColorRangeModifier(new Color[] { Color.Transparent }, DamageTakenAmountTextColor));
+        DamageTakenEmitter.AddModifier(new ScaleModifier(2, 1));
+        //DamageTakenEmitter.AddModifier(new GravityModifier());
 
-        damageTakenEmitter.AddBirthModifier(new ScaleBirthModifier(new Interval(4, 4)));
-        damageTakenEmitter.AddModifier(new GravityModifier());
+        DamageTakenEmitter.Origin = new RectangleOrigin(50, 5);
 
         GameWorld.Instance.Instantiate(go);
     }

@@ -20,6 +20,10 @@ namespace DoctorsDungeon.ComponentPattern.Particles.BirthModifiers
         {
             float scale = (float)_interval.GetValue();
             p.Scale = new Vector2(scale, scale);
+
+            if (p.TextOnSprite == null) return;
+
+            p.TextOnSprite.TextScale = scale;
         }
     }
 }

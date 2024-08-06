@@ -40,6 +40,10 @@ public abstract class Enemy : Character
     public Enemy(GameObject gameObject) : base(gameObject)
     {
         Speed = 250;
+
+        DamageTakenAmountTextColor = new Color[] {
+            Color.OrangeRed, Color.Transparent,
+        };
     }
 
     public override void Awake()

@@ -32,6 +32,10 @@ namespace DoctorsDungeon.ComponentPattern.Particles.Modifiers
 
             float scale = MathHelper.Lerp(_start, _end, (float)(p.Age / p.MaxAge));
             p.Scale = new Vector2(scale, scale);
+
+            if (p.TextOnSprite == null) return;
+
+            p.TextOnSprite.TextScale = scale;
         }
     }
 }
