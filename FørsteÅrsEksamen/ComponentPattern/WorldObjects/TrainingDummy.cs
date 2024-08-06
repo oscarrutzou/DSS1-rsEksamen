@@ -4,17 +4,6 @@ using System.Collections.Generic;
 
 namespace DoctorsDungeon.ComponentPattern.WorldObjects
 {
-    /// <summary>
-    /// Particle: Component
-    ///     Lifetime
-    ///     Direction (random)
-    ///     
-    /// Emitter
-    ///     Hold mængde af particles
-    ///     ObjectPool
-    ///     Ændre sprites på particles
-    /// </summary>
-
 
     public class TrainingDummy : Component
     {
@@ -65,7 +54,7 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
             damageHistoryTime.Enqueue(elapsedTime); // Add timestamp to history
         }
 
-        public override void Update()
+        public override void Update() 
         {
             // Update the timer
             elapsedTime += GameWorld.DeltaTime;

@@ -24,12 +24,12 @@ namespace DoctorsDungeon.ComponentPattern.Particles
         public LayerDepth LayerName { get; set; }
         protected GameObject FollowObject { get; private set; }
         protected Vector2 FollowObjectOffset { get; private set; }
-        public string Name { get; set; }
+        public string EmitterName { get; set; }
         public float MaxParticlesPerSecond { get; set; }
         public float ParticlesPerSecond { get; set; }
         public float LinearDamping { get; set; }
         public Origin Origin { get; set; } = new PointOrigin();
-
+        protected bool ShouldShowSprite { get; set; } = true;
         public double TotalSeconds { get; set; }
         protected Interval Speed;
 
@@ -69,7 +69,7 @@ namespace DoctorsDungeon.ComponentPattern.Particles
         /// <param name="rotationVelocity"></param>
         public Emitter(GameObject gameObject, string name, Vector2 pos, Interval speed, Interval direction, float particlesPerSecond, Interval maxAge, int maxAmount, double timeBeforeStop = -1, Interval rotation = null, Interval rotationVelocity = null) : base(gameObject)
         {
-            Name = name;
+            EmitterName = name;
             Position = pos;
             Speed = speed;
             Direction = direction;
@@ -116,12 +116,15 @@ namespace DoctorsDungeon.ComponentPattern.Particles
         }
 
         protected TextOnSprite TextOnSprite;
-        public void SetParticleText(TextOnSprite textOnSprite)
+        public void SetParticleText(TextOnSprite textOnSprite, bool showSprite = false)
         {
             TextOnSprite = textOnSprite;
-            //foreach ()
+            ShouldShowSprite = showSprite;
         }
 
+        /// <summary>
+        /// Starts the normal emitter
+        /// </summary>
         public void StartEmitter()
         {
             ReleaseTime = 0;

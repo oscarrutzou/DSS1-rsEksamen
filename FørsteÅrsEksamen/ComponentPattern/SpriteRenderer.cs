@@ -63,7 +63,7 @@ public class SpriteRenderer : Component
     public Vector2 Origin { get; set; }
     public Vector2 OriginOffSet { get; set; }
     public Vector2 DrawPosOffSet { get; set; }
-    public bool ShouldDrawSprite = true;
+    public bool ShouldDrawSprite { get; set; } = true;
     public bool ShouldDrawText = true;
     public bool IsCentered = true;
     /// <summary>

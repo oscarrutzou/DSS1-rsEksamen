@@ -66,10 +66,7 @@ namespace DoctorsDungeon.ComponentPattern.Particles
 
                     p.Velocity *= dampening;
                     go.Transform.Rotation += p.RotationVelocity;
-                    //go.Transform.Rotation = MathHelper.PiOver4 * 1f;
-
-                    //go.Transform.Position = BaseMath.Rotate(GameObject.Transform.Position, go.Transform.Rotation);
-
+    
                     foreach (Modifier m in Modifiers)
                     {
                         m.Execute(this, GameWorld.DeltaTime, p);
@@ -85,11 +82,10 @@ namespace DoctorsDungeon.ComponentPattern.Particles
             if (CanDestroy())
             {
                 ParticlePool.ReleaseAllObjects();
-                //GameWorld.Instance.Destroy(GameObject);
             }
         }
 
-        public void AddParticle()
+        private void AddParticle()
         {
             OriginData data = Origin.GetPosition(this);
             if (data == null) return;
@@ -123,8 +119,7 @@ namespace DoctorsDungeon.ComponentPattern.Particles
 
             sr.Sprite = GlobalTextures.Textures[TextureNames.Pixel4x4]; // If there is no other Textures in the BirthModifiers
 
-
-            sr.ShouldDrawSprite = false;
+            sr.ShouldDrawSprite = ShouldShowSprite;
 
             // Should make it so the the offset is always different, and have older paricles under the newer.
             // Get the current timestamp
@@ -139,8 +134,16 @@ namespace DoctorsDungeon.ComponentPattern.Particles
 
             sr.SetLayerDepth(LayerName, (float)result);
 
-
             foreach (BirthModifier m in BirthModifiers) m.Execute(this, go, particle);
+        }
+
+
+        public void EmitParticles(int amount = 1)
+        {
+            for (int i = 0; i < amount; i++)
+            {
+                AddParticle();
+            }
         }
     }
 }

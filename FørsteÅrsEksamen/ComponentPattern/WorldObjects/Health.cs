@@ -25,7 +25,7 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
         public Action OnDamageTaken { get; set; }
         public Action OnZeroHealth { get; set; }
         public Action OnResetColor { get; set; }
-        public Action<int> AmountDamageTaken;
+        public Action<int> AmountDamageTaken { get; set; }
         public Health(GameObject gameObject) : base(gameObject)
         {
         }
@@ -60,7 +60,6 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
             {
                 CurrentHealth = MaxHealth;
             }
-
         }
 
         public bool AddHealth(int addHealth)

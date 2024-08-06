@@ -51,10 +51,7 @@ namespace DoctorsDungeon.ComponentPattern.Particles
             }
         }
 
-        public TextOnSprite TextOnSprite { get; set; } = new TextOnSprite()
-        {
-            Text = "Test"
-        };
+        public TextOnSprite TextOnSprite { get; set; }
 
         private SpriteRenderer spriteRenderer;
 

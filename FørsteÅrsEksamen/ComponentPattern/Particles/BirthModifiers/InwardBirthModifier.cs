@@ -1,9 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DoctorsDungeon.ComponentPattern.Particles.BirthModifiers
 {
@@ -13,8 +8,15 @@ namespace DoctorsDungeon.ComponentPattern.Particles.BirthModifiers
         {
             float v = p.Velocity.Length();
             Vector2 temp = e.Position - p.Position;
-            temp.Normalize();
-            p.Velocity = temp * v;
+            if (temp != Vector2.Zero)
+            {
+                temp.Normalize();
+                p.Velocity = temp * v;
+            }
+            else
+            {
+                p.Velocity = OutwardBirthModifier.OnSpawnOriginPoint * v;
+            }
         }
     }
 }
