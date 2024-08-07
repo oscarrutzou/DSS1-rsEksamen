@@ -148,11 +148,22 @@ public class SpriteRenderer : Component
     }
     private void DrawSprite(SpriteBatch spriteBatch)
     {
+        if (player != null && player.State == CharacterState.Moving)
+        {
+            int i = 0;
+        }
         Origin = IsCentered ? new Vector2(Sprite.Width / 2, Sprite.Height / 2) : OriginOffSet;
 
         drawPos = GameObject.Transform.Position;
 
-        //drawPos += OriginOffSet + DrawPosOffSet;
+        if (GameObject.Type == GameObjectTypes.Weapon)
+        {
+            drawPos += OriginOffSet + DrawPosOffSet;
+        }
+        else
+        {
+            drawPos += DrawPosOffSet;
+        }
 
         //Draws the sprite, and if there is a sourcerectangle set, then it uses that.SourceRectangle == Rectangle.Empty ? null : SourceRectangle
         spriteBatch.Draw(Sprite,
@@ -182,8 +193,8 @@ public class SpriteRenderer : Component
 
     public void SetSprite(TextureNames spriteName)
     {
-        IsCentered = true;
-        ShouldDrawSprite = true;
+        //IsCentered = true;
+        //ShouldDrawSprite = true;
         UsingAnimation = false;
         OriginOffSet = Vector2.Zero;
         DrawPosOffSet = Vector2.Zero;

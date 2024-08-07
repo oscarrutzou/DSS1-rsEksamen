@@ -114,7 +114,11 @@ public class Animator : Component
         
         // Reset spriterenderer
         spriteRenderer.UsingAnimation = true; // This gets set to false if you have played a Animation, then want to use a normal sprite again
-        spriteRenderer.IsCentered = true;
+
+
+        //spriteRenderer.IsCentered = true;
+
+
         spriteRenderer.ShouldDrawSprite = true;
         spriteRenderer.Rotation = -1;
 

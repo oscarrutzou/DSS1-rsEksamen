@@ -44,7 +44,7 @@ public abstract class Character : Component
 
     protected Dictionary<CharacterState, AnimNames> CharacterStateAnimations = new();
     public static Vector2 SmallSpriteOffset = new(0, -32); // Move the animation up a bit so it looks like it walks correctly.
-    public static Vector2 LargeSpriteOffSet = new(0, -96); // Move the animation up more since its a 64x64 insted of 32x32 canvans, for the Run and Death.
+    public static Vector2 LargeSpriteOffSet = new(0, -32); // Move the animation up more since its a 64x64 insted of 32x32 canvans, for the Run and Death.
 
     public CharacterState State { get; protected set; } = CharacterState.Moving; // We use the method SetState, to we can change the animations and other variables.
     public Vector2 Direction { get; protected set; }
