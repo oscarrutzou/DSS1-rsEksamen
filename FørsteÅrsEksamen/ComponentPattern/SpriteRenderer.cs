@@ -1,4 +1,5 @@
 ﻿using DoctorsDungeon.ComponentPattern.GUI;
+using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using DoctorsDungeon.GameManagement;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -86,10 +87,12 @@ public class SpriteRenderer : Component
     public SpriteRenderer(GameObject gameObject) : base(gameObject)
     {
     }
+    Player player;
 
     public override void Start()
     {
         animator = GameObject.GetComponent<Animator>();
+        player = GameObject.GetComponent<Player>();
     }
 
     // Maybe do something with the Y of the GameObject transform, and maybe each SpriteRendere have a list
@@ -118,7 +121,6 @@ public class SpriteRenderer : Component
             DrawSprite(spriteBatch);
         }
     }
-
     private void DrawSprite(SpriteBatch spriteBatch)
     {
         Origin = IsCentered ? new Vector2(Sprite.Width / 2, Sprite.Height / 2) : OriginOffSet;
@@ -127,8 +129,16 @@ public class SpriteRenderer : Component
 
         drawPos += OriginOffSet + DrawPosOffSet;
 
-        //Draws the sprite, and if there is a sourcerectangle set, then it uses that.
-        spriteBatch.Draw(Sprite, drawPos, SourceRectangle == Rectangle.Empty ? null : SourceRectangle, Color, GameObject.Transform.Rotation, Origin, GameObject.Transform.Scale, SpriteEffects, LayerDepth);
+        //Draws the sprite, and if there is a sourcerectangle set, then it uses that.SourceRectangle == Rectangle.Empty ? null : SourceRectangle
+        spriteBatch.Draw(Sprite,
+                         drawPos,
+                         null,
+                         Color,
+                         GameObject.Transform.Rotation,
+                         Origin,
+                         GameObject.Transform.Scale,
+                         SpriteEffects,
+                         LayerDepth);
     }
 
     private void DrawText(SpriteBatch spriteBatch)

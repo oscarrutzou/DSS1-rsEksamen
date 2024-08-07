@@ -16,7 +16,7 @@ public class Animator : Component
 
     private bool isLooping, hasPlayedAnim;
     public int CurrentIndex { get; private set; }
-    public int MaxFrames;
+    public int MaxFrames { get; set; }
     private double timeElapsed, frameDuration;
 
     public Animator(GameObject gameObject) : base(gameObject)
@@ -121,6 +121,11 @@ public class Animator : Component
             spriteRenderer.Sprite = CurrentAnimation.Sprites[0]; //Only one animation in the spritesheet
             MaxFrames = spriteRenderer.Sprite.Width / CurrentAnimation.FrameDimensions; // Only works with animation thats horizontal
         }
+        else
+        {
+            spriteRenderer.Sprite = CurrentAnimation.Sprites[CurrentIndex];
+            MaxFrames = CurrentAnimation.Sprites.Length;
+        }
     }
 
     public void StopCurrentAnimationAtLastSprite()
@@ -128,6 +133,9 @@ public class Animator : Component
         if (CurrentAnimation == null) throw new Exception("Set animation before you can call this method");
 
         isLooping = false; // Stop animation from looping
-        CurrentAnimation.OnAnimationDone += () => { CurrentIndex = MaxFrames - 1; }; ; // The action that gets called when the animation is done
+        CurrentAnimation.OnAnimationDone += () => 
+        { 
+            CurrentIndex = MaxFrames - 1; 
+        }; ; // The action that gets called when the animation is done
     }
 }

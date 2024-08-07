@@ -131,12 +131,12 @@ public static class GlobalAnimations
         LoadIndividualSprites(AnimNames.SkeletonWarriorDeath, "World\\Enemies\\Skeleton\\Skeleton - Warrior\\Death", 6, 6);
 
         //// Load animations for Skeleton Archer
-        LoadIndividualSprites(AnimNames.SkeletonArcherIdle, "World\\Enemies\\Skeleton\\Skeleton - Rogue\\Idle", 4, 4);
+        LoadIndividualSprites(AnimNames.SkeletonArcherIdle, "World\\Enemies\\Skeleton\\Skeleton - Rogue\\Idle", 5, 4);
         LoadIndividualSprites(AnimNames.SkeletonArcherRun, "World\\Enemies\\Skeleton\\Skeleton - Rogue\\Run", 10, 6);
         LoadIndividualSprites(AnimNames.SkeletonArcherDeath, "World\\Enemies\\Skeleton\\Skeleton - Rogue\\Death", 6, 6);
 
         //// Load animations for Skeleton Shaman
-        LoadIndividualSprites(AnimNames.SkeletonMageIdle, "World\\Enemies\\Skeleton\\Skeleton - Mage\\Idle", 4, 4);
+        LoadIndividualSprites(AnimNames.SkeletonMageIdle, "World\\Enemies\\Skeleton\\Skeleton - Mage\\Idle", 5, 4);
         LoadIndividualSprites(AnimNames.SkeletonMageRun, "World\\Enemies\\Skeleton\\Skeleton - Mage\\Run", 10, 6);
         LoadIndividualSprites(AnimNames.SkeletonMageDeath, "World\\Enemies\\Skeleton\\Skeleton - Mage\\Death", 6, 6);
 

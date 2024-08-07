@@ -6,7 +6,6 @@ using DoctorsDungeon.ComponentPattern.Particles.BirthModifiers;
 using DoctorsDungeon.ComponentPattern.Particles.Modifiers;
 using DoctorsDungeon.ComponentPattern.Particles.Origins;
 using DoctorsDungeon.ComponentPattern.PlayerClasses;
-using DoctorsDungeon.ComponentPattern.Weapons;
 using DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons;
 using DoctorsDungeon.ComponentPattern.WorldObjects;
 using DoctorsDungeon.Factory;
@@ -22,18 +21,10 @@ public class WeaponTestScene : Scene
     private GameObject playerGo;
     private Player player;
 
-    //private GameObject testRotateGo;
     public override void Initialize()
     {
         MakePlayer();
         //MakeEmitters();
-        //testRotateGo = new();
-        //testRotateGo.Transform.Position = new Vector2(-200, 200);
-        //testRotateGo.AddComponent<TestRotateComponent>();
-        //SpriteRenderer sr = testRotateGo.AddComponent<SpriteRenderer>();
-        //sr.SetSprite(TextureNames.WoodArrow);
-        //sr.SetLayerDepth(LayerDepth.Player);
-        //GameWorld.Instance.Instantiate(testRotateGo);
 
         SetCommands();
     }
@@ -114,6 +105,7 @@ public class WeaponTestScene : Scene
         //        Text = nmb.ToString()
         //    });
         //}));
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.W, new CustomCmd(() => { player.GameObject.GetComponent<Health>().TakeDamage(1000000); }));
 
 
         InputHandler.Instance.AddKeyButtonDownCommand(Keys.Escape, new CustomCmd(GameWorld.Instance.Exit));
