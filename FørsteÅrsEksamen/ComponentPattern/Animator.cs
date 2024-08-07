@@ -107,6 +107,7 @@ public class Animator : Component
             CurrentIndex = 0;
             CurrentAnimation.OnAnimationDone = null; //Resets its commands
             spriteRenderer.OriginOffSet = Vector2.Zero;
+            spriteRenderer.DrawPosOffSet = Vector2.Zero;
         }
 
         CurrentAnimation = animations[animationName];

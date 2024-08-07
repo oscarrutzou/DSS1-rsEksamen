@@ -61,6 +61,8 @@ public abstract class Player : Character, ISubject
     {
         //SpriteRenderer.Rotation += GameWorld.DeltaTime * 0.5f;
         //SpriteRenderer.OriginOffSet = Vector2.Zero;
+        //GameObject.Transform.Rotation += (float)GameWorld.DeltaTime;
+
 
         if (State != CharacterState.Dead)
         {

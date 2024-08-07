@@ -63,7 +63,7 @@ public class GameWorld : Game
 
         GenerateScenes(); // Makes a instance of all the scene we need
 
-        SpawnBG(); // The background that dont get deleted
+        //SpawnBG(); // The background that dont get deleted
 
         CurrentScene = Scenes[SceneNames.MainMenu];
         CurrentScene.Initialize(); // Starts the main menu
@@ -101,7 +101,7 @@ public class GameWorld : Game
             transformMatrix: WorldCam.GetMatrix());
 
         CurrentScene.DrawInWorld(_spriteBatch);
-        DrawBG(_spriteBatch);
+        //DrawBG(_spriteBatch);
 
         _spriteBatch.End();
 

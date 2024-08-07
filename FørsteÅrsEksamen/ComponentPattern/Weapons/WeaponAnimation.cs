@@ -13,6 +13,12 @@ public enum WeaponAnimTypes
     Heavy,
     // Maybe special or something
 }
+
+public enum WeaponAnimAttackTypes
+{
+    Slash,
+    Stab,
+}
 // A weapon will always have a light attack. It goes though the enum, enum.default = first in.
 // Need to save how many that attack has been picked, with how many times it should repeat
 // Could do it with a int that
@@ -29,13 +35,14 @@ public class WeaponAnimation
     public int Damage;
     public AnimationFunction AnimationMethod; // Delegate field
     public WeaponAnimTypes NextAnimation;
-
+    public WeaponAnimAttackTypes SelectedAttackType;
     public WeaponAnimation(float totalTime,
                            float amountOfRotation,
                            int damage,
                            AnimationFunction animationMethod,
                            WeaponAnimTypes nextAnimation,
-                           int repeats = 1)
+                           int repeats = 1,
+                           WeaponAnimAttackTypes selectedAttackType = WeaponAnimAttackTypes.Slash)
     {
         TotalTime = totalTime;
         AmountOfRotation = amountOfRotation;
@@ -43,6 +50,7 @@ public class WeaponAnimation
         AnimationMethod = animationMethod; // Assign the delegate
         NextAnimation = nextAnimation;
         Repeats = repeats;
+        SelectedAttackType = selectedAttackType;
     }
 
     public float CalculateAnimation(float x)

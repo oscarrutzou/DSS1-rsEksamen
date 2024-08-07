@@ -83,60 +83,62 @@ public static class GlobalAnimations
 
         //Sprite sheets
 
-        // Load animations for Knight
-        LoadSpriteSheet(AnimNames.KnightIdle, "World\\Classes\\Knight\\Idle-Sheet", 5, 32);
-        LoadSpriteSheet(AnimNames.KnightRun, "World\\Classes\\Knight\\Run-Sheet", 10, 64);
-        LoadSpriteSheet(AnimNames.KnightDeath, "World\\Classes\\Knight\\Death-Sheet", 6, 64);
 
         // Load animations for Archer
-        LoadSpriteSheet(AnimNames.ArcherIdle, "World\\Classes\\Rogue\\Idle-Sheet", 5, 32);
-        LoadSpriteSheet(AnimNames.ArcherRun, "World\\Classes\\Rogue\\Run-Sheet", 10, 64);
-        LoadSpriteSheet(AnimNames.ArcherDeath, "World\\Classes\\Rogue\\Death-Sheet", 6, 64);
+        LoadIndividualSprites(AnimNames.ArcherIdle, "World\\Classes\\Rogue\\Idle", 5, 4);
+        LoadIndividualSprites(AnimNames.ArcherRun, "World\\Classes\\Rogue\\Run", 10, 6);
+        LoadIndividualSprites(AnimNames.ArcherDeath, "World\\Classes\\Rogue\\Death", 6, 6);
+
+        // Load animations for Knight
+        LoadIndividualSprites(AnimNames.KnightIdle, "World\\Classes\\Knight\\Idle", 5, 4);
+        LoadIndividualSprites(AnimNames.KnightRun, "World\\Classes\\Knight\\Run", 10, 6);
+        LoadIndividualSprites(AnimNames.KnightDeath, "World\\Classes\\Knight\\Death", 6, 6);
 
         // Load animations for Mage
-        LoadSpriteSheet(AnimNames.MageIdle, "World\\Classes\\Wizard\\Idle-Sheet", 5, 32);
-        LoadSpriteSheet(AnimNames.MageRun, "World\\Classes\\Wizard\\Run-Sheet", 10, 64);
-        LoadSpriteSheet(AnimNames.MageDeath, "World\\Classes\\Wizard\\Death-Sheet", 6, 64);
+        LoadIndividualSprites(AnimNames.MageIdle, "World\\Classes\\Wizard\\Idle", 5, 4);
+        LoadIndividualSprites(AnimNames.MageRun, "World\\Classes\\Wizard\\Run", 10, 6);
+        LoadIndividualSprites(AnimNames.MageDeath, "World\\Classes\\Wizard\\Death", 6, 6);
+
 
         // Load animations for Orc Base
-        LoadSpriteSheet(AnimNames.OrcBaseIdle, "World\\Enemies\\Orc\\Orc - Base\\Idle-Sheet", 4, 32);
-        LoadSpriteSheet(AnimNames.OrcBaseRun, "World\\Enemies\\Orc\\Orc - Base\\Run-Sheet", 10, 64);
-        LoadSpriteSheet(AnimNames.OrcBaseDeath, "World\\Enemies\\Orc\\Orc - Base\\Death-Sheet", 6, 64);
+        LoadIndividualSprites(AnimNames.OrcBaseIdle, "World\\Enemies\\Orc\\Orc - Base\\Idle", 5, 4);
+        LoadIndividualSprites(AnimNames.OrcBaseRun, "World\\Enemies\\Orc\\Orc - Base\\Run", 10, 6);
+        LoadIndividualSprites(AnimNames.OrcBaseDeath, "World\\Enemies\\Orc\\Orc - Base\\Death", 6, 6);
 
         // Load animations for Orc Warrior
-        LoadSpriteSheet(AnimNames.OrcWarriorIdle, "World\\Enemies\\Orc\\Orc - Warrior\\Idle-Sheet", 4, 32);
-        LoadSpriteSheet(AnimNames.OrcWarriorRun, "World\\Enemies\\Orc\\Orc - Warrior\\Run-Sheet", 10, 64);
-        LoadSpriteSheet(AnimNames.OrcWarriorDeath, "World\\Enemies\\Orc\\Orc - Warrior\\Death-Sheet", 6, 64);
+        LoadIndividualSprites(AnimNames.OrcWarriorIdle, "World\\Enemies\\Orc\\Orc - Warrior\\Idle", 5, 4);
+        LoadIndividualSprites(AnimNames.OrcWarriorRun, "World\\Enemies\\Orc\\Orc - Warrior\\Run", 10, 6);
+        LoadIndividualSprites(AnimNames.OrcWarriorDeath, "World\\Enemies\\Orc\\Orc - Warrior\\Death", 6, 6);
 
         // Load animations for Orc Archer
-        LoadSpriteSheet(AnimNames.OrcArcherIdle, "World\\Enemies\\Orc\\Orc - Rogue\\Idle-Sheet", 4, 32);
-        LoadSpriteSheet(AnimNames.OrcArcherRun, "World\\Enemies\\Orc\\Orc - Rogue\\Run-Sheet", 10, 64);
-        LoadSpriteSheet(AnimNames.OrcArcherDeath, "World\\Enemies\\Orc\\Orc - Rogue\\Death-Sheet", 6, 64);
+        LoadIndividualSprites(AnimNames.OrcArcherIdle, "World\\Enemies\\Orc\\Orc - Rogue\\Idle", 5, 4);
+        LoadIndividualSprites(AnimNames.OrcArcherRun, "World\\Enemies\\Orc\\Orc - Rogue\\Run", 10, 6);
+        LoadIndividualSprites(AnimNames.OrcArcherDeath, "World\\Enemies\\Orc\\Orc - Rogue\\Death", 6, 6);
 
         // Load animations for Orc Shaman
-        LoadSpriteSheet(AnimNames.OrcShamanIdle, "World\\Enemies\\Orc\\Orc - Shaman\\Idle-Sheet", 4, 32);
-        LoadSpriteSheet(AnimNames.OrcShamanRun, "World\\Enemies\\Orc\\Orc - Shaman\\Run-Sheet", 10, 64);
-        LoadSpriteSheet(AnimNames.OrcShamanDeath, "World\\Enemies\\Orc\\Orc - Shaman\\Death-Sheet", 6, 64);
+        LoadIndividualSprites(AnimNames.OrcShamanIdle, "World\\Enemies\\Orc\\Orc - Shaman\\Idle", 5, 4);
+        LoadIndividualSprites(AnimNames.OrcShamanRun, "World\\Enemies\\Orc\\Orc - Shaman\\Run", 10, 6);
+        LoadIndividualSprites(AnimNames.OrcShamanDeath, "World\\Enemies\\Orc\\Orc - Shaman\\Death", 6, 6);
 
         //// Load animations for Skeleton Base
-        LoadSpriteSheet(AnimNames.SkeletonBaseIdle, "World\\Enemies\\Skeleton\\Skeleton - Base\\Idle-Sheet", 4, 32);
-        LoadSpriteSheet(AnimNames.SkeletonBaseRun, "World\\Enemies\\Skeleton\\Skeleton - Base\\Run-Sheet", 10, 64);
-        LoadSpriteSheet(AnimNames.SkeletonBaseDeath, "World\\Enemies\\Skeleton\\Skeleton - Base\\Death-Sheet", 6, 64);
+        LoadIndividualSprites(AnimNames.SkeletonBaseIdle, "World\\Enemies\\Skeleton\\Skeleton - Base\\Idle", 5, 4);
+        LoadIndividualSprites(AnimNames.SkeletonBaseRun, "World\\Enemies\\Skeleton\\Skeleton - Base\\Run", 10, 6);
+        LoadIndividualSprites(AnimNames.SkeletonBaseDeath, "World\\Enemies\\Skeleton\\Skeleton - Base\\Death", 6, 8);
 
         //// Load animations for Skeleton Warrior
-        LoadSpriteSheet(AnimNames.SkeletonWarriorIdle, "World\\Enemies\\Skeleton\\Skeleton - Warrior\\Idle-Sheet", 4, 32);
-        LoadSpriteSheet(AnimNames.SkeletonWarriorRun, "World\\Enemies\\Skeleton\\Skeleton - Warrior\\Run-Sheet", 10, 64);
-        LoadSpriteSheet(AnimNames.SkeletonWarriorDeath, "World\\Enemies\\Skeleton\\Skeleton - Warrior\\Death-Sheet", 6, 64);
+        LoadIndividualSprites(AnimNames.SkeletonWarriorIdle, "World\\Enemies\\Skeleton\\Skeleton - Warrior\\Idle", 5, 4);
+        LoadIndividualSprites(AnimNames.SkeletonWarriorRun, "World\\Enemies\\Skeleton\\Skeleton - Warrior\\Run", 10, 6);
+        LoadIndividualSprites(AnimNames.SkeletonWarriorDeath, "World\\Enemies\\Skeleton\\Skeleton - Warrior\\Death", 6, 6);
 
         //// Load animations for Skeleton Archer
-        LoadSpriteSheet(AnimNames.SkeletonArcherIdle, "World\\Enemies\\Skeleton\\Skeleton - Rogue\\Idle-Sheet", 4, 32);
-        LoadSpriteSheet(AnimNames.SkeletonArcherRun, "World\\Enemies\\Skeleton\\Skeleton - Rogue\\Run-Sheet", 10, 64);
-        LoadSpriteSheet(AnimNames.SkeletonArcherDeath, "World\\Enemies\\Skeleton\\Skeleton - Rogue\\Death-Sheet", 6, 64);
+        LoadIndividualSprites(AnimNames.SkeletonArcherIdle, "World\\Enemies\\Skeleton\\Skeleton - Rogue\\Idle", 4, 4);
+        LoadIndividualSprites(AnimNames.SkeletonArcherRun, "World\\Enemies\\Skeleton\\Skeleton - Rogue\\Run", 10, 6);
+        LoadIndividualSprites(AnimNames.SkeletonArcherDeath, "World\\Enemies\\Skeleton\\Skeleton - Rogue\\Death", 6, 6);
 
         //// Load animations for Skeleton Shaman
-        LoadSpriteSheet(AnimNames.SkeletonMageIdle, "World\\Enemies\\Skeleton\\Skeleton - Mage\\Idle-Sheet", 4, 32);
-        LoadSpriteSheet(AnimNames.SkeletonMageRun, "World\\Enemies\\Skeleton\\Skeleton - Mage\\Run-Sheet", 10, 64);
-        LoadSpriteSheet(AnimNames.SkeletonMageDeath, "World\\Enemies\\Skeleton\\Skeleton - Mage\\Death-Sheet", 6, 64);
+        LoadIndividualSprites(AnimNames.SkeletonMageIdle, "World\\Enemies\\Skeleton\\Skeleton - Mage\\Idle", 4, 4);
+        LoadIndividualSprites(AnimNames.SkeletonMageRun, "World\\Enemies\\Skeleton\\Skeleton - Mage\\Run", 10, 6);
+        LoadIndividualSprites(AnimNames.SkeletonMageDeath, "World\\Enemies\\Skeleton\\Skeleton - Mage\\Death", 6, 6);
 
         #region How to Upload Individual Frame Animation
 
@@ -216,5 +218,26 @@ public static class GlobalAnimations
         {
             throw new System.Exception($"Cant find path in directory {absolutePath}");
         }
+    }
+
+    /// <summary>
+    /// It should be called something tile tile000, tile001
+    /// </summary>
+    /// <param name="animationName"></param>
+    /// <param name="path"></param>
+    /// <param name="fps"></param>
+    /// <param name="framesInAnim"></param>
+    private static void LoadIndividualSprites(AnimNames animationName, string path, int fps, int framesInAnim)
+    {
+        Texture2D[] sprites = new Texture2D[framesInAnim];
+        // Here we load our sprites into our arrays
+        for (int i = 0; i < framesInAnim; i++)
+        {
+            // World\\Enemies\\Skeleton\\Skeleton - Mage\\Run\\tile001
+            string formattedNumber = i.ToString("D3");
+            sprites[i] = GameWorld.Instance.Content.Load<Texture2D>(path + "\\tile" + formattedNumber);
+        }
+        // We add it to the Animation, for other scripts to use.
+        Animations.Add(animationName, new Animation(animationName, sprites, fps));
     }
 }

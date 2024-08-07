@@ -125,11 +125,6 @@ public class SpriteRenderer : Component
 
         drawPos = GameObject.Transform.Position;
 
-        if (animator != null && animator.CurrentAnimation != null && animator.CurrentAnimation.UseSpriteSheet)
-        {
-            drawPos += new Vector2(animator.MaxFrames * animator.CurrentAnimation.FrameDimensions * GameObject.Transform.Scale.X / 2 - animator.CurrentAnimation.FrameDimensions * 2, 0);
-        }
-
         drawPos += OriginOffSet + DrawPosOffSet;
 
         //Draws the sprite, and if there is a sourcerectangle set, then it uses that.
@@ -154,6 +149,7 @@ public class SpriteRenderer : Component
     {
         UsingAnimation = false;
         OriginOffSet = Vector2.Zero;
+        DrawPosOffSet = Vector2.Zero;
         Sprite = GlobalTextures.Textures[spriteName];
     }
 }

@@ -111,25 +111,25 @@ public abstract class Character : Component
             case CharacterState.Idle:
                 Animator.PlayAnimation(CharacterStateAnimations[State]);
 
-                SpriteRenderer.OriginOffSet = SmallSpriteOffset;
+                SpriteRenderer.DrawPosOffSet = SmallSpriteOffset;
                 break;
 
             case CharacterState.Moving:
                 Animator.PlayAnimation(CharacterStateAnimations[State]);
 
-                SpriteRenderer.OriginOffSet = LargeSpriteOffSet;
+                SpriteRenderer.DrawPosOffSet = LargeSpriteOffSet;
                 break;
 
             case CharacterState.Attacking:
                 Animator.PlayAnimation(CharacterStateAnimations[CharacterState.Idle]); // Just uses the Idle since we have no attacking animation
 
-                SpriteRenderer.OriginOffSet = SmallSpriteOffset;
+                SpriteRenderer.DrawPosOffSet = SmallSpriteOffset;
                 break;
 
             case CharacterState.Dead:
                 Animator.PlayAnimation(CharacterStateAnimations[State]);
 
-                SpriteRenderer.OriginOffSet = LargeSpriteOffSet;
+                SpriteRenderer.DrawPosOffSet = LargeSpriteOffSet;
                 Animator.StopCurrentAnimationAtLastSprite();
                 break;
         }

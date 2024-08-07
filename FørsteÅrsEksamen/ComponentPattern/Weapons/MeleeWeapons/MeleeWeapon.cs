@@ -15,7 +15,7 @@ public abstract class MeleeWeapon : Weapon
     protected bool IsRotatingBack;
     protected List<CollisionRectangle> WeaponColliders = new();
 
-    private List<GameObject> hitGameObjects { get; set; } = new();
+    private List<GameObject> hitGameObjects { get; set; } = new(); 
 
     private float rotateBackStartRotation;
     private double resetHitObjectsTimer, timeBeforeCanHitAfterRotatingBack = 0.3;
@@ -53,7 +53,19 @@ public abstract class MeleeWeapon : Weapon
     private void AttackAnimation()
     {
         // This should be changed to another animation method if its a stab attack
+        if (Animations[CurrentAnim].SelectedAttackType == WeaponAnimAttackTypes.Slash)
+        {
+            AttackAnimSlash();
+        }
+        else if (Animations[CurrentAnim].SelectedAttackType == WeaponAnimAttackTypes.Stab)
+        {
+            AttackAnimStab();
+        }
+    }
 
+
+    private void AttackAnimSlash()
+    {
         // First rotate current angle to start angle of the anim, before attacking
         if (!IsRotatingBack && TotalElapsedTime >= TimeBeforeNewDirection)
         {
@@ -99,11 +111,19 @@ public abstract class MeleeWeapon : Weapon
         if (Math.Abs(GameObject.Transform.Rotation - StartAnimationAngle) < 0.1f && IsRotatingBack)
         {
             IsRotatingBack = false;
-            Attacking = false; 
+            Attacking = false;
             FinnishedAttack = true;
         }
     }
-    
+
+
+    private void AttackAnimStab()
+    {
+        /*
+         * How should the stab work.
+         */
+    }
+
     public void CheckCollisionAndDmg()
     {
         GameObjectTypes type;

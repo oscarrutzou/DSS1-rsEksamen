@@ -22,11 +22,18 @@ public class WeaponTestScene : Scene
     private GameObject playerGo;
     private Player player;
 
-    
+    //private GameObject testRotateGo;
     public override void Initialize()
     {
         MakePlayer();
-        MakeEmitters();
+        //MakeEmitters();
+        //testRotateGo = new();
+        //testRotateGo.Transform.Position = new Vector2(-200, 200);
+        //testRotateGo.AddComponent<TestRotateComponent>();
+        //SpriteRenderer sr = testRotateGo.AddComponent<SpriteRenderer>();
+        //sr.SetSprite(TextureNames.WoodArrow);
+        //sr.SetLayerDepth(LayerDepth.Player);
+        //GameWorld.Instance.Instantiate(testRotateGo);
 
         SetCommands();
     }
@@ -98,7 +105,7 @@ public class WeaponTestScene : Scene
         //InputHandler.Instance.AddKeyButtonDownCommand(Keys.V, new CustomCmd(emitter.StartEmitter));
         //InputHandler.Instance.AddKeyButtonDownCommand(Keys.B, new CustomCmd(emitter.StopEmitter));
 
-        InputHandler.Instance.AddKeyButtonDownCommand(Keys.E, new CustomCmd(() => { player.GameObject.GetComponent<Health>().TakeDamage(rnd.Next(10, 50)); }));
+        //InputHandler.Instance.AddKeyButtonDownCommand(Keys.E, new CustomCmd(() => { player.GameObject.GetComponent<Health>().TakeDamage(rnd.Next(10, 50)); }));
         //InputHandler.Instance.AddKeyButtonDownCommand(Keys.N, new CustomCmd(() =>
         //{
         //    nmb++;
@@ -110,6 +117,11 @@ public class WeaponTestScene : Scene
 
 
         InputHandler.Instance.AddKeyButtonDownCommand(Keys.Escape, new CustomCmd(GameWorld.Instance.Exit));
+    }
+
+    public override void DrawInWorld(SpriteBatch spriteBatch)
+    {
+        base.DrawInWorld(spriteBatch);
     }
 
     public override void DrawOnScreen(SpriteBatch spriteBatch)
@@ -125,10 +137,10 @@ public class WeaponTestScene : Scene
         //pos += offset;
         //DrawString(spriteBatch, $"Next anim: {weapon.NextAnim} | Rot: {weapon.Animations[weapon.NextAnim].AmountOfRotation}", pos);
 
-        pos += offset;
-        DrawString(spriteBatch, $"Active count: {player.DamageTakenEmitter.ParticlePool.Active.Count}", pos);
-        pos += offset;
-        DrawString(spriteBatch, $"In Active count: {player.DamageTakenEmitter.ParticlePool.InActive.Count}", pos);
+        //pos += offset;
+        //DrawString(spriteBatch, $"Active count: {player.DamageTakenEmitter.ParticlePool.Active.Count}", pos);
+        //pos += offset;
+        //DrawString(spriteBatch, $"In Active count: {player.DamageTakenEmitter.ParticlePool.InActive.Count}", pos);
     }
 
     protected void DrawString(SpriteBatch spriteBatch, string text, Vector2 position)
