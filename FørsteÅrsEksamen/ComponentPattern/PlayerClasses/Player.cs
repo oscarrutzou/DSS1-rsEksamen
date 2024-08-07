@@ -93,9 +93,12 @@ public abstract class Player : Character, ISubject
 
     private void CheckForMovement()
     {
+        //SpriteRenderer.Rotation += (float)GameWorld.DeltaTime;
+
         if (totalMovementInput != Vector2.Zero)
         {
             SetState(CharacterState.Moving);
+
         }
         else
         {

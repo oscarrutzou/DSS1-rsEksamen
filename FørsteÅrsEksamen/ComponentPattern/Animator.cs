@@ -111,7 +111,13 @@ public class Animator : Component
         }
 
         CurrentAnimation = animations[animationName];
+        
+        // Reset spriterenderer
         spriteRenderer.UsingAnimation = true; // This gets set to false if you have played a Animation, then want to use a normal sprite again
+        spriteRenderer.IsCentered = true;
+        spriteRenderer.ShouldDrawSprite = true;
+        spriteRenderer.Rotation = -1;
+
         frameDuration = 1f / CurrentAnimation.FPS; //Sets how long each frame should be
         isLooping = true; // Resets loop
 

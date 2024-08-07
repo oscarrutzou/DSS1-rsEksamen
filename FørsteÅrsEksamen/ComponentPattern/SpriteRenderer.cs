@@ -70,7 +70,22 @@ public class SpriteRenderer : Component
     /// <summary>
     /// A rotation for the sprite only, not the GameObject itself
     /// </summary>
-    public float Rotation;
+    public float Rotation
+    {
+        get
+        {
+            if (_rotation == -1)
+            {
+                return GameObject.Transform.Rotation;
+            }
+            return _rotation;
+        }
+        set
+        {
+            _rotation = value;
+        }
+    }
+    private float _rotation = -1;
     public LayerDepth LayerName { get; private set; } = ComponentPattern.LayerDepth.Default;
     public SpriteEffects SpriteEffects { get; set; } = SpriteEffects.None;
     private float LayerDepth;
@@ -109,6 +124,16 @@ public class SpriteRenderer : Component
         LayerDepth = ((float)LayerName / (Enum.GetNames(typeof(LayerDepth)).Length)) + offSet;
     }
 
+    /// <summary>
+    /// Also sets IsCentered to false, so the offset can be used
+    /// </summary>
+    /// <param name="offset"></param>
+    public void SetOriginOffset(Vector2 offset)
+    {
+        IsCentered = false;
+        OriginOffSet = offset;
+    }
+
     public override void Draw(SpriteBatch spriteBatch)
     {
         if (TextOnSprite != null)
@@ -127,14 +152,14 @@ public class SpriteRenderer : Component
 
         drawPos = GameObject.Transform.Position;
 
-        drawPos += OriginOffSet + DrawPosOffSet;
+        //drawPos += OriginOffSet + DrawPosOffSet;
 
         //Draws the sprite, and if there is a sourcerectangle set, then it uses that.SourceRectangle == Rectangle.Empty ? null : SourceRectangle
         spriteBatch.Draw(Sprite,
                          drawPos,
                          null,
                          Color,
-                         GameObject.Transform.Rotation,
+                         Rotation,
                          Origin,
                          GameObject.Transform.Scale,
                          SpriteEffects,
@@ -148,7 +173,7 @@ public class SpriteRenderer : Component
                     TextOnSprite.Text, 
                     GameObject.Transform.Position, 
                     TextOnSprite.TextColor,
-                    GameObject.Transform.Rotation,
+                    Rotation,
                     Vector2.Zero,
                     TextOnSprite.TextScale,
                     SpriteEffects.None,
@@ -157,9 +182,12 @@ public class SpriteRenderer : Component
 
     public void SetSprite(TextureNames spriteName)
     {
+        IsCentered = true;
+        ShouldDrawSprite = true;
         UsingAnimation = false;
         OriginOffSet = Vector2.Zero;
         DrawPosOffSet = Vector2.Zero;
         Sprite = GlobalTextures.Textures[spriteName];
+        Rotation = -1;
     }
 }
