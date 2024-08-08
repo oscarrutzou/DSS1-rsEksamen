@@ -24,7 +24,7 @@ public class WeaponTestScene : Scene
     public override void Initialize()
     {
         MakePlayer();
-        //MakeEmitters();
+        MakeEmitters();
 
         SetCommands();
     }
@@ -44,7 +44,7 @@ public class WeaponTestScene : Scene
 
     private void MakeEmitters()
     {
-        //FairyEmitter();
+        FairyEmitter();
 
         //DustEmitter();
     }
@@ -93,8 +93,8 @@ public class WeaponTestScene : Scene
     private void SetCommands()
     {
         //InputHandler.Instance.AddMouseButtonDownCommand(MouseCmdState.Right, new CustomCmd(player.Attack));
-        //InputHandler.Instance.AddKeyButtonDownCommand(Keys.V, new CustomCmd(emitter.StartEmitter));
-        //InputHandler.Instance.AddKeyButtonDownCommand(Keys.B, new CustomCmd(emitter.StopEmitter));
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.V, new CustomCmd(emitter.StartEmitter));
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.B, new CustomCmd(emitter.StopEmitter));
 
         //InputHandler.Instance.AddKeyButtonDownCommand(Keys.E, new CustomCmd(() => { player.GameObject.GetComponent<Health>().TakeDamage(rnd.Next(10, 50)); }));
         //InputHandler.Instance.AddKeyButtonDownCommand(Keys.N, new CustomCmd(() =>

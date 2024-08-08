@@ -102,12 +102,10 @@ public class SpriteRenderer : Component
     public SpriteRenderer(GameObject gameObject) : base(gameObject)
     {
     }
-    Player player;
 
     public override void Start()
     {
         animator = GameObject.GetComponent<Animator>();
-        player = GameObject.GetComponent<Player>();
     }
 
     // Maybe do something with the Y of the GameObject transform, and maybe each SpriteRendere have a list
@@ -148,24 +146,14 @@ public class SpriteRenderer : Component
     }
     private void DrawSprite(SpriteBatch spriteBatch)
     {
-        if (player != null && player.State == CharacterState.Moving)
-        {
-            int i = 0;
-        }
         Origin = IsCentered ? new Vector2(Sprite.Width / 2, Sprite.Height / 2) : OriginOffSet;
 
         drawPos = GameObject.Transform.Position;
 
-        if (GameObject.Type == GameObjectTypes.Weapon)
-        {
-            drawPos += OriginOffSet + DrawPosOffSet;
-        }
-        else
-        {
+        if (GameObject.Type != GameObjectTypes.Weapon)
             drawPos += DrawPosOffSet;
-        }
 
-        //Draws the sprite, and if there is a sourcerectangle set, then it uses that.SourceRectangle == Rectangle.Empty ? null : SourceRectangle
+        //Draws the sprite
         spriteBatch.Draw(Sprite,
                          drawPos,
                          null,

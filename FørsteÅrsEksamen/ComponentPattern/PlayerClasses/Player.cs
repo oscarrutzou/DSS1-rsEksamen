@@ -26,7 +26,7 @@ public abstract class Player : Character, ISubject
 
     private Collider movementCollider;
 
-    public WeaponTypes WeaponType;
+    public WeaponTypes WeaponType; 
     public ClassTypes ClassType;
 
     private double onDeadTimer;

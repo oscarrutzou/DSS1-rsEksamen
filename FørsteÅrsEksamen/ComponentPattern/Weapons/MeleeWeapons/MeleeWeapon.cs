@@ -223,8 +223,7 @@ public abstract class MeleeWeapon : Weapon
     /// <param name="amountOfColliders"></param>
     protected void SetStartColliders(Vector2 origin, int width, int height, int heightFromOriginToHandle, int amountOfColliders)
     {
-        SpriteRenderer.OriginOffSet = origin;
-        SpriteRenderer.DrawPosOffSet = -origin;
+        SpriteRenderer.SetOriginOffset(origin);
         AddWeaponColliders(width, height, heightFromOriginToHandle, amountOfColliders);
     }
 

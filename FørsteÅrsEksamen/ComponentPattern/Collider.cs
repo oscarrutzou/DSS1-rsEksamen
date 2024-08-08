@@ -38,11 +38,6 @@ public class Collider : Component
             width *= (int)GameObject.Transform.Scale.X;
             height *= (int)GameObject.Transform.Scale.Y;
 
-            if (!spriteRenderer.IsCentered)
-            {
-                pos += new Vector2(width / 2, height / 2);
-            }
-
             return new Rectangle
                 (
                     (int)((pos.X - offset.X) - (width) / 2),
