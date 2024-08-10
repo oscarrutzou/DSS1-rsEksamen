@@ -69,11 +69,12 @@ public class GameWorld : Game
 
         GenerateScenes(); // Makes a instance of all the scene we need
 
-        SpawnBG(); // The background that dont get deleted
 
-        CurrentScene = Scenes[SceneNames.MainMenu];
+        CurrentScene = Scenes[SceneNames.WeaponTestScene];
         CurrentScene.Initialize(); // Starts the main menu
 
+        SpawnBG(); // The background that dont get deleted
+        
         base.Initialize();
     }
 
@@ -273,7 +274,7 @@ public class GameWorld : Game
 
         //menuBackground.Awake();
         //menuBackground.Start();
-
+        if (!ShowBG) return;
         GameObject go = EmitterFactory.CreateParticleEmitter("Dust Cloud", new Vector2(0, 0), new Interval(250, 550), new Interval(-MathHelper.Pi, 0), 300, new Interval(1500, 2000), 1000, -1, new Interval(-MathHelper.Pi, 0));
 
         menuBackGroundEmitterFairy = go.GetComponent<ParticleEmitter>();
@@ -286,7 +287,7 @@ public class GameWorld : Game
         menuBackGroundEmitterFairy.AddModifier(new GravityModifier());
         menuBackGroundEmitterFairy.AddModifier(new ScaleModifier(4, 1));
 
-        menuBackGroundEmitterFairy.Origin = new FairyDustAnimatedOrigin(new Rectangle((int)GameWorld.Instance.WorldCam.TopLeft.X, (int)GameWorld.Instance.WorldCam.TopLeft.Y, 1920, 1080), 200, 0.5);
+        menuBackGroundEmitterFairy.Origin = new FairyDustAnimatedOrigin(new Rectangle((int)WorldCam.TopLeft.X, (int)WorldCam.TopLeft.Y, 1920, 1080), 200, 0.5);
 
         menuBackGroundEmitterFairy.CustomDrawingBehavior = true;
 
@@ -300,8 +301,16 @@ public class GameWorld : Game
     {
         if (!ShowBG)
         {
-            menuBackGroundEmitterFairy.StopEmitter();
+            if (menuBackGroundEmitterFairy != null)
+            {
+                menuBackGroundEmitterFairy.StopEmitter();
+            }
             return;
+        }
+
+        if (menuBackGroundEmitterFairy == null)
+        {
+            SpawnBG();
         }
 
         menuBackGroundEmitterFairy.Update();

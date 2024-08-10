@@ -47,8 +47,13 @@ namespace DoctorsDungeon.ComponentPattern.Particles.Origins
                 _moveDuration = (_positions[2] - _positions[1]).Length() / _speed / 1000.0f;
                 _lastMove = e.TotalSeconds;
             }
-            Vector2 pos = Vector2.CatmullRom(_positions[0], _positions[1], _positions[2], _positions[3], (float)((e.TotalSeconds - _lastMove) / _moveDuration));
-            
+
+            float amount = _moveDuration != 0.0f
+                ? (float)((e.TotalSeconds - _lastMove) / _moveDuration)
+                : 0.0f;
+
+            Vector2 pos = Vector2.CatmullRom(_positions[0], _positions[1], _positions[2], _positions[3], amount);
+
             if (float.IsNaN(pos.X) || float.IsNaN(pos.Y)) // If the pos is Nan/Nan
             {
                 pos = Vector2.Zero;

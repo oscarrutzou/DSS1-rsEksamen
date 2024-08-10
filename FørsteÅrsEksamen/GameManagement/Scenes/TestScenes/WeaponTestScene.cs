@@ -23,6 +23,8 @@ public class WeaponTestScene : Scene
 
     public override void Initialize()
     {
+        GameWorld.Instance.ShowBG = false;
+
         MakePlayer();
         MakeEmitters();
 
