@@ -50,6 +50,8 @@ namespace DoctorsDungeon.ComponentPattern.Particles
 
         public ParticlePool ParticlePool { get; set; } = new();
 
+        public bool SpawnInScene = true;
+
         public Emitter(GameObject gameObject) : base(gameObject)
         {
         }

@@ -1,5 +1,10 @@
 ﻿using DoctorsDungeon.CommandPattern;
 using DoctorsDungeon.ComponentPattern;
+using DoctorsDungeon.ComponentPattern.Particles;
+using DoctorsDungeon.ComponentPattern.Particles.BirthModifiers;
+using DoctorsDungeon.ComponentPattern.Particles.Modifiers;
+using DoctorsDungeon.ComponentPattern.Particles.Origins;
+using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using DoctorsDungeon.GameManagement;
 using DoctorsDungeon.GameManagement.Scenes;
 using DoctorsDungeon.GameManagement.Scenes.Menus;
@@ -7,6 +12,7 @@ using DoctorsDungeon.GameManagement.Scenes.Rooms;
 using DoctorsDungeon.GameManagement.Scenes.TestScenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SharpDX.X3DAudio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,9 +39,9 @@ public class GameWorld : Game
 
     public SceneNames? NextScene { get; private set; } = null;
     public bool ShowBG { get; set; } = true; // If we should show our background
-
+    
     private SpriteBatch _spriteBatch;
-    private GameObject menuBackground;
+    //private GameObject menuBackground;
 
     public GameWorld()
     {
@@ -63,9 +69,9 @@ public class GameWorld : Game
 
         GenerateScenes(); // Makes a instance of all the scene we need
 
-        //SpawnBG(); // The background that dont get deleted
+        SpawnBG(); // The background that dont get deleted
 
-        CurrentScene = Scenes[SceneNames.WeaponTestScene];
+        CurrentScene = Scenes[SceneNames.MainMenu];
         CurrentScene.Initialize(); // Starts the main menu
 
         base.Initialize();
@@ -101,7 +107,7 @@ public class GameWorld : Game
             transformMatrix: WorldCam.GetMatrix());
 
         CurrentScene.DrawInWorld(_spriteBatch);
-        //DrawBG(_spriteBatch);
+        DrawBG(_spriteBatch);
 
         _spriteBatch.End();
 
@@ -190,8 +196,18 @@ public class GameWorld : Game
         //    throw new Exception("Dont try and use this method to change between Dungoun Rooms. " +
         //        "Summon the Wizard Oscar:)");
 
+
+
         NextScene = sceneName;
+
+        string name = sceneName.ToString();
+
+        if (name.Length >= 4 && name.Substring(name.Length - 4) == test)
+        {
+            menuBackGroundEmitterFairy.StartEmitter();
+        }
     }
+    private string test = "Menu";
 
     // Chosen to make it work with a base room type in the enum,
     // so we can easily change what kind of difficulty a room is and load in how far a player has come in a run.
@@ -246,22 +262,58 @@ public class GameWorld : Game
     }
 
     // We dont need a factory to do this, since its only this place we are going to use this background.
+    private ParticleEmitter menuBackGroundEmitterFairy;
     private void SpawnBG()
     {
-        menuBackground = new();
-        menuBackground.Type = GameObjectTypes.Background;
-        SpriteRenderer sr = menuBackground.AddComponent<SpriteRenderer>();
-        sr.SetLayerDepth(LayerDepth.WorldBackground);
-        sr.SetSprite(TextureNames.SpaceBG1);
+        //menuBackground = new();
+        //menuBackground.Type = GameObjectTypes.Background;
+        //SpriteRenderer sr = menuBackground.AddComponent<SpriteRenderer>();
+        //sr.SetLayerDepth(LayerDepth.WorldBackground);
+        //sr.SetSprite(TextureNames.SpaceBG1);
 
-        menuBackground.Awake();
-        menuBackground.Start();
+        //menuBackground.Awake();
+        //menuBackground.Start();
+
+        GameObject go = EmitterFactory.CreateParticleEmitter("Dust Cloud", new Vector2(0, 0), new Interval(250, 550), new Interval(-MathHelper.Pi, 0), 300, new Interval(1500, 2000), 1000, -1, new Interval(-MathHelper.Pi, 0));
+
+        menuBackGroundEmitterFairy = go.GetComponent<ParticleEmitter>();
+        menuBackGroundEmitterFairy.LayerName = LayerDepth.EnemyUnder;
+        menuBackGroundEmitterFairy.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel4x4));
+        menuBackGroundEmitterFairy.AddModifier(new ColorRangeModifier(new Color[] { Color.DarkViolet, Color.WhiteSmoke, Color.Transparent }));
+
+        menuBackGroundEmitterFairy.AddBirthModifier(new OutwardBirthModifier());
+        menuBackGroundEmitterFairy.LinearDamping = 1.0f;
+        menuBackGroundEmitterFairy.AddModifier(new GravityModifier());
+        menuBackGroundEmitterFairy.AddModifier(new ScaleModifier(4, 1));
+
+        menuBackGroundEmitterFairy.Origin = new FairyDustAnimatedOrigin(new Rectangle((int)GameWorld.Instance.WorldCam.TopLeft.X, (int)GameWorld.Instance.WorldCam.TopLeft.Y, 1920, 1080), 200, 0.5);
+
+        menuBackGroundEmitterFairy.SpawnInScene = false;
+
+        go.Awake();
+        go.Start();
+
+        menuBackGroundEmitterFairy.StartEmitter();
     }
 
     private void DrawBG(SpriteBatch spriteBatch)
     {
-        if (!ShowBG) return;
-        menuBackground.Draw(spriteBatch);
+        if (!ShowBG)
+        {
+            menuBackGroundEmitterFairy.StopEmitter();
+            return;
+        }
+
+        menuBackGroundEmitterFairy.Update();
+        menuBackGroundEmitterFairy.Draw(spriteBatch);
+
+        // Should draw each in the pool.
+        foreach (GameObject go in menuBackGroundEmitterFairy.ParticlePool.Active)
+        {
+            //go.Update();
+            go.Draw(spriteBatch);
+        }
+        //menuBackground.Draw(spriteBatch);
     }
 
     #endregion Scene

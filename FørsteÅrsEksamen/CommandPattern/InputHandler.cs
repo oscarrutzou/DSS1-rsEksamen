@@ -33,7 +33,8 @@ public class InputHandler
     private Dictionary<MouseCmdState, List<ICommand>> mouseButtonDownCommands = new();
     private Dictionary<ScrollWheelState, List<ICommand>> scrollWheelCommands = new();
 
-    public Vector2 MouseInWorld, MouseOnUI;
+    public Vector2 MouseInWorld { get; private set; }
+    public Vector2 MouseOnUI {get; private set; }
     public bool MouseOutOfBounds, DebugMode;
     public bool IsUpdating { get; private set; }
 

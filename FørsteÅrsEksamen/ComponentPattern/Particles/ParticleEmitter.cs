@@ -135,6 +135,17 @@ namespace DoctorsDungeon.ComponentPattern.Particles
             sr.SetLayerDepth(LayerName, Math.Abs((float)result));
 
             foreach (BirthModifier m in BirthModifiers) m.Execute(this, go, particle);
+
+            if (!SpawnInScene)
+            {
+                go.Awake();
+                go.Start();
+            }
+            else
+            {
+                GameWorld.Instance.Instantiate(go);
+            }
+            
         }
 
 

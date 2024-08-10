@@ -33,7 +33,6 @@ public abstract class ObjectPool
         }
 
         Active.Add(go);
-        GameWorld.Instance.Instantiate(go);
 
         return go;
     }
