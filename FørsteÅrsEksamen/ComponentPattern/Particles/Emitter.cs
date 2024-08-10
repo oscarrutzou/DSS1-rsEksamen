@@ -13,8 +13,8 @@ namespace DoctorsDungeon.ComponentPattern.Particles
 {
     public class Emitter : Component
     {
+        #region Properties
         public enum EmitterState { INIT, RUNNING, STOPPING, STOPPED }
-
         public Texture2D Texture { get; set; }
         public Vector2 Position
         {
@@ -41,6 +41,7 @@ namespace DoctorsDungeon.ComponentPattern.Particles
         protected Interval Direction;
         protected Interval Rotation;
         protected Interval RotationVelocity;
+        protected TextOnSprite TextOnSprite;
 
         private double _stopTime;
         private float _stopCount;
@@ -50,7 +51,8 @@ namespace DoctorsDungeon.ComponentPattern.Particles
 
         public ParticlePool ParticlePool { get; set; } = new();
 
-        public bool SpawnInScene = true;
+        public bool CustomDrawingBehavior { get; set; } = false;
+        #endregion
 
         public Emitter(GameObject gameObject) : base(gameObject)
         {
@@ -117,7 +119,6 @@ namespace DoctorsDungeon.ComponentPattern.Particles
             FollowObjectOffset = offset;
         }
 
-        protected TextOnSprite TextOnSprite;
         public void SetParticleText(TextOnSprite textOnSprite, bool showSprite = false)
         {
             TextOnSprite = textOnSprite;

@@ -288,7 +288,7 @@ public class GameWorld : Game
 
         menuBackGroundEmitterFairy.Origin = new FairyDustAnimatedOrigin(new Rectangle((int)GameWorld.Instance.WorldCam.TopLeft.X, (int)GameWorld.Instance.WorldCam.TopLeft.Y, 1920, 1080), 200, 0.5);
 
-        menuBackGroundEmitterFairy.SpawnInScene = false;
+        menuBackGroundEmitterFairy.CustomDrawingBehavior = true;
 
         go.Awake();
         go.Start();
