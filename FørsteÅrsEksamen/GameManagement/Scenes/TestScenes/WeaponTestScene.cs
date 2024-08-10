@@ -46,9 +46,10 @@ public class WeaponTestScene : Scene
 
     private void MakeEmitters()
     {
-        FairyEmitter();
+        //FairyEmitter();
 
         //DustEmitter();
+        SpaceEmitter();
     }
 
     private void DustEmitter()
@@ -73,7 +74,6 @@ public class WeaponTestScene : Scene
         GameObject go = EmitterFactory.CreateParticleEmitter("Dust Cloud", new Vector2(0, 0), new Interval(250, 550), new Interval(-MathHelper.Pi, 0), 300, new Interval(1500, 2000), 1000, -1, new Interval(-MathHelper.Pi, 0));
 
         emitter = go.GetComponent<ParticleEmitter>();
-        emitter.FollowGameObject(playerGo, new Vector2(0, 25));
         emitter.LayerName = LayerDepth.EnemyUnder;
         emitter.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel4x4));
         emitter.AddModifier(new ColorRangeModifier(new Color[] { Color.DarkViolet, Color.WhiteSmoke, Color.Transparent }));
@@ -87,6 +87,23 @@ public class WeaponTestScene : Scene
         //emitter.Origin = new CircleOrigin(500);
 
         emitter.Origin = new FairyDustAnimatedOrigin(new Rectangle((int)GameWorld.Instance.WorldCam.TopLeft.X, (int)GameWorld.Instance.WorldCam.TopLeft.Y, 1920, 1080), 200, 0.5);
+        GameWorld.Instance.Instantiate(go);
+    }
+
+    private void SpaceEmitter()
+    {
+        GameObject go = EmitterFactory.CreateParticleEmitter("Space Dust", new Vector2(0, 0), new Interval(50, 100), new Interval(-MathHelper.Pi, MathHelper.Pi), 200, new Interval(3000, 4000), 300, -1, new Interval(-MathHelper.Pi, MathHelper.Pi));
+
+        emitter = go.GetComponent<ParticleEmitter>();
+        emitter.LayerName = LayerDepth.WorldBackground;
+
+        emitter.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel4x4));
+
+        emitter.AddModifier(new ColorRangeModifier(new Color[] { Color.DarkCyan, Color.DarkGray, Color.Gray, Color.Transparent }));
+        emitter.AddModifier(new ScaleModifier(0.5f, 2));
+
+        emitter.Origin = new RectangleOrigin(GameWorld.Instance.DisplayWidth, GameWorld.Instance.DisplayHeight);
+
         GameWorld.Instance.Instantiate(go);
     }
 

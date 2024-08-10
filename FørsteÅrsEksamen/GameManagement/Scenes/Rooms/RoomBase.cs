@@ -2,6 +2,10 @@
 using DoctorsDungeon.CommandPattern.Commands;
 using DoctorsDungeon.ComponentPattern;
 using DoctorsDungeon.ComponentPattern.Enemies;
+using DoctorsDungeon.ComponentPattern.Particles.BirthModifiers;
+using DoctorsDungeon.ComponentPattern.Particles.Modifiers;
+using DoctorsDungeon.ComponentPattern.Particles.Origins;
+using DoctorsDungeon.ComponentPattern.Particles;
 using DoctorsDungeon.ComponentPattern.Path;
 using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using DoctorsDungeon.ComponentPattern.WorldObjects;
@@ -70,6 +74,7 @@ public abstract class RoomBase : Scene
 
         SpawnGrid();
 
+        SpawnBackgroundEmitter();
         SpawnAndLoadPlayer();
 
         SpawnEndPos();
@@ -86,6 +91,23 @@ public abstract class RoomBase : Scene
     #region Initialize Methods
 
     protected abstract void SetSpawnPotions();
+    protected ParticleEmitter BackgroundEmitter;
+    private void SpawnBackgroundEmitter()
+    {
+        GameObject go = EmitterFactory.CreateParticleEmitter("Space Dust", new Vector2(0, 0), new Interval(50, 100), new Interval(-MathHelper.Pi, MathHelper.Pi), 100, new Interval(3000, 4000), 400, -1, new Interval(-MathHelper.Pi, MathHelper.Pi));
+
+        BackgroundEmitter = go.GetComponent<ParticleEmitter>();
+        BackgroundEmitter.LayerName = LayerDepth.Default;
+
+        BackgroundEmitter.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel4x4));
+
+        BackgroundEmitter.AddModifier(new ColorRangeModifier(new Color[] { Color.DarkRed, Color.DarkGray, Color.Gray, Color.Transparent }));
+        BackgroundEmitter.AddModifier(new ScaleModifier(0.5f, 2));
+
+        BackgroundEmitter.Origin = new RectangleOrigin(GameWorld.Instance.DisplayWidth, GameWorld.Instance.DisplayHeight);
+        
+        GameWorld.Instance.Instantiate(go);
+    }
 
     private void SpawnTexture(TextureNames textureName, LayerDepth layerDepth)
     {
@@ -119,6 +141,9 @@ public abstract class RoomBase : Scene
         PlayerGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[PlayerSpawnPos].Transform.Position;
         PlayerGo.Transform.GridPosition = PlayerSpawnPos;
         GameWorld.Instance.WorldCam.Position = PlayerGo.Transform.Position;
+
+        BackgroundEmitter.FollowGameObject(PlayerGo, Vector2.Zero);
+        BackgroundEmitter.StartEmitter();
     }
 
     private void SpawnEndPos()
