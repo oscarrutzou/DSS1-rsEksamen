@@ -1,10 +1,5 @@
 ﻿using DoctorsDungeon.CommandPattern;
 using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.Particles;
-using DoctorsDungeon.ComponentPattern.Particles.BirthModifiers;
-using DoctorsDungeon.ComponentPattern.Particles.Modifiers;
-using DoctorsDungeon.ComponentPattern.Particles.Origins;
-using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using DoctorsDungeon.GameManagement;
 using DoctorsDungeon.GameManagement.Scenes;
 using DoctorsDungeon.GameManagement.Scenes.Menus;
@@ -12,7 +7,6 @@ using DoctorsDungeon.GameManagement.Scenes.Rooms;
 using DoctorsDungeon.GameManagement.Scenes.TestScenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SharpDX.X3DAudio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,9 +33,9 @@ public class GameWorld : Game
 
     public SceneNames? NextScene { get; private set; } = null;
     public bool ShowBG { get; set; } = true; // If we should show our background
-    
+
     private SpriteBatch _spriteBatch;
-    //private GameObject menuBackground;
+    private GameObject menuBackground;
 
     public GameWorld()
     {
@@ -69,6 +63,7 @@ public class GameWorld : Game
 
         GenerateScenes(); // Makes a instance of all the scene we need
 
+        //SpawnBG(); // The background that dont get deleted
 
         CurrentScene = Scenes[SceneNames.WeaponTestScene];
         CurrentScene.Initialize(); // Starts the main menu
@@ -108,7 +103,7 @@ public class GameWorld : Game
             transformMatrix: WorldCam.GetMatrix());
 
         CurrentScene.DrawInWorld(_spriteBatch);
-        DrawBG(_spriteBatch);
+        //DrawBG(_spriteBatch);
 
         _spriteBatch.End();
 
@@ -197,18 +192,8 @@ public class GameWorld : Game
         //    throw new Exception("Dont try and use this method to change between Dungoun Rooms. " +
         //        "Summon the Wizard Oscar:)");
 
-
-
         NextScene = sceneName;
-
-        string name = sceneName.ToString();
-
-        if (name.Length >= 4 && name.Substring(name.Length - 4) == test)
-        {
-            menuBackGroundEmitterFairy.StartEmitter();
-        }
     }
-    private string test = "Menu";
 
     // Chosen to make it work with a base room type in the enum,
     // so we can easily change what kind of difficulty a room is and load in how far a player has come in a run.
@@ -263,14 +248,13 @@ public class GameWorld : Game
     }
 
     // We dont need a factory to do this, since its only this place we are going to use this background.
-    private ParticleEmitter menuBackGroundEmitterFairy;
     private void SpawnBG()
     {
-        //menuBackground = new();
-        //menuBackground.Type = GameObjectTypes.Background;
-        //SpriteRenderer sr = menuBackground.AddComponent<SpriteRenderer>();
-        //sr.SetLayerDepth(LayerDepth.WorldBackground);
-        //sr.SetSprite(TextureNames.SpaceBG1);
+        menuBackground = new();
+        menuBackground.Type = GameObjectTypes.Background;
+        SpriteRenderer sr = menuBackground.AddComponent<SpriteRenderer>();
+        sr.SetLayerDepth(LayerDepth.WorldBackground);
+        sr.SetSprite(TextureNames.SpaceBG1);
 
         //menuBackground.Awake();
         //menuBackground.Start();

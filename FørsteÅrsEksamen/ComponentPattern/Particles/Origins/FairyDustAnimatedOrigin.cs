@@ -59,7 +59,7 @@ namespace DoctorsDungeon.ComponentPattern.Particles.Origins
                 pos = Vector2.Zero;
             }
 
-            return new OriginData(pos);
+            return new OriginData(Vector2.CatmullRom(_positions[0], _positions[1], _positions[2], _positions[3], (float)((e.TotalSeconds - _lastMove) / _moveDuration)));
 
         }
     }
