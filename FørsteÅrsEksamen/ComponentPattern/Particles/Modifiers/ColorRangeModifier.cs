@@ -9,7 +9,7 @@ namespace DoctorsDungeon.ComponentPattern.Particles.Modifiers
 {
     public class ColorRangeModifier : Modifier
     {
-        private ColorInterval _colorInterval;
+        public ColorInterval ColorInterval;
         private ColorInterval _colorTextInterval;
 
         private static ColorInterval _rainboxInterval = new ColorInterval(new Color[]
@@ -25,7 +25,7 @@ namespace DoctorsDungeon.ComponentPattern.Particles.Modifiers
         private bool spriteRainbow = false, textRainbow = false;
         public ColorRangeModifier(Color[] colors, Color[] textColors = null)
         {
-            _colorInterval = new ColorInterval(colors);
+            ColorInterval = new ColorInterval(colors);
 
             if (textColors == null) return;
             _colorTextInterval = new ColorInterval(textColors);
@@ -41,7 +41,7 @@ namespace DoctorsDungeon.ComponentPattern.Particles.Modifiers
         {
             if (!spriteRainbow && !textRainbow)
             {
-                p.Color = _colorInterval.GetValue(p.Age / p.MaxAge);
+                p.Color = ColorInterval.GetValue(p.Age / p.MaxAge);
 
                 if (p.TextOnSprite == null || _colorTextInterval == null) return;
 

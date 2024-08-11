@@ -61,6 +61,7 @@ public class SpriteRenderer : Component
     public Texture2D Sprite { get; set; }
     public TextOnSprite TextOnSprite { get; set; }
     public Color Color { get; set; } = Color.White;
+    public Color StartColor { get; set; }
     public Vector2 Origin { get; set; }
     public Vector2 OriginOffSet { get; set; }
     public Vector2 DrawPosOffSet { get; set; }

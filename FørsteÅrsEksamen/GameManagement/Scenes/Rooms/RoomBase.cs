@@ -52,8 +52,6 @@ public abstract class RoomBase : Scene
 
     private List<GameObject> cells = new(); // For debug
 
-    protected Color TextColor = new(250, 249, 246);
-
     #endregion Properties
 
     public override void Initialize()
@@ -74,7 +72,7 @@ public abstract class RoomBase : Scene
 
         SpawnGrid();
 
-        SpawnBackgroundEmitter();
+        //SpawnBackgroundEmitter();
         SpawnAndLoadPlayer();
 
         SpawnEndPos();
@@ -91,23 +89,6 @@ public abstract class RoomBase : Scene
     #region Initialize Methods
 
     protected abstract void SetSpawnPotions();
-    protected ParticleEmitter BackgroundEmitter;
-    private void SpawnBackgroundEmitter()
-    {
-        GameObject go = EmitterFactory.CreateParticleEmitter("Space Dust", new Vector2(0, 0), new Interval(25, 50), new Interval(-MathHelper.Pi, MathHelper.Pi), 100, new Interval(1000, 2000), 400, -1, new Interval(-MathHelper.Pi, MathHelper.Pi));
-
-        BackgroundEmitter = go.GetComponent<ParticleEmitter>();
-        BackgroundEmitter.LayerName = LayerDepth.Default;
-
-        BackgroundEmitter.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel4x4));
-
-        BackgroundEmitter.AddModifier(new ColorRangeModifier(new Color[] { Color.DarkRed, Color.DarkGray, Color.Gray, Color.Transparent }));
-        BackgroundEmitter.AddModifier(new ScaleModifier(0.5f, 2));
-
-        BackgroundEmitter.Origin = new RectangleOrigin(GameWorld.Instance.DisplayWidth, GameWorld.Instance.DisplayHeight);
-        
-        GameWorld.Instance.Instantiate(go);
-    }
 
     private void SpawnTexture(TextureNames textureName, LayerDepth layerDepth)
     {
@@ -142,8 +123,8 @@ public abstract class RoomBase : Scene
         PlayerGo.Transform.GridPosition = PlayerSpawnPos;
         GameWorld.Instance.WorldCam.Position = PlayerGo.Transform.Position;
 
-        BackgroundEmitter.FollowGameObject(PlayerGo, Vector2.Zero);
-        BackgroundEmitter.StartEmitter();
+        if (GameWorld.Instance.BackgroundEmitter == null) return;
+        GameWorld.Instance.BackgroundEmitter.FollowGameObject(PlayerGo, Vector2.Zero);
     }
 
     private void SpawnEndPos()
@@ -252,7 +233,7 @@ public abstract class RoomBase : Scene
         DrawTimer(spriteBatch, leftPos);
 
         leftPos += new Vector2(0, 30);
-        spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Player HP: {playerHealth.CurrentHealth}/{playerHealth.MaxHealth}", leftPos, TextColor);
+        spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Player HP: {playerHealth.CurrentHealth}/{playerHealth.MaxHealth}", leftPos, CurrentTextColor);
 
         leftPos += new Vector2(0, 30);
         DrawPotion(spriteBatch, leftPos);
@@ -272,8 +253,15 @@ public abstract class RoomBase : Scene
         Vector2 size = GlobalTextures.DefaultFont.MeasureString(text);
         Vector2 textPos = GameWorld.Instance.UiCam.TopRight + new Vector2(-size.X - 30, size.Y + 10);
         Vector2 underPos = textPos - new Vector2(45, 35);
-        spriteBatch.Draw(GlobalTextures.Textures[TextureNames.QuestUnder], underPos, null, Color.White, 0f, Vector2.Zero, 6f, SpriteEffects.None, 0f);
-        spriteBatch.DrawString(GlobalTextures.DefaultFont, text, textPos, TextColor, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
+
+        Color questUnderColor = Color.White;
+        if (IsChangingScene)
+            questUnderColor = Color.Lerp(Color.White, Color.Transparent, (float)TransitionProgress);
+
+
+        spriteBatch.Draw(GlobalTextures.Textures[TextureNames.QuestUnder], underPos, null, questUnderColor, 0f, Vector2.Zero, 6f, SpriteEffects.None, 0f);
+
+        spriteBatch.DrawString(GlobalTextures.DefaultFont, text, textPos, CurrentTextColor, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
     }
 
     private void DrawTimer(SpriteBatch spriteBatch, Vector2 timerPos)
@@ -281,7 +269,7 @@ public abstract class RoomBase : Scene
         TimeSpan time = TimeSpan.FromSeconds(SaveData.Time_Left);
         string minutes = time.Minutes.ToString("D2");
         string seconds = time.Seconds.ToString("D2");
-        spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Time Left: {minutes}:{seconds}", timerPos, TextColor);
+        spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Time Left: {minutes}:{seconds}", timerPos, CurrentTextColor);
     }
 
     private void DrawPotion(SpriteBatch spriteBatch, Vector2 intentoryPos)
@@ -296,7 +284,7 @@ public abstract class RoomBase : Scene
             text = $"Inventory (1/1): {player.ItemInInventory.Name}";
         }
 
-        spriteBatch.DrawString(GlobalTextures.DefaultFont, text, intentoryPos, TextColor);
+        spriteBatch.DrawString(GlobalTextures.DefaultFont, text, intentoryPos, CurrentTextColor);
     }
 
     private void DebugDraw(SpriteBatch spriteBatch)

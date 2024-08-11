@@ -175,29 +175,16 @@ public abstract class Character : Component
         // Remove hands
         SpriteRenderer.Color = Color.LightPink;
 
-        //Health.OnDamageTaken -= OnDamageTaken;
-        //Health.OnResetColor -= OnResetColor;
         Health.OnZeroHealth -= OnDie;
-    }
-
-    private void OnDamageTaken()
-    {
-        Weapon.SpriteRenderer.Color = Health.DamageTakenColor;
-    }
-
-    private void OnResetColor()
-    {
-        Weapon.SpriteRenderer.Color = Color.White;
     }
 
     public override void Draw(SpriteBatch spriteBatch)
     {
-
         if (!InputHandler.Instance.DebugMode) return;
+        // Draws the center of the sprite, with a 10x10 centered pixel
         Vector2 center = GameObject.Transform.Position - new Vector2(5, 5);
         spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], center, null, Color.DarkRed, 0f, Vector2.Zero, 10, SpriteEffects.None, 1);
     }
-
 
     private void MakeEmitters()
     {

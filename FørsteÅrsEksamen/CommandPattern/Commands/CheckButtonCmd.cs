@@ -9,19 +9,16 @@ public class CheckButtonCmd : ICommand
 {
     public void Execute()
     {
-        lock (GameWorld.GameobjectDeleteLock) // Waits for lock
+        foreach (GameObject gameObject in SceneData.GameObjectLists[GameObjectTypes.Gui])
         {
-            foreach (GameObject gameObject in SceneData.GameObjectLists[GameObjectTypes.Gui])
-            {
-                if (gameObject.IsEnabled == false) continue;
+            if (gameObject.IsEnabled == false) continue;
 
-                Button button = gameObject.GetComponent<Button>();
+            Button button = gameObject.GetComponent<Button>();
 
-                if (button == null || !button.IsMouseOver()) continue;
+            if (button == null || !button.IsMouseOver()) continue;
 
-                button.OnClickButton();
-                break;
-            }
+            button.OnClickButton();
+            break;
         }
     }
 }

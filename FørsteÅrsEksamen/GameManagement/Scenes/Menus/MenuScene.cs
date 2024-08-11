@@ -94,9 +94,9 @@ public abstract class MenuScene : Scene
         GlobalSounds.ChangeSfxVolume();
         SfxBtn.Text = $"SFX Volume {GlobalSounds.SfxVolume * 100}%";
     }
-
     protected void DrawMenuText(SpriteBatch spriteBatch, string text, Vector2 position)
     {
-        GuiMethods.DrawTextCentered(spriteBatch, Font, position, text, new Color(250, 249, 246), Vector2.Zero);
+        // If the scene is changing, then it should use the lerp of the color. Already have the start color
+        GuiMethods.DrawTextCentered(spriteBatch, Font, position, text, CurrentTextColor, Vector2.Zero);
     }
 }

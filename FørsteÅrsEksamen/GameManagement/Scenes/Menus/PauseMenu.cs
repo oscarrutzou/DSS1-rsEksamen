@@ -18,7 +18,7 @@ public class PauseMenu : MenuScene
     public override void Initialize()
     {
         base.Initialize();
-        GameWorld.Instance.ShowBG = false;
+        //GameWorld.Instance.ShowBG = false;
         //GlobalSounds.InMenu = false; //Uncomment this when there has been made a ease in and out from menu and game music
     }
 

@@ -1,5 +1,6 @@
 ﻿using DoctorsDungeon.CommandPattern;
 using DoctorsDungeon.ComponentPattern;
+using DoctorsDungeon.ComponentPattern.Particles;
 using DoctorsDungeon.ComponentPattern.Path;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -35,7 +36,9 @@ public abstract class Scene
     private List<GameObject> newGameObjects = new List<GameObject>();
     private List<GameObject> destroyedGameObjects = new List<GameObject>();
     protected Action OnFirstCleanUp;
+    public bool IsChangingScene;
 
+    protected Color CurrentTextColor;
     public abstract void Initialize();
 
     /// <summary>
@@ -43,6 +46,10 @@ public abstract class Scene
     /// </summary>
     public virtual void Update(GameTime gameTime)
     {
+        CurrentTextColor = GameWorld.TextColor;
+        if (IsChangingScene)
+            CurrentTextColor = Color.Lerp(GameWorld.TextColor, Color.Transparent, (float)TransitionProgress);
+
         CleanUp();
 
         OnFirstCleanUp?.Invoke();
@@ -71,11 +78,47 @@ public abstract class Scene
     public virtual void OnPlayerChanged()
     { }
 
-    public virtual void OnSceneChange()
+
+    public void StartSceneChange()
     {
+        IsChangingScene = true;
+        TransitionProgress = 0; // Start with full opacity
+    }
+
+    protected double TransitionProgress; 
+    private double transitionDuration = 1.0; // Desired duration in seconds
+    
+    public void OnSceneChange()
+    {
+        TransitionProgress += GameWorld.DeltaTime / transitionDuration;
+        TransitionProgress = Math.Clamp(TransitionProgress, 0, 1);
+
+        foreach (GameObjectTypes type in SceneData.GameObjectLists.Keys)
+        {
+            foreach (GameObject gameObject in SceneData.GameObjectLists[type])
+            {
+                SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer>();
+                if (sr == null) continue;
+
+                if (sr.StartColor == Color.Transparent)
+                    sr.StartColor = sr.Color;
+
+                sr.Color = Color.Lerp(sr.StartColor, Color.Transparent, (float)TransitionProgress);
+            }
+        }
+
+        if (TransitionProgress != 1) return;
+
+        IsChangingScene = false;
+        
         OnFirstCleanUp = null; // For extra safety
         InputHandler.Instance.RemoveAllExeptBaseCommands();
         GridManager.Instance.ResetGridManager();
+
+        ParticleEmitter emitter = GameWorld.Instance.BackgroundEmitter;
+        if (emitter == null) return;
+
+        emitter.ResetFollowGameObject();
     }
 
     /// <summary>
