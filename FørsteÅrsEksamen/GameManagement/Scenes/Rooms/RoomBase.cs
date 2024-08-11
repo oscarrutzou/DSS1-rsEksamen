@@ -43,7 +43,7 @@ public abstract class RoomBase : Scene
     protected List<Point> PotionSpawnPoints = new();
     protected Dictionary<Point, GameObject> MiscGameObjectsInRoom = new();
 
-    private TransferDoor transferDoor;
+    private TransferDoor transferDoor {  get; set; }
     private SpriteRenderer transferDoorSpriteRenderer;
     private List<Enemy> enemiesInRoom = new();
     private List<Enemy> aliveEnemies;
@@ -94,7 +94,7 @@ public abstract class RoomBase : Scene
     protected ParticleEmitter BackgroundEmitter;
     private void SpawnBackgroundEmitter()
     {
-        GameObject go = EmitterFactory.CreateParticleEmitter("Space Dust", new Vector2(0, 0), new Interval(50, 100), new Interval(-MathHelper.Pi, MathHelper.Pi), 100, new Interval(3000, 4000), 400, -1, new Interval(-MathHelper.Pi, MathHelper.Pi));
+        GameObject go = EmitterFactory.CreateParticleEmitter("Space Dust", new Vector2(0, 0), new Interval(25, 50), new Interval(-MathHelper.Pi, MathHelper.Pi), 100, new Interval(1000, 2000), 400, -1, new Interval(-MathHelper.Pi, MathHelper.Pi));
 
         BackgroundEmitter = go.GetComponent<ParticleEmitter>();
         BackgroundEmitter.LayerName = LayerDepth.Default;

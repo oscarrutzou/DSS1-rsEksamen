@@ -14,10 +14,11 @@ public class Collider : Component
     public int StartCollisionWidth { get; private set; }
     public int StartCollisionHeight { get; private set; } //If not set, use the sprite width and height
 
-    private Vector2 offset;
+    private Vector2 positionOffset;
 
     public Color DebugColor = Color.Red;
 
+    public bool CenterCollisionBox = true;
     public Rectangle CollisionBox
     {
         get
@@ -38,10 +39,17 @@ public class Collider : Component
             width *= (int)GameObject.Transform.Scale.X;
             height *= (int)GameObject.Transform.Scale.Y;
 
+            // Make the collisionBox to be offcenter, with top left as its origin point.
+            if (!CenterCollisionBox)
+            {
+                pos.X += width / 2;
+                pos.Y += height / 2;
+            }
+
             return new Rectangle
                 (
-                    (int)((pos.X - offset.X) - (width) / 2),
-                    (int)((pos.Y - offset.Y) - (height) / 2),
+                    (int)((pos.X - positionOffset.X) - (width) / 2),
+                    (int)((pos.Y - positionOffset.Y) - (height) / 2),
                     width,
                     height
                 );
@@ -76,11 +84,11 @@ public class Collider : Component
         StartCollisionHeight = height;
     }
 
-    public void SetCollisionBox(int width, int height, Vector2 offset)
+    public void SetCollisionBox(int width, int height, Vector2 positionOffset)
     {
         StartCollisionWidth = width;
         StartCollisionHeight = height;
-        this.offset = offset;
+        this.positionOffset = positionOffset;
     }
 
     /// <summary>
@@ -88,7 +96,7 @@ public class Collider : Component
     /// </summary>
     public void ResetCustomCollsionBox()
     {
-        offset = Vector2.Zero;
+        positionOffset = Vector2.Zero;
         StartCollisionHeight = 0;
         StartCollisionWidth = 0;
     }

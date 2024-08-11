@@ -154,6 +154,6 @@ public abstract class Scene
 
     public virtual void DrawSceenColor()
     {
-        GameWorld.Instance.GraphicsDevice.Clear(new Color(20, 20, 18, 255));
+        GameWorld.Instance.GraphicsDevice.Clear(GameWorld.BackGroundColor);
     }
 }

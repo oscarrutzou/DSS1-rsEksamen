@@ -9,7 +9,7 @@ namespace DoctorsDungeon.ComponentPattern.Particles.BirthModifiers
         public override void Execute(Emitter e, GameObject go, IParticle p)
         {
             float v = p.Velocity.Length();
-            Vector2 temp = p.Position - e.Position;
+            Vector2 temp = p.Position - e.Position; 
             if (temp != Vector2.Zero)
             {
                 temp.Normalize();

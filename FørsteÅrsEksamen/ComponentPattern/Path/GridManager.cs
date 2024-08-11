@@ -71,7 +71,7 @@ public class GridManager
         }
     }
 
-    public DrawMapSelecter CurrentDrawSelected = DrawMapSelecter.DrawBlackedOutRooms;
+    public DrawMapSelecter CurrentDrawSelected { get; set; } = DrawMapSelecter.DrawBlackedOutRooms;
 
     public List<int> PlayerDiscoveredRoomNmbers = new();
 
@@ -248,6 +248,7 @@ public class GridManager
             }
             else if (CurrentDrawSelected == DrawMapSelecter.DrawBlackedOutRooms)
             {
+                
                 CheckCellIsDiscovered(cell);
             }
         }
@@ -270,11 +271,14 @@ public class GridManager
         GameObject go = cell.GameObject;
         SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
 
-        if (PlayerDiscoveredRoomNmbers.Contains(cell.RoomNr) && cell.RoomNr != -1)
+        // If the player already have unloacked the room, or if the room nr have not been set
+        if (PlayerDiscoveredRoomNmbers.Contains(cell.RoomNr) || cell.RoomNr == -1)
         {
             go.IsEnabled = false;
             sr.ShouldDrawSprite = false;
-            sr.Color = Color.AliceBlue;
+
+            // Should start a bool that begins a lerp of the sr.color to Transparent, and then sets the -
+            // IsEnabled and ShouldDrawSprite to false
         }
         else
         {

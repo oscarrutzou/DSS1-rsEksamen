@@ -16,7 +16,9 @@ public static class TransferDoorFactory
         sr.SetSprite(TextureNames.DoorClosed);
         sr.IsCentered = false;
 
-        go.AddComponent<Collider>();
+        Collider collider = go.AddComponent<Collider>();
+        collider.CenterCollisionBox = false;
+
         go.AddComponent<TransferDoor>();
 
         return go;

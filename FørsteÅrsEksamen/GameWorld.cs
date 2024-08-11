@@ -38,7 +38,7 @@ public class GameWorld : Game
 
     public SceneNames? NextScene { get; private set; } = null;
     public bool ShowBG { get; set; } = true; // If we should show our background
-
+    public static Color BackGroundColor { get; private set; } = new Color(20, 20, 18, 255);
     private SpriteBatch _spriteBatch;
 
     public GameWorld()

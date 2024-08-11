@@ -40,7 +40,7 @@ public class Cell : Component
     public int H;
     public int F => G + H;
 
-    public Color NotDiscoveredColor = Color.Black;
+    public Color NotDiscoveredColor => GameWorld.BackGroundColor;
 
     /// <summary>
     /// Parent is for the Astar, not the GameObject that is attached as "GameObject".
