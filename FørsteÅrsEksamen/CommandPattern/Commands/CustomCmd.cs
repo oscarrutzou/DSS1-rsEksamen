@@ -8,7 +8,7 @@ namespace DoctorsDungeon.CommandPattern.Commands;
 // if we wanted the InputHandler to both take ICommands and Actions.
 // We therefore choose this approch to make a flexible approach -
 // where we -can- use more complex commands, but also this cmd that is essentially a longer Action.
-public class CustomCmd : ICommand
+public class CustomCmd : Command
 {
     private readonly Action action;
 
@@ -17,7 +17,7 @@ public class CustomCmd : ICommand
         this.action = action;
     }
 
-    public void Execute()
+    public override void Execute()
     {
         action?.Invoke();
     }

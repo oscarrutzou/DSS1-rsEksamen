@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 namespace DoctorsDungeon.CommandPattern.Commands;
 
 // Oscar
-public class MoveCmd : ICommand
+public class MoveCmd : Command
 {
     private Player player;
     private Vector2 velocity;
@@ -15,7 +15,7 @@ public class MoveCmd : ICommand
         this.velocity = velocity;
     }
 
-    public void Execute()
+    public override void Execute()
     {
         player.AddInput(velocity);
     }

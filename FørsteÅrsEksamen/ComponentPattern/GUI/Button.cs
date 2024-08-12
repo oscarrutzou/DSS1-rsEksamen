@@ -26,8 +26,6 @@ public class Button : Component
     public Color OnMouseDownColor = new(150, 150, 150);
 
     public Vector2 MaxScale { get; private set; }
-    private double clickCooldown = 0.1f; // The delay between button clicks in seconds
-    private double timeSinceLastClick = 0; // The time since the button was last clicked
     private bool invokeActionOnFullScale;
     private bool hasPressed;
 
@@ -67,11 +65,6 @@ public class Button : Component
 
     public override void Update()
     {
-        if (timeSinceLastClick < clickCooldown)
-        {
-            timeSinceLastClick += GameWorld.DeltaTime;
-        }
-
         if (IsMouseOver())
         {
             if (InputHandler.Instance.MouseState.LeftButton != ButtonState.Released)
@@ -124,18 +117,10 @@ public class Button : Component
             MaxScale.X * scaleDownOnClickAmount,
             MaxScale.Y * scaleDownOnClickAmount);
 
-        if (timeSinceLastClick < clickCooldown) return;
-
-        timeSinceLastClick = 0;
-
         if (invokeActionOnFullScale)
-        {
             hasPressed = true;
-        }
         else
-        {
             OnClick?.Invoke();
-        }
     }
 
     public override void Draw(SpriteBatch spriteBatch)
