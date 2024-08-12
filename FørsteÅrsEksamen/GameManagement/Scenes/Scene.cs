@@ -35,7 +35,7 @@ public abstract class Scene
 {
     private List<GameObject> newGameObjects = new List<GameObject>();
     private List<GameObject> destroyedGameObjects = new List<GameObject>();
-    protected Action OnFirstCleanUp;
+    protected Action OnFirstCleanUp { get; set; }
     public bool IsChangingScene;
 
     protected Color CurrentTextColor;
@@ -52,7 +52,11 @@ public abstract class Scene
 
         CleanUp();
 
-        OnFirstCleanUp?.Invoke();
+        if (OnFirstCleanUp != null)
+        {
+            OnFirstCleanUp.Invoke();
+            OnFirstCleanUp = null;
+        }
 
         if (GameWorld.IsPaused) return;
 
@@ -86,7 +90,7 @@ public abstract class Scene
     }
 
     protected double TransitionProgress; 
-    private double transitionDuration = 1.0; // Desired duration in seconds
+    private double transitionDuration = 0.3; // Desired duration in seconds
     
     public void OnSceneChange()
     {

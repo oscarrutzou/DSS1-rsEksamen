@@ -25,9 +25,9 @@ public class SaveFileMenu : MenuScene
     {
         saveFileButtons = new Dictionary<int, Button>()
         {
-            { 1, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(1); }, TextureNames.LargeBtn).GetComponent<Button>() },
-            { 2, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(2); }, TextureNames.LargeBtn).GetComponent<Button>()  },
-            { 3, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(3); }, TextureNames.LargeBtn).GetComponent<Button>()  }
+            { 1, ButtonFactory.Create(newSaveFile + "1", true, () => { MakeNewSaveFile(1); }, TextureNames.LargeBtn).GetComponent<Button>() },
+            { 2, ButtonFactory.Create(newSaveFile + "2", true, () => { MakeNewSaveFile(2); }, TextureNames.LargeBtn).GetComponent<Button>()  },
+            { 3, ButtonFactory.Create(newSaveFile + "3", true, () => { MakeNewSaveFile(3); }, TextureNames.LargeBtn).GetComponent<Button>()  }
         };
 
         foreach (Button button in saveFileButtons.Values)
@@ -47,7 +47,6 @@ public class SaveFileMenu : MenuScene
     public override void AfterFirstCleanUp()
     {
         GuiMethods.PlaceGameObjectsVertical(FirstMenuObjects, TextPos + new Vector2(0, 75), 25);
-
         ChangeButtonText();
     }
 
@@ -60,15 +59,11 @@ public class SaveFileMenu : MenuScene
         SaveFileData saveFile = DB.Instance.LoadGame();
 
         if (saveFile == null) // Creates a new save file
-        {
             saveFile = DB.Instance.SaveGame(id); // Makes the save id
-        }
 
         if (saveFile.RunData == null)
-        {
             // Make a new run after the characterSelector
             GameWorld.Instance.ChangeScene(SceneNames.CharacterSelectorMenu);
-        }
         else
         {
             SaveData.Time_Left = saveFile.RunData.Time_Left;

@@ -154,8 +154,6 @@ public class CharacterSelectorMenu : MenuScene
 
             // Unlocked the weapon
             DB.Instance.UnlockWeapon(weapon);
-
-            weaponButtons[weapon].Text = $"{weapon}";
         }
 
         SaveData.SelectedWeapon = weapon;
@@ -169,15 +167,12 @@ public class CharacterSelectorMenu : MenuScene
 
         // Go into the new scene with a new player.
         GameWorld.Instance.ChangeDungeonScene(SceneNames.DungeonRoom, 1);
-        //GameWorld.Instance.ChangeScene(SceneNames.DungeonRoom3);
     }
 
     private void Back()
     {
         if (!FirstMenuObjects[0].IsEnabled)
-        {
             ShowHideClassMenu();
-        }
         else
         {
             // Reset variables
@@ -211,14 +206,12 @@ public class CharacterSelectorMenu : MenuScene
         string currentText = $"Currency: {SaveData.Currency}g";
         Vector2 size = GlobalTextures.DefaultFont.MeasureString(currentText);
         Vector2 pos;
+
         if (!ShowSecondMenu)
-        {
             pos = FirstMenuObjects.Last().Transform.Position + new Vector2(size.X / 2 - 30, -size.Y - 60);
-        }
         else
-        {
             pos = classWeaponButton[SaveData.SelectedClass].Last().Transform.Position + new Vector2(size.X / 2 - 30, -size.Y - 60);
-        }
+        
         DrawString(spriteBatch, currentText, pos, new Color(250, 249, 246));
     }
 

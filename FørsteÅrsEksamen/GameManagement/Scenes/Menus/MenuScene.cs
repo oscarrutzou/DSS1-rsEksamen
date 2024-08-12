@@ -32,7 +32,6 @@ public abstract class MenuScene : Scene
 
         OnFirstCleanUp = AfterFirstCleanUp;
 
-        //SpawnBG();
         InitFirstMenu();
         InitSecondMenu();
 

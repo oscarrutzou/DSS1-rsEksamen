@@ -65,14 +65,13 @@ public abstract class RoomBase : Scene
 
         pauseMenu = new PauseMenu();
         pauseMenu.Initialize();
-        OnFirstCleanUp = pauseMenu.AfterFirstCleanUp;
+        OnFirstCleanUp = pauseMenu.AfterFirstCleanUp; // We need to couple the pausemenu to the current RoomScene Action.
 
         SpawnTexture(BackGroundTexture, LayerDepth.WorldBackground);
         SpawnTexture(ForeGroundTexture, LayerDepth.WorldForeground);
 
         SpawnGrid();
 
-        //SpawnBackgroundEmitter();
         SpawnAndLoadPlayer();
 
         SpawnEndPos();
@@ -257,7 +256,6 @@ public abstract class RoomBase : Scene
         Color questUnderColor = Color.White;
         if (IsChangingScene)
             questUnderColor = Color.Lerp(Color.White, Color.Transparent, (float)TransitionProgress);
-
 
         spriteBatch.Draw(GlobalTextures.Textures[TextureNames.QuestUnder], underPos, null, questUnderColor, 0f, Vector2.Zero, 6f, SpriteEffects.None, 0f);
 

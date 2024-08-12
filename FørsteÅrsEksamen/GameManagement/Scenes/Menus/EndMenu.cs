@@ -12,8 +12,12 @@ public class EndMenu : MenuScene
     protected override void InitFirstMenu()
     {
         GameObject startBtn = ButtonFactory.Create("New Run", true,
-                        () => { GameWorld.Instance.ChangeScene(SceneNames.SaveFileMenu); });
+                        () => { GameWorld.Instance.ChangeScene(SceneNames.CharacterSelectorMenu); });
         FirstMenuObjects.Add(startBtn);
+
+        GameObject mainMenuBtn = ButtonFactory.Create("Main Menu", true,
+                () => { GameWorld.Instance.ChangeScene(SceneNames.MainMenu); });
+        FirstMenuObjects.Add(mainMenuBtn);
 
         GameObject settingsBtn = ButtonFactory.Create("Settings", true, ShowHideSecondMenu);
         FirstMenuObjects.Add(settingsBtn);
