@@ -15,12 +15,12 @@ public class EndMenu : MenuScene
                         () => { GameWorld.Instance.ChangeScene(SceneNames.CharacterSelectorMenu); });
         FirstMenuObjects.Add(startBtn);
 
+        GameObject settingsBtn = ButtonFactory.Create("Settings", true, ShowHideSecondMenu);
+        FirstMenuObjects.Add(settingsBtn);
+
         GameObject mainMenuBtn = ButtonFactory.Create("Main Menu", true,
                 () => { GameWorld.Instance.ChangeScene(SceneNames.MainMenu); });
         FirstMenuObjects.Add(mainMenuBtn);
-
-        GameObject settingsBtn = ButtonFactory.Create("Settings", true, ShowHideSecondMenu);
-        FirstMenuObjects.Add(settingsBtn);
 
         GameObject quitBtn = ButtonFactory.Create("Quit", true, GameWorld.Instance.Exit);
         FirstMenuObjects.Add(quitBtn);

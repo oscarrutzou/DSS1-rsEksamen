@@ -49,7 +49,31 @@ public class WeaponTestScene : Scene
         //FairyEmitter();
 
         //DustEmitter();
-        SpaceEmitter();
+        //SpaceEmitter();
+
+        DoorEmitter();
+    }
+
+    private void DoorEmitter()
+    {
+        GameObject go = EmitterFactory.CreateParticleEmitter("Dust Cloud", new Vector2(0, 0), new Interval(100, 150), new Interval(-MathHelper.Pi, MathHelper.Pi), 50, new Interval(500, 1000), 1000, -1, new Interval(-MathHelper.Pi, MathHelper.Pi), new Interval(-0.01, 0.01));
+
+        emitter = go.GetComponent<ParticleEmitter>();
+
+        emitter.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel4x4));
+        emitter.AddBirthModifier(new ScaleBirthModifier(new Interval(0.5, 2)));
+
+        emitter.AddModifier(new InwardModifier(2));
+
+        emitter.AddModifier(new ColorRangeModifier(GameWorld.Instance.roomColors));
+
+        int width = 32 * 4;
+        int height = 48 * 4;
+        RectangleOrigin origin = new RectangleOrigin(width, height, true);
+        origin.OffCenter(emitter);
+        emitter.Origin = origin;
+
+        GameWorld.Instance.Instantiate(go);
     }
 
     private void DustEmitter()
@@ -148,10 +172,10 @@ public class WeaponTestScene : Scene
         //pos += offset;
         //DrawString(spriteBatch, $"Next anim: {weapon.NextAnim} | Rot: {weapon.Animations[weapon.NextAnim].AmountOfRotation}", pos);
 
-        //pos += offset;
-        //DrawString(spriteBatch, $"Active count: {player.DamageTakenEmitter.ParticlePool.Active.Count}", pos);
-        //pos += offset;
-        //DrawString(spriteBatch, $"In Active count: {player.DamageTakenEmitter.ParticlePool.InActive.Count}", pos);
+        pos += offset;
+        DrawString(spriteBatch, $"Active count: {emitter.ParticlePool.Active.Count}", pos);
+        pos += offset;
+        DrawString(spriteBatch, $"In Active count: {emitter.ParticlePool.InActive.Count}", pos);
     }
 
     protected void DrawString(SpriteBatch spriteBatch, string text, Vector2 position)

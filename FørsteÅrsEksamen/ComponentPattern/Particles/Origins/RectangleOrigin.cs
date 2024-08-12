@@ -21,6 +21,11 @@ namespace DoctorsDungeon.ComponentPattern.Particles.Origins
             y = new Interval(-height / 2, height / 2);
         }
 
+        public void OffCenter(Emitter e)
+        {
+            e.Position += new Vector2(_width / 2, _height / 2);
+        }
+
         public override OriginData GetPosition(Emitter e)
         {
             if (_edge)

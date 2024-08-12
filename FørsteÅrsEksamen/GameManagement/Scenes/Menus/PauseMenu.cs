@@ -30,12 +30,12 @@ public class PauseMenu : MenuScene
         GameObject settingsBtn = ButtonFactory.Create("Settings", true, ShowHideSecondMenu);
         FirstMenuObjects.Add(settingsBtn);
 
-        GameObject quitBtn = ButtonFactory.Create("Quit", true, GameWorld.Instance.Exit);
-        FirstMenuObjects.Add(quitBtn);
-
         GameObject mainMenu = ButtonFactory.Create("Main Menu", true,
             () => { GameWorld.Instance.ChangeScene(SceneNames.MainMenu); });
         FirstMenuObjects.Add(mainMenu);
+
+        GameObject quitBtn = ButtonFactory.Create("Quit", true, GameWorld.Instance.Exit);
+        FirstMenuObjects.Add(quitBtn); 
 
         ShowHideGameObjects(FirstMenuObjects, false);
     }

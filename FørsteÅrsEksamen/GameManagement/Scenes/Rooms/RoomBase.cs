@@ -218,6 +218,7 @@ public abstract class RoomBase : Scene
 
         transferDoorSpriteRenderer.ShouldDrawSprite = false;
         transferDoor.CanTranser = true;
+        transferDoor.emitter.StartEmitter();
     }
 
     #region Draw

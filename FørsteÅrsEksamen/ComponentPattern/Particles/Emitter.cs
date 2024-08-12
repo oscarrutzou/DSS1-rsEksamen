@@ -21,6 +21,7 @@ public class Emitter : Component
         get { return GameObject.Transform.Position; }
         set { GameObject.Transform.Position = value; }
     }
+    public Vector2 FollowPoint { get; set; }
     public LayerDepth LayerName { get; set; }
     protected GameObject FollowObject { get; private set; }
     protected Vector2 FollowObjectOffset { get; private set; }

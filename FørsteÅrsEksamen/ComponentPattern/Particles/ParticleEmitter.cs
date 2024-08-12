@@ -12,7 +12,6 @@ using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using static DoctorsDungeon.ComponentPattern.Particles.Emitter;
 
 namespace DoctorsDungeon.ComponentPattern.Particles;
 
@@ -90,7 +89,7 @@ public class ParticleEmitter : Emitter
             {
                 go.Transform.Position += (p.Velocity * (float)GameWorld.DeltaTime);
 
-                p.Velocity *= dampening;
+                p.Velocity *= dampening; // If we a modifier to be able to change velocity, we need to have 0 dampening
                 go.Transform.Rotation += p.RotationVelocity;
 
                 foreach (Modifier m in Modifiers.Values)

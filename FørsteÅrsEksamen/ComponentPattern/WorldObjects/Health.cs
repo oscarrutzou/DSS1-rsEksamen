@@ -21,7 +21,7 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
         /// <summary>
         /// Gets set in Start of Health component
         /// </summary>
-        public int CurrentHealth { get; private set; } = -1;
+        public int CurrentHealth { get; set; } = -1;
         public Action OnDamageTaken { get; set; }
         public Action OnZeroHealth { get; set; }
         public Action OnResetColor { get; set; }

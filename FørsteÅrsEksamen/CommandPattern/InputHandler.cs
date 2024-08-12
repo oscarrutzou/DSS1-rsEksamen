@@ -1,4 +1,5 @@
 ﻿using DoctorsDungeon.CommandPattern.Commands;
+using DoctorsDungeon.ComponentPattern;
 using DoctorsDungeon.ComponentPattern.Path;
 using DoctorsDungeon.LiteDB;
 using Microsoft.Xna.Framework;
@@ -37,6 +38,8 @@ public class InputHandler
     public Vector2 MouseInWorld, MouseOnUI;
     public bool MouseOutOfBounds, DebugMode;
     public bool IsUpdating { get; private set; }
+
+    public GameObject MouseGo;
 
     #endregion Properties
 

@@ -4,6 +4,7 @@ using DoctorsDungeon.ComponentPattern.Particles;
 using DoctorsDungeon.ComponentPattern.Particles.BirthModifiers;
 using DoctorsDungeon.ComponentPattern.Particles.Modifiers;
 using DoctorsDungeon.ComponentPattern.Particles.Origins;
+using DoctorsDungeon.ComponentPattern.WorldObjects;
 using DoctorsDungeon.GameManagement;
 using DoctorsDungeon.GameManagement.Scenes;
 using DoctorsDungeon.GameManagement.Scenes.Menus;
@@ -11,6 +12,7 @@ using DoctorsDungeon.GameManagement.Scenes.Rooms;
 using DoctorsDungeon.GameManagement.Scenes.TestScenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,23 +27,25 @@ public class GameWorld : Game
     public static GameWorld Instance;
 
     public static bool DebugAndCheats = true;
-
-    public Dictionary<SceneNames, Scene> Scenes { get; private set; }
-
-    public Scene CurrentScene;
-    public Camera WorldCam { get; private set; } // Follows player
-    public Camera UiCam { get; private set; } //Static on the ui
     public static double DeltaTime { get; private set; }
-    public GraphicsDeviceManager GfxManager { get; private set; }
-
     public static bool IsPaused = false;
-    public static readonly object GameobjectDeleteLock = new();
-
-    public SceneNames? NextScene { get; private set; } = null;
-    public bool ShowBG { get; set; } = true; // If we should show our background
     public static Color BackGroundColor { get; private set; } = new Color(20, 20, 18, 255);
     public static Color TextColor { get; private set; } = new Color(250, 249, 246);
+
+    public GraphicsDeviceManager GfxManager { get; private set; }
+    public Dictionary<SceneNames, Scene> Scenes { get; private set; }
+    public Scene CurrentScene { get; private set; }
+    public Camera WorldCam { get; private set; } // Follows player
+    public Camera UiCam { get; private set; } //Static on the ui
+    public SceneNames? NextScene { get; private set; } = null;
+    public bool ShowBG { get; set; } = true; // If we should show our background
+
+    public int DisplayWidth => GraphicsDevice.DisplayMode.Width;
+    public int DisplayHeight => GraphicsDevice.DisplayMode.Height;
+
     private SpriteBatch _spriteBatch;
+    private string _menuString = "Menu";
+    private bool _isInMenu = true;
     #endregion
 
     public GameWorld()
@@ -71,7 +75,7 @@ public class GameWorld : Game
         CurrentScene.Initialize(); // Starts the main menu
 
         SpawnBG(); // The background that dont get deleted
-        
+
         base.Initialize();
     }
 
@@ -86,6 +90,9 @@ public class GameWorld : Game
 
         GlobalSounds.MusicUpdate(); // Updates the Music in the game, not SFX
         InputHandler.Instance.Update();
+
+        InputHandler.Instance.MouseGo.Update(gameTime);
+
         CurrentScene.Update(gameTime); // Updates all gameobjects and their componetents in the scene
         HandleSceneChange(); // Goes to the next scene
 
@@ -136,7 +143,7 @@ public class GameWorld : Game
     /// </summary>
     public void Fullscreen()
     {
-        if (GraphicsDevice.DisplayMode.Width > 1920) // To big screen, so dont open in fullscreen
+        if (GraphicsDevice.DisplayMode.Width > 1920) // Too big screen, so dont open in fullscreen
         {
             SetResolutionSize(1920, 1080);
             return;
@@ -149,9 +156,7 @@ public class GameWorld : Game
         GfxManager.ApplyChanges();
     }
 
-    public int DisplayWidth => GraphicsDevice.DisplayMode.Width;
-    public int DisplayHeight => GraphicsDevice.DisplayMode.Height;
-
+    #region Scene
     /// <summary>
     /// Adds the GameObject to the CurrentScene
     /// </summary>
@@ -163,8 +168,6 @@ public class GameWorld : Game
     /// </summary>
     /// <param name="go"></param>
     public void Destroy(GameObject go) => CurrentScene.Destroy(go);
-
-    #region Scene
 
     /// <summary>
     /// Generates the scenes that can be used in the project.
@@ -192,18 +195,17 @@ public class GameWorld : Game
         };
     }
 
-    private string menuString = "Menu";
-    private bool IsInMenu = true;
+
     public void ChangeScene(SceneNames sceneName)
     {
         NextScene = sceneName;
 
         // Starts the background emitter if scene ends in Menu
         string name = sceneName.ToString();
-        if (name.Length >= 4 && name.Substring(name.Length - 4) == menuString)
-            IsInMenu = true;
+        if (name.Length >= 4 && name.Substring(name.Length - 4) == _menuString)
+            _isInMenu = true;
         else
-            IsInMenu = false;
+            _isInMenu = false;
     }
 
     // Chosen to make it work with a base room type in the enum,
@@ -229,18 +231,18 @@ public class GameWorld : Game
             if (Scenes.ContainsKey(newScene)) // The next scene dosent exit
             {
                 NextScene = newScene;
-                IsInMenu = false;
+                _isInMenu = false;
             }
             else
             {
                 NextScene = SceneNames.MainMenu; // Sends them back to the menu
-                IsInMenu = true;
+                _isInMenu = true;
             }
         }
         else
         {
             NextScene = SceneNames.MainMenu; // Sends them back to the menu
-            IsInMenu = true;
+            _isInMenu = true;
         }
     }
 
@@ -271,7 +273,7 @@ public class GameWorld : Game
     }
     public ParticleEmitter BackgroundEmitter { get; set; }
     private Color[] menuColors = new Color[] { Color.DarkCyan, Color.DarkGray, Color.Gray, Color.Transparent };
-    private Color[] roomColors = new Color[] { Color.DarkRed, Color.DarkGray, Color.Gray, Color.Transparent };
+    public Color[] roomColors = new Color[] { Color.DarkRed, Color.DarkGray, Color.Gray, Color.Transparent };
     // We dont need a factory to do this, since its only this place we are going to use this background.
     private ColorInterval menuColorInterval;
     private ColorInterval roomColorInterval;
@@ -279,7 +281,7 @@ public class GameWorld : Game
     private void SpawnBG()
     {
         if (!ShowBG) return;
-        GameObject go = EmitterFactory.CreateParticleEmitter("Space Dust", new Vector2(0, 0), new Interval(25, 50), new Interval(-MathHelper.Pi, MathHelper.Pi), 100, new Interval(1000, 2000), 400, -1, new Interval(-MathHelper.Pi, MathHelper.Pi));
+        GameObject go = EmitterFactory.CreateParticleEmitter("Space Dust", new Vector2(0, 0), new Interval(50, 100), new Interval(-MathHelper.Pi, MathHelper.Pi), 70, new Interval(1500, 2500), 400, -1, new Interval(-MathHelper.Pi, MathHelper.Pi));
 
         BackgroundEmitter = go.GetComponent<ParticleEmitter>();
         BackgroundEmitter.LayerName = LayerDepth.WorldBackground;
@@ -287,10 +289,11 @@ public class GameWorld : Game
         BackgroundEmitter.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel4x4));
         
         BackgroundEmitter.AddModifier(new ColorRangeModifier(menuColors));
-        BackgroundEmitter.AddModifier(new ScaleModifier(0.5f, 3));
-        BackgroundEmitter.AddBirthModifier(new InwardBirthModifier());
+        BackgroundEmitter.AddModifier(new ScaleModifier(0.5f, 2));
+        BackgroundEmitter.AddModifier(new InwardModifier(10));
 
-        BackgroundEmitter.Origin = new RectangleOrigin(DisplayWidth, DisplayHeight);
+        int buffer = 300; // A buffer around the center, so when the player runs, there are already some particles
+        BackgroundEmitter.Origin = new RectangleOrigin(DisplayWidth + buffer, DisplayHeight + buffer);
 
         BackgroundEmitter.CustomDrawingBehavior = true;
 
@@ -300,7 +303,19 @@ public class GameWorld : Game
         menuColorInterval = new ColorInterval(menuColors);
         roomColorInterval = new ColorInterval(roomColors);
 
+        MakeMouseGo();
+
         BackgroundEmitter.StartEmitter();
+    }
+
+    private void MakeMouseGo()
+    {
+        InputHandler.Instance.MouseGo = new();
+        InputHandler.Instance.MouseGo.AddComponent<MouseComponent>();
+
+        InputHandler.Instance.MouseGo.Awake();
+        InputHandler.Instance.MouseGo.Start();
+
     }
 
     private void DrawBG(SpriteBatch spriteBatch)
@@ -316,7 +331,7 @@ public class GameWorld : Game
         BackgroundEmitter.StartEmitter();
 
         ColorRangeModifier colorMod = BackgroundEmitter.GetModifier<ColorRangeModifier>();
-        if (IsInMenu)
+        if (_isInMenu)
             colorMod.ColorInterval = menuColorInterval; 
         else
             colorMod.ColorInterval = roomColorInterval;

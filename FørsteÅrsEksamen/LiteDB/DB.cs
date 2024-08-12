@@ -303,7 +303,7 @@ public class DB
             Player player = playerGo.GetComponent<Player>();
             Health playerHealth = playerGo.GetComponent<Health>();
 
-            playerHealth.SetHealth(playerHealth.MaxHealth, loadPlayerData.Health);
+            playerHealth.CurrentHealth = loadPlayerData.Health;
 
             if (loadPlayerData.Potion_Name != null)
             {
