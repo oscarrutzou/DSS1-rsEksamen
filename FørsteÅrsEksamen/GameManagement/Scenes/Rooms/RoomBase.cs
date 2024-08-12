@@ -325,13 +325,13 @@ public abstract class RoomBase : Scene
         DrawString(spriteBatch, $"Grid Room Nr {GridManager.Instance.RoomNrIndex}", startPos);
 
         startPos += offset;
-        DrawString(spriteBatch, $"Player Pos {player.GameObject.Transform.Position}", startPos);
+        DrawString(spriteBatch, $"Player TargetVel {player.targetVelocity}", startPos);
 
         startPos += offset;
-        DrawString(spriteBatch, $"Grid Room Nr {GridManager.Instance.RoomNrIndex}", startPos);
+        DrawString(spriteBatch, $"player.velocity {player.velocity}", startPos);
 
         startPos += offset;
-        DrawString(spriteBatch, $"Grid Room Nr {GridManager.Instance.RoomNrIndex}", startPos);
+        DrawString(spriteBatch, $"Player totalMovementInput: {player.totalMovementInput.X},{player.totalMovementInput.Y}", startPos);
     }
 
     protected void DrawString(SpriteBatch spriteBatch, string text, Vector2 position)

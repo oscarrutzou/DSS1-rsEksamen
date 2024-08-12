@@ -7,8 +7,6 @@ namespace DoctorsDungeon.Other;
 public static class BaseMath
 {
 
-    public const float GravityScale = 20.0f;
-    public static Vector2 Gravity { get; set; } = new Vector2(0, 10.0f * GravityScale);
 
     public static Vector2 Rotate(Vector2 position, float rotation)
     {

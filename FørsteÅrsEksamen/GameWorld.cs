@@ -269,7 +269,7 @@ public class GameWorld : Game
 
         NextScene = null;
     }
-    public ParticleEmitter BackgroundEmitter;
+    public ParticleEmitter BackgroundEmitter { get; set; }
     private Color[] menuColors = new Color[] { Color.DarkCyan, Color.DarkGray, Color.Gray, Color.Transparent };
     private Color[] roomColors = new Color[] { Color.DarkRed, Color.DarkGray, Color.Gray, Color.Transparent };
     // We dont need a factory to do this, since its only this place we are going to use this background.
@@ -311,10 +311,7 @@ public class GameWorld : Game
             return;
         }
 
-        if (BackgroundEmitter == null)
-        {
-            SpawnBG();
-        }
+        if (BackgroundEmitter == null) SpawnBG();
 
         BackgroundEmitter.StartEmitter();
 

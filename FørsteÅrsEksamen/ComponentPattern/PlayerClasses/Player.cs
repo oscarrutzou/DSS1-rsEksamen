@@ -16,7 +16,7 @@ public abstract class Player : Character, ISubject
     public GameObject HandsGo;
     public GameObject MovementColliderGo;
 
-    private Vector2 totalMovementInput, velocity, targetVelocity, previousPosition;
+    public Vector2 totalMovementInput, velocity, targetVelocity, previousPosition;
 
     private readonly float turnSpeed = 40f; // Adjust as needed
 
@@ -93,17 +93,10 @@ public abstract class Player : Character, ISubject
 
     private void CheckForMovement()
     {
-        //SpriteRenderer.Rotation += (float)GameWorld.DeltaTime;
-
         if (totalMovementInput != Vector2.Zero)
-        {
             SetState(CharacterState.Moving);
-
-        }
         else
-        {
             SetState(CharacterState.Idle);
-        }
     }
 
     #region Movement
@@ -115,8 +108,10 @@ public abstract class Player : Character, ISubject
         {
             // Add the normalized input to the total movement
             totalMovementInput += input;
-
-            totalMovementInput.Normalize();
+            
+            // If the input is the opposite then the input can turn into Vector.Zero
+            if (totalMovementInput != Vector2.Zero)
+                totalMovementInput.Normalize();
         }
     }
 

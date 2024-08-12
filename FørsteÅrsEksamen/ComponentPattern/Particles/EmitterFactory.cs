@@ -29,12 +29,9 @@ namespace DoctorsDungeon.ComponentPattern.Particles
             emitter.AddModifier(new ColorRangeModifier(new Color[] { Color.Transparent }, colors));
             emitter.AddModifier(new ScaleModifier(2, 1));
             emitter.FollowGameObject(followObj, followOffset);
-            //DamageTakenEmitter.AddModifier(new GravityModifier());
 
             if (emitterOrigin != null)
-            {
                 emitter.Origin = emitterOrigin;
-            }
 
             return go;
         }

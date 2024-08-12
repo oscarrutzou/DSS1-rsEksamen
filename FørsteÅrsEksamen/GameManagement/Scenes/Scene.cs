@@ -92,13 +92,16 @@ public abstract class Scene
     protected double TransitionProgress; 
     private double transitionDuration = 0.3; // Desired duration in seconds
     
-    public void OnSceneChange()
+    private void LerpGameObjects()
     {
         TransitionProgress += GameWorld.DeltaTime / transitionDuration;
         TransitionProgress = Math.Clamp(TransitionProgress, 0, 1);
 
         foreach (GameObjectTypes type in SceneData.GameObjectLists.Keys)
         {
+            // The cells shouldnt be turned transparent, since that allows the player to see whats under them.
+            if (type == GameObjectTypes.Cell) continue; 
+
             foreach (GameObject gameObject in SceneData.GameObjectLists[type])
             {
                 SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer>();
@@ -111,11 +114,19 @@ public abstract class Scene
             }
         }
 
+    }
+
+    public void OnSceneChange()
+    {
+        LerpGameObjects();
+
+        // If the progrss of the lerp has not finnished, we wont change scenes
         if (TransitionProgress != 1) return;
 
         IsChangingScene = false;
         
-        OnFirstCleanUp = null; // For extra safety
+        OnFirstCleanUp = null;
+
         InputHandler.Instance.RemoveAllExeptBaseCommands();
         GridManager.Instance.ResetGridManager();
 

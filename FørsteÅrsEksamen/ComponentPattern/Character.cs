@@ -87,6 +87,8 @@ public abstract class Character : Component
         //Health.OnResetColor += OnResetColor;
     }
 
+    private ParticleEmitter dustCloudEmitter;
+
     // This is not a abstract method since we only need to set it in the Player and Enemy class, and not in its subclasses
     /// <summary>
     /// A method to set the new state and change the animation drawn.
@@ -97,14 +99,10 @@ public abstract class Character : Component
         if (State == newState) return; // Dont change the state to the same and reset the animation
         State = newState;
 
-        //if (State == CharacterState.Moving)
-        //{
-        //    emitterDustCloud.StartEmitter();
-        //}
-        //else
-        //{
-        //    emitterDustCloud.StopEmitter();
-        //}
+        if (State == CharacterState.Moving)
+            dustCloudEmitter.StartEmitter();
+        else
+            dustCloudEmitter.StopEmitter();
 
         switch (State)
         {
@@ -188,9 +186,28 @@ public abstract class Character : Component
 
     private void MakeEmitters()
     {
-        DustWalkEmitter();
+        MakeDustEmitter();
+        MakeDamageTakenEmitter();
 
         Health.AmountDamageTaken += OnDamageTakenText;
+    }
+
+    private void MakeDustEmitter()
+    {
+        GameObject go = EmitterFactory.CreateParticleEmitter("Dust Cloud", new Vector2(200, -200), new Interval(100, 150), new Interval(-MathHelper.Pi, 0), 30, new Interval(500, 1000), 1000, -1, new Interval(-MathHelper.Pi, 0), new Interval(-0.01, 0.01));
+
+        dustCloudEmitter = go.GetComponent<ParticleEmitter>();
+        dustCloudEmitter.FollowGameObject(GameObject, new Vector2(0, 25));
+        dustCloudEmitter.LayerName = LayerDepth.EnemyUnder;
+        dustCloudEmitter.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel4x4));
+        dustCloudEmitter.AddModifier(new ColorRangeModifier(new Color[] { new(142, 94, 52), new(82, 61, 42), Color.Transparent }));
+
+        dustCloudEmitter.AddBirthModifier(new ScaleBirthModifier(new Interval(1, 2)));
+        dustCloudEmitter.AddModifier(new GravityModifier(20f));
+
+        dustCloudEmitter.Origin = new RectangleOrigin(80, 30);
+
+        GameWorld.Instance.Instantiate(go);
     }
 
     private void OnDamageTakenText(int damage)
@@ -203,7 +220,7 @@ public abstract class Character : Component
     public ParticleEmitter DamageTakenEmitter { get; private set; }
     protected Color[] DamageTakenAmountTextColor = new Color[] { Color.OrangeRed, Color.DarkRed, Color.Transparent };
 
-    private void DustWalkEmitter()
+    private void MakeDamageTakenEmitter()
     {
         GameObject go = EmitterFactory.TextDamageEmitter(DamageTakenAmountTextColor, GameObject, new Vector2(-20, -95), new RectangleOrigin(50, 5));
         DamageTakenEmitter = go.GetComponent<ParticleEmitter>();
