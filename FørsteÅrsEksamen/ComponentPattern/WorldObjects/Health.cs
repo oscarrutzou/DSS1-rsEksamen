@@ -25,6 +25,7 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
         public Action OnDamageTaken { get; set; }
         public Action OnZeroHealth { get; set; }
         public Action OnResetColor { get; set; }
+        public bool IsDead { get; private set; }
         public Action<int> AmountDamageTaken { get; set; }
         public Health(GameObject gameObject) : base(gameObject)
         {
@@ -94,6 +95,7 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
                 return;
             }
 
+            IsDead = true;
             ResetColor();
             OnZeroHealth?.Invoke();
         }
@@ -107,7 +109,7 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
 
         private void ResetColor()
         {
-            spriteRenderer.Color = Color.White;
+            //spriteRenderer.Color = Color.White;
             OnResetColor?.Invoke();
         }
 

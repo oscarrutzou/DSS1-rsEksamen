@@ -45,7 +45,9 @@ public static class PlayerFactory
 
         //Weapon
         GameObject weaponGo = WeaponFactory.Create(weaponType);
-        weaponGo.GetComponent<Weapon>().PlayerUser = player;
+        Weapon weapon = weaponGo.GetComponent<Weapon>();
+        weapon.PlayerUser = player;
+        weapon.UseAttackCooldown = false;
         GameWorld.Instance.Instantiate(weaponGo);
 
         // Add weapon to player

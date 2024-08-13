@@ -38,6 +38,8 @@ public abstract class MeleeWeapon : Weapon
 
     public override void Update()
     {
+        base.Update();
+
         if (Attacking)
         {
             TotalElapsedTime += GameWorld.DeltaTime;

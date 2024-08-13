@@ -16,7 +16,7 @@ public class Potion : Component
     private int healAmount = 50;
 
     public Potion(GameObject gameObject) : base(gameObject)
-    {
+    { 
     }
 
     public Potion(GameObject gameObject, GameObject player) : base(gameObject)
@@ -54,7 +54,7 @@ public class Potion : Component
 
     public void Use()
     {
-        if (!health.AddHealth(healAmount)) return; // Already full health
+        if (!health.AddHealth(healAmount) || health.IsDead) return; // Already full health
         player.ItemInInventory = null;
         GameWorld.Instance.Destroy(GameObject);
     }

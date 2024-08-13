@@ -57,6 +57,10 @@ public abstract class Weapon : Component
     private float untouchedAngle;
     int divideBy = 4;
     protected float FinalLerp { get; set; }
+
+    protected double AttackTimer { get; set; }
+    protected double AttackCooldown = 2.0;
+    public bool UseAttackCooldown = true;
     #endregion
 
     protected Weapon(GameObject gameObject) : base(gameObject)
@@ -78,10 +82,29 @@ public abstract class Weapon : Component
             PlayerWeaponSprite();
         }
     }
+    public override void Start()
+    {
+        animRotation = Animations[CurrentAnim].AmountOfRotation;
+
+        NextAnim = CurrentAnim;
+
+        nextAnimRotation = Animations[NextAnim].AmountOfRotation;
+    }
+
+    public override void Update()
+    {
+        if (UseAttackCooldown && AttackTimer < AttackCooldown)
+            AttackTimer += GameWorld.DeltaTime;
+    }
 
     public void StartAttack()
     {
         if (Attacking) return;
+
+        // If the weapon uses cooldown between attacks, and the 
+        if (UseAttackCooldown && AttackTimer < AttackCooldown) return;
+
+        AttackTimer = 0;
 
         MoveWeaponAndAngle();
         
@@ -95,15 +118,6 @@ public abstract class Weapon : Component
         PlayAttackSound();
 
         SetAttackDirection();
-    }
-
-    public override void Start()
-    {
-        animRotation = Animations[CurrentAnim].AmountOfRotation;
-
-        NextAnim = CurrentAnim;
-
-        nextAnimRotation = Animations[NextAnim].AmountOfRotation;
     }
 
     private void ChangeWeaponAttacks()
@@ -123,14 +137,18 @@ public abstract class Weapon : Component
         {
             NextAnim = Animations[CurrentAnim].NextAnimation;
         }
-        else // The Animation is the same
+        else // The Animation is the same 
         {
             NextAnim = CurrentAnim;
         }
 
         nextAnimRotation = Animations[NextAnim].AmountOfRotation;
-    }
 
+        if (UseAttackCooldown)
+        {
+            AttackCooldown = Animations[NextAnim].TotalTime;
+        }
+    }
 
     protected virtual void PlayerWeaponSprite()
     { }
@@ -176,7 +194,6 @@ public abstract class Weapon : Component
 
         lastOffSetPos = BaseMath.Rotate(startRelativePos, angle - MathHelper.PiOver2) + startRelativeOffsetPos;
         GameObject.Transform.Position = userPos + lastOffSetPos;
-
 
         SetAngleToCorrectSide();
 

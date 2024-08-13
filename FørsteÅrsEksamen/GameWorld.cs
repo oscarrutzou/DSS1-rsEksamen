@@ -26,7 +26,7 @@ public class GameWorld : Game
     #region Properties
     public static GameWorld Instance;
 
-    public static bool DebugAndCheats = true;
+    public static bool DebugAndCheats = false;
     public static double DeltaTime { get; private set; }
     public static bool IsPaused = false;
     public static Color BackGroundColor { get; private set; } = new Color(20, 20, 18, 255);
@@ -72,7 +72,7 @@ public class GameWorld : Game
         GenerateScenes(); // Makes a instance of all the scene we need
 
         CurrentScene = Scenes[SceneNames.MainMenu];
-        CurrentScene.Initialize(); // Starts the main menu
+        CurrentScene.Initialize(); // Starts the main menu 
 
         SpawnBG(); // The background that dont get deleted
 

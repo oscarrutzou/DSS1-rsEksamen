@@ -55,7 +55,7 @@ public class Projectile : Component
         Move();
     }
 
-    private void Move(  )
+    private void Move()
     {
         //if (targetPos == Vector2.Zero) return;
 

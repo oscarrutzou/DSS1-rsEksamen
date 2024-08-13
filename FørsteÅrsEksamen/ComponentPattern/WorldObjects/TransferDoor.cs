@@ -67,7 +67,7 @@ public class TransferDoor : Component
     {
         // Skal kun fjerne item ved player position, ikke alle items.
         // Stop the door from changing scenes if the player died.
-        if (playerHealth.CurrentHealth == 0) return;
+        if (playerHealth.IsDead) return;
 
         if (collider.CollisionBox.Intersects(playerCollider.CollisionBox))
         {

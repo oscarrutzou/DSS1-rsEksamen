@@ -50,8 +50,6 @@ public abstract class Character : Component
     public Vector2 Direction { get; protected set; }
     protected AnimationDirectionState DirectionState = AnimationDirectionState.Right;
 
-    protected float AttackTimer;
-    protected float AttackCooldown = 2f;
 
     protected int Speed { get; set; }
     public int CollisionNr { get; set; }
@@ -158,6 +156,7 @@ public abstract class Character : Component
 
     public void Attack()
     {
+
         if (Weapon == null) return;
         Weapon.MoveWeaponAndAngle(); // Should maybe wait till it has reached towards the new direction
         if (Weapon == null) return;
