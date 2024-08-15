@@ -89,7 +89,7 @@ public class SpriteRenderer : Component
     private float _rotation = -1;
     public LayerDepth LayerName { get; private set; } = ComponentPattern.LayerDepth.Default;
     public SpriteEffects SpriteEffects { get; set; } = SpriteEffects.None;
-    private float LayerDepth;
+    public float LayerDepth { get; private set; }
     private Vector2 drawPos;
 
     // For the animation draw calls

@@ -71,7 +71,7 @@ public class GameWorld : Game
 
         GenerateScenes(); // Makes a instance of all the scene we need
 
-        CurrentScene = Scenes[SceneNames.MainMenu];
+        CurrentScene = Scenes[SceneNames.WeaponTestScene];
         CurrentScene.Initialize(); // Starts the main menu 
 
         SpawnBG(); // The background that dont get deleted
@@ -91,7 +91,7 @@ public class GameWorld : Game
         GlobalSounds.MusicUpdate(); // Updates the Music in the game, not SFX
         InputHandler.Instance.Update();
 
-        InputHandler.Instance.MouseGo.Update(gameTime);
+        InputHandler.Instance.MouseGo?.Update(gameTime);
 
         CurrentScene.Update(gameTime); // Updates all gameobjects and their componetents in the scene
         HandleSceneChange(); // Goes to the next scene

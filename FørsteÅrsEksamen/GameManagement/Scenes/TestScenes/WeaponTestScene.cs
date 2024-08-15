@@ -9,6 +9,7 @@ using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons;
 using DoctorsDungeon.ComponentPattern.WorldObjects;
 using DoctorsDungeon.Factory;
+using DoctorsDungeon.Factory.Gui;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -27,6 +28,7 @@ public class WeaponTestScene : Scene
 
         MakePlayer();
         MakeEmitters();
+        MakeHealthBar();
 
         SetCommands();
     }
@@ -40,6 +42,12 @@ public class WeaponTestScene : Scene
 
         GameWorld.Instance.WorldCam.Position = playerGo.Transform.Position;
         GameWorld.Instance.Instantiate(playerGo);
+    }
+
+    private void MakeHealthBar()
+    {
+        GameObject go = ScalableBarFactory.CreateHealthBar(playerGo, true);
+        GameWorld.Instance.Instantiate(go);
     }
 
     ParticleEmitter emitter;

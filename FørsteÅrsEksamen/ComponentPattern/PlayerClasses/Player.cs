@@ -52,8 +52,8 @@ public abstract class Player : Character, ISubject
         Collider.SetCollisionBox(15, 24, new Vector2(0, 30));
 
         Cell cellUnderPlayer = SetStartCollisionNr();
+        if (cellUnderPlayer == null) return;
         GridManager.Instance.AddVisitedRoomNumbers(cellUnderPlayer.RoomNr);
-
     }
 
     public override void Start()

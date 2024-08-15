@@ -94,6 +94,8 @@ public abstract class Character : Component
 
     public Cell SetStartCollisionNr()
     {
+        if (Grid == null) return null;
+
         GameObject currentCellGo = Grid.GetCellGameObjectFromPoint(GameObject.Transform.GridPosition);
         GameObject.Transform.Position = currentCellGo.Transform.Position;
         Cell cell = currentCellGo.GetComponent<Cell>();

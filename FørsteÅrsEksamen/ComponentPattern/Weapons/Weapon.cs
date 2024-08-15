@@ -69,6 +69,8 @@ public abstract class Weapon : Component
 
     public override void Awake()
     {
+        AttackTimer = AttackCooldown;
+
         SpriteRenderer = GameObject.GetComponent<SpriteRenderer>();
         SpriteRenderer.SetLayerDepth(LayerDepth.PlayerWeapon); // Should not matter?
         SpriteRenderer.IsCentered = false;

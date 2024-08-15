@@ -201,6 +201,18 @@
 /processorParam:TextureFormat=Color
 /build:UI/BigButtonIndividuel (2).png
 
+#begin UI/PlayerHealthOver.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:UI/PlayerHealthOver.png
+
 #begin UI/Quest.png
 /importer:TextureImporter
 /processor:TextureProcessor
