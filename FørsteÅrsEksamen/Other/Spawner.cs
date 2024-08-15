@@ -14,7 +14,7 @@ public class Spawner : Component
     {
     }
 
-    public List<Enemy> SpawnEnemies(List<Point> spawnLocations, GameObject playerGo)
+    public List<Enemy> SpawnEnemies(List<Point> spawnLocations, GameObject playerGo, List<EnemyTypes> randomTypes = null)
     {
         List<Enemy> enemies = new();
         for (int i = 0; i < spawnLocations.Count; i++)
@@ -22,8 +22,16 @@ public class Spawner : Component
             Point spawnPoint = spawnLocations[i];
 
             GameObject enemyGo;
-            if (i % 2 == 0) enemyGo = EnemyFactory.Create(EnemyTypes.OrcWarrior, WeaponTypes.Sword);
-            else enemyGo = EnemyFactory.Create(EnemyTypes.OrcArcher, WeaponTypes.Dagger);
+
+            if (randomTypes == null)
+            {
+                if (i % 2 == 0) enemyGo = EnemyFactory.Create(EnemyTypes.OrcWarrior, WeaponTypes.Sword);
+                else enemyGo = EnemyFactory.Create(EnemyTypes.OrcArcher, WeaponTypes.Dagger);
+            }
+            else
+            {
+                enemyGo = EnemyFactory.CreateWithRandomType(randomTypes);
+            }
 
             Enemy enemy = enemyGo.GetComponent<Enemy>();
             enemy.SetStartPosition(playerGo, spawnPoint);

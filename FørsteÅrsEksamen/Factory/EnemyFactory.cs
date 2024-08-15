@@ -6,6 +6,7 @@ using DoctorsDungeon.ComponentPattern.Weapons;
 using DoctorsDungeon.ComponentPattern.WorldObjects;
 using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
 
 namespace DoctorsDungeon.Factory;
 
@@ -23,22 +24,18 @@ public enum EnemyTypes
 // Asser
 public static class EnemyFactory
 {
-    private static Random random = new();
+    private static readonly Random random = new();
 
-    //public static GameObject CreateWithRandomType()
-    //{
-    //    Array enemyValue = Enum.GetValues(typeof(EnemyTypes));
-    //    int randomClassIndex = random.Next(enemyValue.Length);
-    //    EnemyTypes randomType = (EnemyTypes)enemyValue.GetValue(randomClassIndex);
+    public static GameObject CreateWithRandomType(List<EnemyTypes> spawnableTypes)
+    {
+        EnemyTypes randomType = spawnableTypes[random.Next(0, spawnableTypes.Count)];
 
-    //    Array weaponValue = Enum.GetValues(typeof(WeaponTypes));
-    //    int randomWeaponIndex = random.Next(weaponValue.Length);
-    //    WeaponTypes randomWeapon = (WeaponTypes)weaponValue.GetValue(randomWeaponIndex);
+        // Need to put them into classes
+        List<WeaponTypes> weaponTypes = WeaponFactory.EnemyHasWeapon[randomType];
+        WeaponTypes randomWeapon = weaponTypes[random.Next(0, weaponTypes.Count)];
 
-    //    // Need to put them into classes
-
-    //    return Create(randomType, randomWeapon);
-    //}
+        return Create(randomType, randomWeapon);
+    }
 
     public static GameObject Create(EnemyTypes enemyType, WeaponTypes weaponType)
     {

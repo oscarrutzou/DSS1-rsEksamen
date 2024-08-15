@@ -2,7 +2,9 @@
 using DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons;
 using DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons;
 using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DoctorsDungeon.Factory;
 
@@ -21,7 +23,13 @@ public enum WeaponTypes
 // Erik
 public static class WeaponFactory
 {
-    public static Dictionary<ClassTypes, List<WeaponTypes>> ClassHasWeapons = new()
+    public static List<WeaponTypes> WeaponTypesThatAreDone { get; private set; } = new()
+    {
+        WeaponTypes.Sword,
+        WeaponTypes.Dagger,
+    };
+
+    public static Dictionary<ClassTypes, List<WeaponTypes>> ClassHasWeapons { get; private set; } = new()
     {
         { ClassTypes.Rogue, new List<WeaponTypes>(){
             WeaponTypes.Dagger,
@@ -40,22 +48,22 @@ public static class WeaponFactory
         }},
     };
 
-    public static Dictionary<EnemyTypes, List<WeaponTypes>> EnemyHasWeapon = new()
+    public static Dictionary<EnemyTypes, List<WeaponTypes>> EnemyHasWeapon { get; private set; } = new()
     {
         { EnemyTypes.OrcArcher, new List<WeaponTypes>(){
             WeaponTypes.Dagger,
-            WeaponTypes.Bow,
-            WeaponTypes.BowFire,
+            //WeaponTypes.Bow,
+            //WeaponTypes.BowFire,
         }},
 
         { EnemyTypes.OrcShaman, new List<WeaponTypes>(){
-            WeaponTypes.MagicStaff,
-            WeaponTypes.MagicStaffFire,
+            //WeaponTypes.MagicStaff,
+            //WeaponTypes.MagicStaffFire,
         }},
 
         { EnemyTypes.OrcWarrior, new List<WeaponTypes>(){
             WeaponTypes.Sword,
-            WeaponTypes.Axe,
+            //WeaponTypes.Axe,
         }},
     };
 
@@ -68,6 +76,7 @@ public static class WeaponFactory
 
         return weaponGo;
     }
+
 
     private static void AddClassComponent(GameObject weaponGo, WeaponTypes type)
     {

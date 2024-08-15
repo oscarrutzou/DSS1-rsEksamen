@@ -1,6 +1,7 @@
 ﻿using DoctorsDungeon.ComponentPattern.Path;
 using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using DoctorsDungeon.ComponentPattern.WorldObjects;
+using DoctorsDungeon.Factory;
 using DoctorsDungeon.GameManagement;
 using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
@@ -9,6 +10,11 @@ using System.Collections.Generic;
 
 namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
 {
+    /*
+     * Tribal Conjurer Lokar: 
+     * Ancestral Caller Brug:
+     * Spiritforge Garok:
+     */
     public class MiniBossEnemy : EnemyMelee
     {
         private double spawnTimer;
@@ -24,7 +30,7 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
         public MiniBossEnemy(GameObject gameObject) : base(gameObject)
         {
             CanAttack = false;
-        } 
+        }  
 
         public override void Awake()
         {
@@ -92,7 +98,7 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
             // Amount to spawn
             points.Add(GameObject.Transform.GridPosition);
 
-            List<Enemy> newEnemies = enemySpawner.SpawnEnemies(points, Player.GameObject);
+            List<Enemy> newEnemies = enemySpawner.SpawnEnemies(points, Player.GameObject, spawnAbleTypes);
 
             spawnedEnemies.AddRange(newEnemies);
 
@@ -102,6 +108,12 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
                 enemy.HasBeenAwoken = true;
             }
         }
+
+        private List<EnemyTypes> spawnAbleTypes = new List<EnemyTypes>()
+        {
+            EnemyTypes.OrcArcher,
+            EnemyTypes.OrcWarrior,
+        };
 
     }
 }

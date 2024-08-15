@@ -27,11 +27,7 @@ public class CharacterSelectorMenu : MenuScene
         ClassTypes.Rogue,
     };
 
-    private List<WeaponTypes> weaponTypesThatAreDone = new()
-    {
-        WeaponTypes.Sword,
-        WeaponTypes.Dagger,
-    };
+
 
     private int spaceBetween = 30;
 
@@ -94,7 +90,7 @@ public class CharacterSelectorMenu : MenuScene
 
             foreach (WeaponTypes weaponType in WeaponFactory.ClassHasWeapons[classType])
             {
-                if (!weaponTypesThatAreDone.Contains(weaponType)) continue; // If we havent made that weapon yet
+                if (!WeaponFactory.WeaponTypesThatAreDone.Contains(weaponType)) continue; // If we havent made that weapon yet
 
                 GameObject btnGo = ButtonFactory.Create($"{weaponType} 50g", true, () => { SeletectWeapon(weaponType); }, TextureNames.LargeBtn);
 
