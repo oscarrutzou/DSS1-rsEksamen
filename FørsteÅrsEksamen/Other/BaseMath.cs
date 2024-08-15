@@ -83,4 +83,32 @@ public static class BaseMath
     {
         return Math.Max(low, Math.Min(a, high));
     }
+
+
+    public static Vector2 SafeNormalize(Vector2 value)
+    {
+        float length = value.Length();
+        if (length > 0)
+        {
+            float num = 1f / length;
+            value.X *= num;
+            value.Y *= num;
+        }
+        return value;
+    }
+
+    public static void SafeNormalize(ref Vector2 value, out Vector2 result)
+    {
+        float length = value.Length();
+        if (length > 0)
+        {
+            float num = 1f / length;
+            result.X = value.X * num;
+            result.Y = value.Y * num;
+        }
+        else
+        {
+            result = Vector2.Zero; 
+        }
+    }
 }

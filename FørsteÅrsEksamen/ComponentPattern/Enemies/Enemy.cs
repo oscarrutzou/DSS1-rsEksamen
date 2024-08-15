@@ -1,5 +1,6 @@
 ﻿using DoctorsDungeon.ComponentPattern.Path;
 using DoctorsDungeon.ComponentPattern.PlayerClasses;
+using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -132,7 +133,7 @@ public abstract class Enemy : Character
                 if (Player.State == CharacterState.Dead) return;
 
                 // Update direction towards player insted of moving direction
-                Direction = Vector2.Normalize(PlayerGo.Transform.Position - GameObject.Transform.Position);
+                Direction = BaseMath.SafeNormalize(PlayerGo.Transform.Position - GameObject.Transform.Position);
                 Weapon.MoveWeaponAndAngle();
                 UpdateDirection();
 
@@ -296,14 +297,14 @@ public abstract class Enemy : Character
             }
         }
 
-        Direction = Vector2.Normalize(nextTarget - position);
+        Direction = BaseMath.SafeNormalize(nextTarget - position);
 
         GameObject.Transform.Translate(Direction * Speed * (float)GameWorld.DeltaTime);
         Weapon.MoveWeaponAndAngle();
 
         if (CanAttack && Path != null && Path.Count <= 3) // Attack before reaching the player, to put pressure on them
         {
-            Direction = Vector2.Normalize(PlayerGo.Transform.Position - GameObject.Transform.Position);
+            Direction = BaseMath.SafeNormalize(PlayerGo.Transform.Position - GameObject.Transform.Position);
             Attack();
         }
         

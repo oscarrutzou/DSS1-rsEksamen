@@ -4,6 +4,7 @@ using DoctorsDungeon.ComponentPattern.WorldObjects;
 using DoctorsDungeon.Factory;
 using DoctorsDungeon.LiteDB;
 using DoctorsDungeon.ObserverPattern;
+using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;

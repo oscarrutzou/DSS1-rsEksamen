@@ -44,7 +44,7 @@ public class Projectile : Component
     {
         targetPos = InputHandler.Instance.MouseOnUI;
 
-        direction = Vector2.Normalize(targetPos - GameObject.Transform.Position);
+        direction = BaseMath.SafeNormalize(targetPos - GameObject.Transform.Position);
 
         float angle = (float)Math.Atan2(direction.Y, direction.X);
         GameObject.Transform.Rotation = angle;
