@@ -23,13 +23,16 @@ public class TransferDoor : Component
     {
     }
 
+    public override void Awake()
+    {
+        MakeEmitter();
+    }
+
     public override void Start()
     {
         playerCollider = SaveData.Player.GameObject.GetComponent<Collider>();
         playerHealth = SaveData.Player.GameObject.GetComponent<Health>();
         collider = GameObject.GetComponent<Collider>();
-
-        MakeEmitter();
     }
 
     private void MakeEmitter()

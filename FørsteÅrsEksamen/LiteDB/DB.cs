@@ -171,6 +171,16 @@ public class DB
             grid.Cells.Add(gridPos, cellGo); // Adds to Cell Dict so we can use it later.
             cellGo.IsEnabled = InputHandler.Instance.DebugMode;
             GameWorld.Instance.Instantiate(cellGo); //Spawn it into the world.
+
+            Cell cell = cellGo.GetComponent<Cell>();
+
+            // Add the cell to the dictionary based on its CollisionNr
+            if (!grid.CellsCollisionDict.TryGetValue(cellData.CollisionNr, out var cellList))
+            {
+                cellList = new List<GameObject>();
+                grid.CellsCollisionDict.Add(cellData.CollisionNr, cellList);
+            }
+            cellList.Add(cellGo);
         }
 
         return gridGo;

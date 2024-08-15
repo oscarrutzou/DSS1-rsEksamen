@@ -216,7 +216,7 @@ public class GridManager
         if (CurrentGrid == null) return temp;
 
         temp = CurrentGrid.PosFromGridPos(gridCell);
-        temp -= new Vector2(Cell.dimension * Cell.Scale / 2, Cell.dimension * Cell.Scale / 2);
+        temp -= new Vector2(Cell.Dimension * Cell.Scale / 2, Cell.Dimension * Cell.Scale / 2);
 
         return temp;
     }

@@ -178,7 +178,7 @@ public abstract class RoomBase : Scene
         InputHandler.Instance.AddKeyButtonDownCommand(Keys.Enter, new CustomCmd(ChangeScene));
         InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DB.Instance.SaveGrid(GridManager.Instance.CurrentGrid); }));
 
-        InputHandler.Instance.AddKeyButtonDownCommand(Keys.Q, new CustomCmd(() => { player.GameObject.GetComponent<Health>().TakeDamage(rnd.Next(500000000, 500000000)); }));
+        //InputHandler.Instance.AddKeyButtonDownCommand(Keys.Q, new CustomCmd(() => { player.GameObject.GetComponent<Health>().TakeDamage(rnd.Next(500000000, 500000000)); }));
     }
     Random rnd = new();
 
@@ -214,7 +214,8 @@ public abstract class RoomBase : Scene
 
     private void OnAllEnemiesDied()
     {
-        if (transferDoorSpriteRenderer.ShouldDrawSprite == false) return; // To stop method from being run twice.
+        // The transferDoor.emitter == null is there for when there is 0 enemies in the room at the start
+        if (transferDoorSpriteRenderer.ShouldDrawSprite == false || transferDoor.emitter == null) return; // To stop method from being run twice.
 
         transferDoorSpriteRenderer.ShouldDrawSprite = false;
         transferDoor.CanTranser = true;

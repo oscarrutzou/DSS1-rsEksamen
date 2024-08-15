@@ -17,6 +17,7 @@ public enum EnemyTypes
     SkeletonWarrior,
     SkeletonArcher,
     SkeletonMage,
+    OrcMiniBoss,
 }
 
 // Asser
@@ -41,7 +42,7 @@ public static class EnemyFactory
 
     public static GameObject Create(EnemyTypes enemyType, WeaponTypes weaponType)
     {
-        GameObject enemyGo = new GameObject();
+        GameObject enemyGo = new();
         enemyGo.Type = GameObjectTypes.Enemy;
         enemyGo.AddComponent<SpriteRenderer>();
         enemyGo.AddComponent<Animator>();
@@ -75,6 +76,10 @@ public static class EnemyFactory
 
             case EnemyTypes.OrcArcher:
                 enemyGo.AddComponent<OrcArcher>();
+                break;
+
+            case EnemyTypes.OrcMiniBoss:
+                enemyGo.AddComponent<MiniBossEnemy>();
                 break;
 
             case EnemyTypes.SkeletonWarrior:

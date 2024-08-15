@@ -1,5 +1,6 @@
 ﻿using DoctorsDungeon.Factory;
 using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 
 namespace DoctorsDungeon.ComponentPattern.Path;
@@ -13,7 +14,10 @@ public class Grid : Component
 
     public Vector2 StartPostion { get; set; }
 
-    public Dictionary<Point, GameObject> Cells { get; private set; } = new Dictionary<Point, GameObject>();
+    public Dictionary<Point, GameObject> Cells { get; private set; } = new();
+    // Evt. tag og lav en dict af en dict
+    // Declare a dictionary to store multiple GameObjects per key
+    public Dictionary<int, List<GameObject>> CellsCollisionDict = new Dictionary<int, List<GameObject>>();
     public List<Point> TargetPoints { get; private set; } = new List<Point>(); //Target cell points
 
     public int Width, Height;
@@ -34,6 +38,7 @@ public class Grid : Component
 
     #endregion Properties
 
+
     /// <summary>
     /// Generates a grid with GameObject Cells foreach node
     /// </summary>
@@ -46,8 +51,8 @@ public class Grid : Component
         if (isCentered)
         {
             StartPostion = new Vector2(
-                StartPostion.X - (Width * Cell.dimension * Cell.Scale / 2),
-                StartPostion.Y - (Height * Cell.dimension * Cell.Scale / 2)
+                StartPostion.X - (Width * Cell.Dimension * Cell.Scale / 2),
+                StartPostion.Y - (Height * Cell.Dimension * Cell.Scale / 2)
             );
         }
 
@@ -62,6 +67,68 @@ public class Grid : Component
         }
     }
 
+
+    public List<GameObject> GetCellsInRadius(Vector2 pos, int searchRadius, int minimumCellDistance)
+    {
+        List<GameObject> tilesInRadius = new List<GameObject>();
+        GameObject startCellGo = GetCellGameObject(pos) ?? throw new Exception("Not a tile under pos");
+
+        Vector2 startPos = startCellGo.Transform.Position;
+        Point startGridPos = startCellGo.Transform.GridPosition;
+
+        // Calculate the range of positions that the radius covers
+        Vector2 minPos = startPos - new Vector2(searchRadius);
+
+        Vector2 maxPos = startPos + new Vector2(searchRadius);
+
+        // Iterate over the positions in the range
+        for (float x = minPos.X; x <= maxPos.X; x += Cell.Dimension * Cell.Scale)
+        {
+            for (float y = minPos.Y; y <= maxPos.Y; y += Cell.Dimension * Cell.Scale)
+            {
+                Vector2 gridPosVec = new(x, y);
+                GameObject cellGo = GetCellGameObject(gridPosVec);
+                if (cellGo == null) continue;
+
+                Point gridPos = cellGo.Transform.GridPosition;
+
+                if (gridPos == startGridPos) continue;
+
+                // Check if the grid position is within the grid bounds
+                if (gridPos.X >= 0 && gridPos.X < Width && gridPos.Y >= 0 && gridPos.Y < Height)
+                {
+                    Cell cell = cellGo.GetComponent<Cell>();
+
+                    // Check if the tile is not null and not 'Empty'
+                    if (cell != null && cell.CellWalkableType == CellWalkableType.FullValid)
+                    {
+                        Point pos1 = gridPos;
+                        float dis = Distance(startPos, gridPosVec);
+
+                        // Check if the position is within the radius from the center position
+                        // gridPos - start pos >= minDis gridPos - startCellGo.Transform.GridPosition >= minimumCellDistance
+                        if (dis <= searchRadius &&
+                            gridPos.X - startCellGo.Transform.GridPosition.X >= minimumCellDistance &&
+                            gridPos.Y - startCellGo.Transform.GridPosition.Y >= minimumCellDistance)
+                        {
+                            tilesInRadius.Add(cellGo);
+                        }
+                    }
+                }
+            }
+        }
+
+        return tilesInRadius;
+    }
+
+    public static float Distance(Vector2 value1, Vector2 value2)
+    {
+        float num = value1.X - value2.X;
+        float num2 = value1.Y - value2.Y;
+        return MathF.Sqrt(num * num + num2 * num2);
+    }
+
+
     public GameObject GetCellGameObject(Vector2 pos)
     {
         if (pos.X < StartPostion.X || pos.Y < StartPostion.Y)
@@ -70,8 +137,8 @@ public class Grid : Component
         }
 
         // Calculates the position of each point. Maybe remove the zoom
-        int gridX = (int)((pos.X - StartPostion.X) / (Cell.dimension * Cell.Scale * GameWorld.Instance.WorldCam.zoom));
-        int gridY = (int)((pos.Y - StartPostion.Y) / (Cell.dimension * Cell.Scale * GameWorld.Instance.WorldCam.zoom));
+        int gridX = (int)((pos.X - StartPostion.X) / (Cell.Dimension * Cell.Scale * GameWorld.Instance.WorldCam.zoom));
+        int gridY = (int)((pos.Y - StartPostion.Y) / (Cell.Dimension * Cell.Scale * GameWorld.Instance.WorldCam.zoom));
 
         // Checks if its inside the grid.
         if (0 <= gridX && gridX < Width && 0 <= gridY && gridY < Height)

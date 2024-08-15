@@ -49,6 +49,10 @@ public abstract class Player : Character, ISubject
         base.Awake();
         movementCollider = MovementColliderGo.GetComponent<Collider>();
         Collider.SetCollisionBox(15, 24, new Vector2(0, 30));
+
+        Cell cellUnderPlayer = SetStartCollisionNr();
+        GridManager.Instance.AddVisitedRoomNumbers(cellUnderPlayer.RoomNr);
+
     }
 
     public override void Start()
@@ -185,10 +189,12 @@ public abstract class Player : Character, ISubject
         SetMovement(GameObject.Transform.Position); // So we set the other gameobjects (Hands, Movement Collider...)
 
         // Updates the grid position
+        //Cell cellUnderPlayer = SetStartCollisionNr();
         GameObject cellGoUnderPlayer = GridManager.Instance.GetCellAtPos(GameObject.Transform.Position);
         GameObject.Transform.GridPosition = cellGoUnderPlayer.Transform.GridPosition;
         Cell cellUnderPlayer = cellGoUnderPlayer.GetComponent<Cell>();
         CollisionNr = cellUnderPlayer.CollisionNr;
+
         GridManager.Instance.AddVisitedRoomNumbers(cellUnderPlayer.RoomNr);
 
         Notify();

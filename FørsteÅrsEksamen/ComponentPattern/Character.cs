@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using static System.Net.Mime.MediaTypeNames;
 using SharpDX.X3DAudio;
+using DoctorsDungeon.ComponentPattern.Path;
 
 namespace DoctorsDungeon.ComponentPattern;
 
@@ -53,6 +54,8 @@ public abstract class Character : Component
 
     protected int Speed { get; set; }
     public int CollisionNr { get; set; }
+    protected Grid Grid; 
+
 
     #endregion Properties
 
@@ -62,6 +65,8 @@ public abstract class Character : Component
 
     public override void Awake()
     {
+        Grid = GridManager.Instance.CurrentGrid;
+
         SpriteRenderer = GameObject.GetComponent<SpriteRenderer>();
         Animator = GameObject.GetComponent<Animator>();
         Collider = GameObject.GetComponent<Collider>();
@@ -86,6 +91,15 @@ public abstract class Character : Component
     }
 
     private ParticleEmitter dustCloudEmitter;
+
+    public Cell SetStartCollisionNr()
+    {
+        GameObject currentCellGo = Grid.GetCellGameObjectFromPoint(GameObject.Transform.GridPosition);
+        GameObject.Transform.Position = currentCellGo.Transform.Position;
+        Cell cell = currentCellGo.GetComponent<Cell>();
+        CollisionNr = cell.CollisionNr;
+        return cell;
+    }
 
     // This is not a abstract method since we only need to set it in the Player and Enemy class, and not in its subclasses
     /// <summary>
@@ -154,9 +168,8 @@ public abstract class Character : Component
         }
     }
 
-    public void Attack()
+    public virtual void Attack()
     {
-
         if (Weapon == null) return;
         Weapon.MoveWeaponAndAngle(); // Should maybe wait till it has reached towards the new direction
         if (Weapon == null) return;

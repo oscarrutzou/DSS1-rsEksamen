@@ -25,11 +25,16 @@ public class Astar
         otherEnemies = enemyList;
         thisEnemy = enemy;
 
-        gridDem = Cell.dimension * Cell.Scale;
+        gridDem = Cell.Dimension * Cell.Scale;
         cells = GridManager.Instance.CurrentGrid.Cells.ToDictionary(
             entry => entry.Key,
             entry => entry.Value
         );
+    }
+
+    public void SetEnemyListReferences(List<Enemy> enemyList)
+    {
+        otherEnemies = enemyList;
     }
 
     public List<GameObject> FindPath(Point start, Point goal)

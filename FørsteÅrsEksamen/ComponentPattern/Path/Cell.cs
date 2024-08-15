@@ -15,7 +15,7 @@ public enum CellWalkableType
 // Oscar
 public class Cell : Component
 {
-    public static int dimension = 16;
+    public static int Dimension = 16;
 
     //public static readonly Vector2 ScaleSize = new(4, 4);
     public static int Scale = 4;
@@ -56,8 +56,8 @@ public class Cell : Component
 
         // Centers the position of the cell.
         GameObject.Transform.Position = grid.StartPostion
-            + new Vector2(point.X * dimension * Scale + dimension * Scale / 2,
-                          point.Y * dimension * Scale + dimension * Scale / 2);
+            + new Vector2(point.X * Dimension * Scale + Dimension * Scale / 2,
+                          point.Y * Dimension * Scale + Dimension * Scale / 2);
     }
 
     public Cell(GameObject gameObject, Grid grid, Point point, CellWalkableType type) : base(gameObject)
@@ -69,8 +69,8 @@ public class Cell : Component
 
         // Centers the position of the cell.
         GameObject.Transform.Position = grid.StartPostion
-            + new Vector2(point.X * dimension * Scale + dimension * Scale / 2,
-                          point.Y * dimension * Scale + dimension * Scale / 2);
+            + new Vector2(point.X * Dimension * Scale + Dimension * Scale / 2,
+                          point.Y * Dimension * Scale + Dimension * Scale / 2);
     }
 
     public Cell(GameObject gameObject, Grid grid, Point point, CellWalkableType type, int collisionNr, int roomNr) : base(gameObject)
@@ -84,8 +84,8 @@ public class Cell : Component
 
         // Centers the position of the cell.
         GameObject.Transform.Position = grid.StartPostion
-            + new Vector2(point.X * dimension * Scale + dimension * Scale / 2,
-                          point.Y * dimension * Scale + dimension * Scale / 2);
+            + new Vector2(point.X * Dimension * Scale + Dimension * Scale / 2,
+                          point.Y * Dimension * Scale + Dimension * Scale / 2);
     }
 
     public override void Start()

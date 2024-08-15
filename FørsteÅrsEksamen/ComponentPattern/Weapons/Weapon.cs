@@ -181,11 +181,13 @@ public abstract class Weapon : Component
             return;
         }
 
-        if (EnemyUser != null)
+        if (EnemyUser != null && EnemyUser.CanAttack)
             angle = GetAngleToMouseEnemy(userPos);
-        else
+        else if (PlayerUser != null)
             angle = GetAngleToMousePlayer();
-
+        else // If the weapon shouldnt rotate to the player
+            angle = 0f;
+        
         // Adjust the angle to be in the range of 0 to 2π
         if (angle < 0)
         {
@@ -196,9 +198,9 @@ public abstract class Weapon : Component
         GameObject.Transform.Position = userPos + lastOffSetPos;
 
         SetAngleToCorrectSide();
+        if (EnemyUser != null && !EnemyUser.CanAttack) return;
 
         StartAnimationAngle = angle;
-
         GameObject.Transform.Rotation = StartAnimationAngle;
     }
 

@@ -26,7 +26,7 @@ public class GameWorld : Game
     #region Properties
     public static GameWorld Instance;
 
-    public static bool DebugAndCheats = false;
+    public static bool DebugAndCheats = true;
     public static double DeltaTime { get; private set; }
     public static bool IsPaused = false;
     public static Color BackGroundColor { get; private set; } = new Color(20, 20, 18, 255);

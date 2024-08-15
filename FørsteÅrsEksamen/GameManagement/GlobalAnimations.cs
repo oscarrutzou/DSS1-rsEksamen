@@ -118,7 +118,7 @@ public static class GlobalAnimations
         // Load animations for Orc Shaman
         LoadIndividualSprites(AnimNames.OrcShamanIdle, "World\\Enemies\\Orc\\Orc - Shaman\\Idle", 5, 4);
         LoadIndividualSprites(AnimNames.OrcShamanRun, "World\\Enemies\\Orc\\Orc - Shaman\\Run", 10, 6);
-        LoadIndividualSprites(AnimNames.OrcShamanDeath, "World\\Enemies\\Orc\\Orc - Shaman\\Death", 6, 6);
+        LoadIndividualSprites(AnimNames.OrcShamanDeath, "World\\Enemies\\Orc\\Orc - Shaman\\Death", 6, 7);
 
         //// Load animations for Skeleton Base
         LoadIndividualSprites(AnimNames.SkeletonBaseIdle, "World\\Enemies\\Skeleton\\Skeleton - Base\\Idle", 5, 4);
