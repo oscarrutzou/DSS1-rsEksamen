@@ -19,6 +19,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DoctorsDungeon.Factory.Gui;
 
 namespace DoctorsDungeon.GameManagement.Scenes.Rooms;
 
@@ -76,6 +77,7 @@ public abstract class RoomBase : Scene
 
         SpawnEndPos();
 
+        SpawnHealthBar();
         SpawnEnemies();
         SpawnPotions();
         CenterMiscItems();
@@ -125,6 +127,13 @@ public abstract class RoomBase : Scene
         if (GameWorld.Instance.BackgroundEmitter == null) return;
         GameWorld.Instance.BackgroundEmitter.FollowGameObject(PlayerGo, Vector2.Zero);
     }
+
+    private void SpawnHealthBar()
+    {
+        GameObject go = ScalableBarFactory.CreateHealthBar(PlayerGo, true);
+        GameWorld.Instance.Instantiate(go);
+    }
+
 
     private void SpawnEndPos()
     {

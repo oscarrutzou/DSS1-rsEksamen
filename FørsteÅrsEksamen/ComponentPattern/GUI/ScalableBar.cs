@@ -1,4 +1,6 @@
-﻿using DoctorsDungeon.GameManagement;
+﻿using DoctorsDungeon.CommandPattern;
+using DoctorsDungeon.ComponentPattern.WorldObjects;
+using DoctorsDungeon.GameManagement;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -11,10 +13,12 @@ namespace DoctorsDungeon.ComponentPattern.GUI
 {
     public class ScalableBar : Component
     {
-        private GameObject _characterHealthBar;
+        private GameObject _characterGo;
+        private Health _characterHealth;
         private bool _playerHealth;
         private Collider _collider;
         private SpriteRenderer _spriteRenderer;
+
         private Vector2 Position
         {
             get
@@ -32,75 +36,92 @@ namespace DoctorsDungeon.ComponentPattern.GUI
         private Color _playerColor = Color.DarkRed;
         private int _playerHealthBarWidth = 80;
         private int _playerHealthBarHeight = 10;
+        private int _bossHealthBarWidth = 120;
+        private int _bossHealthBarHeight = 10;
+
         public ScalableBar(GameObject gameObject) : base(gameObject)
         {
         }
 
-        public ScalableBar(GameObject gameObject, GameObject characterHealthBar, bool playerHealth) : base(gameObject)
+        public ScalableBar(GameObject gameObject, GameObject characterGo, bool playerHealth) : base(gameObject)
         {
-            _characterHealthBar = characterHealthBar;
+            _characterGo = characterGo;
             _playerHealth = playerHealth;
         }
 
-
         public override void Awake()
         {
+            GameObject.Transform.Rotation = -MathHelper.PiOver4;
+
             _collider = GameObject.GetComponent<Collider>();
             _spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
-            
+            _characterHealth = _characterGo.GetComponent<Health>();
+
+            //_spriteRenderer.IsCentered = false;
+            //_collider.CenterCollisionBox = false;
+
             if (_playerHealth)
             {
                 Position = GameWorld.Instance.UiCam.TopLeft + _playerOffset;
-                _spriteRenderer.IsCentered = false;
+                Position += new Vector2(200, 200);
                 _spriteRenderer.SetSprite(TextureNames.PlayerHealthOver);
-
-                Vector2 spriteToColliderDifference = new Vector2(_spriteRenderer.Sprite.Width - _playerHealthBarWidth, _spriteRenderer.Sprite.Height - _playerHealthBarHeight);
-                
-                if (spriteToColliderDifference != Vector2.Zero)
-                    _spriteRenderer.DrawPosOffSet = -spriteToColliderDifference / 2 * GameObject.Transform.Scale;
+                SetDrawPosOffset(_playerHealthBarWidth, _playerHealthBarHeight);
+                _collider.SetCollisionBox(_playerHealthBarWidth, _playerHealthBarHeight);
             }
             else
             {
                 Position = GameWorld.Instance.UiCam.BottomCenter;
+                Vector2 scale = GameObject.Transform.Scale;
+                Position -= new Vector2(_bossHealthBarWidth / 2 * scale.X, _bossHealthBarHeight / 2 * scale.Y) + new Vector2(0, 40);
+
+
+                _collider.SetCollisionBox(_bossHealthBarWidth, _bossHealthBarHeight);
+                
             }
 
 
-            _collider.CenterCollisionBox = false;
-            _collider.SetCollisionBox(_playerHealthBarWidth, _playerHealthBarHeight);
         }
 
+        private void SetDrawPosOffset(int barWidth, int barHeight)
+        {
+            Vector2 spriteToColliderDifference = new Vector2(_spriteRenderer.Sprite.Width - _playerHealthBarWidth, _spriteRenderer.Sprite.Height - _playerHealthBarHeight);
+
+            if (spriteToColliderDifference != Vector2.Zero)
+                _spriteRenderer.DrawPosOffSet = -spriteToColliderDifference / 2 * GameObject.Transform.Scale;
+        }
+        bool contains;
         public override void Update()
         {
-            size -= 0.01f;
+            size = (float)_characterHealth.CurrentHealth / _characterHealth.MaxHealth;
+            GameObject.Transform.Rotation += 0.01f;
+
+            contains = _collider.Contains(InputHandler.Instance.MouseOnUI);
         }
 
-        private void PlayerDraw(SpriteBatch spriteBatch)
-        {
-            // Need to be little under the layerdepth to be under the texture
-
-            Rectangle collisionBox = _collider.CollisionBox;
-            float fillAmount = size * collisionBox.Width;
-            Rectangle filledRectangle = new Rectangle(collisionBox.X, collisionBox.Y, (int)fillAmount, collisionBox.Height);
-            spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel],
-                Position,
-                filledRectangle,
-                _playerColor,
-                GameObject.Transform.Rotation,
-                Vector2.Zero,
-                1,
-                SpriteEffects.None,
-                _spriteRenderer.LayerDepth - 0.0001f);
-        }
-
-        private void EnemyBossDraw(SpriteBatch spriteBatch)
-        {
-
-        }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (_playerHealth) PlayerDraw(spriteBatch);
-            else EnemyBossDraw(spriteBatch);
+            Rectangle collisionBox = _collider.CollisionBox;
+
+            float fillAmount = size * collisionBox.Width;
+
+            // The final rectangle that will be drawn
+            Rectangle filledRectangle = new Rectangle(collisionBox.X, collisionBox.Y, (int)fillAmount, collisionBox.Height);
+
+            Color color = contains ? Color.DarkGray : Color.Red;
+
+            spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel],
+                Position,
+                filledRectangle,
+                color,
+                GameObject.Transform.Rotation,
+                Vector2.Zero,
+                1f,                                    // Already have scaled from the CollisionBox
+                SpriteEffects.None,
+                _spriteRenderer.LayerDepth - 0.0001f); // Need to be little under the layerdepth to be under the texture
+
+
+            
         }
 
 

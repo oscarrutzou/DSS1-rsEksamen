@@ -2,6 +2,7 @@
 using DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies;
 using DoctorsDungeon.ComponentPattern.Path;
 using DoctorsDungeon.Factory;
+using DoctorsDungeon.Factory.Gui;
 using DoctorsDungeon.LiteDB;
 using Microsoft.Xna.Framework;
 
@@ -30,6 +31,10 @@ public class Room1Scene : RoomBase
         go.Transform.Position = GridManager.Instance.CurrentGrid.Cells[pos].Transform.Position;
         miniBossEnemy.SetStartPosition(PlayerGo, pos, false);
         GameWorld.Instance.Instantiate(go);
+
+
+        GameObject barGo = ScalableBarFactory.CreateHealthBar(go, false);
+        GameWorld.Instance.Instantiate(barGo);
     }
 
     private MiniBossEnemy miniBossEnemy;

@@ -11,7 +11,7 @@ namespace DoctorsDungeon.Factory.Gui
 {
     public static class ScalableBarFactory
     {
-        public static GameObject CreateHealthBar(GameObject characterHealthBar, bool playerHealth)
+        public static GameObject CreateHealthBar(GameObject characterGo, bool playerHealth)
         {
             GameObject go = new();
             go.Type = GameObjectTypes.Gui;
@@ -19,7 +19,7 @@ namespace DoctorsDungeon.Factory.Gui
             sr.SetLayerDepth(LayerDepth.UI);
             
             go.AddComponent<Collider>();
-            ScalableBar bar = go.AddComponent<ScalableBar>(characterHealthBar, playerHealth);
+            ScalableBar bar = go.AddComponent<ScalableBar>(characterGo, playerHealth);
 
             return go;
         }

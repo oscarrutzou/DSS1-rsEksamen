@@ -54,7 +54,7 @@ public class Potion : Component
 
     public void Use()
     {
-        if (!health.AddHealth(healAmount) || health.IsDead) return; // Already full health
+        if (health.IsDead || !health.AddHealth(healAmount)) return; // Already full health
         player.ItemInInventory = null;
         GameWorld.Instance.Destroy(GameObject);
     }
