@@ -17,11 +17,14 @@ public class Collider : Component
     public int StartCollisionWidth { get; private set; }
     public int StartCollisionHeight { get; private set; } //If not set, use the sprite width and height
 
-    private Vector2 positionOffset;
+    private Vector2 positionOffset { get; set; }
 
     public Color DebugColor = Color.Red;
     public Color DebugColorRotated = Color.Azure;
 
+    /// <summary>
+    /// Centers both origin of collider and position.
+    /// </summary>
     public bool CenterCollisionBox = true;
     public Rectangle CollisionBox
     {
@@ -43,23 +46,24 @@ public class Collider : Component
             width *= (int)GameObject.Transform.Scale.X;
             height *= (int)GameObject.Transform.Scale.Y;
 
-            // Make the collisionBox to be offcenter, with top left as its origin point.
-            if (!CenterCollisionBox)
+            if (CenterCollisionBox)
             {
-                pos.X += width / 2;
-                pos.Y += height / 2;
+                pos.X -= width / 2;
+                pos.Y -= height / 2;
             }
 
+            Vector2 rotatedOffset = positionOffset;
+
+            //rotatedOffset = BaseMath.Rotate(positionOffset, GameObject.Transform.Rotation);
             return new Rectangle
                 (
-                    (int)((pos.X - positionOffset.X) - (width) / 2),
-                    (int)((pos.Y - positionOffset.Y) - (height) / 2),
+                    (int)(pos.X - rotatedOffset.X),
+                    (int)(pos.Y - rotatedOffset.Y),
                     width,
                     height
                 );
         }
     }
-
 
     public Collider(GameObject gameObject) : base(gameObject)
     {
@@ -75,8 +79,8 @@ public class Collider : Component
     public override void Draw(SpriteBatch spriteBatch)
     {
         if (!InputHandler.Instance.DebugMode) return;
-        //DrawRectangle(CollisionBox, DebugColor, spriteBatch);
-        DrawRotatedRectangle(CollisionBox, GameObject.Transform.Rotation, DebugColor, spriteBatch);
+        DrawRotatedRectangle(CollisionBox, 0f, DebugColor, spriteBatch);
+        DrawRotatedRectangle(CollisionBox, GameObject.Transform.Rotation, DebugColorRotated, spriteBatch);
     }
 
     /// <summary>
@@ -107,24 +111,9 @@ public class Collider : Component
         StartCollisionWidth = 0;
     }
 
-    public bool Contains(Vector2 point)
-    {
-        // Rotate the point
-        Vector2 pos = GameObject.Transform.Position;
+   
 
-        Vector2 center;
-        if (CenterCollisionBox)
-            center = pos + new Vector2(CollisionBox.Width / 2, CollisionBox.Height / 2);
-        else
-            center = pos;
-
-        var rotatedPoint = RotatePoint(point, center, -GameObject.Transform.Rotation); // Negative rotation to undo rectangle rotation
-
-        return rotatedPoint.X >= GameObject.Transform.Position.X && rotatedPoint.X <= GameObject.Transform.Position.X + CollisionBox.Width &&
-               rotatedPoint.Y >= GameObject.Transform.Position.Y && rotatedPoint.Y <= GameObject.Transform.Position.Y + CollisionBox.Height;
-    }
-
-    private Vector2 RotatePoint(Vector2 point, Vector2 pivot, float angle)
+    public static Vector2 RotatePoint(Vector2 point, Vector2 pivot, float angle)
     {
         var cosTheta = MathF.Cos(angle);
         var sinTheta = MathF.Sin(angle);
@@ -133,28 +122,6 @@ public class Collider : Component
         var y = sinTheta * (point.X - pivot.X) + cosTheta * (point.Y - pivot.Y) + pivot.Y;
 
         return new Vector2(x, y);
-    }
-
-    /// <summary>
-    /// Draws a debug line around the rectangle
-    /// </summary>
-    /// <param name="collisionBox"></param>
-    /// <param name="spriteBatch"></param>
-    /// <param name="vectorOffSet"></param>
-    public void DrawRectangle(Rectangle collisionBox, Color color, SpriteBatch spriteBatch)
-    {
-        Vector2 colBoxPos = new Vector2(collisionBox.X, collisionBox.Y);
-
-        int thickness = 1;
-        Rectangle topLine = new Rectangle((int)colBoxPos.X, (int)colBoxPos.Y, collisionBox.Width, thickness);
-        Rectangle bottomLine = new Rectangle((int)colBoxPos.X, (int)colBoxPos.Y + collisionBox.Height, collisionBox.Width, thickness);
-        Rectangle rightLine = new Rectangle((int)colBoxPos.X + collisionBox.Width, (int)colBoxPos.Y, thickness, collisionBox.Height);
-        Rectangle leftLine = new Rectangle((int)colBoxPos.X, (int)colBoxPos.Y, thickness, collisionBox.Height);
-
-        spriteBatch.Draw(texture, topLine, null, color, 0, Vector2.Zero, spriteRenderer.SpriteEffects, 1);
-        spriteBatch.Draw(texture, bottomLine, null, color, 0, Vector2.Zero, spriteRenderer.SpriteEffects, 1);
-        spriteBatch.Draw(texture, rightLine, null, color, 0, Vector2.Zero, spriteRenderer.SpriteEffects, 1);
-        spriteBatch.Draw(texture, leftLine, null, color, 0, Vector2.Zero, spriteRenderer.SpriteEffects, 1);
     }
 
     public void DrawRotatedRectangle(Rectangle collisionBox, float rotation, Color color, SpriteBatch spriteBatch)
@@ -169,15 +136,11 @@ public class Collider : Component
 
     public Vector2[] GetRotatedCorners(Rectangle collisionBox, float rotation)
     {
-        Vector2 colBoxPos = new(collisionBox.X, collisionBox.Y);
         int width = collisionBox.Width;
         int height = collisionBox.Height;
 
-        Vector2 center;
-        if (CenterCollisionBox)
-            center = colBoxPos + new Vector2(width / 2, height / 2);
-        else
-            center = colBoxPos;
+        Vector2 colBoxPos = new(collisionBox.X, collisionBox.Y);
+        Vector2 center = CenterCollisionBox ? GameObject.Transform.Position : colBoxPos;
 
         var topLeft = RotatePoint(colBoxPos, center, rotation);
         var topRight = RotatePoint(colBoxPos + new Vector2(width, 0), center, rotation);
@@ -185,6 +148,48 @@ public class Collider : Component
         var bottomRight = RotatePoint(colBoxPos + new Vector2(width, height), center, rotation);
 
         return new[] { topLeft, topRight, bottomLeft, bottomRight };
+    }
+
+    public bool Contains(Vector2 point)
+    {
+        // Calculate the center of the collision box 
+        Vector2 center = CenterCollisionBox ? GameObject.Transform.Position : new Vector2(CollisionBox.X, CollisionBox.Y);
+
+        Vector2 pos = new Vector2(CollisionBox.X, CollisionBox.Y);
+
+        float halfWidth = CollisionBox.Width / 2f;
+        float halfHeight = CollisionBox.Height / 2f;
+
+        // Rotate the point
+        var rotatedPoint = RotatePoint(point, center, -GameObject.Transform.Rotation); // Negative rotation to undo rectangle rotation
+        bool withinXBounds;
+        bool withinYBounds;
+
+        
+        if (CenterCollisionBox)
+        {
+            withinXBounds = MathF.Abs(rotatedPoint.X - center.X + positionOffset.X) <= halfWidth;
+            withinYBounds = MathF.Abs(rotatedPoint.Y - center.Y + positionOffset.Y) <= halfHeight;
+            
+            // -60 point <= 48
+            //float y = rotatedPoint.Y - center.Y;
+            //if (rotatedPoint.Y <= 0)
+            //{
+            //    withinYBounds = y <= halfHeight;
+            //}
+            // 60 rotated point.
+            // needs first to take the normal point, then rotate the point
+        }
+        else
+        {
+            withinXBounds = rotatedPoint.X >= center.X
+                         && rotatedPoint.X <= center.X + CollisionBox.Width;
+
+            withinYBounds = rotatedPoint.Y >= center.Y
+                         && rotatedPoint.Y <= center.Y + CollisionBox.Height;
+        }
+
+        return withinXBounds && withinYBounds;
     }
 
     public static void DrawLine(SpriteBatch spriteBatch, Vector2 point1, Vector2 point2, Color color, float thickness = 1f)
@@ -198,9 +203,7 @@ public class Collider : Component
     {
         var origin = new Vector2(0f, 0.5f);
         var scale = new Vector2(length, thickness);
-
-        //point += new Vector2(50, 50);
-        spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], point, null, color, angle, origin, scale, SpriteEffects.None, 0);
+        spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], point, null, color, angle, origin, scale, SpriteEffects.None, 0.9f);
     }
 
     public static void DrawRectangleNoSprite(Rectangle rectangle, Color color, SpriteBatch spriteBatch)

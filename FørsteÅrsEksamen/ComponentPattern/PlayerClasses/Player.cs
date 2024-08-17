@@ -1,4 +1,5 @@
-﻿using DoctorsDungeon.ComponentPattern.Path;
+﻿using DoctorsDungeon.CommandPattern;
+using DoctorsDungeon.ComponentPattern.Path;
 using DoctorsDungeon.ComponentPattern.Weapons;
 using DoctorsDungeon.ComponentPattern.WorldObjects;
 using DoctorsDungeon.Factory;
@@ -64,6 +65,15 @@ public abstract class Player : Character, ISubject
 
     public override void Update()
     {
+        GameObject.Transform.Rotation += 0.5f * (float)GameWorld.DeltaTime;
+        //GameObject.Transform.Rotation = MathHelper.Pi;
+
+        Vector2 check;
+        check = InputHandler.Instance.MouseInWorld;
+        //check = new Vector2(0, 60);
+        //check = new Vector2(0, 40);
+        SpriteRenderer.Color = Collider.Contains(check) ? Color.Red : Color.White;
+
         if (State != CharacterState.Dead)
         {
             CheckForMovement();

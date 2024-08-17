@@ -185,7 +185,9 @@ public class WeaponTestScene : Scene
         pos += offset;
         DrawString(spriteBatch, $"In Active count: {emitter.ParticlePool.InActive.Count}", pos);
         pos += offset;
-        DrawString(spriteBatch, $"Mouse pos: {InputHandler.Instance.MouseOnUI}", pos);
+        DrawString(spriteBatch, $"Mouse pos UI : {InputHandler.Instance.MouseOnUI}", pos);
+        pos += offset;
+        DrawString(spriteBatch, $"Mouse pos World: {InputHandler.Instance.MouseInWorld}", pos);
     }
 
     protected void DrawString(SpriteBatch spriteBatch, string text, Vector2 position)

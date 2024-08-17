@@ -1,6 +1,7 @@
 ﻿using DoctorsDungeon.ComponentPattern.GUI;
 using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using DoctorsDungeon.GameManagement;
+using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -152,7 +153,11 @@ public class SpriteRenderer : Component
         drawPos = GameObject.Transform.Position;
 
         if (GameObject.Type != GameObjectTypes.Weapon)
-            drawPos += DrawPosOffSet;
+        {
+            //Vector2 d = drawPos + DrawPosOffSet;
+            Vector2 rotatedOffset = BaseMath.Rotate(DrawPosOffSet, Rotation); // 0,5333097  -31,995556
+            drawPos += rotatedOffset;
+        }
 
         //Draws the sprite
         spriteBatch.Draw(Sprite,
@@ -179,7 +184,7 @@ public class SpriteRenderer : Component
                     SpriteEffects.None,
                     LayerDepth);
     }
-
+     
     public void SetSprite(TextureNames spriteName)
     {
         //IsCentered = true;
