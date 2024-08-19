@@ -52,13 +52,10 @@ public class Collider : Component
                 pos.Y -= height / 2;
             }
 
-            Vector2 rotatedOffset = positionOffset;
-
-            //rotatedOffset = BaseMath.Rotate(positionOffset, GameObject.Transform.Rotation);
             return new Rectangle
                 (
-                    (int)(pos.X - rotatedOffset.X),
-                    (int)(pos.Y - rotatedOffset.Y),
+                    (int)(pos.X - positionOffset.X),
+                    (int)(pos.Y - positionOffset.Y),
                     width,
                     height
                 );
@@ -80,7 +77,9 @@ public class Collider : Component
     {
         if (!InputHandler.Instance.DebugMode) return;
         DrawRotatedRectangle(CollisionBox, 0f, DebugColor, spriteBatch);
-        DrawRotatedRectangle(CollisionBox, GameObject.Transform.Rotation, DebugColorRotated, spriteBatch);
+        
+        if (GameObject.Transform.Rotation != 0.0f) // So we dont have layer figthing
+            DrawRotatedRectangle(CollisionBox, GameObject.Transform.Rotation, DebugColorRotated, spriteBatch);
     }
 
     /// <summary>

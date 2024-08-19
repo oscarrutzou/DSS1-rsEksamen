@@ -20,7 +20,7 @@ public abstract class Player : Character, ISubject
 
     public Vector2 totalMovementInput, velocity, targetVelocity, previousPosition;
 
-    private readonly float turnSpeed = 40f; // Adjust as needed
+    private readonly float turnSpeed = 40f; // Adjust as needed 
 
     protected List<IObserver> observers = new();
 
@@ -65,14 +65,11 @@ public abstract class Player : Character, ISubject
 
     public override void Update()
     {
-        GameObject.Transform.Rotation += 0.5f * (float)GameWorld.DeltaTime;
-        //GameObject.Transform.Rotation = MathHelper.Pi;
+        //GameObject.Transform.Rotation += 0.5f * (float)GameWorld.DeltaTime;
 
-        Vector2 check;
-        check = InputHandler.Instance.MouseInWorld;
-        //check = new Vector2(0, 60);
-        //check = new Vector2(0, 40);
-        SpriteRenderer.Color = Collider.Contains(check) ? Color.Red : Color.White;
+        //Vector2 check;
+        //check = InputHandler.Instance.MouseInWorld;
+        //SpriteRenderer.Color = Collider.Contains(check) ? Color.Red : Color.White;
 
         if (State != CharacterState.Dead)
         {

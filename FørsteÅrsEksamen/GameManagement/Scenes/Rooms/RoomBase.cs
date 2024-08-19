@@ -124,8 +124,8 @@ public abstract class RoomBase : Scene
         PlayerGo.Transform.GridPosition = PlayerSpawnPos;
         GameWorld.Instance.WorldCam.Position = PlayerGo.Transform.Position;
 
-        if (GameWorld.Instance.BackgroundEmitter == null) return;
-        GameWorld.Instance.BackgroundEmitter.FollowGameObject(PlayerGo, Vector2.Zero);
+        if (IndependentBackground.BackgroundEmitter == null) return;
+        IndependentBackground.BackgroundEmitter.FollowGameObject(PlayerGo, Vector2.Zero);
     }
 
     private void SpawnHealthBar()
@@ -220,7 +220,7 @@ public abstract class RoomBase : Scene
 
         base.Update(gameTime);
     }
-
+     
     private void OnAllEnemiesDied()
     {
         // The transferDoor.emitter == null is there for when there is 0 enemies in the room at the start
@@ -239,7 +239,7 @@ public abstract class RoomBase : Scene
 
         pauseMenu.DrawOnScreen(spriteBatch);
 
-        Vector2 leftPos = GameWorld.Instance.UiCam.TopLeft + new Vector2(30, 30);
+        Vector2 leftPos = GameWorld.Instance.UiCam.TopLeft + new Vector2(30, 150);
         DrawTimer(spriteBatch, leftPos);
 
         leftPos += new Vector2(0, 30);

@@ -19,7 +19,7 @@ namespace DoctorsDungeon.Factory.Gui
             sr.SetLayerDepth(LayerDepth.UI);
             
             go.AddComponent<Collider>();
-            ScalableBar bar = go.AddComponent<ScalableBar>(characterGo, playerHealth);
+            HealthBar bar = go.AddComponent<HealthBar>(characterGo, playerHealth);
 
             return go;
         }

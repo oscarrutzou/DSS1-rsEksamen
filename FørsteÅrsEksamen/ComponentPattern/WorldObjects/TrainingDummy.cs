@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using DoctorsDungeon.ComponentPattern.GUI;
+using System;
+using System.Diagnostics;
 
 namespace DoctorsDungeon.ComponentPattern.WorldObjects
 {
@@ -70,8 +72,23 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
             damageHistoryAmount.Enqueue(damage); // Add timestamp to history
             damageHistoryTime.Enqueue(elapsedTime); // Add timestamp to history
 
+            /*
+                Dmg 25 : Time 2,600005200000004
+                Dmg 25 : Time 2,666672000000004
+             */
+
+            timeSinceLastHit = elapsedTime - lastHitTime;
+            lastHitTime = elapsedTime;
+
+            if (timeSinceLastHit < 0.2f)
+            {
+
+            }
             // Need to show Damage Accumulated somewhere, maybe at the feet
+            Debug.WriteLine($"Dmg {damage} : Time {timeSinceLastHit}");
         }
+        private double lastHitTime;
+        private double timeSinceLastHit;
 
         private void OnDamageTakenText(int damage)
         {

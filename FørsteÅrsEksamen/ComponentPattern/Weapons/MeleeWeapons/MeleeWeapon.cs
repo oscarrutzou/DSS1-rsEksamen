@@ -40,6 +40,7 @@ public abstract class MeleeWeapon : Weapon
     {
         base.Update();
 
+
         if (Attacking)
         {
             TotalElapsedTime += GameWorld.DeltaTime;
@@ -189,7 +190,9 @@ public abstract class MeleeWeapon : Weapon
         firstResetHittedObjects = false;
         resetHitObjectsTimer = 0;
 
-        timeBeforeCanHitAfterRotatingBack = Math.Max(0.15f, TimeBeforeNewDirection / 3); 
+        //timeBeforeCanHitAfterRotatingBack = Math.Max(0.15f, TimeBeforeNewDirection / 3); 
+
+        timeBeforeCanHitAfterRotatingBack = 0.5f;
 
         if (LeftSide)
             FinalLerp = -Animations[CurrentAnim].AmountOfRotation;

@@ -5,6 +5,7 @@ using DoctorsDungeon.ComponentPattern.Particles;
 using DoctorsDungeon.GameManagement;
 using DoctorsDungeon.LiteDB;
 using Microsoft.Xna.Framework;
+using DoctorsDungeon.GameManagement.Scenes.Menus;
 
 namespace DoctorsDungeon.ComponentPattern.WorldObjects;
 
@@ -47,7 +48,7 @@ public class TransferDoor : Component
 
         emitter.AddModifier(new InwardModifier(2));
 
-        emitter.AddModifier(new ColorRangeModifier(GameWorld.Instance.roomColors));
+        emitter.AddModifier(new ColorRangeModifier(IndependentBackground.RoomColors));
 
         int width = 32 * 4;
         int height = 48 * 4;

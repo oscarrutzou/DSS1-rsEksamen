@@ -2,6 +2,7 @@
 using DoctorsDungeon.ComponentPattern;
 using DoctorsDungeon.ComponentPattern.Particles;
 using DoctorsDungeon.ComponentPattern.Path;
+using DoctorsDungeon.GameManagement.Scenes.Menus;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -130,7 +131,7 @@ public abstract class Scene
         InputHandler.Instance.RemoveAllExeptBaseCommands();
         GridManager.Instance.ResetGridManager();
 
-        ParticleEmitter emitter = GameWorld.Instance.BackgroundEmitter;
+        ParticleEmitter emitter = IndependentBackground.BackgroundEmitter;
         if (emitter == null) return;
 
         emitter.ResetFollowGameObject();

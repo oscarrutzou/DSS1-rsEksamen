@@ -10,6 +10,7 @@ using DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons;
 using DoctorsDungeon.ComponentPattern.WorldObjects;
 using DoctorsDungeon.Factory;
 using DoctorsDungeon.Factory.Gui;
+using DoctorsDungeon.GameManagement.Scenes.Menus;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -73,7 +74,7 @@ public class WeaponTestScene : Scene
 
         emitter.AddModifier(new InwardModifier(2));
 
-        emitter.AddModifier(new ColorRangeModifier(GameWorld.Instance.roomColors));
+        emitter.AddModifier(new ColorRangeModifier(IndependentBackground.RoomColors));
 
         int width = 32 * 4;
         int height = 48 * 4;

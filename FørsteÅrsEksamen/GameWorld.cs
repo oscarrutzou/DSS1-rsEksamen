@@ -45,7 +45,7 @@ public class GameWorld : Game
 
     private SpriteBatch _spriteBatch;
     private string _menuString = "Menu";
-    private bool _isInMenu = true;
+    private bool _isInMenu { get; set; } = true;
     #endregion
 
     public GameWorld()
@@ -71,10 +71,10 @@ public class GameWorld : Game
 
         GenerateScenes(); // Makes a instance of all the scene we need
 
-        CurrentScene = Scenes[SceneNames.WeaponTestScene];
+        CurrentScene = Scenes[SceneNames.MainMenu];
         CurrentScene.Initialize(); // Starts the main menu 
 
-        SpawnBG(); // The background that dont get deleted
+        IndependentBackground.SpawnBG(); // The background that dont get deleted
 
         base.Initialize();
     }
@@ -103,10 +103,11 @@ public class GameWorld : Game
     {
         CurrentScene.DrawSceenColor();
 
+        // This spriteBatch is for drawing a non pixelart background
         _spriteBatch.Begin(sortMode: SpriteSortMode.FrontToBack, BlendState.AlphaBlend,
             SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise,
             transformMatrix: WorldCam.GetMatrix());
-        DrawBG(_spriteBatch);
+        IndependentBackground.DrawBG(_spriteBatch, _isInMenu);
         _spriteBatch.End();
 
         //Draw in world objects. Uses pixel perfect and a WorldCam, that can be moved around
@@ -271,80 +272,8 @@ public class GameWorld : Game
 
         NextScene = null;
     }
-    public ParticleEmitter BackgroundEmitter { get; set; }
-    private Color[] menuColors = new Color[] { Color.DarkCyan, Color.DarkGray, Color.Gray, Color.Transparent };
-    public Color[] roomColors = new Color[] { Color.DarkRed, Color.DarkGray, Color.Gray, Color.Transparent };
-    // We dont need a factory to do this, since its only this place we are going to use this background.
-    private ColorInterval menuColorInterval;
-    private ColorInterval roomColorInterval;
+   
 
-    private void SpawnBG()
-    {
-        if (!ShowBG) return;
-        GameObject go = EmitterFactory.CreateParticleEmitter("Space Dust", new Vector2(0, 0), new Interval(50, 100), new Interval(-MathHelper.Pi, MathHelper.Pi), 70, new Interval(1500, 2500), 400, -1, new Interval(-MathHelper.Pi, MathHelper.Pi));
-
-        BackgroundEmitter = go.GetComponent<ParticleEmitter>();
-        BackgroundEmitter.LayerName = LayerDepth.WorldBackground;
-
-        BackgroundEmitter.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel4x4));
-        
-        BackgroundEmitter.AddModifier(new ColorRangeModifier(menuColors));
-        BackgroundEmitter.AddModifier(new ScaleModifier(0.5f, 2));
-        BackgroundEmitter.AddModifier(new InwardModifier(10));
-
-        int buffer = 300; // A buffer around the center, so when the player runs, there are already some particles
-        BackgroundEmitter.Origin = new RectangleOrigin(DisplayWidth + buffer, DisplayHeight + buffer);
-
-        BackgroundEmitter.CustomDrawingBehavior = true;
-
-        go.Awake();
-        go.Start();
-
-        menuColorInterval = new ColorInterval(menuColors);
-        roomColorInterval = new ColorInterval(roomColors);
-
-        MakeMouseGo();
-
-        BackgroundEmitter.StartEmitter();
-    }
-
-    private void MakeMouseGo()
-    {
-        InputHandler.Instance.MouseGo = new();
-        InputHandler.Instance.MouseGo.AddComponent<MouseComponent>();
-
-        InputHandler.Instance.MouseGo.Awake();
-        InputHandler.Instance.MouseGo.Start();
-
-    }
-
-    private void DrawBG(SpriteBatch spriteBatch)
-    {
-        if (!ShowBG)
-        {
-            BackgroundEmitter?.StopEmitter();
-            return;
-        }
-
-        if (BackgroundEmitter == null) SpawnBG();
-
-        BackgroundEmitter.StartEmitter();
-
-        ColorRangeModifier colorMod = BackgroundEmitter.GetModifier<ColorRangeModifier>();
-        if (_isInMenu)
-            colorMod.ColorInterval = menuColorInterval; 
-        else
-            colorMod.ColorInterval = roomColorInterval;
-
-        BackgroundEmitter.Update();
-        BackgroundEmitter.Draw(spriteBatch);
-
-        // Should draw each in the pool.
-        foreach (GameObject go in BackgroundEmitter.ParticlePool.Active)
-        {
-            go.Draw(spriteBatch);
-        }
-    }
 
     #endregion Scene
 }
