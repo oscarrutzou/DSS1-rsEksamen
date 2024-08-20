@@ -20,7 +20,7 @@ public class Button : Component
     private SpriteRenderer spriteRenderer;
     private Collider collider;
 
-    public Color TextColor = Color.Black;
+    public Color TextColor;
 
     private Color baseColor;
     public Color OnHoverColor = new(200, 200, 200);
@@ -62,6 +62,8 @@ public class Button : Component
         spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
 
         baseColor = spriteRenderer.Color;
+
+        TextColor = GameWorld.TextColor;
     }
 
     public override void Update()

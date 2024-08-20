@@ -64,12 +64,14 @@ public static class GuiMethods
     /// <summary>
     /// <para>Can take and divide the text and center each part of the text.</para>
     /// </summary>
-    public static void DrawTextCentered(SpriteBatch spriteBatch, SpriteFont font, Vector2 position, string text, Color textColor, Vector2 origin, float rot = 0f, float scale = 1f, SpriteEffects spriteEffects = SpriteEffects.None, float layer = 1)
+    public static void DrawTextCentered(SpriteBatch spriteBatch, SpriteFont font, Vector2 position, string text, Color textColor, Vector2 origin, float rot = 0f, float scale = 1f, SpriteEffects spriteEffects = SpriteEffects.None)
     {
         if (string.IsNullOrEmpty(text)) return;
 
         // Split the text into lines based on the newline character '\n'
         string[] lines = text.Split('\n');
+
+        float layer = SpriteRenderer.GetLayerDepth(LayerDepth.Text);
 
         if (lines.Length == 1) // Only one line so can make a easier and fast way to draw it, if we have another method for 1 line
         {

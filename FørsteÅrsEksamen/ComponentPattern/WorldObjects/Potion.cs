@@ -1,5 +1,6 @@
 ﻿using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace DoctorsDungeon.ComponentPattern.WorldObjects;
 

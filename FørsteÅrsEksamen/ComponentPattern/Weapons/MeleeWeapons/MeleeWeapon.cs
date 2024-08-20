@@ -104,7 +104,6 @@ public abstract class MeleeWeapon : Weapon
                 SpriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
         }
 
-
         float normalizedTime = (float)AttackedTotalElapsedTime / (float)TimeBeforeNewDirection;
         float easedTime; // maybe switch between them.
         float finalLerp = StartAnimationAngle;

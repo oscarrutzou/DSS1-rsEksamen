@@ -34,10 +34,13 @@ public enum TextureNames
 
     // UI
     SmallBtn,
-
     LargeBtn,
+    DeleteSaveBtn,
     QuestUnder,
     PlayerHealthOver,
+    BossHealthOver,
+    BackpackIcon,
+    MouseCursorDefault,
 }
 
 // Oscar
@@ -87,8 +90,13 @@ public static class GlobalTextures
 
             {TextureNames.SmallBtn, content.Load<Texture2D>("UI\\SmallButtonIndividuel (1)") },
             {TextureNames.LargeBtn, content.Load<Texture2D>("UI\\BigButtonIndividuel (1)") },
+            {TextureNames.DeleteSaveBtn, content.Load<Texture2D>("UI\\DeleteSaveButton") },
             {TextureNames.QuestUnder, content.Load<Texture2D>("UI\\Quest") },
             {TextureNames.PlayerHealthOver, content.Load<Texture2D>("UI\\PlayerHealthOver") },
+            {TextureNames.BackpackIcon, content.Load<Texture2D>("UI\\Icons\\BackpackIcon") },
+            {TextureNames.MouseCursorDefault, content.Load<Texture2D>("UI\\Icons\\MouseCursor") },
+            {TextureNames.BossHealthOver, content.Load<Texture2D>("UI\\BossHealthBarOver") },
+
         };
 
         // Load all fonts

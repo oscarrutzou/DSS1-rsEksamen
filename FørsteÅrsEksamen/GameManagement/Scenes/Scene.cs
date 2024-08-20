@@ -40,7 +40,7 @@ public abstract class Scene
     protected Action OnFirstCleanUp { get; set; }
     public bool IsChangingScene { get; set; }
 
-    protected Color CurrentTextColor;
+    protected Color CurrentTextColor { get; set; }
     public double TransitionProgress { get; private set; }
     private double transitionDuration = 0.3; // Desired duration in seconds
 

@@ -4,6 +4,7 @@ using DoctorsDungeon.GameManagement;
 using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SharpDX.Direct3D9;
 using System;
 
 namespace DoctorsDungeon.ComponentPattern;
@@ -32,6 +33,7 @@ public enum LayerDepth
     Button,
     Text,
     CollisionDebug,
+    Cursor,
     Size, // So we just can take LayerDepth.
 }
 
@@ -124,6 +126,11 @@ public class SpriteRenderer : Component
         LayerDepth = ((float)LayerName / (Enum.GetNames(typeof(LayerDepth)).Length)) + offSet;
     }
 
+    public static float GetLayerDepth(LayerDepth layerName, float offSet = 0)
+    {
+        return ((float)layerName / (Enum.GetNames(typeof(LayerDepth)).Length)) + offSet;
+    }
+
     /// <summary>
     /// Also sets IsCentered to false, so the offset can be used
     /// </summary>
@@ -143,24 +150,30 @@ public class SpriteRenderer : Component
 
         if (Sprite != null && ShouldDrawSprite)
         {
-            DrawSprite(spriteBatch);
+            DrawSprite(spriteBatch, Sprite, Vector2.Zero, LayerDepth);
         }
     }
-    private void DrawSprite(SpriteBatch spriteBatch)
-    {
-        Origin = IsCentered ? new Vector2(Sprite.Width / 2, Sprite.Height / 2) : OriginOffSet;
 
-        drawPos = GameObject.Transform.Position;
+    /// <summary>
+    /// Draws the sprite the same place, as the normal sprite that is set with SetSprite. 
+    /// </summary>
+    /// <param name="spriteBatch"></param>
+    /// <param name="sprite"></param>
+    /// <param name="layerDepth"></param>
+    public void DrawSprite(SpriteBatch spriteBatch, Texture2D sprite, Vector2 posOffset, float layerDepth)
+    {
+        Origin = IsCentered ? new Vector2(sprite.Width / 2, sprite.Height / 2) : OriginOffSet;
+
+        drawPos = GameObject.Transform.Position + posOffset;
 
         if (GameObject.Type != GameObjectTypes.Weapon)
         {
-            //Vector2 d = drawPos + DrawPosOffSet;
-            Vector2 rotatedOffset = BaseMath.Rotate(DrawPosOffSet, Rotation); // 0,5333097  -31,995556
+            Vector2 rotatedOffset = BaseMath.Rotate(DrawPosOffSet, Rotation);
             drawPos += rotatedOffset;
         }
 
         //Draws the sprite
-        spriteBatch.Draw(Sprite,
+        spriteBatch.Draw(sprite,
                          drawPos,
                          null,
                          Color,
@@ -168,7 +181,20 @@ public class SpriteRenderer : Component
                          Origin,
                          GameObject.Transform.Scale,
                          SpriteEffects,
-                         LayerDepth);
+                         layerDepth);
+    }
+    /// <summary>
+    ///         
+
+    /// </summary>
+    /// <param name="spriteBatch"></param>
+    /// <param name=""></param>
+    public static void DrawCenteredSprite(SpriteBatch spriteBatch, TextureNames textureName, Vector2 pos, Color color, LayerDepth layer, float scale = 4f, SpriteEffects spriteEffects = SpriteEffects.None, float rotation = 0f)
+    {
+        Texture2D sprite = GlobalTextures.Textures[textureName];
+        Vector2 spriteCentered = new Vector2(sprite.Width / 2, sprite.Height / 2);
+
+        spriteBatch.Draw(sprite, pos, null, color, rotation, spriteCentered, scale, spriteEffects, GetLayerDepth(layer));
     }
 
     private void DrawText(SpriteBatch spriteBatch)
@@ -187,8 +213,6 @@ public class SpriteRenderer : Component
      
     public void SetSprite(TextureNames spriteName)
     {
-        //IsCentered = true;
-        //ShouldDrawSprite = true;
         UsingAnimation = false;
         OriginOffSet = Vector2.Zero;
         DrawPosOffSet = Vector2.Zero;

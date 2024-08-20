@@ -9,8 +9,9 @@ public enum AnimNames
 {
     // GUI
     SmallBtn,
-
     LargeBtn,
+    HourGlass,
+    HourGlassReset,
 
     TestWizardRightIndividualFrames,
 
@@ -64,10 +65,6 @@ public enum AnimNames
 }
 
 // Oscar
-
-// Brug en enum til enemy typer, tag ToString() og det er hvad animationernes base animation (pakke) skal være.
-// En enemy animations pakke er der for at holde de forskellige animationer som bliver brugt til hver.
-// Kan være en dict
 
 /// <summary>
 /// Contains all the Animation used in the project.
@@ -151,6 +148,9 @@ public static class GlobalAnimations
 
         LoadIndividualFramesAnimation(AnimNames.SmallBtn, "UI\\SmallButtonIndividuel (1)", 3, 2);
         LoadIndividualFramesAnimation(AnimNames.LargeBtn, "UI\\BigButtonIndividuel (1)", 3, 2);
+        LoadIndividualFramesAnimation(AnimNames.HourGlass, "UI\\Icons\\HourGlass\\HourGlass (1)", 3, 10);
+        LoadIndividualFramesAnimation(AnimNames.HourGlassReset, "UI\\Icons\\HourGlass\\HourGlassReset (1)", 2, 2);
+
         //LoadIndividualFramesAnimation(AnimNames.TestWizardRightIndividualFrames, "Test\\MultipleFilesAnim\\wizardRight (1)", 5, 8);
     }
 

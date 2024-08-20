@@ -93,10 +93,11 @@ public class SaveFileMenu : MenuScene
                     $"\n Last Login {saveFile.Last_Login:MM-dd}"; // Removes .ToString
 
             // Add a delete button next to it.
-            GameObject deleteBtn = ButtonFactory.Create("X", true, () => { DeleteSave(saveFile.Save_ID); });
+            GameObject deleteBtn = ButtonFactory.Create("X", true, () => { DeleteSave(saveFile.Save_ID); }, TextureNames.DeleteSaveBtn);
             Button delete = deleteBtn.GetComponent<Button>();
-            delete.ChangeScale(new Vector2(2, 6));
             deleteBtn.Transform.Position = saveFileBtn.GameObject.Transform.Position + new Vector2(180, 0);
+            Collider deleteBtnCol = deleteBtn.GetComponent<Collider>();
+            deleteBtnCol.SetCollisionBox(10, 10);
 
             GameWorld.Instance.Instantiate(deleteBtn);
         }

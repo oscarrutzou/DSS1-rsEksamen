@@ -25,7 +25,7 @@ public class Animator : Component
 
     #endregion Properties
 
-    public override void Start()
+    public override void Awake()
     {
         spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
         if (spriteRenderer == null)
@@ -104,6 +104,7 @@ public class Animator : Component
 
         if (CurrentAnimation != null) // Reset previous animation
         {
+            timeElapsed = 0;
             CurrentIndex = 0;
             CurrentAnimation.OnAnimationDone = null; //Resets its commands
             spriteRenderer.OriginOffSet = Vector2.Zero;
@@ -115,15 +116,12 @@ public class Animator : Component
         // Reset spriterenderer
         spriteRenderer.UsingAnimation = true; // This gets set to false if you have played a Animation, then want to use a normal sprite again
 
-
-        //spriteRenderer.IsCentered = true;
-
-
         spriteRenderer.ShouldDrawSprite = true;
         spriteRenderer.Rotation = -1;
 
         frameDuration = 1f / CurrentAnimation.FPS; //Sets how long each frame should be
         isLooping = true; // Resets loop
+        hasPlayedAnim = false;
 
         if (CurrentAnimation.UseSpriteSheet)
         {

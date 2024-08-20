@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
+using DoctorsDungeon.Factory.Gui;
 
 namespace DoctorsDungeon.GameManagement.Scenes.Menus
 {
@@ -56,12 +57,19 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
 
         private static void MakeMouseGo()
         {
-            InputHandler.Instance.MouseGo = new();
-            InputHandler.Instance.MouseGo.AddComponent<MouseComponent>();
+            InputHandler.Instance.MouseGo = IconFactory.CreateCursorIcon();
 
             InputHandler.Instance.MouseGo.Awake();
             InputHandler.Instance.MouseGo.Start();
+            
+        }
 
+        public static void Update(GameTime gameTime)
+        {
+            InputHandler.Instance.MouseGo.Update(gameTime);
+            InputHandler.Instance.MouseGo.Transform.Position = InputHandler.Instance.MouseOnUI;
+
+            BackgroundEmitter.FollowPoint = InputHandler.Instance.MouseInWorld;
         }
 
         public static void DrawBG(SpriteBatch spriteBatch, bool isInMenu)

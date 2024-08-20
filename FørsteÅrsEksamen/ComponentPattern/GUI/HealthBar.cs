@@ -1,6 +1,8 @@
 ﻿using DoctorsDungeon.ComponentPattern.WorldObjects;
 using DoctorsDungeon.GameManagement;
+using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +25,9 @@ namespace DoctorsDungeon.ComponentPattern.GUI
         private int _bossHealthBarWidth = 120;
         private int _bossHealthBarHeight = 10;
 
+        private float _timer;
+        private float _timeBeforeStopDrawing = 3f; // This is for when the health is 0, and we can stop drawing the bosses healthbar
+
         public HealthBar(GameObject gameObject) : base(gameObject)
         {
         }
@@ -40,11 +45,11 @@ namespace DoctorsDungeon.ComponentPattern.GUI
             _characterHealth = _characterGo.GetComponent<Health>();
             DrawBarColor = _color;
 
+
             if (_playerHealth)
             {
                 SpriteRenderer.IsCentered = false;
                 Collider.CenterCollisionBox = false;
-
                 Position = GameWorld.Instance.UiCam.TopLeft + _playerBarOffset;
                 SpriteRenderer.SetSprite(TextureNames.PlayerHealthOver);
                 SetDrawPosOffset(_playerHealthBarWidth, _playerHealthBarHeight);
@@ -54,14 +59,31 @@ namespace DoctorsDungeon.ComponentPattern.GUI
             else
             {
                 Position = GameWorld.Instance.UiCam.BottomCenter + _bossBarOffset;
+                SpriteRenderer.SetSprite(TextureNames.BossHealthOver);
                 Collider.SetCollisionBox(_bossHealthBarWidth, _bossHealthBarHeight);
             }
         }
 
-
         public override void Update()
         {
             sizeOfDrawnBar = (float)_characterHealth.CurrentHealth / _characterHealth.MaxHealth;
+
+            if (!_characterHealth.IsDead) return;
+            _timer += (float)GameWorld.DeltaTime;
+
+            if (_timer < _timeBeforeStopDrawing) return;
+
+            GameObject.IsEnabled = false;
+            _timer = 0;
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
+
+            Vector2 pos = Collider.CollisionBox.Center.ToVector2();
+            string text = $"{_characterHealth.CurrentHealth} / {_characterHealth.MaxHealth}";
+            GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, pos, text, BaseMath.TransitionColor(GameWorld.TextColor), Vector2.Zero);
         }
     }
 }

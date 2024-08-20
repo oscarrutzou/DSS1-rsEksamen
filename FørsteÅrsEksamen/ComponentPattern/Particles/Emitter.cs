@@ -215,7 +215,6 @@ public class Emitter : Component
             if (ParticlesPerSecond <= 0)
             {
                 State = EmitterState.STOPPED;
-                //ResetAllModifiers();
             }
         }
     }

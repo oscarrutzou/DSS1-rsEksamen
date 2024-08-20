@@ -52,7 +52,7 @@ public class GameWorld : Game
     {
         GfxManager = new GraphicsDeviceManager(this);
         Content.RootDirectory = "A-Content";
-        IsMouseVisible = true;
+        IsMouseVisible = false;
         Window.Title = "Doctor's Dungeon";
     }
 
@@ -90,8 +90,7 @@ public class GameWorld : Game
 
         GlobalSounds.MusicUpdate(); // Updates the Music in the game, not SFX
         InputHandler.Instance.Update();
-
-        InputHandler.Instance.MouseGo?.Update(gameTime);
+        IndependentBackground.Update(gameTime);
 
         CurrentScene.Update(gameTime); // Updates all gameobjects and their componetents in the scene
         HandleSceneChange(); // Goes to the next scene
@@ -125,6 +124,7 @@ public class GameWorld : Game
             transformMatrix: UiCam.GetMatrix());
 
         CurrentScene.DrawOnScreen(_spriteBatch);
+        InputHandler.Instance.MouseGo?.Draw(_spriteBatch);
         _spriteBatch.End();
 
         base.Draw(gameTime);

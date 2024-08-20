@@ -20,6 +20,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DoctorsDungeon.Factory.Gui;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
+using static System.Net.Mime.MediaTypeNames;
+using DoctorsDungeon.ComponentPattern.GUI;
 
 namespace DoctorsDungeon.GameManagement.Scenes.Rooms;
 
@@ -53,6 +56,8 @@ public abstract class RoomBase : Scene
 
     private List<GameObject> cells = new(); // For debug
 
+    private string startFinalText; // Used to set the start size of text for the hour glass,
+                                   // so it dosent move when the timer counts down.
     #endregion Properties
 
     public override void Initialize()
@@ -82,12 +87,31 @@ public abstract class RoomBase : Scene
         SpawnPotions();
         CenterMiscItems();
 
+        SetStartTimeLeft();
+
         SetCommands();
 
         GridManager.Instance.SetCellsVisibility();
     }
 
     #region Initialize Methods
+
+    private GameObject hourGlassIcon, inventoryIcon;
+    private void SetStartTimeLeft()
+    {
+        startLeftPos = GameWorld.Instance.UiCam.TopLeft + new Vector2(80, 130);
+        inventoryIcon = IconFactory.CreateBackpackIcon();
+        inventoryIcon.Transform.Position = startLeftPos;
+
+        GameWorld.Instance.Instantiate(inventoryIcon);
+        startLeftPos.X += 50f;
+
+        hourGlassIcon = IconFactory.CreateHourGlassIcon();
+        hourGlassIcon.Transform.Position = startLeftPos;
+
+        GameWorld.Instance.Instantiate(hourGlassIcon);
+
+    }
 
     protected abstract void SetSpawnPotions();
 
@@ -233,20 +257,14 @@ public abstract class RoomBase : Scene
 
     #region Draw
 
+    private Vector2 startLeftPos;
     public override void DrawOnScreen(SpriteBatch spriteBatch)
     {
         base.DrawOnScreen(spriteBatch);
 
         pauseMenu.DrawOnScreen(spriteBatch);
 
-        Vector2 leftPos = GameWorld.Instance.UiCam.TopLeft + new Vector2(30, 150);
-        DrawTimer(spriteBatch, leftPos);
-
-        leftPos += new Vector2(0, 30);
-        spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Player HP: {playerHealth.CurrentHealth}/{playerHealth.MaxHealth}", leftPos, CurrentTextColor);
-
-        leftPos += new Vector2(0, 30);
-        DrawPotion(spriteBatch, leftPos);
+        DrawTimer(spriteBatch, startLeftPos);
 
         DrawQuest(spriteBatch);
 
@@ -259,50 +277,37 @@ public abstract class RoomBase : Scene
         aliveEnemies = enemiesInRoom.Where(x => x.State != CharacterState.Dead).ToList();
         int amountToKill = EnemySpawnPoints.Count - aliveEnemies.Count;
 
-        string text = $"Kill your way through {amountToKill}/{EnemySpawnPoints.Count}";
+        string text = $"Kill your way through {amountToKill}/{EnemySpawnPoints.Count}";//
+
         Vector2 size = GlobalTextures.DefaultFont.MeasureString(text);
-        Vector2 textPos = GameWorld.Instance.UiCam.TopRight + new Vector2(-size.X - 30, size.Y + 10);
-        Vector2 underPos = textPos - new Vector2(45, 35);
+        Vector2 textPos = GameWorld.Instance.UiCam.TopRight + new Vector2(-260, 55);
 
         Color questUnderColor = Color.White;
         if (IsChangingScene)
             questUnderColor = Color.Lerp(Color.White, Color.Transparent, (float)TransitionProgress);
 
-        spriteBatch.Draw(GlobalTextures.Textures[TextureNames.QuestUnder], underPos, null, questUnderColor, 0f, Vector2.Zero, 6f, SpriteEffects.None, 0f);
+        SpriteRenderer.DrawCenteredSprite(spriteBatch, TextureNames.QuestUnder, textPos, questUnderColor, LayerDepth.Default);
 
-        spriteBatch.DrawString(GlobalTextures.DefaultFont, text, textPos, CurrentTextColor, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
+        GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, textPos, text, CurrentTextColor, Vector2.Zero);
     }
 
     private void DrawTimer(SpriteBatch spriteBatch, Vector2 timerPos)
     {
         TimeSpan time = TimeSpan.FromSeconds(SaveData.Time_Left);
-        string minutes = time.Minutes.ToString("D2");
-        string seconds = time.Seconds.ToString("D2");
-        spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Time Left: {minutes}:{seconds}", timerPos, CurrentTextColor);
-    }
+        string finalText = $"Time Left: {time.Minutes:D2}:{time.Seconds:D2}";
 
-    private void DrawPotion(SpriteBatch spriteBatch, Vector2 intentoryPos)
-    {
-        string text;
-        if (player.ItemInInventory == null)
-        {
-            text = "Inventory (0/1):";
-        }
-        else
-        {
-            text = $"Inventory (1/1): {player.ItemInInventory.Name}";
-        }
+        Vector2 lineSize = GlobalTextures.DefaultFont.MeasureString(finalText);
+        Vector2 center = timerPos - new Vector2(0, lineSize.Y / 2);
 
-        spriteBatch.DrawString(GlobalTextures.DefaultFont, text, intentoryPos, CurrentTextColor);
+        spriteBatch.DrawString(GlobalTextures.DefaultFont, finalText, center, CurrentTextColor);
     }
 
     private void DebugDraw(SpriteBatch spriteBatch)
     {
-        spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], GameWorld.Instance.UiCam.TopLeft, null, Color.WhiteSmoke, 0f, Vector2.Zero, new Vector2(450, 350), SpriteEffects.None, 0.99f); // Over everything exept text
-
+        Vector2 startPos = GameWorld.Instance.UiCam.LeftCenter;
+        
         Vector2 mousePos = InputHandler.Instance.MouseOnUI;
 
-        Vector2 startPos = GameWorld.Instance.UiCam.TopLeft;
         Vector2 offset = new Vector2(0, 30);
 
         DrawString(spriteBatch, $"MousePos UI {mousePos}", startPos);
@@ -347,7 +352,7 @@ public abstract class RoomBase : Scene
 
     protected void DrawString(SpriteBatch spriteBatch, string text, Vector2 position)
     {
-        spriteBatch.DrawString(GlobalTextures.DefaultFont, text, position, Color.Pink, 0f, Vector2.Zero, 1, SpriteEffects.None, 1f);
+        spriteBatch.DrawString(GlobalTextures.DefaultFont, text, position, Color.Pink, 0f, Vector2.Zero, 1, SpriteEffects.None, SpriteRenderer.GetLayerDepth(LayerDepth.Text));
     }
 
     #endregion Draw
