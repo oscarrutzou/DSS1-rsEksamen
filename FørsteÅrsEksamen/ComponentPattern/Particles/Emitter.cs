@@ -38,7 +38,7 @@ public class Emitter : Component
     public Dictionary<Type, BirthModifier> BirthModifiers { get; set; } = new();
     protected Interval MaxAge;
     public EmitterState State = EmitterState.INIT;
-    protected double ReleaseTime = 0;
+    protected double ReleaseTime { get; set; } = 0;
     protected Interval Direction;
     protected Interval Rotation;
     protected Interval RotationVelocity;

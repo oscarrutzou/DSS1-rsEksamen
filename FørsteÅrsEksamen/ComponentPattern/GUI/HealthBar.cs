@@ -46,8 +46,8 @@ namespace DoctorsDungeon.ComponentPattern.GUI
                 Collider.CenterCollisionBox = false;
 
                 Position = GameWorld.Instance.UiCam.TopLeft + _playerBarOffset;
-                //SpriteRenderer.SetSprite(TextureNames.PlayerHealthOver);
-                //SetDrawPosOffset(_playerHealthBarWidth, _playerHealthBarHeight);
+                SpriteRenderer.SetSprite(TextureNames.PlayerHealthOver);
+                SetDrawPosOffset(_playerHealthBarWidth, _playerHealthBarHeight);
                 // Tag point, rotate around draw, then use it as offset
                 Collider.SetCollisionBox(_playerHealthBarWidth, _playerHealthBarHeight);
             }

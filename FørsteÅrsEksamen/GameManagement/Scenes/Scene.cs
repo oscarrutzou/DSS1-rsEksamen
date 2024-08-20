@@ -3,6 +3,7 @@ using DoctorsDungeon.ComponentPattern;
 using DoctorsDungeon.ComponentPattern.Particles;
 using DoctorsDungeon.ComponentPattern.Path;
 using DoctorsDungeon.GameManagement.Scenes.Menus;
+using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -37,9 +38,12 @@ public abstract class Scene
     private List<GameObject> newGameObjects = new List<GameObject>();
     private List<GameObject> destroyedGameObjects = new List<GameObject>();
     protected Action OnFirstCleanUp { get; set; }
-    public bool IsChangingScene;
+    public bool IsChangingScene { get; set; }
 
     protected Color CurrentTextColor;
+    public double TransitionProgress { get; private set; }
+    private double transitionDuration = 0.3; // Desired duration in seconds
+
     public abstract void Initialize();
 
     /// <summary>
@@ -47,9 +51,7 @@ public abstract class Scene
     /// </summary>
     public virtual void Update(GameTime gameTime)
     {
-        CurrentTextColor = GameWorld.TextColor;
-        if (IsChangingScene)
-            CurrentTextColor = Color.Lerp(GameWorld.TextColor, Color.Transparent, (float)TransitionProgress);
+        LerpTextColor();
 
         CleanUp();
 
@@ -90,9 +92,6 @@ public abstract class Scene
         TransitionProgress = 0; // Start with full opacity
     }
 
-    protected double TransitionProgress; 
-    private double transitionDuration = 0.3; // Desired duration in seconds
-    
     private void LerpGameObjects()
     {
         TransitionProgress += GameWorld.DeltaTime / transitionDuration;
@@ -115,6 +114,11 @@ public abstract class Scene
             }
         }
 
+    }
+    
+    private void LerpTextColor()
+    {
+        CurrentTextColor = BaseMath.TransitionColor(GameWorld.TextColor);
     }
 
     public void OnSceneChange()

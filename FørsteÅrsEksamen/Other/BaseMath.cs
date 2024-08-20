@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using DoctorsDungeon.GameManagement.Scenes;
+using Microsoft.Xna.Framework;
 using System;
 
 namespace DoctorsDungeon.Other;
@@ -84,6 +85,15 @@ public static class BaseMath
         return Math.Max(low, Math.Min(a, high));
     }
 
+    public static Color TransitionColor(Color startColor)
+    {
+        Scene crntScene = GameWorld.Instance.CurrentScene;
+
+        if (crntScene.IsChangingScene)
+            return Color.Lerp(startColor, Color.Transparent, (float)crntScene.TransitionProgress);
+        else
+            return startColor;
+    }
 
     public static Vector2 SafeNormalize(Vector2 value)
     {

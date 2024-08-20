@@ -25,6 +25,9 @@ public class Sword : MeleeWeapon
 
         CurrentAnim = WeaponAnimTypes.Light;
 
+        MinimumTimeBetweenHits = 0.3f;
+
+
         base.Start();
     }
 

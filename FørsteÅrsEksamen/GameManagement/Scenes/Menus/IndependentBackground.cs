@@ -27,7 +27,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
         public static void SpawnBG()
         {
             if (!GameWorld.Instance.ShowBG) return;
-            GameObject go = EmitterFactory.CreateParticleEmitter("Space Dust", new Vector2(0, 0), new Interval(50, 100), new Interval(-MathHelper.Pi, MathHelper.Pi), 70, new Interval(1500, 2500), 400, -1, new Interval(-MathHelper.Pi, MathHelper.Pi));
+            GameObject go = EmitterFactory.CreateParticleEmitter("Space Dust", new Vector2(0, 0), new Interval(50, 100), new Interval(-MathHelper.Pi, MathHelper.Pi), 50, new Interval(1500, 2500), 100, -1, new Interval(-MathHelper.Pi, MathHelper.Pi));
 
             BackgroundEmitter = go.GetComponent<ParticleEmitter>();
             BackgroundEmitter.LayerName = LayerDepth.WorldBackground;
@@ -66,15 +66,16 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
 
         public static void DrawBG(SpriteBatch spriteBatch, bool isInMenu)
         {
-            if (!GameWorld.Instance.ShowBG)
+            // Only stop the emitter if its already running. Otherwise it will keep being in STOPPING state:d
+            if (!GameWorld.Instance.ShowBG && 
+                BackgroundEmitter != null && 
+                BackgroundEmitter.State == Emitter.EmitterState.RUNNING)
             {
                 BackgroundEmitter?.StopEmitter();
                 return;
             }
 
             if (BackgroundEmitter == null) SpawnBG();
-
-            BackgroundEmitter.StartEmitter();
 
             ColorRangeModifier colorMod = BackgroundEmitter.GetModifier<ColorRangeModifier>();
             if (isInMenu)
@@ -83,7 +84,6 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
                 colorMod.ColorInterval = roomColorInterval;
 
             BackgroundEmitter.Update();
-            BackgroundEmitter.Draw(spriteBatch);
 
             // Should draw each in the pool.
             foreach (GameObject go in BackgroundEmitter.ParticlePool.Active)

@@ -1,5 +1,6 @@
 ﻿using DoctorsDungeon.CommandPattern;
 using DoctorsDungeon.GameManagement;
+using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -128,6 +129,6 @@ public class Button : Component
         // If the text is not visible or null, we don't need to do anything
         if (string.IsNullOrEmpty(Text)) return;
 
-        GuiMethods.DrawTextCentered(spriteBatch, font, GameObject.Transform.Position, Text, TextColor, Vector2.Zero);
+        GuiMethods.DrawTextCentered(spriteBatch, font, GameObject.Transform.Position, Text, BaseMath.TransitionColor(TextColor), Vector2.Zero);
     }
 }

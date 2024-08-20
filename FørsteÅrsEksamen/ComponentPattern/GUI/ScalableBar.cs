@@ -1,6 +1,8 @@
 ﻿using DoctorsDungeon.CommandPattern;
 using DoctorsDungeon.ComponentPattern.WorldObjects;
 using DoctorsDungeon.GameManagement;
+using DoctorsDungeon.GameManagement.Scenes;
+using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -73,7 +75,7 @@ namespace DoctorsDungeon.ComponentPattern.GUI
             spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel],
                 Position,
                 filledRectangle,
-                DrawBarColor,
+                BaseMath.TransitionColor(DrawBarColor),
                 GameObject.Transform.Rotation,
                 origin,
                 1f,                                    // Already have scaled from the CollisionBox

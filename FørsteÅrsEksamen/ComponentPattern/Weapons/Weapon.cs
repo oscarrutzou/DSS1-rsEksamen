@@ -37,7 +37,7 @@ public abstract class Weapon : Component
 
     protected float StartAnimationAngle { get; set; }
 
-    protected double TotalElapsedTime;
+    protected double AttackedTotalElapsedTime { get; set; }
     protected float EnemyWeakness = 2.5f; // What to divide with, to make enemie attacks weaker.
 
     protected bool Attacking;
@@ -55,7 +55,7 @@ public abstract class Weapon : Component
     public WeaponAnimTypes NextAnim { get; private set; }
     protected bool FinnishedAttack;
     private float untouchedAngle;
-    int divideBy = 4;
+    private int divideBy = 4;
     protected float FinalLerp { get; set; }
 
     protected double AttackTimer { get; set; }

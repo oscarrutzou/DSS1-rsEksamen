@@ -26,6 +26,8 @@ public class Dagger : MeleeWeapon
 
         CurrentAnim = WeaponAnimTypes.Light;
 
+        MinimumTimeBetweenHits = 0.2f;
+
         if (EnemyUser != null)
         {
             EnemyUser.CellPlayerMoveBeforeNewTarget = 2;
