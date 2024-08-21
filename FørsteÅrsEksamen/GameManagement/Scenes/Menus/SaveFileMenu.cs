@@ -17,9 +17,9 @@ public class SaveFileMenu : MenuScene
     {
         saveFileButtons = new Dictionary<int, Button>()
         {
-            { 1, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(1); }, TextureNames.LargeBtn).GetComponent<Button>() },
-            { 2, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(2); }, TextureNames.LargeBtn).GetComponent<Button>()  },
-            { 3, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(3); }, TextureNames.LargeBtn).GetComponent<Button>()  }
+            { 1, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(1); }, TextureNames.WideBtn).GetComponent<Button>() },
+            { 2, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(2); }, TextureNames.WideBtn).GetComponent<Button>()  },
+            { 3, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(3); }, TextureNames.WideBtn).GetComponent<Button>()  }
         };
 
         foreach (Button button in saveFileButtons.Values)
@@ -86,9 +86,6 @@ public class SaveFileMenu : MenuScene
             Button delete = deleteBtn.GetComponent<Button>();
 
             deleteBtn.Transform.Position = saveFileBtn.GameObject.Transform.Position + new Vector2(180, 0);
-            Collider deleteBtnCol = deleteBtn.GetComponent<Collider>();
-            deleteBtnCol.SetCollisionBox(10, 10);
-
             GameWorld.Instance.Instantiate(deleteBtn);
         }
     }

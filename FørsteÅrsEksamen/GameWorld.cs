@@ -1,10 +1,6 @@
 ﻿using DoctorsDungeon.CommandPattern;
 using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.Particles;
-using DoctorsDungeon.ComponentPattern.Particles.BirthModifiers;
-using DoctorsDungeon.ComponentPattern.Particles.Modifiers;
-using DoctorsDungeon.ComponentPattern.Particles.Origins;
-using DoctorsDungeon.ComponentPattern.WorldObjects;
+using DoctorsDungeon.ComponentPattern.GUI;
 using DoctorsDungeon.GameManagement;
 using DoctorsDungeon.GameManagement.Scenes;
 using DoctorsDungeon.GameManagement.Scenes.Menus;
@@ -12,11 +8,9 @@ using DoctorsDungeon.GameManagement.Scenes.Rooms;
 using DoctorsDungeon.GameManagement.Scenes.TestScenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace DoctorsDungeon;
 
@@ -33,6 +27,7 @@ public class GameWorld : Game
     public static Color TextColor { get; private set; } = new Color(250, 249, 246);
 
     public GraphicsDeviceManager GfxManager { get; private set; } 
+    public float AvgFPS { get; private set; }
     public Dictionary<SceneNames, Scene> Scenes { get; private set; }
     public Scene CurrentScene { get; private set; }
     public Camera WorldCam { get; private set; } // Follows player
@@ -58,6 +53,10 @@ public class GameWorld : Game
 
     protected override void Initialize()
     {
+        //Frametime not limited to 16.66 Hz / 60 FPS
+        IsFixedTimeStep = false;
+        GfxManager.SynchronizeWithVerticalRetrace = true;
+
         SceneData.GenereateGameObjectDicionary();
         Fullscreen();
 
@@ -95,6 +94,8 @@ public class GameWorld : Game
         CurrentScene.Update(); // Updates all gameobjects and their componetents in the scene
         HandleSceneChange(); // Goes to the next scene
 
+        UpdateFPS(gameTime);
+
         base.Update(gameTime);
     }
 
@@ -125,6 +126,8 @@ public class GameWorld : Game
 
         CurrentScene.DrawOnScreen(_spriteBatch);
         InputHandler.Instance.MouseGo?.Draw(_spriteBatch);
+
+        _spriteBatch.DrawString(GlobalTextures.DefaultFont, $"FPS: {AvgFPS}", UiCam.TopLeft, Color.DarkGreen);
         _spriteBatch.End();
 
         base.Draw(gameTime);
@@ -155,6 +158,19 @@ public class GameWorld : Game
         GfxManager.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
         GfxManager.IsFullScreen = true;
         GfxManager.ApplyChanges();
+    }
+
+    private void UpdateFPS(GameTime gameTime)
+    {
+        float fps = 0;
+        if (gameTime.ElapsedGameTime.TotalMilliseconds > 0)
+            fps = (float)Math.Round(1000 / (gameTime.ElapsedGameTime.TotalMilliseconds), 1);
+
+        //Set _avgFPS to the first fps value when started.
+        if (AvgFPS < 0.01f) AvgFPS = fps;
+
+        //Average over 20 frames
+        AvgFPS = AvgFPS * 0.95f + fps * 0.05f;
     }
 
     #region Scene

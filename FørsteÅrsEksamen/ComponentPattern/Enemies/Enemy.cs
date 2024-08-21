@@ -149,6 +149,11 @@ public abstract class Enemy : Character
 
                 Attack();
                 break;
+
+            case CharacterState.Dead:
+                ResetRotationWhenIdle();
+                // Maybe a fade after some time?
+                break;
         }
     }
 

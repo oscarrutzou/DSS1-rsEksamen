@@ -19,7 +19,6 @@ namespace DoctorsDungeon.ComponentPattern.GUI
 
             DrawBarColor = Color.WhiteSmoke;
             SpriteRenderer.SetSprite(TextureNames.MouseCooldownBar);
-
             Collider.SetCollisionBox(5, 20);
             sizeOfDrawnBar = 1f;
             FillWidth = false;

@@ -33,8 +33,9 @@ public enum TextureNames
     DoorClosed,
 
     // UI
-    SmallBtn,
-    LargeBtn,
+    ShortBtn,
+    LongButton,
+    WideBtn,
     DeleteSaveBtn,
     QuestUnder,
     PlayerHealthOver,
@@ -89,8 +90,9 @@ public static class GlobalTextures
             {TextureNames.HealthPotionFull, content.Load<Texture2D>("World\\Objects\\Potions\\RedPotion1") },
             {TextureNames.DoorClosed, content.Load<Texture2D>("World\\Objects\\DoorClosed") },
 
-            {TextureNames.SmallBtn, content.Load<Texture2D>("UI\\SmallButtonIndividuel (1)") },
-            {TextureNames.LargeBtn, content.Load<Texture2D>("UI\\BigButtonIndividuel (1)") },
+            {TextureNames.ShortBtn, content.Load<Texture2D>("UI\\ShortButton") },
+            {TextureNames.LongButton, content.Load<Texture2D>("UI\\LongButton") },
+            {TextureNames.WideBtn, content.Load<Texture2D>("UI\\WideButton") },
             {TextureNames.DeleteSaveBtn, content.Load<Texture2D>("UI\\DeleteSaveButton") },
             {TextureNames.QuestUnder, content.Load<Texture2D>("UI\\Quest") },
             {TextureNames.PlayerHealthOver, content.Load<Texture2D>("UI\\PlayerHealthOver") },

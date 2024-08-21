@@ -83,7 +83,7 @@ namespace DoctorsDungeon.ComponentPattern.GUI
 
             Vector2 pos = Collider.CollisionBox.Center.ToVector2();
             string text = $"{_characterHealth.CurrentHealth} / {_characterHealth.MaxHealth}";
-            GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, pos, text, BaseMath.TransitionColor(GameWorld.TextColor), Vector2.Zero);
+            GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, pos, text, BaseMath.TransitionColor(GameWorld.TextColor));
         }
     }
 }

@@ -162,7 +162,8 @@ public class SpriteRenderer : Component
     /// <param name="layerDepth"></param>
     public void DrawSprite(SpriteBatch spriteBatch, Texture2D sprite, Vector2 posOffset, float layerDepth)
     {
-        Origin = IsCentered ? new Vector2(sprite.Width / 2, sprite.Height / 2) : OriginOffSet;
+        // Parse into a float from int, so we can get the centered origin
+        Origin = IsCentered ? new Vector2((float)sprite.Width / 2, (float)sprite.Height / 2) : OriginOffSet;
 
         drawPos = GameObject.Transform.Position + posOffset;
 

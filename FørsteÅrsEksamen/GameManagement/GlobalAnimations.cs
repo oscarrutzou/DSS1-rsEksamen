@@ -8,8 +8,6 @@ namespace DoctorsDungeon.GameManagement;
 public enum AnimNames
 {
     // GUI
-    SmallBtn,
-    LargeBtn,
     HourGlass,
     HourGlassReset,
 
@@ -146,12 +144,8 @@ public static class GlobalAnimations
 
         #endregion How to Upload Individual Frame Animation
 
-        LoadIndividualFramesAnimation(AnimNames.SmallBtn, "UI\\SmallButtonIndividuel (1)", 3, 2);
-        LoadIndividualFramesAnimation(AnimNames.LargeBtn, "UI\\BigButtonIndividuel (1)", 3, 2);
         LoadIndividualFramesAnimation(AnimNames.HourGlass, "UI\\Icons\\HourGlass\\HourGlass (1)", 3, 10);
         LoadIndividualFramesAnimation(AnimNames.HourGlassReset, "UI\\Icons\\HourGlass\\HourGlassReset (1)", 2, 2);
-
-        //LoadIndividualFramesAnimation(AnimNames.TestWizardRightIndividualFrames, "Test\\MultipleFilesAnim\\wizardRight (1)", 5, 8);
     }
 
     /// <summary>

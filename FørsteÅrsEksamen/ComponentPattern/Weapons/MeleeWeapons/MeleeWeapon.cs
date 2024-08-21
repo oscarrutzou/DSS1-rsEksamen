@@ -84,8 +84,6 @@ public abstract class MeleeWeapon : Weapon
 
             AttackedTotalElapsedTime = 0f; // Reset totalElapsedTime
             IsRotatingBack = true;
-            //hitGameObjects = new(); // Reset hit gameobjects so we can hit when it goes back again
-            //secondResetHittedObjects = false;
 
             SetStartAngleToNextAnim(); // Changes the StartAnimationAngle so it rotates to the next animation start, insted of snapping to the place after
             // Need to also set the new start point
@@ -99,22 +97,21 @@ public abstract class MeleeWeapon : Weapon
         }
 
         float normalizedAttackingTime = (float)AttackedTotalElapsedTime / (float)TimeBeforeNewDirection;
-        float easedTime; // maybe switch between them.
+        float easedTime = Animations[CurrentAnim].AnimationMethod(normalizedAttackingTime); // maybe switch between them.
+        float adjustedEasedTime = easedTime * (normalizedAttackingTime);
         float finalLerp = StartAnimationAngle;
 
         if (!IsRotatingBack)
         {
             finalLerp += FinalLerp; // The first rotation
             // Down attack
-            easedTime = Animations[CurrentAnim].AnimationMethod(normalizedAttackingTime);
-            GameObject.Transform.Rotation = MathHelper.Lerp(StartAnimationAngle, finalLerp, easedTime);
+            GameObject.Transform.Rotation = MathHelper.Lerp(StartAnimationAngle, finalLerp, adjustedEasedTime);
         }
         else
         {
             // Second rotation to rotate to the start of the next rotation
             //Up attack
-            easedTime = Animations[CurrentAnim].AnimationMethod(normalizedAttackingTime);
-            GameObject.Transform.Rotation = MathHelper.Lerp(rotateBackStartRotation, StartAnimationAngle, easedTime);
+            GameObject.Transform.Rotation = MathHelper.Lerp(rotateBackStartRotation, StartAnimationAngle, adjustedEasedTime);
         }
 
         // Reset
@@ -125,12 +122,14 @@ public abstract class MeleeWeapon : Weapon
             FinnishedAttack = true;
             ResetAttackTimers();
         }
+
     }
     private void ResetAttackTimers()
     {
         WeaponAnimation curAnim = Animations[CurrentAnim];
         NormalizedFullAttack = _fullAttackTimer / Animations[CurrentAnim].TotalTime;
 
+        // With easedTime
         // Total time 1.5
         // timer 1.23
         // 8.22

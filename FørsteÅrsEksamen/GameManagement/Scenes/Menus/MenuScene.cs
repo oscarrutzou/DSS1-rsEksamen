@@ -1,5 +1,6 @@
 ﻿using DoctorsDungeon.ComponentPattern;
 using DoctorsDungeon.ComponentPattern.GUI;
+using DoctorsDungeon.LiteDB;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -20,6 +21,8 @@ public abstract class MenuScene : Scene
 
     public override void Initialize()
     {
+        SaveData.SetBaseValues();
+
         FirstMenuObjects = new();
         SecondMenuObjects = new();
         ShowSecondMenu = false;
@@ -96,6 +99,6 @@ public abstract class MenuScene : Scene
     protected void DrawMenuText(SpriteBatch spriteBatch, string text, Vector2 position)
     {
         // If the scene is changing, then it should use the lerp of the color. Already have the start color
-        GuiMethods.DrawTextCentered(spriteBatch, Font, position, text, CurrentTextColor, Vector2.Zero);
+        GuiMethods.DrawTextCentered(spriteBatch, Font, position, text, CurrentTextColor);
     }
 }

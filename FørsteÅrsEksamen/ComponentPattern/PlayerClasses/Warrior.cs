@@ -7,7 +7,7 @@ public class Warrior : Player
 {
     public Warrior(GameObject gameObject) : base(gameObject)
     {
-        Speed = 150;
+        Speed = 300;
     }
 
     public override void Awake()

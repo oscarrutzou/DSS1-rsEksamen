@@ -283,7 +283,7 @@ public abstract class RoomBase : Scene
 
         SpriteRenderer.DrawCenteredSprite(spriteBatch, TextureNames.QuestUnder, textPos, questUnderColor, LayerDepth.Default);
 
-        GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, textPos, text, CurrentTextColor, Vector2.Zero);
+        GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, textPos, text, CurrentTextColor);
     }
 
     private void DrawTimer(SpriteBatch spriteBatch, Vector2 timerPos)
@@ -334,9 +334,6 @@ public abstract class RoomBase : Scene
 
         startPos += offset;
         DrawString(spriteBatch, $"Grid Room Nr {GridManager.Instance.RoomNrIndex}", startPos);
-
-        startPos += offset;
-        DrawString(spriteBatch, $"Player TargetVel {player.targetVelocity}", startPos);
 
         startPos += offset;
         DrawString(spriteBatch, $"player.velocity {player.velocity}", startPos);

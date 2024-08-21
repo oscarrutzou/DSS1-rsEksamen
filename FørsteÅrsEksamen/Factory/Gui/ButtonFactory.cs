@@ -8,10 +8,10 @@ namespace DoctorsDungeon.Factory.Gui;
 // Stefan
 public static class ButtonFactory
 {
-    public static GameObject Create(string text, bool invokeActionOnFullScale, Action onClick, TextureNames textureName = TextureNames.SmallBtn)
+    public static GameObject Create(string text, bool invokeActionOnFullScale, Action onClick, TextureNames textureName = TextureNames.ShortBtn)
     {
         GameObject roomBtn = new();
-        roomBtn.Transform.Scale = new(6, 6);
+        //roomBtn.Transform.Scale = new(6, 6);
         roomBtn.Type = GameObjectTypes.Gui;
         SpriteRenderer sr = roomBtn.AddComponent<SpriteRenderer>();
         sr.SetSprite(textureName);

@@ -28,12 +28,12 @@ public class EndMenu : MenuScene
 
     protected override void InitSecondMenu()
     {
-        GameObject musicVolGo = ButtonFactory.Create("", true, ChangeMusic, TextureNames.LargeBtn);
+        GameObject musicVolGo = ButtonFactory.Create("", true, ChangeMusic, TextureNames.LongButton);
         MusicBtn = musicVolGo.GetComponent<Button>();
         MusicBtn.Text = $"Music Volume {GlobalSounds.MusicVolume * 100}%";
         SecondMenuObjects.Add(musicVolGo);
 
-        GameObject sfxVolGo = ButtonFactory.Create("", true, ChangeSfx, TextureNames.LargeBtn);
+        GameObject sfxVolGo = ButtonFactory.Create("", true, ChangeSfx, TextureNames.LongButton);
         SfxBtn = sfxVolGo.GetComponent<Button>();
         SfxBtn.Text = $"SFX Volume {GlobalSounds.SfxVolume * 100}%";
         SecondMenuObjects.Add(sfxVolGo);

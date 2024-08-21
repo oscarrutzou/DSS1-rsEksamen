@@ -50,7 +50,7 @@ public class CharacterSelectorMenu : MenuScene
     {
         foreach (ClassTypes type in classTypesThatAreDone)
         {
-            GameObject btnGo = ButtonFactory.Create($"{type} 50g", true, () => { SelectClass(type); }, TextureNames.LargeBtn);
+            GameObject btnGo = ButtonFactory.Create($"{type} 50g", true, () => { SelectClass(type); }, TextureNames.WideBtn);
             FirstMenuObjects.Add(btnGo);
 
             Button btn = btnGo.GetComponent<Button>();
@@ -92,7 +92,7 @@ public class CharacterSelectorMenu : MenuScene
             {
                 if (!WeaponFactory.WeaponTypesThatAreDone.Contains(weaponType)) continue; // If we havent made that weapon yet
 
-                GameObject btnGo = ButtonFactory.Create($"{weaponType} 50g", true, () => { SeletectWeapon(weaponType); }, TextureNames.LargeBtn);
+                GameObject btnGo = ButtonFactory.Create($"{weaponType} 50g", true, () => { SeletectWeapon(weaponType); }, TextureNames.WideBtn);
 
                 weaponButtonGameObjects.Add(btnGo);
 
@@ -171,9 +171,6 @@ public class CharacterSelectorMenu : MenuScene
             ShowHideClassMenu();
         else
         {
-            // Reset variables
-            SaveData.SetBaseValues();
-
             GameWorld.Instance.ChangeScene(SceneNames.SaveFileMenu);
         }
     }

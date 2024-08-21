@@ -64,7 +64,7 @@ public static class GuiMethods
     /// <summary>
     /// <para>Can take and divide the text and center each part of the text.</para>
     /// </summary>
-    public static void DrawTextCentered(SpriteBatch spriteBatch, SpriteFont font, Vector2 position, string text, Color textColor, Vector2 origin, float rot = 0f, float scale = 1f, SpriteEffects spriteEffects = SpriteEffects.None)
+    public static void DrawTextCentered(SpriteBatch spriteBatch, SpriteFont font, Vector2 position, string text, Color textColor, bool centerMiddle = true, float rot = 0f, float scale = 1f, SpriteEffects spriteEffects = SpriteEffects.None)
     {
         if (string.IsNullOrEmpty(text)) return;
 
@@ -73,9 +73,10 @@ public static class GuiMethods
 
         float layer = SpriteRenderer.GetLayerDepth(LayerDepth.Text);
 
-        if (lines.Length == 1) // Only one line so can make a easier and fast way to draw it, if we have another method for 1 line
+
+        if (lines.Length == 1 || !centerMiddle) // Only one line so can make a easier and fast way to draw it, if we have another method for 1 line
         {
-            DrawSingleLineCentered(spriteBatch, font, position, text, textColor, origin, rot, scale, spriteEffects, layer);
+            DrawSingleLineCentered(spriteBatch, font, position, text, textColor, rot, scale, spriteEffects, layer);
             return;
         }
 
@@ -109,22 +110,22 @@ public static class GuiMethods
                                    linePosition,
                                    textColor,
                                    rot,
-                                   origin,
+                                   Vector2.Zero,
                                    scale,
                                    spriteEffects,
                                    layer);
         }
     }
 
-    private static void DrawSingleLineCentered(SpriteBatch spriteBatch, SpriteFont font, Vector2 position, string text, Color textColor, Vector2 origin, float rot = 0f, float scale = 1f, SpriteEffects spriteEffects = SpriteEffects.None, float layer = 1)
+    private static void DrawSingleLineCentered(SpriteBatch spriteBatch, SpriteFont font, Vector2 position, string text, Color textColor, float rot = 0f, float scale = 1f, SpriteEffects spriteEffects = SpriteEffects.None, float layer = 1)
     {
         Vector2 lineSize = font.MeasureString(text);
 
-        Vector2 center = position - new Vector2(lineSize.X / 2, lineSize.Y / 2);
+        Vector2 origin = new Vector2(lineSize.X / 2, lineSize.Y / 2);
 
         spriteBatch.DrawString(font,
                    text,
-                   center,
+                   position,
                    textColor,
                    rot,
                    origin,

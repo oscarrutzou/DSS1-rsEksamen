@@ -7,6 +7,7 @@ using DoctorsDungeon.LiteDB;
 using DoctorsDungeon.ObserverPattern;
 using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
@@ -18,9 +19,8 @@ public abstract class Player : Character
     public GameObject HandsGo;
     public GameObject MovementColliderGo;
 
-    public Vector2 totalMovementInput, velocity, targetVelocity, previousPosition;
-
-    private readonly float turnSpeed = 40f; // Adjust as needed 
+    public Vector2 totalMovementInput, previousPosition;
+    public Vector2 velocity { get; set; }
 
     protected List<IObserver> observers = new();
 
@@ -85,6 +85,7 @@ public abstract class Player : Character
                 break;
 
             case CharacterState.Dead:
+                ResetRotationWhenIdle();
                 ChangeScene();
                 break;
         }
@@ -145,50 +146,49 @@ public abstract class Player : Character
         UpdatePositionAndNotify();
     }
 
+    public override void Draw(SpriteBatch spriteBatch)
+    {
+        base.Draw(spriteBatch);
+    }
+
     private void InitializeMovement()
     {
-        targetVelocity = Vector2.Zero;
+        velocity = Vector2.Zero;
         previousPosition = GameObject.Transform.Position;
     }
 
-    private void ProcessInput(Vector2 input) // 0.77 / 0.77
+    private void ProcessInput(Vector2 input)
     {
-        input.Normalize();
-        targetVelocity = input * Speed * (float)GameWorld.DeltaTime;
-
-        // To fix the error that if all buttons have been pressed, that it sometimes sets the velocity to Nan/Nan
-        if (float.IsNaN(velocity.X))
-        {
-            velocity = Vector2.Zero;
-        }
-
-        // Interpolate the velocity
-        velocity = Vector2.Lerp(velocity, targetVelocity, turnSpeed * (float)GameWorld.DeltaTime);
+        velocity = BaseMath.SafeNormalize(input);
         Direction = velocity;
     }
 
     private void TryMoveInBothDirections()
     {
+        velocity *= Speed * (float)GameWorld.DeltaTime;
         // Separate the movement into X and Y components
-        Vector2 xMovement = new Vector2(velocity.X, 0) * Speed * (float)GameWorld.DeltaTime;
-        Vector2 yMovement = new Vector2(0, velocity.Y) * Speed * (float)GameWorld.DeltaTime;
+        Vector2 xMovement = new Vector2(velocity.X, 0);
+        Vector2 yMovement = new Vector2(0, velocity.Y);
 
         bool hasMoved = false;
         // Try moving along the X axis
-        if (xMovement.X != 0f && TryMove(xMovement))
-        {
-            // Update the previous position after a successful move
-            previousPosition = GameObject.Transform.Position;
-            hasMoved = true;
-        }
+        //if (xMovement.X != 0f && TryMove(xMovement))
+        //{
+        //    // Update the previous position after a successful move
+        //    previousPosition = GameObject.Transform.Position;
+        //    hasMoved = true;
+        //}
 
-        // Try moving along the Y axis
-        if (yMovement.Y != 0f && TryMove(yMovement))
-        {
-            // Update the previous position after a successful move
-            previousPosition = GameObject.Transform.Position;
-            hasMoved = true;
-        }
+        //// Try moving along the Y axis
+        //if (yMovement.Y != 0f && TryMove(yMovement))
+        //{
+        //    // Update the previous position after a successful move
+        //    previousPosition = GameObject.Transform.Position;
+        //    hasMoved = true;
+        //}
+        hasMoved = true;
+
+        GameObject.Transform.Translate(velocity);
 
         RotateCharacterOnMove(hasMoved);
     }
@@ -200,6 +200,7 @@ public abstract class Player : Character
 
         // Updates the grid position
         GameObject cellGoUnderPlayer = GridManager.Instance.GetCellAtPos(GameObject.Transform.Position);
+        if (cellGoUnderPlayer == null) return;
         GameObject.Transform.GridPosition = cellGoUnderPlayer.Transform.GridPosition;
         Cell cellUnderPlayer = cellGoUnderPlayer.GetComponent<Cell>();
         CollisionNr = cellUnderPlayer.CollisionNr;
