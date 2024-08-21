@@ -40,6 +40,7 @@ public enum TextureNames
     PlayerHealthOver,
     BossHealthOver,
     BackpackIcon,
+    MouseCooldownBar,
     MouseCursorDefault,
 }
 
@@ -96,6 +97,7 @@ public static class GlobalTextures
             {TextureNames.BackpackIcon, content.Load<Texture2D>("UI\\Icons\\BackpackIcon") },
             {TextureNames.MouseCursorDefault, content.Load<Texture2D>("UI\\Icons\\MouseCursor") },
             {TextureNames.BossHealthOver, content.Load<Texture2D>("UI\\BossHealthBarOver") },
+            {TextureNames.MouseCooldownBar, content.Load<Texture2D>("UI\\MouseCooldownBar") },
 
         };
 

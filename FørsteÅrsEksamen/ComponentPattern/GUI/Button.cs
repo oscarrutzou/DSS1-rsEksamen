@@ -12,56 +12,55 @@ namespace DoctorsDungeon.ComponentPattern.GUI;
 public class Button : Component
 {
     #region Properties
-
     public Action OnClick;
     public string Text;
-    private SpriteFont font;
+    private SpriteFont _font;
 
-    private SpriteRenderer spriteRenderer;
-    private Collider collider;
+    private SpriteRenderer _spriteRenderer;
+    private Collider _collider;
 
     public Color TextColor;
 
-    private Color baseColor;
+    private Color _baseColor;
     public Color OnHoverColor = new(200, 200, 200);
     public Color OnMouseDownColor = new(150, 150, 150);
 
     public Vector2 MaxScale { get; private set; }
-    private bool invokeActionOnFullScale;
-    private bool hasPressed;
+    private readonly bool _invokeActionOnFullScale;
+    private bool _hasPressed;
 
-    private Vector2 scaleUpAmount;
-    private float scaleDownOnClickAmount = 0.95f;
+    private Vector2 _scaleUpAmount;
+    private readonly float _scaleDownOnClickAmount = 0.95f;
 
     #endregion Properties
 
     public Button(GameObject gameObject) : base(gameObject)
     {
         MaxScale = GameObject.Transform.Scale;
-        scaleUpAmount = new Vector2(MaxScale.X * 0.01f, MaxScale.Y * 0.01f);
+        _scaleUpAmount = new Vector2(MaxScale.X * 0.01f, MaxScale.Y * 0.01f);
 
-        font = GlobalTextures.DefaultFont;
+        _font = GlobalTextures.DefaultFont;
         GameObject.Type = GameObjectTypes.Gui;
     }
 
     public Button(GameObject gameObject, string text, bool invokeActionOnFullScale, Action onClick) : base(gameObject)
     {
         MaxScale = GameObject.Transform.Scale;
-        scaleUpAmount = new Vector2(MaxScale.X * 0.01f, MaxScale.Y * 0.01f);
+        _scaleUpAmount = new Vector2(MaxScale.X * 0.01f, MaxScale.Y * 0.01f);
 
-        font = GlobalTextures.DefaultFont;
+        _font = GlobalTextures.DefaultFont;
         this.Text = text;
-        this.invokeActionOnFullScale = invokeActionOnFullScale;
+        this._invokeActionOnFullScale = invokeActionOnFullScale;
         this.OnClick = onClick;
         GameObject.Type = GameObjectTypes.Gui;
     }
 
     public override void Start()
     {
-        collider = GameObject.GetComponent<Collider>();
-        spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
+        _collider = GameObject.GetComponent<Collider>();
+        _spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
 
-        baseColor = spriteRenderer.Color;
+        _baseColor = _spriteRenderer.Color;
 
         TextColor = GameWorld.TextColor;
     }
@@ -72,44 +71,44 @@ public class Button : Component
         {
             if (InputHandler.Instance.MouseState.LeftButton != ButtonState.Released)
             {
-                spriteRenderer.Color = OnMouseDownColor;
+                _spriteRenderer.Color = OnMouseDownColor;
                 return;
             }
 
-            spriteRenderer.Color = OnHoverColor;
+            _spriteRenderer.Color = OnHoverColor;
         }
         else
         {
-            spriteRenderer.Color = baseColor;
+            _spriteRenderer.Color = _baseColor;
         }
 
         Vector2 scale = GameObject.Transform.Scale;
 
         // Scales up too fast
         GameObject.Transform.Scale = new Vector2(
-            Math.Min(MaxScale.X, scale.X + scaleUpAmount.X),
-            Math.Min(MaxScale.Y, scale.Y + scaleUpAmount.Y));
+            Math.Min(MaxScale.X, scale.X + _scaleUpAmount.X),
+            Math.Min(MaxScale.Y, scale.Y + _scaleUpAmount.Y));
 
         if (!GameObject.IsEnabled
-            || !invokeActionOnFullScale
-            || !hasPressed
+            || !_invokeActionOnFullScale
+            || !_hasPressed
             || GameObject.Transform.Scale != MaxScale) return;
 
         OnClick?.Invoke();
-        hasPressed = false;
+        _hasPressed = false;
     }
 
     public bool IsMouseOver()
     {
-        if (collider == null) return false;
-        return collider.CollisionBox.Contains(InputHandler.Instance.MouseOnUI.ToPoint());
+        if (_collider == null) return false;
+        return _collider.CollisionBox.Contains(InputHandler.Instance.MouseOnUI.ToPoint());
     }
 
     public void ChangeScale(Vector2 scale)
     {
         GameObject.Transform.Scale = scale;
         MaxScale = scale;
-        scaleUpAmount = new Vector2(MaxScale.X * 0.01f, MaxScale.Y * 0.01f);
+        _scaleUpAmount = new Vector2(MaxScale.X * 0.01f, MaxScale.Y * 0.01f);
     }
 
     public void OnClickButton()
@@ -117,11 +116,11 @@ public class Button : Component
         if (!GameObject.IsEnabled) return;
 
         GameObject.Transform.Scale = new Vector2(
-            MaxScale.X * scaleDownOnClickAmount,
-            MaxScale.Y * scaleDownOnClickAmount);
+            MaxScale.X * _scaleDownOnClickAmount,
+            MaxScale.Y * _scaleDownOnClickAmount);
 
-        if (invokeActionOnFullScale)
-            hasPressed = true;
+        if (_invokeActionOnFullScale)
+            _hasPressed = true;
         else
             OnClick?.Invoke();
     }
@@ -131,6 +130,6 @@ public class Button : Component
         // If the text is not visible or null, we don't need to do anything
         if (string.IsNullOrEmpty(Text)) return;
 
-        GuiMethods.DrawTextCentered(spriteBatch, font, GameObject.Transform.Position, Text, BaseMath.TransitionColor(TextColor), Vector2.Zero);
+        GuiMethods.DrawTextCentered(spriteBatch, _font, GameObject.Transform.Position, Text, BaseMath.TransitionColor(TextColor), Vector2.Zero);
     }
 }

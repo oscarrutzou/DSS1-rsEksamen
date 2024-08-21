@@ -36,6 +36,7 @@ namespace DoctorsDungeon.ComponentPattern.GUI
 
 
         protected Color DrawBarColor;
+        protected bool FillWidth = true;
 
         public ScalableBar(GameObject gameObject) : base(gameObject)
         {
@@ -63,10 +64,20 @@ namespace DoctorsDungeon.ComponentPattern.GUI
             Rectangle collisionBox = Collider.CollisionBox;
             Vector2 pos = new Vector2(Collider.CollisionBox.X, Collider.CollisionBox.Y);
 
-            float fillAmount = sizeOfDrawnBar * collisionBox.Width;
             // The final rectangle that will be drawn
-            Rectangle filledRectangle = new Rectangle((int)pos.X, (int)pos.Y, (int)fillAmount, collisionBox.Height);
+            Rectangle filledRectangle;
+            float fillAmount;
 
+            if (FillWidth)
+            {
+                fillAmount = sizeOfDrawnBar * collisionBox.Width;
+                filledRectangle = new Rectangle((int)pos.X, (int)pos.Y, (int)fillAmount, collisionBox.Height);
+            }
+            else
+            {
+                fillAmount = sizeOfDrawnBar * collisionBox.Height;
+                filledRectangle = new Rectangle((int)pos.X, (int)pos.Y, collisionBox.Width, (int)fillAmount);
+            }
             // The origin 
             Vector2 origin = Vector2.Zero;
             if (Collider.CenterCollisionBox)

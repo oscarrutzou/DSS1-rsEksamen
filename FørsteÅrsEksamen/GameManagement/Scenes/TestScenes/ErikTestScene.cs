@@ -40,9 +40,9 @@ public class ErikTestScene : Scene
         //GameWorld.Instance.Instantiate(spawner.GameObject);
     }
 
-    public override void Update(GameTime gameTime)
+    public override void Update()
     {
-        base.Update(gameTime);
+        base.Update();
     }
 
     private List<Point> spawnPoints = new()

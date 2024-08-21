@@ -219,7 +219,7 @@ public abstract class RoomBase : Scene
 
     #endregion Initialize Methods
 
-    public override void Update(GameTime gameTime)
+    public override void Update()
     {
         SaveData.Time_Left -= GameWorld.DeltaTime;
 
@@ -238,7 +238,7 @@ public abstract class RoomBase : Scene
             OnAllEnemiesDied();
         }
 
-        base.Update(gameTime);
+        base.Update();
     }
      
     private void OnAllEnemiesDied()

@@ -32,21 +32,11 @@ public abstract class MeleeWeapon : Weapon
     private float rotateBackStartRotation;
     private double timeCooldownBetweenHits { get; set; }
     private double totalElapsedTime;
+    public float NormalizedFullAttack { get; private set; } // The normalized value for how far the attack is to be dont
+    private float _fullAttackTimer;
 
     protected MeleeWeapon(GameObject gameObject) : base(gameObject)
     {
-    }
-
-    public void DealDamage(GameObject damageGo)
-    {
-        Health health = damageGo.GetComponent<Health>();
-
-        // Float so we can divide with enemy weakness
-        float damage = Animations[CurrentAnim].Damage;
-        if (EnemyUser != null)
-            damage /= EnemyWeakness;
-
-        health.TakeDamage((int)damage);
     }
 
     public override void Update()
@@ -81,8 +71,12 @@ public abstract class MeleeWeapon : Weapon
         }
     }
 
+
     private void AttackAnimSlash()
     {
+        _fullAttackTimer += (float)GameWorld.DeltaTime;
+        NormalizedFullAttack = _fullAttackTimer / Animations[CurrentAnim].TotalTime; 
+
         // First rotate current angle to start angle of the anim, before attacking
         if (!IsRotatingBack && AttackedTotalElapsedTime >= TimeBeforeNewDirection)
         {
@@ -104,7 +98,7 @@ public abstract class MeleeWeapon : Weapon
                 SpriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
         }
 
-        float normalizedTime = (float)AttackedTotalElapsedTime / (float)TimeBeforeNewDirection;
+        float normalizedAttackingTime = (float)AttackedTotalElapsedTime / (float)TimeBeforeNewDirection;
         float easedTime; // maybe switch between them.
         float finalLerp = StartAnimationAngle;
 
@@ -112,23 +106,51 @@ public abstract class MeleeWeapon : Weapon
         {
             finalLerp += FinalLerp; // The first rotation
             // Down attack
-            easedTime = Animations[CurrentAnim].AnimationMethod(normalizedTime);
+            easedTime = Animations[CurrentAnim].AnimationMethod(normalizedAttackingTime);
             GameObject.Transform.Rotation = MathHelper.Lerp(StartAnimationAngle, finalLerp, easedTime);
         }
         else
         {
             // Second rotation to rotate to the start of the next rotation
             //Up attack
-            easedTime = Animations[CurrentAnim].AnimationMethod(normalizedTime);
+            easedTime = Animations[CurrentAnim].AnimationMethod(normalizedAttackingTime);
             GameObject.Transform.Rotation = MathHelper.Lerp(rotateBackStartRotation, StartAnimationAngle, easedTime);
         }
 
+        // Reset
         if (Math.Abs(GameObject.Transform.Rotation - StartAnimationAngle) < 0.1f && IsRotatingBack)
         {
             IsRotatingBack = false;
             Attacking = false;
             FinnishedAttack = true;
+            ResetAttackTimers();
         }
+    }
+    private void ResetAttackTimers()
+    {
+        WeaponAnimation curAnim = Animations[CurrentAnim];
+        NormalizedFullAttack = _fullAttackTimer / Animations[CurrentAnim].TotalTime;
+
+        // Total time 1.5
+        // timer 1.23
+        // 8.22
+        // rotation 5.89
+        // start rotation 5.926
+        _fullAttackTimer = 0f;
+        NormalizedFullAttack = 0f;
+        AttackedTotalElapsedTime = 0f;
+    }
+
+    protected override void SetAttackDirection()
+    {
+        ResetAttackTimers();
+
+        timeCooldownBetweenHits = Math.Max(MinimumTimeBetweenHits, TimeBeforeNewDirection / 3);
+
+        if (LeftSide)
+            FinalLerp = -Animations[CurrentAnim].AmountOfRotation;
+        else
+            FinalLerp = Animations[CurrentAnim].AmountOfRotation;
     }
 
     private void AttackAnimStab()
@@ -183,17 +205,18 @@ public abstract class MeleeWeapon : Weapon
 
     }
 
-    protected override void SetAttackDirection()
+    public void DealDamage(GameObject damageGo)
     {
-        AttackedTotalElapsedTime = 0f;
+        Health health = damageGo.GetComponent<Health>();
 
-        timeCooldownBetweenHits = Math.Max(MinimumTimeBetweenHits, TimeBeforeNewDirection / 3); 
+        // Float so we can divide with enemy weakness
+        float damage = Animations[CurrentAnim].Damage;
+        if (EnemyUser != null)
+            damage /= EnemyWeakness;
 
-        if (LeftSide)
-            FinalLerp = -Animations[CurrentAnim].AmountOfRotation;
-        else
-            FinalLerp = Animations[CurrentAnim].AmountOfRotation;
+        health.TakeDamage((int)damage);
     }
+
 
     #region Weapon Colliders
 

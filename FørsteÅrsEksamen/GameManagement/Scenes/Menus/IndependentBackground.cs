@@ -55,24 +55,23 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
             BackgroundEmitter.StartEmitter();
         }
 
+        private static GameObject mouseGo;
         private static void MakeMouseGo()
         {
             InputHandler.Instance.MouseGo = IconFactory.CreateCursorIcon();
+            mouseGo = InputHandler.Instance.MouseGo;
 
-            InputHandler.Instance.MouseGo.Awake();
-            InputHandler.Instance.MouseGo.Start();
+            mouseGo.Awake();
+            mouseGo.Start();
             
         }
 
-        public static void Update(GameTime gameTime)
+        public static void Update()
         {
-            InputHandler.Instance.MouseGo.Update(gameTime);
-            InputHandler.Instance.MouseGo.Transform.Position = InputHandler.Instance.MouseOnUI;
-
-            BackgroundEmitter.FollowPoint = InputHandler.Instance.MouseInWorld;
+            mouseGo.Update();
         }
 
-        public static void DrawBG(SpriteBatch spriteBatch, bool isInMenu)
+        public static void DrawBG(SpriteBatch spriteBatch)
         {
             // Only stop the emitter if its already running. Otherwise it will keep being in STOPPING state:d
             if (!GameWorld.Instance.ShowBG && 
@@ -86,7 +85,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
             if (BackgroundEmitter == null) SpawnBG();
 
             ColorRangeModifier colorMod = BackgroundEmitter.GetModifier<ColorRangeModifier>();
-            if (isInMenu)
+            if (GameWorld.Instance.IsInMenu)
                 colorMod.ColorInterval = menuColorInterval;
             else
                 colorMod.ColorInterval = roomColorInterval;

@@ -84,6 +84,7 @@ public class SaveFileMenu : MenuScene
             // Add a delete button next to it.
             GameObject deleteBtn = ButtonFactory.Create("X", true, () => { DeleteSave(saveFile.Save_ID); }, TextureNames.DeleteSaveBtn);
             Button delete = deleteBtn.GetComponent<Button>();
+
             deleteBtn.Transform.Position = saveFileBtn.GameObject.Transform.Position + new Vector2(180, 0);
             Collider deleteBtnCol = deleteBtn.GetComponent<Collider>();
             deleteBtnCol.SetCollisionBox(10, 10);

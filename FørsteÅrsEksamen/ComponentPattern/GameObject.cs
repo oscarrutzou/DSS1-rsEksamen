@@ -136,7 +136,7 @@ public class GameObject : ICloneable
         }
     }
 
-    public void Update(GameTime gameTime)
+    public void Update()
     {
         if (!IsEnabled) return;
         foreach (var component in components.Values)

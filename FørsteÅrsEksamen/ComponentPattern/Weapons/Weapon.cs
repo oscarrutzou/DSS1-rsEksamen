@@ -40,7 +40,7 @@ public abstract class Weapon : Component
     protected double AttackedTotalElapsedTime { get; set; }
     protected float EnemyWeakness = 2.5f; // What to divide with, to make enemie attacks weaker.
 
-    protected bool Attacking;
+    public bool Attacking { get; protected set; }
 
     // A lot of this data is being copied on many different weapons, even though it has the same data.
     // Could use a GlobalPool or something that contains data, that are the same and wont be changed on each object

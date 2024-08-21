@@ -9,8 +9,10 @@ namespace DoctorsDungeon.Factory.Gui
     {
         public static GameObject CreateCursorIcon()
         {
-            GameObject iconGo = new();
-            iconGo.Type = GameObjectTypes.Gui;
+            GameObject iconGo = new()
+            {
+                Type = GameObjectTypes.Gui
+            };
             iconGo.Transform.Scale = new Vector2(3, 3);
 
             SpriteRenderer sr = iconGo.AddComponent<SpriteRenderer>();
@@ -18,8 +20,15 @@ namespace DoctorsDungeon.Factory.Gui
             sr.SetSprite(TextureNames.MouseCursorDefault);
             sr.IsCentered = false;
 
+            GameObject cooldownBar = ScalableBarFactory.CreateCooldownBar();
+            MouseIcon mouseIcon = iconGo.AddComponent<MouseIcon>();
+            mouseIcon.SetMouseCooldownBar(cooldownBar);
+
             return iconGo;
         }
+
+
+
         public static GameObject CreateBackpackIcon()
         {
             GameObject iconGo = new();

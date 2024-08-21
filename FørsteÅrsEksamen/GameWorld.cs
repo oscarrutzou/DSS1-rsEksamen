@@ -45,7 +45,7 @@ public class GameWorld : Game
 
     private SpriteBatch _spriteBatch;
     private readonly string _menuString = "Menu";
-    private bool _isInMenu = true;
+    public bool IsInMenu { get; private set; } = true;
     #endregion
 
     public GameWorld()
@@ -90,9 +90,9 @@ public class GameWorld : Game
 
         GlobalSounds.MusicUpdate(); // Updates the Music in the game, not SFX
         InputHandler.Instance.Update();
-        IndependentBackground.Update(gameTime);
+        IndependentBackground.Update();
 
-        CurrentScene.Update(gameTime); // Updates all gameobjects and their componetents in the scene
+        CurrentScene.Update(); // Updates all gameobjects and their componetents in the scene
         HandleSceneChange(); // Goes to the next scene
 
         base.Update(gameTime);
@@ -106,7 +106,7 @@ public class GameWorld : Game
         _spriteBatch.Begin(sortMode: SpriteSortMode.FrontToBack, BlendState.AlphaBlend,
             SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise,
             transformMatrix: WorldCam.GetMatrix());
-        IndependentBackground.DrawBG(_spriteBatch, _isInMenu);
+        IndependentBackground.DrawBG(_spriteBatch);
         _spriteBatch.End();
 
         //Draw in world objects. Uses pixel perfect and a WorldCam, that can be moved around
@@ -203,9 +203,9 @@ public class GameWorld : Game
         // Starts the background emitter if scene ends in Menu
         string name = sceneName.ToString();
         if (name.Length >= 4 && name[^4..] == _menuString) // name.Substring(name.Length - 4)
-            _isInMenu = true;
+            IsInMenu = true;
         else
-            _isInMenu = false;
+            IsInMenu = false;
     }
 
     // Chosen to make it work with a base room type in the enum,
@@ -231,18 +231,18 @@ public class GameWorld : Game
             if (Scenes.ContainsKey(newScene)) // The next scene dosent exit
             {
                 NextScene = newScene;
-                _isInMenu = false;
+                IsInMenu = false;
             }
             else
             {
                 NextScene = SceneNames.MainMenu; // Sends them back to the menu
-                _isInMenu = true;
+                IsInMenu = true;
             }
         }
         else
         {
             NextScene = SceneNames.MainMenu; // Sends them back to the menu
-            _isInMenu = true;
+            IsInMenu = true;
         }
     }
 

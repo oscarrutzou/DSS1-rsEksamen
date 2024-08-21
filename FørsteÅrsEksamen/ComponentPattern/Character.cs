@@ -47,7 +47,7 @@ public abstract class Character : Component
     protected SpriteRenderer SpriteRenderer;
     protected Animator Animator;
     protected Collider Collider { get; set; }
-    protected Weapon Weapon;
+    public Weapon Weapon { get; protected set; }
     protected Health Health;
 
     protected Dictionary<CharacterState, AnimNames> CharacterStateAnimations = new();

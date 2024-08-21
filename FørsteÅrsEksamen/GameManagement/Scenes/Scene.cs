@@ -49,7 +49,7 @@ public abstract class Scene
     /// <summary>
     /// The base update on the scene handles all the GameObjects and calls Update on them all.
     /// </summary>
-    public virtual void Update(GameTime gameTime)
+    public virtual void Update()
     {
         LerpTextColor();
 
@@ -67,7 +67,7 @@ public abstract class Scene
         {
             foreach (GameObject gameObject in SceneData.GameObjectLists[type])
             {
-                gameObject.Update(gameTime);
+                gameObject.Update();
             }
         }
     }
