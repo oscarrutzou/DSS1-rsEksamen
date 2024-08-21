@@ -15,11 +15,9 @@ using System.Collections.Generic;
 
 namespace DoctorsDungeon.GameManagement.Scenes.TestScenes;
 
-public class OscarTestScene : Scene, IObserver
+public class OscarTestScene : Scene
 {
     private GameObject drawRoomBtn, drawAstarPathBtn;
-
-    private Vector2 playerPos;
     private Point PlayerSpawnPos;
     private GameObject PlayerGo;
 
@@ -49,8 +47,10 @@ public class OscarTestScene : Scene, IObserver
 
     private void SetLevelBG()
     {
-        GameObject go = new();
-        go.Type = GameObjectTypes.Background;
+        GameObject go = new()
+        {
+            Type = GameObjectTypes.Background
+        };
 
         SpriteRenderer spriteRenderer = go.AddComponent<SpriteRenderer>();
         spriteRenderer.SetSprite(TextureNames.TestLevelBG);
@@ -93,7 +93,6 @@ public class OscarTestScene : Scene, IObserver
     private void SetCommands()
     {
         player = PlayerGo.GetComponent<Player>();
-        player.Attach(this);
         InputHandler.Instance.AddKeyUpdateCommand(Keys.D, new MoveCmd(player, new Vector2(1, 0)));
         InputHandler.Instance.AddKeyUpdateCommand(Keys.A, new MoveCmd(player, new Vector2(-1, 0)));
         InputHandler.Instance.AddKeyUpdateCommand(Keys.W, new MoveCmd(player, new Vector2(0, -1)));
@@ -114,11 +113,6 @@ public class OscarTestScene : Scene, IObserver
     private void Attack()
     {
         //player.weapon.Attack();
-    }
-
-    private void TestRemoveComm()
-    {
-        InputHandler.Instance.RemoveKeyUpdateCommand(Keys.S);
     }
 
     private void StartGrid()
@@ -169,8 +163,6 @@ public class OscarTestScene : Scene, IObserver
 
         DrawCellPos(spriteBatch);
 
-        spriteBatch.DrawString(GlobalTextures.DefaultFont, $"PlayerPos {playerPos}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 60), Color.Black);
-
         SceneData.GameObjectLists.TryGetValue(GameObjectTypes.Cell, out list);
         spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Cell GameObjects in scene {list.Count}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 90), Color.Black);
 
@@ -181,17 +173,11 @@ public class OscarTestScene : Scene, IObserver
 
     private void DrawCellPos(SpriteBatch spriteBatch)
     {
-        //if (GridManager.Instance.CurrentGrid == null) throw new System.Exception("Error spørg da Oscar");
         GameObject cellGo = GridManager.Instance.GetCellAtPos(InputHandler.Instance.MouseInWorld);
 
         if (cellGo == null) return;
 
         Point cellGridPos = cellGo.Transform.GridPosition;
         spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Cell Point from MousePos: {cellGridPos}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 30), Color.Black);
-    }
-
-    public void UpdateObserver()
-    {
-        playerPos = player.GameObject.Transform.Position;
     }
 }

@@ -13,7 +13,7 @@ using System.Collections.Generic;
 namespace DoctorsDungeon.ComponentPattern.PlayerClasses;
 
 // Stefan
-public abstract class Player : Character, ISubject
+public abstract class Player : Character
 {
     public GameObject HandsGo;
     public GameObject MovementColliderGo;
@@ -32,7 +32,7 @@ public abstract class Player : Character, ISubject
     public ClassTypes ClassType;
 
     private double onDeadTimer;
-    private double timeTillSceneChange = 3f;
+    private readonly double timeTillSceneChange = 3f;
 
     public Player(GameObject gameObject) : base(gameObject)
     {
@@ -65,23 +65,23 @@ public abstract class Player : Character, ISubject
 
     public override void Update()
     {
-        //GameObject.Transform.Rotation += 0.5f * (float)GameWorld.DeltaTime;
-
-        //Vector2 check;
-        //check = InputHandler.Instance.MouseInWorld;
-        //SpriteRenderer.Color = Collider.Contains(check) ? Color.Red : Color.White;
-
         if (State != CharacterState.Dead)
-        {
             CheckForMovement();
-        }
 
         Weapon?.MoveWeaponAndAngle();
 
         switch (State)
         {
+            case CharacterState.Idle:
+                ResetRotationWhenIdle();
+                break;
+
             case CharacterState.Moving:
                 Move(totalMovementInput);
+                break;
+
+            case CharacterState.Attacking:
+                ResetRotationWhenIdle();
                 break;
 
             case CharacterState.Dead:
@@ -173,39 +173,38 @@ public abstract class Player : Character, ISubject
         Vector2 xMovement = new Vector2(velocity.X, 0) * Speed * (float)GameWorld.DeltaTime;
         Vector2 yMovement = new Vector2(0, velocity.Y) * Speed * (float)GameWorld.DeltaTime;
 
-        //bool hasMoved = false;
+        bool hasMoved = false;
         // Try moving along the X axis
-        if (TryMove(xMovement))
+        if (xMovement.X != 0f && TryMove(xMovement))
         {
             // Update the previous position after a successful move
             previousPosition = GameObject.Transform.Position;
-            //hasMoved = true;
+            hasMoved = true;
         }
 
         // Try moving along the Y axis
-        if (TryMove(yMovement))
+        if (yMovement.Y != 0f && TryMove(yMovement))
         {
             // Update the previous position after a successful move
             previousPosition = GameObject.Transform.Position;
-            //hasMoved = true;
+            hasMoved = true;
         }
 
+        RotateCharacterOnMove(hasMoved);
     }
+    
 
     private void UpdatePositionAndNotify()
     {
         SetMovement(GameObject.Transform.Position); // So we set the other gameobjects (Hands, Movement Collider...)
 
         // Updates the grid position
-        //Cell cellUnderPlayer = SetStartCollisionNr();
         GameObject cellGoUnderPlayer = GridManager.Instance.GetCellAtPos(GameObject.Transform.Position);
         GameObject.Transform.GridPosition = cellGoUnderPlayer.Transform.GridPosition;
         Cell cellUnderPlayer = cellGoUnderPlayer.GetComponent<Cell>();
         CollisionNr = cellUnderPlayer.CollisionNr;
 
         GridManager.Instance.AddVisitedRoomNumbers(cellUnderPlayer.RoomNr);
-
-        Notify();
     }
 
     private bool TryMove(Vector2 movement)
@@ -219,10 +218,10 @@ public abstract class Player : Character, ISubject
         // Check each corner of the CollisionBox
         Vector2[] corners = new Vector2[]
         {
-            new Vector2(collisionBox.Left, collisionBox.Top),
-            new Vector2(collisionBox.Right, collisionBox.Top),
-            new Vector2(collisionBox.Right, collisionBox.Bottom),
-            new Vector2(collisionBox.Left, collisionBox.Bottom)
+            new(collisionBox.Left, collisionBox.Top),
+            new(collisionBox.Right, collisionBox.Top),
+            new(collisionBox.Right, collisionBox.Bottom),
+            new(collisionBox.Left, collisionBox.Bottom)
         };
 
         foreach (Vector2 corner in corners)
@@ -291,26 +290,4 @@ public abstract class Player : Character, ISubject
     }
 
     #endregion Item
-
-    #region Observer Pattern
-
-    public void Attach(IObserver observer)
-    {
-        observers.Add(observer);
-    }
-
-    public void Detach(IObserver observer)
-    {
-        observers.Remove(observer);
-    }
-
-    public void Notify()
-    {
-        foreach (IObserver observer in observers)
-        {
-            observer.UpdateObserver();
-        }
-    }
-
-    #endregion Observer Pattern
 }

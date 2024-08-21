@@ -1,11 +1,15 @@
-﻿using DoctorsDungeon.CommandPattern;
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+
 using DoctorsDungeon.CommandPattern.Commands;
+using DoctorsDungeon.CommandPattern;
 using DoctorsDungeon.ComponentPattern;
 using DoctorsDungeon.ComponentPattern.Enemies;
-using DoctorsDungeon.ComponentPattern.Particles.BirthModifiers;
-using DoctorsDungeon.ComponentPattern.Particles.Modifiers;
-using DoctorsDungeon.ComponentPattern.Particles.Origins;
-using DoctorsDungeon.ComponentPattern.Particles;
 using DoctorsDungeon.ComponentPattern.Path;
 using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using DoctorsDungeon.ComponentPattern.WorldObjects;
@@ -13,15 +17,7 @@ using DoctorsDungeon.Factory;
 using DoctorsDungeon.GameManagement.Scenes.Menus;
 using DoctorsDungeon.LiteDB;
 using DoctorsDungeon.Other;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using DoctorsDungeon.Factory.Gui;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
-using static System.Net.Mime.MediaTypeNames;
 using DoctorsDungeon.ComponentPattern.GUI;
 
 namespace DoctorsDungeon.GameManagement.Scenes.Rooms;
@@ -47,7 +43,7 @@ public abstract class RoomBase : Scene
     protected List<Point> PotionSpawnPoints = new();
     protected Dictionary<Point, GameObject> MiscGameObjectsInRoom = new();
 
-    private TransferDoor transferDoor {  get; set; }
+    private TransferDoor transferDoor;
     private SpriteRenderer transferDoorSpriteRenderer;
     private List<Enemy> enemiesInRoom = new();
     private List<Enemy> aliveEnemies;
@@ -55,9 +51,10 @@ public abstract class RoomBase : Scene
     private Spawner spawner;
 
     private List<GameObject> cells = new(); // For debug
+    private Vector2 startLeftPos;
 
-    private string startFinalText; // Used to set the start size of text for the hour glass,
-                                   // so it dosent move when the timer counts down.
+    //private string startFinalText; // Used to set the start size of text for the hour glass,
+    // so it dosent move when the timer counts down.
     #endregion Properties
 
     public override void Initialize()
@@ -213,7 +210,6 @@ public abstract class RoomBase : Scene
 
         //InputHandler.Instance.AddKeyButtonDownCommand(Keys.Q, new CustomCmd(() => { player.GameObject.GetComponent<Health>().TakeDamage(rnd.Next(500000000, 500000000)); }));
     }
-    Random rnd = new();
 
     private void ChangeScene()
     {
@@ -257,7 +253,6 @@ public abstract class RoomBase : Scene
 
     #region Draw
 
-    private Vector2 startLeftPos;
     public override void DrawOnScreen(SpriteBatch spriteBatch)
     {
         base.DrawOnScreen(spriteBatch);
@@ -308,7 +303,7 @@ public abstract class RoomBase : Scene
         
         Vector2 mousePos = InputHandler.Instance.MouseOnUI;
 
-        Vector2 offset = new Vector2(0, 30);
+        Vector2 offset = new(0, 30);
 
         DrawString(spriteBatch, $"MousePos UI {mousePos}", startPos);
 
@@ -332,7 +327,7 @@ public abstract class RoomBase : Scene
         DrawString(spriteBatch, $"Current Level Reached {SaveData.Level_Reached}", startPos);
 
         startPos += offset;
-        DrawString(spriteBatch, $"Grid Current Draw {GridManager.Instance.CurrentDrawSelected.ToString()}", startPos);
+        DrawString(spriteBatch, $"Grid Current Draw {GridManager.Instance.CurrentDrawSelected}", startPos);
 
         startPos += offset;
         DrawString(spriteBatch, $"Grid Collision Nr {GridManager.Instance.ColliderNrIndex}", startPos);

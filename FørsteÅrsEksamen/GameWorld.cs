@@ -32,7 +32,7 @@ public class GameWorld : Game
     public static Color BackGroundColor { get; private set; } = new Color(20, 20, 18, 255);
     public static Color TextColor { get; private set; } = new Color(250, 249, 246);
 
-    public GraphicsDeviceManager GfxManager { get; private set; }
+    public GraphicsDeviceManager GfxManager { get; private set; } 
     public Dictionary<SceneNames, Scene> Scenes { get; private set; }
     public Scene CurrentScene { get; private set; }
     public Camera WorldCam { get; private set; } // Follows player
@@ -44,8 +44,8 @@ public class GameWorld : Game
     public int DisplayHeight => GraphicsDevice.DisplayMode.Height;
 
     private SpriteBatch _spriteBatch;
-    private string _menuString = "Menu";
-    private bool _isInMenu { get; set; } = true;
+    private readonly string _menuString = "Menu";
+    private bool _isInMenu = true;
     #endregion
 
     public GameWorld()
@@ -196,14 +196,13 @@ public class GameWorld : Game
         };
     }
 
-
     public void ChangeScene(SceneNames sceneName)
     {
         NextScene = sceneName;
 
         // Starts the background emitter if scene ends in Menu
         string name = sceneName.ToString();
-        if (name.Length >= 4 && name.Substring(name.Length - 4) == _menuString)
+        if (name.Length >= 4 && name[^4..] == _menuString) // name.Substring(name.Length - 4)
             _isInMenu = true;
         else
             _isInMenu = false;

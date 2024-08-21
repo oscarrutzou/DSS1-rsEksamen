@@ -37,7 +37,15 @@ public abstract class Enemy : Character
     public bool CanAttack = true;
     protected bool TargetPlayer;
 
-    private Random rnd = new();
+    private readonly Random rnd = new();
+    private double randomMoveTimer;
+    private readonly double randomMoveCoolDown = 1;
+    private List<GameObject> cellsInCollisionNr = new();
+    private List<GameObject> cellGameObjects = new();
+
+    private readonly int distanceStopFromTarget = 2; // The amount of distance the enemy has to the player
+
+
     #endregion Properties
 
     public Enemy(GameObject gameObject) : base(gameObject)
@@ -83,7 +91,6 @@ public abstract class Enemy : Character
         }
     }
 
-    private List<GameObject> cellsInCollisionNr = new();
     private void SetCellsCollision()
     {
         if (Grid.CellsCollisionDict.TryGetValue(CollisionNr, out var cellList))
@@ -112,8 +119,6 @@ public abstract class Enemy : Character
         if (Player.CollisionNr == CollisionNr) SetPath(); // We know that the player the targetPoint has been set
     }
 
-
-
     public override void Update()
     {
         CheckLayerDepth(); // Make sure the enemy is drawn correctly.
@@ -124,11 +129,16 @@ public abstract class Enemy : Character
 
         switch (State)
         {
+            case CharacterState.Idle:
+                ResetRotationWhenIdle();
+                break;
+
             case CharacterState.Moving:
                 UpdatePathing();
                 break;
 
             case CharacterState.Attacking:
+                ResetRotationWhenIdle();
                 // Do nothing if the player has died.
                 if (Player.State == CharacterState.Dead) return;
 
@@ -157,9 +167,6 @@ public abstract class Enemy : Character
             SetPath();
         }
     }
-    
-    private double randomMoveTimer;
-    private double randomMoveCoolDown = 1;
 
     protected virtual void RandomMoveInRoom()
     {
@@ -188,12 +195,10 @@ public abstract class Enemy : Character
             }
         }
     }
-    private List<GameObject> cellGameObjects = new();
 
     private void PickRandomPoint()
     {
         Point randomPoint;
-        Point currentPoint = GameObject.Transform.GridPosition;
 
         cellGameObjects = Grid.GetCellsInRadius(GameObject.Transform.Position, 1000, 2);
         
@@ -234,8 +239,6 @@ public abstract class Enemy : Character
     }
 
     #region PathFinding
-
-
     public void SetPath()
     {
         Path = null; // We cant use the previous path
@@ -254,8 +257,6 @@ public abstract class Enemy : Character
         else
             SetNextTargetPos(Path[0]);
     }
-
-    private int distanceStopFromTarget = 2; // The amount of distance the enemy has to the player
 
     public virtual void UpdatePathing()
     {
@@ -300,6 +301,8 @@ public abstract class Enemy : Character
         Direction = BaseMath.SafeNormalize(nextTarget - position);
 
         GameObject.Transform.Translate(Direction * Speed * (float)GameWorld.DeltaTime);
+        RotateCharacterOnMove(true);
+
         Weapon.MoveWeaponAndAngle();
 
         if (CanAttack && Path != null && Path.Count <= 3) // Attack before reaching the player, to put pressure on them

@@ -11,28 +11,19 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus;
 public class SaveFileMenu : MenuScene
 {
     private Dictionary<int, Button> saveFileButtons;
-
-    public override void Initialize()
-    {
-        base.Initialize();
-
-        // Add command to delete save files? Right click
-    }
-
-    private string newSaveFile = "New Save";
+    private readonly string newSaveFile = "New Save";
 
     protected override void InitFirstMenu()
     {
         saveFileButtons = new Dictionary<int, Button>()
         {
-            { 1, ButtonFactory.Create(newSaveFile + "1", true, () => { MakeNewSaveFile(1); }, TextureNames.LargeBtn).GetComponent<Button>() },
-            { 2, ButtonFactory.Create(newSaveFile + "2", true, () => { MakeNewSaveFile(2); }, TextureNames.LargeBtn).GetComponent<Button>()  },
-            { 3, ButtonFactory.Create(newSaveFile + "3", true, () => { MakeNewSaveFile(3); }, TextureNames.LargeBtn).GetComponent<Button>()  }
+            { 1, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(1); }, TextureNames.LargeBtn).GetComponent<Button>() },
+            { 2, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(2); }, TextureNames.LargeBtn).GetComponent<Button>()  },
+            { 3, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(3); }, TextureNames.LargeBtn).GetComponent<Button>()  }
         };
 
         foreach (Button button in saveFileButtons.Values)
         {
-            //button.ChangeScale(new Vector2(14, 5));
             FirstMenuObjects.Add(button.GameObject);
         }
 
@@ -58,8 +49,7 @@ public class SaveFileMenu : MenuScene
 
         SaveFileData saveFile = DB.Instance.LoadGame();
 
-        if (saveFile == null) // Creates a new save file
-            saveFile = DB.Instance.SaveGame(id); // Makes the save id
+        saveFile ??= DB.Instance.SaveGame(id); // Makes the save id
 
         if (saveFile.RunData == null)
             // Make a new run after the characterSelector
@@ -89,8 +79,7 @@ public class SaveFileMenu : MenuScene
 
             saveFileBtn.Text =
                     $"Save {saveFile.Save_ID}" +
-                    $"\nCurrency {saveFile.Currency}" +
-                    $"\n Last Login {saveFile.Last_Login:MM-dd}"; // Removes .ToString
+                    $"\nCurrency {saveFile.Currency}"; // Removes .ToString+$"\n Last Login {saveFile.Last_Login:MM-dd}"
 
             // Add a delete button next to it.
             GameObject deleteBtn = ButtonFactory.Create("X", true, () => { DeleteSave(saveFile.Save_ID); }, TextureNames.DeleteSaveBtn);
