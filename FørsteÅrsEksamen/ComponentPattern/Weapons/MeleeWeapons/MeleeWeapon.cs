@@ -28,11 +28,11 @@ public abstract class MeleeWeapon : Weapon
     protected List<CollisionRectangle> WeaponColliders = new();
     protected double MinimumTimeBetweenHits = 0.3f;
 
-    private Dictionary<GameObject, HitDamagePackage> hitGameObjects { get; set; } = new(); 
+    private Dictionary<GameObject, HitDamagePackage> _hitGameObjects { get; set; } = new(); 
 
-    private float rotateBackStartRotation;
-    private double timeCooldownBetweenHits { get; set; }
-    private double totalElapsedTime;
+    private float _rotateBackStartRotation;
+    private double _timeCooldownBetweenHits { get; set; }
+    private double _totalElapsedTime;
     public float NormalizedFullAttack { get; private set; } // The normalized value for how far the attack is to be dont
     private float _fullAttackTimer;
     protected bool CanDealDamage = true;
@@ -45,7 +45,7 @@ public abstract class MeleeWeapon : Weapon
     {
         base.Update();
 
-        totalElapsedTime += GameWorld.DeltaTime;
+        _totalElapsedTime += GameWorld.DeltaTime;
         ResetHittedGameObjects();
 
         if (Attacking)
@@ -90,7 +90,7 @@ public abstract class MeleeWeapon : Weapon
 
             SetStartAngleToNextAnim(); // Changes the StartAnimationAngle so it rotates to the next animation start, insted of snapping to the place after
             // Need to also set the new start point
-            rotateBackStartRotation = GameObject.Transform.Rotation;
+            _rotateBackStartRotation = GameObject.Transform.Rotation;
 
             // Makes the weapon flip when rotating back
             if (SpriteRenderer.SpriteEffects == SpriteEffects.FlipHorizontally)
@@ -114,7 +114,7 @@ public abstract class MeleeWeapon : Weapon
         {
             // Second rotation to rotate to the start of the next rotation
             //Up attack
-            GameObject.Transform.Rotation = MathHelper.Lerp(rotateBackStartRotation, StartAnimationAngle, adjustedEasedTime);
+            GameObject.Transform.Rotation = MathHelper.Lerp(_rotateBackStartRotation, StartAnimationAngle, adjustedEasedTime);
         }
 
         // Reset
@@ -138,7 +138,7 @@ public abstract class MeleeWeapon : Weapon
     {
         ResetAttackTimers();
 
-        timeCooldownBetweenHits = Math.Max(MinimumTimeBetweenHits, TimeBeforeNewDirection / 3);
+        _timeCooldownBetweenHits = Math.Max(MinimumTimeBetweenHits, TimeBeforeNewDirection / 3);
 
         if (LeftSide)
             FinalLerp = -Animations[CurrentAnim].AmountOfRotation;
@@ -165,18 +165,18 @@ public abstract class MeleeWeapon : Weapon
 
         foreach (GameObject otherGo in SceneData.GameObjectLists[type])
         {
-            if (!otherGo.IsEnabled || hitGameObjects.ContainsKey(otherGo)) continue;
+            if (!otherGo.IsEnabled || _hitGameObjects.ContainsKey(otherGo)) continue;
             
             Collider otherCollider = otherGo.GetComponent<Collider>();
 
             if (otherCollider == null) continue;
             foreach (CollisionRectangle weaponRectangle in WeaponColliders)
             {
-                if (hitGameObjects.ContainsKey(otherGo)) break; // Need to check again here so it dosent attack twice
+                if (_hitGameObjects.ContainsKey(otherGo)) break; // Need to check again here so it dosent attack twice
 
                 if (weaponRectangle.Rectangle.Intersects(otherCollider.CollisionBox))
                 {
-                    hitGameObjects.Add(otherGo, new(totalElapsedTime, IsRotatingBack));
+                    _hitGameObjects.Add(otherGo, new(_totalElapsedTime, IsRotatingBack));
                     DealDamage(otherGo);
                     break;
                 }
@@ -186,15 +186,15 @@ public abstract class MeleeWeapon : Weapon
 
     private void ResetHittedGameObjects()
     {
-        Dictionary<GameObject, HitDamagePackage> temp = hitGameObjects;
+        Dictionary<GameObject, HitDamagePackage> temp = _hitGameObjects;
         foreach (GameObject go in temp.Keys)
         {
             HitDamagePackage package = temp[go];
-            double difference = totalElapsedTime - package.TimeOfHit;
+            double difference = _totalElapsedTime - package.TimeOfHit;
             // Need also to check that its not the same IsRotatingBack
-            if (difference >= timeCooldownBetweenHits && IsRotatingBack != package.WasRotatingBack)
+            if (difference >= _timeCooldownBetweenHits && IsRotatingBack != package.WasRotatingBack)
             {
-                hitGameObjects.Remove(go);
+                _hitGameObjects.Remove(go);
             }
         }
 

@@ -15,10 +15,10 @@ namespace DoctorsDungeon.ComponentPattern.GUI
     public class HourGlassIcon : Component
     {
 
-        private Animator animator;
-        private float timer;
-        private float resetCooldown = 2f;
-        private bool startRotate;
+        private Animator _animator;
+        private float _timer;
+        private float _resetCooldown = 2f;
+        private bool _startRotate;
 
         public HourGlassIcon(GameObject gameObject) : base(gameObject)
         {
@@ -26,7 +26,7 @@ namespace DoctorsDungeon.ComponentPattern.GUI
 
         public override void Awake()
         {
-            animator = GameObject.GetComponent<Animator>();
+            _animator = GameObject.GetComponent<Animator>();
 
             GameObject.Transform.Position += new Vector2(270f, 0);
             
@@ -35,30 +35,30 @@ namespace DoctorsDungeon.ComponentPattern.GUI
 
         public override void Update()
         {
-            if (!startRotate) return;
+            if (!_startRotate) return;
 
-            timer += (float)GameWorld.DeltaTime;
+            _timer += (float)GameWorld.DeltaTime;
 
-            float normalized = timer / resetCooldown;
+            float normalized = _timer / _resetCooldown;
 
             normalized = BaseMath.EaseOutCubic(normalized);
             GameObject.Transform.Rotation = MathHelper.Lerp(0, MathHelper.Pi, normalized);
 
-            if (timer < resetCooldown) return;
+            if (_timer < _resetCooldown) return;
 
-            timer = 0;
-            startRotate = false;
+            _timer = 0;
+            _startRotate = false;
             GameObject.Transform.Rotation = 0;
 
-            animator.PlayAnimation(AnimNames.HourGlassReset);
-            animator.CurrentAnimation.OnAnimationDone += PlayNormalAnim;
+            _animator.PlayAnimation(AnimNames.HourGlassReset);
+            _animator.CurrentAnimation.OnAnimationDone += PlayNormalAnim;
         }
 
         private void PlayNormalAnim()
         {
-            animator.PlayAnimation(AnimNames.HourGlass);
-            animator.StopCurrentAnimationAtLastSprite();
-            animator.CurrentAnimation.OnAnimationDone += () => { startRotate = true; };
+            _animator.PlayAnimation(AnimNames.HourGlass);
+            _animator.StopCurrentAnimationAtLastSprite();
+            _animator.CurrentAnimation.OnAnimationDone += () => { _startRotate = true; };
         }
     }
 }

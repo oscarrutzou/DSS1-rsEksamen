@@ -17,15 +17,15 @@ namespace DoctorsDungeon.GameManagement.Scenes.TestScenes;
 
 public class ErikTestScene : Scene
 {
-    private GameObject weapon, bow, PlayerGo, spawnerGameObject;
-    private Point PlayerSpawnPos;
-    private Player player;
+    private GameObject _weapon, _bow, _playerGo, _spawnerGameObject;
+    private Point _playerSpawnPos;
+    private Player _player;
 
     public override void Initialize()
     {
         SetLevelBG();
         StartGrid();
-        PlayerSpawnPos = new Point(5, 5);
+        _playerSpawnPos = new Point(5, 5);
         MakePlayer();
 
         OnPlayerChanged();
@@ -54,9 +54,9 @@ public class ErikTestScene : Scene
 
     private void InitSpawner()
     {
-        spawnerGameObject = new GameObject();
-        Spawner spawner = spawnerGameObject.AddComponent<Spawner>();
-        spawner.SpawnEnemies(spawnPoints, PlayerGo);
+        _spawnerGameObject = new GameObject();
+        Spawner spawner = _spawnerGameObject.AddComponent<Spawner>();
+        spawner.SpawnEnemies(spawnPoints, _playerGo);
     }
 
     private void SetLevelBG()
@@ -73,11 +73,11 @@ public class ErikTestScene : Scene
 
     private void MakePlayer()
     {
-        PlayerGo = PlayerFactory.Create(ClassTypes.Warrior, WeaponTypes.Sword);
-        PlayerGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[PlayerSpawnPos].Transform.Position;
-        PlayerGo.Transform.GridPosition = PlayerSpawnPos;
-        GameWorld.Instance.WorldCam.Position = PlayerGo.Transform.Position;
-        GameWorld.Instance.Instantiate(PlayerGo);
+        _playerGo = PlayerFactory.Create(ClassTypes.Warrior, WeaponTypes.Sword);
+        _playerGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[_playerSpawnPos].Transform.Position;
+        _playerGo.Transform.GridPosition = _playerSpawnPos;
+        GameWorld.Instance.WorldCam.Position = _playerGo.Transform.Position;
+        GameWorld.Instance.Instantiate(_playerGo);
     }
 
     private void StartGrid()
@@ -90,14 +90,14 @@ public class ErikTestScene : Scene
 
     private void SetCommands()
     {
-        player = PlayerGo.GetComponent<Player>();
+        _player = _playerGo.GetComponent<Player>();
 
-        InputHandler.Instance.AddKeyUpdateCommand(Keys.D, new MoveCmd(player, new Vector2(1, 0)));
-        InputHandler.Instance.AddKeyUpdateCommand(Keys.A, new MoveCmd(player, new Vector2(-1, 0)));
-        InputHandler.Instance.AddKeyUpdateCommand(Keys.W, new MoveCmd(player, new Vector2(0, -1)));
-        InputHandler.Instance.AddKeyUpdateCommand(Keys.S, new MoveCmd(player, new Vector2(0, 1)));
+        InputHandler.Instance.AddKeyUpdateCommand(Keys.D, new MoveCmd(_player, new Vector2(1, 0)));
+        InputHandler.Instance.AddKeyUpdateCommand(Keys.A, new MoveCmd(_player, new Vector2(-1, 0)));
+        InputHandler.Instance.AddKeyUpdateCommand(Keys.W, new MoveCmd(_player, new Vector2(0, -1)));
+        InputHandler.Instance.AddKeyUpdateCommand(Keys.S, new MoveCmd(_player, new Vector2(0, 1)));
 
-        InputHandler.Instance.AddKeyButtonDownCommand(Keys.D1, new CustomCmd(player.UseItem));
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.D1, new CustomCmd(_player.UseItem));
         InputHandler.Instance.AddKeyButtonDownCommand(Keys.Tab, new CustomCmd(() => { GridManager.Instance.ShowHideGrid(); }));
         InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, new CustomCmd(Attack));
         InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DB.Instance.SaveGrid(GridManager.Instance.CurrentGrid); }));
@@ -111,17 +111,17 @@ public class ErikTestScene : Scene
 
     private void MakeWeapon()
     {
-        weapon = WeaponFactory.Create(WeaponTypes.Sword);
+        _weapon = WeaponFactory.Create(WeaponTypes.Sword);
 
-        bow = WeaponFactory.Create(WeaponTypes.Bow);
+        _bow = WeaponFactory.Create(WeaponTypes.Bow);
 
-        GameWorld.Instance.Instantiate(weapon);
-        GameWorld.Instance.Instantiate(bow);
+        GameWorld.Instance.Instantiate(_weapon);
+        GameWorld.Instance.Instantiate(_bow);
     }
 
     private void Attack()
     {
-        weapon.GetComponent<Weapon>().StartAttack();
+        _weapon.GetComponent<Weapon>().StartAttack();
 
         //projectile.GetComponent<MagicStaff>().Attack();
     }
@@ -137,7 +137,7 @@ public class ErikTestScene : Scene
 
     public void Shoot()
     {
-        var rangedWeapon = bow.GetComponent<RangedWeapon>();
+        var rangedWeapon = _bow.GetComponent<RangedWeapon>();
 
         //projectile.GetComponent<Projectile>().SetValues(MathHelper.Pi);
 

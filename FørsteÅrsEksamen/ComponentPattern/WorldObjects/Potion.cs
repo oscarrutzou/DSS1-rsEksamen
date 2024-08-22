@@ -15,14 +15,14 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects;
 // Asser
 public class Potion : Component
 {
-    private SpriteRenderer spriteRenderer;
-    private Collider collider, playerCollider;
-    private Player player;
-    private Health health;
-    private GameObject playerGo;
+    private SpriteRenderer _spriteRenderer;
+    private Collider _collider, _playerCollider;
+    private Player _player;
+    private Health _health;
+    private GameObject _playerGo;
 
     public string Name = "Strong Health Potion";
-    private int healAmount = 100;
+    private int _healAmount = 100;
 
     public Potion(GameObject gameObject) : base(gameObject)
     { 
@@ -30,31 +30,31 @@ public class Potion : Component
 
     public Potion(GameObject gameObject, GameObject player) : base(gameObject)
     {
-        playerGo = player;
+        _playerGo = player;
     }
 
     public override void Awake()
     {
         base.Awake();
-        collider = GameObject.GetComponent<Collider>();
-        collider.SetCollisionBox(10, 15);
-        spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
-        playerCollider = playerGo.GetComponent<Collider>();
-        player = playerGo.GetComponent<Player>();
-        health = playerGo.GetComponent<Health>();
+        _collider = GameObject.GetComponent<Collider>();
+        _collider.SetCollisionBox(10, 15);
+        _spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
+        _playerCollider = _playerGo.GetComponent<Collider>();
+        _player = _playerGo.GetComponent<Player>();
+        _health = _playerGo.GetComponent<Health>();
     }
 
     public override void Update()
     {
-        OnCollisionEnter(collider);
+        OnCollisionEnter(_collider);
     }
 
     public override void OnCollisionEnter(Collider collider)
     {
         // Skal kun fjerne item ved player position, ikke alle items.
-        if (collider.CollisionBox.Intersects(playerCollider.CollisionBox))
+        if (collider.CollisionBox.Intersects(_playerCollider.CollisionBox))
         {
-            if (player.CanPickUpItem(this))
+            if (_player.CanPickUpItem(this))
             {
                 GameObject.IsEnabled = false;
             }
@@ -63,8 +63,8 @@ public class Potion : Component
 
     public void Use()
     {
-        if (health.IsDead || !health.AddHealth(healAmount)) return; // Already full health
-        player.ItemInInventory = null;
+        if (_health.IsDead || !_health.AddHealth(_healAmount)) return; // Already full health
+        _player.ItemInInventory = null;
         GameWorld.Instance.Destroy(GameObject);
     }
 }

@@ -24,15 +24,15 @@ public enum EnemyTypes
 // Asser
 public static class EnemyFactory
 {
-    private static readonly Random random = new();
+    private static readonly Random _random = new();
 
     public static GameObject CreateWithRandomType(List<EnemyTypes> spawnableTypes)
     {
-        EnemyTypes randomType = spawnableTypes[random.Next(0, spawnableTypes.Count)];
+        EnemyTypes randomType = spawnableTypes[_random.Next(0, spawnableTypes.Count)];
 
         // Need to put them into classes
         List<WeaponTypes> weaponTypes = WeaponFactory.EnemyHasWeapon[randomType];
-        WeaponTypes randomWeapon = weaponTypes[random.Next(0, weaponTypes.Count)];
+        WeaponTypes randomWeapon = weaponTypes[_random.Next(0, weaponTypes.Count)];
 
         return Create(randomType, randomWeapon);
     }

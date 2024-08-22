@@ -20,8 +20,8 @@ namespace DoctorsDungeon.GameManagement.Scenes.TestScenes;
 
 public class WeaponTestScene : Scene
 {
-    private GameObject playerGo;
-    private Player player;
+    private GameObject _playerGo;
+    private Player _player;
 
     public override void Initialize()
     {
@@ -34,24 +34,24 @@ public class WeaponTestScene : Scene
         SetCommands();
     }
 
-    MeleeWeapon weapon;
+    MeleeWeapon _weapon;
     private void MakePlayer()
     {
-        playerGo = PlayerFactory.Create(ClassTypes.Rogue, WeaponTypes.Sword);
-        player = playerGo.GetComponent<Player>();
-        weapon = player.WeaponGo.GetComponent<MeleeWeapon>();
+        _playerGo = PlayerFactory.Create(ClassTypes.Rogue, WeaponTypes.Sword);
+        _player = _playerGo.GetComponent<Player>();
+        _weapon = _player.WeaponGo.GetComponent<MeleeWeapon>();
 
-        GameWorld.Instance.WorldCam.Position = playerGo.Transform.Position;
-        GameWorld.Instance.Instantiate(playerGo);
+        GameWorld.Instance.WorldCam.Position = _playerGo.Transform.Position;
+        GameWorld.Instance.Instantiate(_playerGo);
     }
 
     private void MakeHealthBar()
     {
-        GameObject go = ScalableBarFactory.CreateHealthBar(playerGo, true);
+        GameObject go = ScalableBarFactory.CreateHealthBar(_playerGo, true);
         GameWorld.Instance.Instantiate(go);
     }
 
-    ParticleEmitter emitter;
+    ParticleEmitter _emitter;
 
     private void MakeEmitters()
     {
@@ -67,20 +67,20 @@ public class WeaponTestScene : Scene
     {
         GameObject go = EmitterFactory.CreateParticleEmitter("Dust Cloud", new Vector2(0, 0), new Interval(100, 150), new Interval(-MathHelper.Pi, MathHelper.Pi), 50, new Interval(500, 1000), 1000, -1, new Interval(-MathHelper.Pi, MathHelper.Pi), new Interval(-0.01, 0.01));
 
-        emitter = go.GetComponent<ParticleEmitter>();
+        _emitter = go.GetComponent<ParticleEmitter>();
 
-        emitter.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel4x4));
-        emitter.AddBirthModifier(new ScaleBirthModifier(new Interval(0.5, 2)));
+        _emitter.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel4x4));
+        _emitter.AddBirthModifier(new ScaleBirthModifier(new Interval(0.5, 2)));
 
-        emitter.AddModifier(new InwardModifier(2));
+        _emitter.AddModifier(new InwardModifier(2));
 
-        emitter.AddModifier(new ColorRangeModifier(IndependentBackground.RoomColors));
+        _emitter.AddModifier(new ColorRangeModifier(IndependentBackground.RoomColors));
 
         int width = 32 * 4;
         int height = 48 * 4;
         RectangleOrigin origin = new RectangleOrigin(width, height, true);
-        origin.OffCenter(emitter);
-        emitter.Origin = origin;
+        origin.OffCenter(_emitter);
+        _emitter.Origin = origin;
 
         GameWorld.Instance.Instantiate(go);
     }
@@ -89,13 +89,13 @@ public class WeaponTestScene : Scene
     {
         GameObject go = EmitterFactory.CreateParticleEmitter("Dust Cloud", new Vector2(200, -200), new Interval(100, 150), new Interval(-MathHelper.Pi, 0), 20, new Interval(2000, 2000), 1000, -1, new Interval(-MathHelper.Pi, 0), new Interval(-0.01, 0.01));
 
-        emitter = go.GetComponent<ParticleEmitter>();
-        emitter.FollowGameObject(playerGo, new Vector2(0, 25));
-        emitter.LayerName = LayerDepth.EnemyUnder;
-        emitter.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel4x4));
-        emitter.AddModifier(new ColorRangeModifier(new Color[] { Color.DarkGray, Color.Moccasin, Color.Transparent }, new Color[] { Color.Yellow, Color.Transparent }));
+        _emitter = go.GetComponent<ParticleEmitter>();
+        _emitter.FollowGameObject(_playerGo, new Vector2(0, 25));
+        _emitter.LayerName = LayerDepth.EnemyUnder;
+        _emitter.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel4x4));
+        _emitter.AddModifier(new ColorRangeModifier(new Color[] { Color.DarkGray, Color.Moccasin, Color.Transparent }, new Color[] { Color.Yellow, Color.Transparent }));
 
-        emitter.AddBirthModifier(new ScaleBirthModifier(new Interval(4, 4)));
+        _emitter.AddBirthModifier(new ScaleBirthModifier(new Interval(4, 4)));
         //emitter.AddModifier(new GravityModifier());
         //emitter.AddModifier(new ScaleModifier(4, 10));
 
@@ -106,20 +106,20 @@ public class WeaponTestScene : Scene
     {
         GameObject go = EmitterFactory.CreateParticleEmitter("Dust Cloud", new Vector2(0, 0), new Interval(250, 550), new Interval(-MathHelper.Pi, 0), 300, new Interval(1500, 2000), 1000, -1, new Interval(-MathHelper.Pi, 0));
 
-        emitter = go.GetComponent<ParticleEmitter>();
-        emitter.LayerName = LayerDepth.EnemyUnder;
-        emitter.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel4x4));
-        emitter.AddModifier(new ColorRangeModifier(new Color[] { Color.DarkViolet, Color.WhiteSmoke, Color.Transparent }));
+        _emitter = go.GetComponent<ParticleEmitter>();
+        _emitter.LayerName = LayerDepth.EnemyUnder;
+        _emitter.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel4x4));
+        _emitter.AddModifier(new ColorRangeModifier(new Color[] { Color.DarkViolet, Color.WhiteSmoke, Color.Transparent }));
         //emitter.AddModifier(new ColorRangeModifier(true));
 
         //emitter.AddBirthModifier(new ScaleBirthModifier(new Interval(4, 4)));
-        emitter.AddBirthModifier(new OutwardBirthModifier());
-        emitter.LinearDamping = 1.0f;
-        emitter.AddModifier(new GravityModifier());
-        emitter.AddModifier(new ScaleModifier(4, 1));
+        _emitter.AddBirthModifier(new OutwardBirthModifier());
+        _emitter.LinearDamping = 1.0f;
+        _emitter.AddModifier(new GravityModifier());
+        _emitter.AddModifier(new ScaleModifier(4, 1));
         //emitter.Origin = new CircleOrigin(500);
 
-        emitter.Origin = new FairyDustAnimatedOrigin(new Rectangle((int)GameWorld.Instance.WorldCam.TopLeft.X, (int)GameWorld.Instance.WorldCam.TopLeft.Y, 1920, 1080), 200, 0.5);
+        _emitter.Origin = new FairyDustAnimatedOrigin(new Rectangle((int)GameWorld.Instance.WorldCam.TopLeft.X, (int)GameWorld.Instance.WorldCam.TopLeft.Y, 1920, 1080), 200, 0.5);
         GameWorld.Instance.Instantiate(go);
     }
 
@@ -127,15 +127,15 @@ public class WeaponTestScene : Scene
     {
         GameObject go = EmitterFactory.CreateParticleEmitter("Space Dust", new Vector2(0, 0), new Interval(50, 100), new Interval(-MathHelper.Pi, MathHelper.Pi), 200, new Interval(3000, 4000), 300, -1, new Interval(-MathHelper.Pi, MathHelper.Pi));
 
-        emitter = go.GetComponent<ParticleEmitter>();
-        emitter.LayerName = LayerDepth.WorldBackground;
+        _emitter = go.GetComponent<ParticleEmitter>();
+        _emitter.LayerName = LayerDepth.WorldBackground;
 
-        emitter.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel4x4));
+        _emitter.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel4x4));
 
-        emitter.AddModifier(new ColorRangeModifier(new Color[] { Color.DarkCyan, Color.DarkGray, Color.Gray, Color.Transparent }));
-        emitter.AddModifier(new ScaleModifier(0.5f, 2));
+        _emitter.AddModifier(new ColorRangeModifier(new Color[] { Color.DarkCyan, Color.DarkGray, Color.Gray, Color.Transparent }));
+        _emitter.AddModifier(new ScaleModifier(0.5f, 2));
 
-        emitter.Origin = new RectangleOrigin(GameWorld.Instance.DisplayWidth, GameWorld.Instance.DisplayHeight);
+        _emitter.Origin = new RectangleOrigin(GameWorld.Instance.DisplayWidth, GameWorld.Instance.DisplayHeight);
 
         GameWorld.Instance.Instantiate(go);
     }
@@ -145,8 +145,8 @@ public class WeaponTestScene : Scene
     private void SetCommands()
     {
         //InputHandler.Instance.AddMouseButtonDownCommand(MouseCmdState.Right, new CustomCmd(player.Attack));
-        InputHandler.Instance.AddKeyButtonDownCommand(Keys.V, new CustomCmd(emitter.StartEmitter));
-        InputHandler.Instance.AddKeyButtonDownCommand(Keys.B, new CustomCmd(emitter.StopEmitter));
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.V, new CustomCmd(_emitter.StartEmitter));
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.B, new CustomCmd(_emitter.StopEmitter));
 
         //InputHandler.Instance.AddKeyButtonDownCommand(Keys.E, new CustomCmd(() => { player.GameObject.GetComponent<Health>().TakeDamage(rnd.Next(10, 50)); }));
         //InputHandler.Instance.AddKeyButtonDownCommand(Keys.N, new CustomCmd(() =>
@@ -157,7 +157,7 @@ public class WeaponTestScene : Scene
         //        Text = nmb.ToString()
         //    });
         //}));
-        InputHandler.Instance.AddKeyButtonDownCommand(Keys.W, new CustomCmd(() => { player.GameObject.GetComponent<Health>().TakeDamage(1000000); }));
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.W, new CustomCmd(() => { _player.GameObject.GetComponent<Health>().TakeDamage(1000000); }));
 
 
         InputHandler.Instance.AddKeyButtonDownCommand(Keys.Escape, new CustomCmd(GameWorld.Instance.Exit));
@@ -182,9 +182,9 @@ public class WeaponTestScene : Scene
         //DrawString(spriteBatch, $"Next anim: {weapon.NextAnim} | Rot: {weapon.Animations[weapon.NextAnim].AmountOfRotation}", pos);
 
         pos += offset;
-        DrawString(spriteBatch, $"Active count: {emitter.ParticlePool.Active.Count}", pos);
+        DrawString(spriteBatch, $"Active count: {_emitter.ParticlePool.Active.Count}", pos);
         pos += offset;
-        DrawString(spriteBatch, $"In Active count: {emitter.ParticlePool.InActive.Count}", pos);
+        DrawString(spriteBatch, $"In Active count: {_emitter.ParticlePool.InActive.Count}", pos);
         pos += offset;
         DrawString(spriteBatch, $"Mouse pos UI : {InputHandler.Instance.MouseOnUI}", pos);
         pos += offset;

@@ -22,7 +22,7 @@ public class Grid : Component
 
     public int Width, Height;
 
-    private readonly bool isCentered = false;
+    private readonly bool _isCentered = false;
 
     public Grid(GameObject gameObject) : base(gameObject)
     {
@@ -48,7 +48,7 @@ public class Grid : Component
     public void GenerateGrid()
     {
         Cells.Clear();
-        if (isCentered)
+        if (_isCentered)
         {
             StartPostion = new Vector2(
                 StartPostion.X - (Width * Cell.Dimension * Cell.Scale / 2),

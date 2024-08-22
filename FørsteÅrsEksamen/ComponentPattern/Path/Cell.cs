@@ -20,7 +20,7 @@ public class Cell : Component
     //public static readonly Vector2 ScaleSize = new(4, 4);
     public static int Scale = 4;
 
-    private SpriteRenderer spriteRenderer;
+    private SpriteRenderer _spriteRenderer;
 
     /// <summary>
     /// Used when selecting which room is active on each grid. Base is -1, so they dont count as a room
@@ -90,8 +90,8 @@ public class Cell : Component
 
     public override void Start()
     {
-        spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
-        if (spriteRenderer == null) throw new System.Exception("Cell need a spriteRenderer");
+        _spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
+        if (_spriteRenderer == null) throw new System.Exception("Cell need a spriteRenderer");
 
         ChangeCellWalkalbeType(CellWalkableType); //Just the same here, so it turns the correct color.
     }
@@ -108,7 +108,7 @@ public class Cell : Component
 
     public override void Draw(SpriteBatch spriteBatch)
     {
-        if (spriteRenderer == null) return;
+        if (_spriteRenderer == null) return;
 
         if (!InputHandler.Instance.DebugMode) return;
         Vector2 offset = new Vector2(10, 0);
@@ -118,7 +118,7 @@ public class Cell : Component
 
     public void ChangeCellWalkalbeType(CellWalkableType cellWalkableType)
     {
-        if (spriteRenderer == null) return;
+        if (_spriteRenderer == null) return;
 
         if (GridManager.Instance.CurrentDrawSelected == DrawMapSelecter.DrawBlackedOutRooms) return;
 
@@ -133,7 +133,7 @@ public class Cell : Component
         switch (CellWalkableType)
         {
             case CellWalkableType.FullValid:
-                spriteRenderer.Color = Color.DarkOliveGreen;
+                _spriteRenderer.Color = Color.DarkOliveGreen;
                 break;
         }
     }

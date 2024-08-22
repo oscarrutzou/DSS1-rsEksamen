@@ -8,12 +8,12 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus;
 // Stefan
 public class PauseMenu : MenuScene
 {
-    private bool isMenuVisible;
+    private bool _isMenuVisible;
 
     private enum MenuState
     { StartMenu, SettingsMenu }
 
-    private MenuState currentMenuState = MenuState.StartMenu;
+    private MenuState _currentMenuState = MenuState.StartMenu;
 
     public override void Initialize()
     {
@@ -60,8 +60,8 @@ public class PauseMenu : MenuScene
 
     public void TogglePauseMenu()
     {
-        isMenuVisible = !isMenuVisible;
-        if (isMenuVisible)
+        _isMenuVisible = !_isMenuVisible;
+        if (_isMenuVisible)
         {
             ShowMenu();
         }
@@ -73,7 +73,7 @@ public class PauseMenu : MenuScene
 
     private void ShowMenu()
     {
-        if (currentMenuState == MenuState.StartMenu)
+        if (_currentMenuState == MenuState.StartMenu)
         {
             ShowHideGameObjects(FirstMenuObjects, true);
             ShowHideGameObjects(SecondMenuObjects, false);
@@ -87,20 +87,20 @@ public class PauseMenu : MenuScene
 
     private void HideMenu()
     {
-        currentMenuState = MenuState.StartMenu;
+        _currentMenuState = MenuState.StartMenu;
         ShowHideGameObjects(FirstMenuObjects, false);
         ShowHideGameObjects(SecondMenuObjects, false);
     }
 
     protected override void ShowHideSecondMenu()
     {
-        if (currentMenuState == MenuState.StartMenu)
+        if (_currentMenuState == MenuState.StartMenu)
         {
-            currentMenuState = MenuState.SettingsMenu;
+            _currentMenuState = MenuState.SettingsMenu;
         }
         else
         {
-            currentMenuState = MenuState.StartMenu;
+            _currentMenuState = MenuState.StartMenu;
         }
         ShowMenu();
     }
@@ -112,7 +112,7 @@ public class PauseMenu : MenuScene
 
         //GameWorld.Instance.IsMouseVisible = true;
 
-        if (currentMenuState == MenuState.StartMenu)
+        if (_currentMenuState == MenuState.StartMenu)
         {
             DrawMenuText(spriteBatch, "Pause Menu", TextPos);
         }

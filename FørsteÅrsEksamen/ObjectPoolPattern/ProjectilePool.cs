@@ -6,10 +6,10 @@ namespace DoctorsDungeon.ObjectPoolPattern;
 // Stefan
 public class ProjectilePool : ObjectPool
 {
-    private static ProjectilePool instance;
+    private static ProjectilePool _instance;
 
     public static ProjectilePool Instance
-    { get { return instance ??= new ProjectilePool(); } }
+    { get { return _instance ??= new ProjectilePool(); } }
 
     public override void CleanUp(GameObject gameObject)
     {

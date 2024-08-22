@@ -94,13 +94,13 @@ public class SpriteRenderer : Component
     public LayerDepth LayerName { get; private set; } = ComponentPattern.LayerDepth.Default;
     public SpriteEffects SpriteEffects { get; set; } = SpriteEffects.None;
     public float LayerDepth { get; private set; }
-    private Vector2 drawPos;
+    private Vector2 _drawPos;
 
     // For the animation draw calls
     public Rectangle SourceRectangle;
 
     public bool UsingAnimation;
-    private Animator animator;
+    private Animator _animator;
 
     #endregion Properties
 
@@ -110,7 +110,7 @@ public class SpriteRenderer : Component
 
     public override void Start()
     {
-        animator = GameObject.GetComponent<Animator>();
+        _animator = GameObject.GetComponent<Animator>();
     }
 
     // Maybe do something with the Y of the GameObject transform, and maybe each SpriteRendere have a list
@@ -170,17 +170,17 @@ public class SpriteRenderer : Component
         // Parse into a float from int, so we can get the centered origin
         Origin = IsCentered ? new Vector2((float)sprite.Width / 2, (float)sprite.Height / 2) : OriginOffSet;
 
-        drawPos = GameObject.Transform.Position + posOffset;
+        _drawPos = GameObject.Transform.Position + posOffset;
 
         if (GameObject.Type != GameObjectTypes.Weapon)
         {
             Vector2 rotatedOffset = BaseMath.Rotate(DrawPosOffSet, Rotation);
-            drawPos += rotatedOffset;
+            _drawPos += rotatedOffset;
         }
 
         //Draws the sprite
         spriteBatch.Draw(sprite,
-                         drawPos,
+                         _drawPos,
                          null,
                          Color,
                          Rotation,

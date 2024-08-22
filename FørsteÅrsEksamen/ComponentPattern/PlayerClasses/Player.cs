@@ -31,8 +31,8 @@ public abstract class Player : Character
     public WeaponTypes WeaponType; 
     public ClassTypes ClassType;
 
-    private double onDeadTimer;
-    private readonly double timeTillSceneChange = 3f;
+    private double _onDeadTimer;
+    private readonly double _timeTillSceneChange = 3f;
 
     public Player(GameObject gameObject) : base(gameObject)
     {
@@ -95,10 +95,10 @@ public abstract class Player : Character
 
     private void ChangeScene()
     {
-        onDeadTimer += GameWorld.DeltaTime;
-        if (onDeadTimer >= timeTillSceneChange)
+        _onDeadTimer += GameWorld.DeltaTime;
+        if (_onDeadTimer >= _timeTillSceneChange)
         {
-            onDeadTimer = 0;
+            _onDeadTimer = 0;
             SaveData.HasWon = false;
             DB.Instance.OnChangeSceneEnd();
         }

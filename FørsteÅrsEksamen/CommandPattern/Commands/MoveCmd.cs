@@ -6,17 +6,17 @@ namespace DoctorsDungeon.CommandPattern.Commands;
 // Oscar
 public class MoveCmd : Command
 {
-    private Player player;
-    private Vector2 velocity;
+    private Player _player;
+    private Vector2 _velocity;
 
     public MoveCmd(Player player, Vector2 velocity)
     {
-        this.player = player;
-        this.velocity = velocity;
+        this._player = player;
+        this._velocity = velocity;
     }
 
     public override void Execute()
     {
-        player.AddInput(velocity);
+        _player.AddInput(_velocity);
     }
 }

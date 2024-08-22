@@ -6,10 +6,10 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons;
 // Erik
 public abstract class RangedWeapon : Weapon
 {
-    private GameObject projectile;
-    private bool canShoot = true;
-    private double lastShot = 0;
-    private double shootTimer = 0.5f;
+    private GameObject _projectile;
+    private bool _canShoot = true;
+    private double _lastShot = 0;
+    private double _shootTimer = 0.5f;
 
     protected RangedWeapon(GameObject gameObject) : base(gameObject)
     {
@@ -18,33 +18,33 @@ public abstract class RangedWeapon : Weapon
     public override void Update()
     {
         base.Update();
-        lastShot += GameWorld.DeltaTime;
+        _lastShot += GameWorld.DeltaTime;
 
-        if (lastShot > shootTimer)
+        if (_lastShot > _shootTimer)
         {
-            canShoot = true;
+            _canShoot = true;
         }
     }
 
     public void MakeProjectile()
     {
         //ProjectileFactory projectileFactory = new ProjectileFactory();
-        projectile = ProjectileFactory.Create();
-        projectile.GetComponent<Projectile>().SetValues(GameObject.Transform.Rotation);
+        _projectile = ProjectileFactory.Create();
+        _projectile.GetComponent<Projectile>().SetValues(GameObject.Transform.Rotation);
 
-        projectile.Transform.Position = GameObject.Transform.Position;
+        _projectile.Transform.Position = GameObject.Transform.Position;
 
-        GameWorld.Instance.Instantiate(projectile);
+        GameWorld.Instance.Instantiate(_projectile);
     }
 
     public void Shoot()
     {
         //projectile.GetComponent<Projectile>().SetValues(MathHelper.Pi);
 
-        if (canShoot)
+        if (_canShoot)
         {
-            canShoot = false;
-            lastShot = 0;
+            _canShoot = false;
+            _lastShot = 0;
             MakeProjectile();
         }
     }

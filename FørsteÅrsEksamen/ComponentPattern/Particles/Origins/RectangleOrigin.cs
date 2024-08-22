@@ -10,7 +10,7 @@ namespace DoctorsDungeon.ComponentPattern.Particles.Origins
         private readonly bool _edge;
         private readonly int _width;
         private readonly int _height;
-        private static Random rand = new Random();
+        private static Random _rand = new Random();
 
         public RectangleOrigin(int width, int height, bool edge = false)
         {
@@ -30,19 +30,19 @@ namespace DoctorsDungeon.ComponentPattern.Particles.Origins
         {
             if (_edge)
             {
-                int n = rand.Next(_width + _height);
+                int n = _rand.Next(_width + _height);
 
                 if (n < _width)
                 {
 
-                    if (rand.Next(2) == 1)
+                    if (_rand.Next(2) == 1)
                         return new OriginData(new Vector2((int)x.GetValue(), -_height / 2));
                     else
                         return new OriginData(new Vector2((int)x.GetValue(), _height / 2));
                 }
                 else
                 {
-                    if (rand.Next(2) == 1)
+                    if (_rand.Next(2) == 1)
                         return new OriginData(new Vector2(-_width / 2, (int)y.GetValue()));
                     else
                         return new OriginData(new Vector2(_width / 2, (int)y.GetValue()));

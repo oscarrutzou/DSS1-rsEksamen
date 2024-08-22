@@ -35,14 +35,14 @@ public enum SceneNames
 // Oscar
 public abstract class Scene
 {
-    private List<GameObject> newGameObjects = new List<GameObject>();
-    private List<GameObject> destroyedGameObjects = new List<GameObject>();
+    private List<GameObject> _newGameObjects = new List<GameObject>();
+    private List<GameObject> _destroyedGameObjects = new List<GameObject>();
     protected Action OnFirstCleanUp { get; set; }
     public bool IsChangingScene { get; set; }
 
     protected Color CurrentTextColor { get; set; }
     public double TransitionProgress { get; private set; }
-    private double transitionDuration = 0.3; // Desired duration in seconds
+    private double _transitionDuration = 0.3; // Desired duration in seconds
 
     public abstract void Initialize();
 
@@ -74,12 +74,12 @@ public abstract class Scene
 
     public void Instantiate(GameObject gameObject)
     {
-        newGameObjects.Add(gameObject);
+        _newGameObjects.Add(gameObject);
     }
 
     public void Destroy(GameObject go)
     {
-        destroyedGameObjects.Add(go);
+        _destroyedGameObjects.Add(go);
     }
 
     public virtual void OnPlayerChanged()
@@ -94,7 +94,7 @@ public abstract class Scene
 
     private void LerpGameObjects()
     {
-        TransitionProgress += GameWorld.DeltaTime / transitionDuration;
+        TransitionProgress += GameWorld.DeltaTime / _transitionDuration;
         TransitionProgress = Math.Clamp(TransitionProgress, 0, 1);
 
         foreach (GameObjectTypes type in SceneData.GameObjectLists.Keys)
@@ -147,21 +147,21 @@ public abstract class Scene
     /// </summary>
     private void CleanUp()
     {
-        if (newGameObjects.Count == 0 && destroyedGameObjects.Count == 0) return; //Shouldnt run since there is no new changes
+        if (_newGameObjects.Count == 0 && _destroyedGameObjects.Count == 0) return; //Shouldnt run since there is no new changes
 
-        for (int i = 0; i < newGameObjects.Count; i++)
+        for (int i = 0; i < _newGameObjects.Count; i++)
         {
-            AddToCategory(newGameObjects[i]);
-            newGameObjects[i].Awake();
-            newGameObjects[i].Start();
+            AddToCategory(_newGameObjects[i]);
+            _newGameObjects[i].Awake();
+            _newGameObjects[i].Start();
         }
-        for (int i = 0; i < destroyedGameObjects.Count; i++)
+        for (int i = 0; i < _destroyedGameObjects.Count; i++)
         {
-            RemoveFromCategory(destroyedGameObjects[i]);
+            RemoveFromCategory(_destroyedGameObjects[i]);
         }
 
-        newGameObjects.Clear();
-        destroyedGameObjects.Clear();
+        _newGameObjects.Clear();
+        _destroyedGameObjects.Clear();
     }
 
     /// <summary>

@@ -9,24 +9,24 @@ namespace DoctorsDungeon.ComponentPattern.Path;
 // Asser, Oscar
 public class Astar
 {
-    private Dictionary<Point, GameObject> cells;
-    private int gridDem;
-    private HashSet<GameObject> open;
-    private HashSet<GameObject> closed;
-    private List<GameObject> path = new();
-    private Enemy thisEnemy;
-    private List<Enemy> otherEnemies; // So we can take into account the other enemies paths.
+    private Dictionary<Point, GameObject> _cells;
+    private int _gridDem;
+    private HashSet<GameObject> _open;
+    private HashSet<GameObject> _closed;
+    private List<GameObject> _path = new();
+    private Enemy _thisEnemy;
+    private List<Enemy> _otherEnemies; // So we can take into account the other enemies paths.
 
-    private Point start;
-    private Random rnd = new();
+    private Point _start;
+    private Random _rnd = new();
 
     public void Start(Enemy enemy, List<Enemy> enemyList)
     {
-        otherEnemies = enemyList;
-        thisEnemy = enemy;
+        _otherEnemies = enemyList;
+        _thisEnemy = enemy;
 
-        gridDem = Cell.Dimension * Cell.Scale;
-        cells = GridManager.Instance.CurrentGrid.Cells.ToDictionary(
+        _gridDem = Cell.Dimension * Cell.Scale;
+        _cells = GridManager.Instance.CurrentGrid.Cells.ToDictionary(
             entry => entry.Key,
             entry => entry.Value
         );
@@ -34,7 +34,7 @@ public class Astar
 
     public void SetEnemyListReferences(List<Enemy> enemyList)
     {
-        otherEnemies = enemyList;
+        _otherEnemies = enemyList;
     }
 
     public List<GameObject> FindPath(Point start, Point goal)
@@ -46,22 +46,22 @@ public class Astar
             goal = newPoint;
         }
 
-        this.start = start;
+        this._start = start;
         ResetCells(); // Gets the Cells ready
 
-        open = new HashSet<GameObject>(); // Cells to check
-        closed = new HashSet<GameObject>(); // Checked cells
-        if (!cells.ContainsKey(start) || !cells.ContainsKey(goal)) //Makes sure the cell start and end isnt the same
+        _open = new HashSet<GameObject>(); // Cells to check
+        _closed = new HashSet<GameObject>(); // Checked cells
+        if (!_cells.ContainsKey(start) || !_cells.ContainsKey(goal)) //Makes sure the cell start and end isnt the same
         {
             return null;
         }
 
-        open.Add(cells[start]); // Starts with the start cell
+        _open.Add(_cells[start]); // Starts with the start cell
 
-        while (open.Count > 0)
+        while (_open.Count > 0)
         {
-            GameObject curCellGo = open.First(); // Gets the first object
-            foreach (GameObject cellGo in open)
+            GameObject curCellGo = _open.First(); // Gets the first object
+            foreach (GameObject cellGo in _open)
             {
                 Cell cell = cellGo.GetComponent<Cell>();
                 Cell curCell = curCellGo.GetComponent<Cell>();
@@ -72,8 +72,8 @@ public class Astar
             }
 
             // Check is complete, so we can move it from the unchecked HashSet to the checked.
-            open.Remove(curCellGo);
-            closed.Add(curCellGo);
+            _open.Remove(curCellGo);
+            _closed.Add(curCellGo);
 
             // Gets the Cell component
             Cell newCurCell = curCellGo.GetComponent<Cell>();
@@ -82,7 +82,7 @@ public class Astar
             if (newCurCell.GameObject.Transform.GridPosition.X == goal.X && newCurCell.GameObject.Transform.GridPosition.Y == goal.Y)
             {
                 // Path found!
-                return RetracePath(cells[start], cells[goal]);
+                return RetracePath(_cells[start], _cells[goal]);
             }
 
             // Gets neighbor GameObjects from the new postion, checks all 8 directions.
@@ -90,7 +90,7 @@ public class Astar
 
             foreach (GameObject neighborGo in neighbors)
             {
-                if (closed.Contains(neighborGo)) continue; // Dont check objects that have been checked.
+                if (_closed.Contains(neighborGo)) continue; // Dont check objects that have been checked.
 
                 // Finds the G cost from the start node to the current node
                 //throw new Exception("Check the GetDistance to make sure it gets the start pos is used");
@@ -99,7 +99,7 @@ public class Astar
                 Cell neighbor = neighborGo.GetComponent<Cell>();
 
                 // Updates the cost for the current position.
-                if (!(newMovementCostToNeighbor < neighbor.G || !open.Contains(neighborGo))) continue; // I know its a bad way with the !() inside a if, how could i fix this? The < works like that even if its not inverted with the !?
+                if (!(newMovementCostToNeighbor < neighbor.G || !_open.Contains(neighborGo))) continue; // I know its a bad way with the !() inside a if, how could i fix this? The < works like that even if its not inverted with the !?
 
                 neighbor.G = newMovementCostToNeighbor; // C
                                                         // Calulates H using manhatten principle
@@ -107,7 +107,7 @@ public class Astar
 
                 neighbor.Parent = curCellGo;
 
-                if (!open.Contains(neighborGo)) open.Add(neighborGo);
+                if (!_open.Contains(neighborGo)) _open.Add(neighborGo);
             }
         }
 
@@ -122,7 +122,7 @@ public class Astar
     /// <returns></returns>
     private List<GameObject> RetracePath(GameObject startPoint, GameObject endPoint)
     {
-        path.Clear();
+        _path.Clear();
         GameObject currentNode = endPoint;
 
         int amount = 0;
@@ -134,19 +134,19 @@ public class Astar
             {
                 continue;
             }
-            path.Add(currentNode);
+            _path.Add(currentNode);
             currentNode = currentNode.GetComponent<Cell>().Parent;
         }
 
-        path.Add(startPoint);
-        path.Reverse();
+        _path.Add(startPoint);
+        _path.Reverse();
 
-        return path;
+        return _path;
     }
 
     private void ResetCells()
     {
-        foreach (GameObject cell in cells.Values)
+        foreach (GameObject cell in _cells.Values)
         {
             cell.GetComponent<Cell>().Parent = null;
         }
@@ -170,21 +170,21 @@ public class Astar
         List<GameObject> availableTargets = new();
 
         bool shouldChange = false;
-        foreach (Enemy otherEnemy in otherEnemies)
+        foreach (Enemy otherEnemy in _otherEnemies)
         {
-            if (otherEnemy.TargetPoint != thisEnemy.TargetPoint) continue;
+            if (otherEnemy.TargetPoint != _thisEnemy.TargetPoint) continue;
             shouldChange = true;
         }
 
         if (!shouldChange) return retPoint;
 
-        List<GameObject> targetPointNeighbors = GetNeighbors(thisEnemy.TargetPoint);
+        List<GameObject> targetPointNeighbors = GetNeighbors(_thisEnemy.TargetPoint);
 
         foreach (GameObject neighborGo in targetPointNeighbors)
         {
             bool cellBeingUsed = false;
 
-            foreach (Enemy otherEnemy in otherEnemies)
+            foreach (Enemy otherEnemy in _otherEnemies)
             {
                 if (neighborGo.Transform.GridPosition != otherEnemy.TargetPoint) continue;
 
@@ -200,10 +200,10 @@ public class Astar
         // To select one of the targets, to spread out the enemies. Dosent take into account the classes
         // Also have the bug where if the target is on the other side of the player, it will stop inside the player
         // This is caused since the enemy only follows to a certain point and stop a bit before the end target. (More in CoDecks)
-        closestTarget = availableTargets[rnd.Next(0, availableTargets.Count)];
+        closestTarget = availableTargets[_rnd.Next(0, availableTargets.Count)];
 
         retPoint = closestTarget.Transform.GridPosition;
-        thisEnemy.TargetPoint = retPoint;
+        _thisEnemy.TargetPoint = retPoint;
 
         return retPoint;
     }
@@ -234,9 +234,9 @@ public class Astar
             Point newPoint = new Point(nx, ny);
 
             //If the direction isn't in the grid or the point doesn't exist in the grid
-            if (!(nx >= 0 && nx < gridDem && ny >= 0 && ny < gridDem) || !cells.ContainsKey(newPoint)) continue;
+            if (!(nx >= 0 && nx < _gridDem && ny >= 0 && ny < _gridDem) || !_cells.ContainsKey(newPoint)) continue;
 
-            Cell newPointCell = cells[newPoint].GetComponent<Cell>();
+            Cell newPointCell = _cells[newPoint].GetComponent<Cell>();
             if (newPointCell.CellWalkableType == CellWalkableType.NotValid) continue;
 
             //Check if the cell is diagonally adjacent
@@ -247,15 +247,15 @@ public class Astar
                 Point sidePoint2 = new Point(nx, point.Y);
 
                 // Does grid position exits in the grid
-                if (!cells.ContainsKey(sidePoint1) || !cells.ContainsKey(sidePoint2)) continue;
+                if (!_cells.ContainsKey(sidePoint1) || !_cells.ContainsKey(sidePoint2)) continue;
 
                 // To make sure the astar cant jump corner
-                Cell side1Cell = cells[sidePoint1].GetComponent<Cell>();
-                Cell side2Cell = cells[sidePoint2].GetComponent<Cell>();
+                Cell side1Cell = _cells[sidePoint1].GetComponent<Cell>();
+                Cell side2Cell = _cells[sidePoint2].GetComponent<Cell>();
                 if (side1Cell.CellWalkableType == CellWalkableType.NotValid || side2Cell.CellWalkableType == CellWalkableType.NotValid) continue;
             }
 
-            temp.Add(cells[newPoint]);
+            temp.Add(_cells[newPoint]);
         }
         return temp;
     }

@@ -18,34 +18,34 @@ namespace DoctorsDungeon.ComponentPattern.GUI
         public BackpackIcon(GameObject gameObject) : base(gameObject)
         {
         }
-        private SpriteRenderer sr;
+        private SpriteRenderer _sr;
 
-        private Player player;
-        private Texture2D potionTexture;
+        private Player _player;
+        private Texture2D _potionTexture;
 
         public override void Awake()
         {
-            sr = GameObject.GetComponent<SpriteRenderer>();
-            sr.SetSprite(TextureNames.BackpackIcon);
+            _sr = GameObject.GetComponent<SpriteRenderer>();
+            _sr.SetSprite(TextureNames.BackpackIcon);
 
-            player = SaveData.Player;
+            _player = SaveData.Player;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (player.ItemInInventory == null)
+            if (_player.ItemInInventory == null)
             {
-                potionTexture = null;
+                _potionTexture = null;
                 return;
             }
-            if (potionTexture == null)
+            if (_potionTexture == null)
             {
-                SpriteRenderer potionSr = player.ItemInInventory.GameObject.GetComponent<SpriteRenderer>();
-                potionTexture = potionSr.Sprite;
+                SpriteRenderer potionSr = _player.ItemInInventory.GameObject.GetComponent<SpriteRenderer>();
+                _potionTexture = potionSr.Sprite;
             }
             // Draw the item inside the backpack icon
 
-            sr.DrawSprite(spriteBatch, potionTexture, new Vector2(0, -10), 0.1f);
+            _sr.DrawSprite(spriteBatch, _potionTexture, new Vector2(0, -10), 0.1f);
         }
     }
 }

@@ -17,7 +17,7 @@ namespace DoctorsDungeon.ComponentPattern.Particles;
 
 public class ParticleEmitter : Emitter
 {
-    private List<GameObject> particleToBeReleased = new();
+    private List<GameObject> _particleToBeReleased = new();
 
     public ParticleEmitter(GameObject gameObject) : base(gameObject)
     {
@@ -37,11 +37,11 @@ public class ParticleEmitter : Emitter
         }
 
         TotalSeconds += GameWorld.DeltaTime;
-        particleToBeReleased.Clear(); 
+        _particleToBeReleased.Clear(); 
 
         UpdateActiveParticles();
 
-        foreach (GameObject go in particleToBeReleased)
+        foreach (GameObject go in _particleToBeReleased)
         {
             ParticlePool.ReleaseObject(go);
         }
@@ -83,7 +83,7 @@ public class ParticleEmitter : Emitter
             if (p.Age > p.MaxAge)
             {
                 //OnParticleDeath(new ParticleEventArgs(p));
-                particleToBeReleased.Add(go);
+                _particleToBeReleased.Add(go);
             }
             else
             {

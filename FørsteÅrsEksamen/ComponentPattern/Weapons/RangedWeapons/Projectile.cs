@@ -10,17 +10,17 @@ namespace DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons;
 // Erik
 public class Projectile : Component
 {
-    private float speed;
-    private Vector2 direction;
-    private float range;
-    private Vector2 startPos;
-    private Vector2 lerpTo;
-    private Vector2 targetPos;
+    private float _speed;
+    private Vector2 _direction;
+    private float _range;
+    private Vector2 _startPos;
+    private Vector2 _lerpTo;
+    private Vector2 _targetPos;
 
     public Projectile(GameObject gameObject) : base(gameObject)
     {
-        this.speed = 100;
-        this.range = 200;
+        this._speed = 100;
+        this._range = 200;
     }
 
     public override void Start()
@@ -34,19 +34,19 @@ public class Projectile : Component
     public void SetValues(float rotation)
     {
         GameObject.Transform.Rotation = rotation;
-        startPos = GameObject.Transform.Position;
+        _startPos = GameObject.Transform.Position;
 
-        lerpTo = BaseMath.Rotate(startPos + new Vector2(0, range), rotation);
+        _lerpTo = BaseMath.Rotate(_startPos + new Vector2(0, _range), rotation);
         SetDirection();
     }
 
     public void SetDirection()
     {
-        targetPos = InputHandler.Instance.MouseOnUI;
+        _targetPos = InputHandler.Instance.MouseOnUI;
 
-        direction = BaseMath.SafeNormalize(targetPos - GameObject.Transform.Position);
+        _direction = BaseMath.SafeNormalize(_targetPos - GameObject.Transform.Position);
 
-        float angle = (float)Math.Atan2(direction.Y, direction.X);
+        float angle = (float)Math.Atan2(_direction.Y, _direction.X);
         GameObject.Transform.Rotation = angle;
     }
 
@@ -68,12 +68,12 @@ public class Projectile : Component
 
         //}
 
-        double distance = speed * GameWorld.DeltaTime;
-        Vector2 step = direction * (float)distance;
+        double distance = _speed * GameWorld.DeltaTime;
+        Vector2 step = _direction * (float)distance;
 
         GameObject.Transform.Position += step;
 
-        if (Vector2.Distance(startPos, GameObject.Transform.Position) >= range)
+        if (Vector2.Distance(_startPos, GameObject.Transform.Position) >= _range)
         {
             GameWorld.Instance.Destroy(GameObject);
         }

@@ -11,10 +11,10 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
 {
     public class Health : Component
     {
-        private float damageTimerTotal = 0.2f;
-        private double damageTimer;
+        private float _damageTimerTotal = 0.2f;
+        private double _damageTimer;
         public Color DamageTakenColor { get; private set; } = Color.Red;
-        private SpriteRenderer spriteRenderer;
+        private SpriteRenderer _spriteRenderer;
 
         public int MaxHealth { get; private set; } = -1;
 
@@ -33,7 +33,7 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
 
         public override void Awake()
         {
-            spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
+            _spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
         }
 
         public override void Start()
@@ -102,7 +102,7 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
 
         private void DamageTaken()
         {
-            damageTimer = damageTimerTotal;
+            _damageTimer = _damageTimerTotal;
             //spriteRenderer.Color = DamageTakenColor;
             OnDamageTaken?.Invoke(); // For specific behavor when Damage taken
         }
@@ -115,12 +115,12 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
 
         private void HandleOnDamage()
         {
-            if (damageTimer <= 0) return;
+            if (_damageTimer <= 0) return;
 
-            damageTimer -= GameWorld.DeltaTime;
+            _damageTimer -= GameWorld.DeltaTime;
 
             // Count down
-            if (damageTimer <= 0)
+            if (_damageTimer <= 0)
             {
                 ResetColor();
             }

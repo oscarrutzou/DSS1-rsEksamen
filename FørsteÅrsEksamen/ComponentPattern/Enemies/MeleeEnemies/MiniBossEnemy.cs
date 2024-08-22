@@ -18,24 +18,24 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
      */
     public class MiniBossEnemy : EnemyMelee
     {
-        private double spawnTimer;
-        private double spawnCooldown = 5.0;
+        private double _spawnTimer;
+        private double _spawnCooldown = 5.0;
 
-        private Spawner enemySpawner;
-        private List<Enemy> spawnedEnemies = new();
-        private List<Health> spawnedEnemiesHealth = new();
+        private Spawner _enemySpawner;
+        private List<Enemy> _spawnedEnemies = new();
+        private List<Health> _spawnedEnemiesHealth = new();
 
-        private List<Point> points = new();
-        private int maxAmountOfSpawns = 3;
+        private List<Point> _points = new();
+        private int _maxAmountOfSpawns = 3;
 
-        private RoomBase roomBase;
+        private RoomBase _roomBase;
 
         public MiniBossEnemy(GameObject gameObject) : base(gameObject)
         {
             CanAttack = false;
         }  
 
-        public void SetRoom(RoomBase roomBase) => this.roomBase = roomBase;
+        public void SetRoom(RoomBase roomBase) => this._roomBase = roomBase;
 
         public override void Awake()
         {
@@ -53,7 +53,7 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
         private void MakeSpawner()
         {
             GameObject spawnerGo = new();
-            enemySpawner = spawnerGo.AddComponent<Spawner>();
+            _enemySpawner = spawnerGo.AddComponent<Spawner>();
         }
 
         public override void Attack()
@@ -71,9 +71,9 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
         {
             base.Update();
 
-            if (spawnTimer < spawnCooldown)
+            if (_spawnTimer < _spawnCooldown)
             {
-                spawnTimer += GameWorld.DeltaTime;
+                _spawnTimer += GameWorld.DeltaTime;
             }
 
             if (Health.IsDead) return;
@@ -81,40 +81,40 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
         }
         private void SpawnEnemy()
         {
-            if (spawnTimer < spawnCooldown) return;
+            if (_spawnTimer < _spawnCooldown) return;
 
             // Make this cheaper to run, not as often.
-            spawnedEnemiesHealth.Clear();
+            _spawnedEnemiesHealth.Clear();
 
-            foreach (Enemy enemy in spawnedEnemies)
+            foreach (Enemy enemy in _spawnedEnemies)
             {
                 Health health = enemy.GameObject.GetComponent<Health>();
-                spawnedEnemiesHealth.Add(health);
+                _spawnedEnemiesHealth.Add(health);
             }
             // Finds all enemies that arent dead
-            spawnedEnemiesHealth = spawnedEnemiesHealth.FindAll(x => !x.IsDead);
+            _spawnedEnemiesHealth = _spawnedEnemiesHealth.FindAll(x => !x.IsDead);
 
-            if (spawnedEnemiesHealth.Count >= maxAmountOfSpawns) return;
+            if (_spawnedEnemiesHealth.Count >= _maxAmountOfSpawns) return;
 
-            spawnTimer = 0;
+            _spawnTimer = 0;
 
             // Spawn enemy at location.
-            points.Clear();
+            _points.Clear();
 
             // Select a random point
 
             // Amount to spawn
-            points.Add(GameObject.Transform.GridPosition);
+            _points.Add(GameObject.Transform.GridPosition);
 
-            List<Enemy> newEnemies = enemySpawner.SpawnEnemies(points, Player.GameObject, spawnAbleTypes);
+            List<Enemy> newEnemies = _enemySpawner.SpawnEnemies(_points, Player.GameObject, spawnAbleTypes);
 
-            roomBase.EnemiesInRoom.AddRange(newEnemies);
+            _roomBase.EnemiesInRoom.AddRange(newEnemies);
 
-            spawnedEnemies.AddRange(newEnemies);
+            _spawnedEnemies.AddRange(newEnemies);
 
-            foreach (Enemy enemy in spawnedEnemies)
+            foreach (Enemy enemy in _spawnedEnemies)
             {
-                enemy.Astar.SetEnemyListReferences(spawnedEnemies);
+                enemy.Astar.SetEnemyListReferences(_spawnedEnemies);
                 enemy.HasBeenAwoken = true;
             }
         }

@@ -58,11 +58,11 @@ public class GameWorld : Game
         GfxManager.SynchronizeWithVerticalRetrace = true;
 
         SceneData.GenereateGameObjectDicionary();
-        //Fullscreen();
-        SetResolutionSize(800, 800);
+        Fullscreen();
+        //SetResolutionSize(800, 800);
 
         WorldCam = new Camera(true); // Camera that follows the player
-        UiCam = new Camera(false); // Camera that is static
+        UiCam = new Camera(false);   // Camera that is static
 
         // Put some of this into threads to load faster in a loading menu, insted of running it here.
         GlobalTextures.LoadContent();

@@ -29,7 +29,7 @@ public enum GameObjectTypes
 // Oscar
 public class GameObject : ICloneable
 {
-    private Dictionary<Type, Component> components = new Dictionary<Type, Component>();
+    private Dictionary<Type, Component> _components = new Dictionary<Type, Component>();
     public Transform Transform { get; private set; } = new Transform();
 
     public GameObjectTypes Type { get; set; } = GameObjectTypes.Default;
@@ -55,7 +55,7 @@ public class GameObject : ICloneable
         {
             // Makes a component and adds "this" gameobject to the params.
             T component = (T)Activator.CreateInstance(componentType, this);
-            components[componentType] = component; // Adds the component to the GameObject
+            _components[componentType] = component; // Adds the component to the GameObject
             return component;
         }
         else
@@ -82,7 +82,7 @@ public class GameObject : ICloneable
             Array.Copy(additionalParams, 0, allParams, 1, additionalParams.Length); // Copies extra params into the array.
 
             T component = (T)Activator.CreateInstance(componentType, allParams); // Creates a component with the correct params
-            components[componentType] = component; // Adds the component to the GameObject
+            _components[componentType] = component; // Adds the component to the GameObject
             return component;
         }
         catch (Exception)
@@ -102,13 +102,13 @@ public class GameObject : ICloneable
         Type componentType = typeof(T);
 
         // First check if the component is in the GameObject
-        if (components.TryGetValue(componentType, out Component component))
+        if (_components.TryGetValue(componentType, out Component component))
         {
             return (T)component;
         }
 
         // Make a check to see if "T" is a subclass of one of the components.
-        foreach (Component componentVal in components.Values)
+        foreach (Component componentVal in _components.Values)
         {
             if (componentType.IsAssignableFrom(componentVal.GetType()))
             {
@@ -122,7 +122,7 @@ public class GameObject : ICloneable
 
     public void Awake()
     {
-        foreach (var component in components.Values)
+        foreach (var component in _components.Values)
         {
             component.Awake();
         }
@@ -130,7 +130,7 @@ public class GameObject : ICloneable
 
     public void Start()
     {
-        foreach (var component in components.Values)
+        foreach (var component in _components.Values)
         {
             component.Start();
         }
@@ -139,7 +139,7 @@ public class GameObject : ICloneable
     public void Update()
     {
         if (!IsEnabled) return;
-        foreach (var component in components.Values)
+        foreach (var component in _components.Values)
         {
             component.Update();
         }
@@ -148,7 +148,7 @@ public class GameObject : ICloneable
     public void Draw(SpriteBatch spriteBatch)
     {
         if (!IsEnabled) return;
-        foreach (var component in components.Values)
+        foreach (var component in _components.Values)
         {
             component.Draw(spriteBatch);
         }
@@ -157,7 +157,7 @@ public class GameObject : ICloneable
     public void OnCollisionEnter(Collider collider)
     {
         if (!IsEnabled) return;
-        foreach (var component in components.Values)
+        foreach (var component in _components.Values)
         {
             component.OnCollisionEnter(collider);
         }
@@ -165,7 +165,7 @@ public class GameObject : ICloneable
 
     private Component AddComponentWithExistingValues(Component component)
     {
-        components[component.GetType()] = component;
+        _components[component.GetType()] = component;
         return component;
     }
 
@@ -206,7 +206,7 @@ public class GameObject : ICloneable
         GameObject go = new GameObject();
         go.Transform = Transform; // Sets the transform to be the same
         go.Type = Type;
-        foreach (Component component in components.Values)
+        foreach (Component component in _components.Values)
         {
             Component newComponent = go.AddComponentWithExistingValues(component.Clone() as Component);
             newComponent.SetNewGameObject(go);

@@ -27,7 +27,7 @@ public abstract class RoomBase : Scene
 {
     #region Properties
 
-    private PauseMenu pauseMenu;
+    private PauseMenu _pauseMenu;
 
     protected string GridName;
     protected int GridWidth, GridHeight;
@@ -36,22 +36,22 @@ public abstract class RoomBase : Scene
 
     public Point PlayerSpawnPos, EndPointSpawnPos = new(6, 6);
     protected GameObject PlayerGo;
-    private Player player;
-    private Health playerHealth;
+    private Player _player;
+    private Health _playerHealth;
 
     protected List<Point> EnemySpawnPoints = new();
     protected List<Point> PotionSpawnPoints = new();
     protected Dictionary<Point, GameObject> MiscGameObjectsInRoom = new();
 
-    private TransferDoor transferDoor;
-    private SpriteRenderer transferDoorSpriteRenderer;
+    private TransferDoor _transferDoor;
+    private SpriteRenderer _transferDoorSpriteRenderer;
     public List<Enemy> EnemiesInRoom { get; set; } = new();
-    private List<Enemy> aliveEnemies;
+    private List<Enemy> _aliveEnemies;
 
-    private Spawner spawner;
+    private Spawner _spawner;
 
-    private List<GameObject> cells = new(); // For debug
-    private Vector2 startLeftPos;
+    private List<GameObject> _cells = new(); // For debug
+    private Vector2 _startLeftPos;
 
     //private string startFinalText; // Used to set the start size of text for the hour glass,
     // so it dosent move when the timer counts down.
@@ -65,9 +65,9 @@ public abstract class RoomBase : Scene
         // There needs to have been set some stuff before this base.Initialize (Look at Room1 for reference)
         PlayerGo = null; //Remove this from normal Scene and make another scene that sets all up.
 
-        pauseMenu = new PauseMenu();
-        pauseMenu.Initialize();
-        OnFirstCleanUp = pauseMenu.AfterFirstCleanUp; // We need to couple the pausemenu to the current RoomScene Action.
+        _pauseMenu = new PauseMenu();
+        _pauseMenu.Initialize();
+        OnFirstCleanUp = _pauseMenu.AfterFirstCleanUp; // We need to couple the pausemenu to the current RoomScene Action.
 
         SpawnTexture(BackGroundTexture, LayerDepth.WorldBackground);
         SpawnTexture(ForeGroundTexture, LayerDepth.WorldForeground);
@@ -95,15 +95,15 @@ public abstract class RoomBase : Scene
     private GameObject hourGlassIcon, inventoryIcon;
     private void SetStartTimeLeft()
     {
-        startLeftPos = GameWorld.Instance.UiCam.TopLeft + new Vector2(80, 130);
+        _startLeftPos = GameWorld.Instance.UiCam.TopLeft + new Vector2(80, 130);
         inventoryIcon = IconFactory.CreateBackpackIcon();
-        inventoryIcon.Transform.Position = startLeftPos;
+        inventoryIcon.Transform.Position = _startLeftPos;
 
         GameWorld.Instance.Instantiate(inventoryIcon);
-        startLeftPos.X += 50f;
+        _startLeftPos.X += 50f;
 
         hourGlassIcon = IconFactory.CreateHourGlassIcon();
-        hourGlassIcon.Transform.Position = startLeftPos;
+        hourGlassIcon.Transform.Position = _startLeftPos;
 
         GameWorld.Instance.Instantiate(hourGlassIcon);
 
@@ -158,8 +158,8 @@ public abstract class RoomBase : Scene
     private void SpawnEndPos()
     {
         GameObject endDoor = TransferDoorFactory.Create();
-        transferDoor = endDoor.GetComponent<TransferDoor>();
-        transferDoorSpriteRenderer = endDoor.GetComponent<SpriteRenderer>();
+        _transferDoor = endDoor.GetComponent<TransferDoor>();
+        _transferDoorSpriteRenderer = endDoor.GetComponent<SpriteRenderer>();
         endDoor.Transform.Position = GridManager.Instance.GetCornerPositionOfCell(EndPointSpawnPos);
         GameWorld.Instance.Instantiate(endDoor);
     }
@@ -167,13 +167,13 @@ public abstract class RoomBase : Scene
     private void SpawnEnemies()
     {
         GameObject spawnerGo = new();
-        spawner = spawnerGo.AddComponent<Spawner>();
-        EnemiesInRoom = spawner.SpawnEnemies(EnemySpawnPoints, PlayerGo);
+        _spawner = spawnerGo.AddComponent<Spawner>();
+        EnemiesInRoom = _spawner.SpawnEnemies(EnemySpawnPoints, PlayerGo);
     }
 
     private void SpawnPotions()
     {
-        spawner.SpawnPotions(PotionSpawnPoints, PlayerGo);
+        _spawner.SpawnPotions(PotionSpawnPoints, PlayerGo);
     }
 
     private void CenterMiscItems()
@@ -187,23 +187,23 @@ public abstract class RoomBase : Scene
 
     private void SetCommands()
     {
-        player = PlayerGo.GetComponent<Player>();
-        playerHealth = PlayerGo.GetComponent<Health>();
-        InputHandler.Instance.AddKeyUpdateCommand(Keys.D, new MoveCmd(player, new Vector2(1, 0)));
-        InputHandler.Instance.AddKeyUpdateCommand(Keys.A, new MoveCmd(player, new Vector2(-1, 0)));
-        InputHandler.Instance.AddKeyUpdateCommand(Keys.W, new MoveCmd(player, new Vector2(0, -1)));
-        InputHandler.Instance.AddKeyUpdateCommand(Keys.S, new MoveCmd(player, new Vector2(0, 1)));
+        _player = PlayerGo.GetComponent<Player>();
+        _playerHealth = PlayerGo.GetComponent<Health>();
+        InputHandler.Instance.AddKeyUpdateCommand(Keys.D, new MoveCmd(_player, new Vector2(1, 0)));
+        InputHandler.Instance.AddKeyUpdateCommand(Keys.A, new MoveCmd(_player, new Vector2(-1, 0)));
+        InputHandler.Instance.AddKeyUpdateCommand(Keys.W, new MoveCmd(_player, new Vector2(0, -1)));
+        InputHandler.Instance.AddKeyUpdateCommand(Keys.S, new MoveCmd(_player, new Vector2(0, 1)));
 
-        InputHandler.Instance.AddMouseUpdateCommand(MouseCmdState.Left, new CustomCmd(player.Attack));
+        InputHandler.Instance.AddMouseUpdateCommand(MouseCmdState.Left, new CustomCmd(_player.Attack));
 
-        InputHandler.Instance.AddKeyButtonDownCommand(Keys.Escape, new CustomCmd(pauseMenu.TogglePauseMenu));
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.Escape, new CustomCmd(_pauseMenu.TogglePauseMenu));
 
-        InputHandler.Instance.AddKeyButtonDownCommand(Keys.E, new CustomCmd(player.UseItem));
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.E, new CustomCmd(_player.UseItem));
 
         // For debugging
         if (!GameWorld.DebugAndCheats) return;
 
-        InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, new CustomCmd(player.Attack));
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, new CustomCmd(_player.Attack));
         InputHandler.Instance.AddKeyButtonDownCommand(Keys.Enter, new CustomCmd(ChangeScene));
         InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DB.Instance.SaveGrid(GridManager.Instance.CurrentGrid); }));
 
@@ -226,13 +226,13 @@ public abstract class RoomBase : Scene
         {
             SaveData.Time_Left = 0;
             SaveData.LostByTime = true;
-            playerHealth.TakeDamage(1000); // Kills the player
+            _playerHealth.TakeDamage(1000); // Kills the player
         }
 
         // Check if enemies has been killed
-        aliveEnemies = EnemiesInRoom.Where(x => x.State != CharacterState.Dead).ToList();
+        _aliveEnemies = EnemiesInRoom.Where(x => x.State != CharacterState.Dead).ToList();
 
-        if (aliveEnemies.Count == 0) // All enemies are dead to
+        if (_aliveEnemies.Count == 0) // All enemies are dead to
         {
             OnAllEnemiesDied();
         }
@@ -243,11 +243,11 @@ public abstract class RoomBase : Scene
     private void OnAllEnemiesDied()
     {
         // The transferDoor.emitter == null is there for when there is 0 enemies in the room at the start
-        if (transferDoorSpriteRenderer.ShouldDrawSprite == false || transferDoor.emitter == null) return; // To stop method from being run twice.
+        if (_transferDoorSpriteRenderer.ShouldDrawSprite == false || _transferDoor.emitter == null) return; // To stop method from being run twice.
 
-        transferDoorSpriteRenderer.ShouldDrawSprite = false;
-        transferDoor.CanTranser = true;
-        transferDoor.emitter.StartEmitter();
+        _transferDoorSpriteRenderer.ShouldDrawSprite = false;
+        _transferDoor.CanTranser = true;
+        _transferDoor.emitter.StartEmitter();
     }
 
     #region Draw
@@ -256,9 +256,9 @@ public abstract class RoomBase : Scene
     {
         base.DrawOnScreen(spriteBatch);
 
-        pauseMenu.DrawOnScreen(spriteBatch);
+        _pauseMenu.DrawOnScreen(spriteBatch);
 
-        DrawTimer(spriteBatch, startLeftPos);
+        DrawTimer(spriteBatch, _startLeftPos);
 
         DrawQuest(spriteBatch);
 
@@ -268,9 +268,9 @@ public abstract class RoomBase : Scene
 
     private void DrawQuest(SpriteBatch spriteBatch)
     {
-        aliveEnemies = EnemiesInRoom.Where(x => x.State != CharacterState.Dead).ToList();
+        _aliveEnemies = EnemiesInRoom.Where(x => x.State != CharacterState.Dead).ToList();
 
-        int dead = EnemiesInRoom.Count - aliveEnemies.Count;
+        int dead = EnemiesInRoom.Count - _aliveEnemies.Count;
         int amountToKill = EnemiesInRoom.Count - dead;
 
         string text = $"Kill your way through {amountToKill}/{EnemiesInRoom.Count}";//
@@ -319,10 +319,10 @@ public abstract class RoomBase : Scene
         DrawString(spriteBatch, $"PlayerPos {PlayerGo.Transform.Position}", startPos);
 
         startPos += offset;
-        DrawString(spriteBatch, $"Player Room Nr {player.CollisionNr}", startPos);
+        DrawString(spriteBatch, $"Player Room Nr {_player.CollisionNr}", startPos);
 
         startPos += offset;
-        DrawString(spriteBatch, $"Cell GameObjects in scene {cells.Count}", startPos);
+        DrawString(spriteBatch, $"Cell GameObjects in scene {_cells.Count}", startPos);
 
         startPos += offset;
         DrawString(spriteBatch, $"Current Level Reached {SaveData.Level_Reached}", startPos);
@@ -337,10 +337,10 @@ public abstract class RoomBase : Scene
         DrawString(spriteBatch, $"Grid Room Nr {GridManager.Instance.RoomNrIndex}", startPos);
 
         startPos += offset;
-        DrawString(spriteBatch, $"player.velocity {player.velocity}", startPos);
+        DrawString(spriteBatch, $"player.velocity {_player.velocity}", startPos);
 
         startPos += offset;
-        DrawString(spriteBatch, $"Player totalMovementInput: {player.totalMovementInput.X},{player.totalMovementInput.Y}", startPos);
+        DrawString(spriteBatch, $"Player totalMovementInput: {_player.totalMovementInput.X},{_player.totalMovementInput.Y}", startPos);
     }
 
     protected void DrawString(SpriteBatch spriteBatch, string text, Vector2 position)

@@ -19,19 +19,19 @@ public class DB
 {
     #region Start
 
-    private static DB instance;
+    private static DB _instance;
 
     // Used a singleton so we can get the path when we first use our database
     public static DB Instance
     {
         get
         {
-            if (instance == null)
+            if (_instance == null)
             {
-                instance = new DB();
+                _instance = new DB();
                 DataBasePath = GetStartPath();
             }
-            return instance;
+            return _instance;
         }
     }
 

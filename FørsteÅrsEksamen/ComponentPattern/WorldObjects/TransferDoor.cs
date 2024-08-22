@@ -14,10 +14,10 @@ public class TransferDoor : Component
 {
     public bool CanTranser { get; set; }    
     
-    private Collider collider, playerCollider;
-    private Health playerHealth;
-    private double timer;
-    private double timeTillActivation = 2f;
+    private Collider _collider, _playerCollider;
+    private Health _playerHealth;
+    private double _timer;
+    private double _timeTillActivation = 2f;
     public ParticleEmitter emitter;
 
     public TransferDoor(GameObject gameObject) : base(gameObject)
@@ -31,9 +31,9 @@ public class TransferDoor : Component
 
     public override void Start()
     {
-        playerCollider = SaveData.Player.GameObject.GetComponent<Collider>();
-        playerHealth = SaveData.Player.GameObject.GetComponent<Health>();
-        collider = GameObject.GetComponent<Collider>();
+        _playerCollider = SaveData.Player.GameObject.GetComponent<Collider>();
+        _playerHealth = SaveData.Player.GameObject.GetComponent<Health>();
+        _collider = GameObject.GetComponent<Collider>();
     }
 
     private void MakeEmitter()
@@ -64,25 +64,25 @@ public class TransferDoor : Component
         if (!CanTranser) return; //Shouldnt open door before quest is done
         
 
-        OnCollisionEnter(collider);
+        OnCollisionEnter(_collider);
     }
 
     public override void OnCollisionEnter(Collider collider)
     {
         // Skal kun fjerne item ved player position, ikke alle items.
         // Stop the door from changing scenes if the player died.
-        if (playerHealth.IsDead) return;
+        if (_playerHealth.IsDead) return;
 
-        if (collider.CollisionBox.Intersects(playerCollider.CollisionBox))
+        if (collider.CollisionBox.Intersects(_playerCollider.CollisionBox))
         {
-            timer += GameWorld.DeltaTime;
+            _timer += GameWorld.DeltaTime;
 
             // Darken screen (Remeber to brighten screen if player goes out of the collision box
 
-            if (timer >= timeTillActivation)
+            if (_timer >= _timeTillActivation)
             {
                 DB.Instance.CheckChangeDungeonScene();
-                timer = 0f;
+                _timer = 0f;
             }
         }
     }

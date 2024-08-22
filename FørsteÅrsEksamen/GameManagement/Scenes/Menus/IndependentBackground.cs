@@ -22,8 +22,8 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
         public static Color[] menuColors = new Color[] { Color.DarkCyan, Color.DarkGray, Color.Gray, Color.Transparent };
         public static Color[] RoomColors = new Color[] { Color.DarkRed, Color.DarkGray, Color.Gray, Color.Transparent };
         // We dont need a factory to do this, since its only this place we are going to use this background.
-        private static ColorInterval menuColorInterval;
-        private static ColorInterval roomColorInterval;
+        private static ColorInterval _menuColorInterval;
+        private static ColorInterval _roomColorInterval;
 
         public static void SpawnBG()
         {
@@ -47,8 +47,8 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
             go.Awake();
             go.Start();
 
-            menuColorInterval = new ColorInterval(menuColors);
-            roomColorInterval = new ColorInterval(RoomColors);
+            _menuColorInterval = new ColorInterval(menuColors);
+            _roomColorInterval = new ColorInterval(RoomColors);
 
             MakeMouseGo();
 
@@ -85,9 +85,9 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
 
             ColorRangeModifier colorMod = BackgroundEmitter.GetModifier<ColorRangeModifier>();
             if (GameWorld.Instance.IsInMenu)
-                colorMod.ColorInterval = menuColorInterval;
+                colorMod.ColorInterval = _menuColorInterval;
             else
-                colorMod.ColorInterval = roomColorInterval;
+                colorMod.ColorInterval = _roomColorInterval;
         }
 
         public static void DrawBG(SpriteBatch spriteBatch)

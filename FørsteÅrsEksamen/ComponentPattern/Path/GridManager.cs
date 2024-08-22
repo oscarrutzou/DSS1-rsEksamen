@@ -37,36 +37,36 @@ public class GridManager
 
     public bool DrawRoomNr { get; set; }
 
-    private int colliderNrIndex = 1;
-    private int roomNrIndex = 1;
+    private int _colliderNrIndex = 1;
+    private int _roomNrIndex = 1;
 
     /// <summary>
     /// For the room index on the cells, right now there is a limit of 10 rooms.
     /// </summary>
     public int ColliderNrIndex
     {
-        get { return colliderNrIndex; }
+        get { return _colliderNrIndex; }
         set
         {
             if (value == 0 || value > 10) return;
 
-            if (colliderNrIndex != value)
+            if (_colliderNrIndex != value)
             {
-                colliderNrIndex = value;
+                _colliderNrIndex = value;
             }
         }
     }
 
     public int RoomNrIndex
     {
-        get { return roomNrIndex; }
+        get { return _roomNrIndex; }
         set
         {
             if (value == 0 || value > 10) return;
 
-            if (roomNrIndex != value)
+            if (_roomNrIndex != value)
             {
-                roomNrIndex = value;
+                _roomNrIndex = value;
             }
         }
     }

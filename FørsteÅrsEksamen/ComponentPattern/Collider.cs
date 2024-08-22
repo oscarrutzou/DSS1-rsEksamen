@@ -11,13 +11,13 @@ namespace DoctorsDungeon.ComponentPattern;
 // Oscar
 public class Collider : Component
 {
-    private SpriteRenderer spriteRenderer;
-    private Animator animator;
-    private Texture2D texture;
+    private SpriteRenderer _spriteRenderer;
+    private Animator _animator;
+    private Texture2D _texture;
     public int StartCollisionWidth { get; private set; }
     public int StartCollisionHeight { get; private set; } //If not set, use the sprite width and height
 
-    private Vector2 positionOffset { get; set; }
+    private Vector2 _positionOffset { get; set; }
 
     public Color DebugColor = Color.Red;
     public Color DebugColorRotated = Color.Azure;
@@ -32,15 +32,15 @@ public class Collider : Component
         {
             int width, height;
             Vector2 pos = GameObject.Transform.Position;
-            if (animator != null && animator.CurrentAnimation != null)
+            if (_animator != null && _animator.CurrentAnimation != null)
             {
-                width = StartCollisionWidth > 0 ? StartCollisionWidth : animator.CurrentAnimation.FrameDimensions;
-                height = StartCollisionHeight > 0 ? StartCollisionHeight : animator.CurrentAnimation.FrameDimensions;
+                width = StartCollisionWidth > 0 ? StartCollisionWidth : _animator.CurrentAnimation.FrameDimensions;
+                height = StartCollisionHeight > 0 ? StartCollisionHeight : _animator.CurrentAnimation.FrameDimensions;
             }
             else
             {
-                width = StartCollisionWidth > 0 ? StartCollisionWidth : spriteRenderer.Sprite.Width;
-                height = StartCollisionHeight > 0 ? StartCollisionHeight : spriteRenderer.Sprite.Height;
+                width = StartCollisionWidth > 0 ? StartCollisionWidth : _spriteRenderer.Sprite.Width;
+                height = StartCollisionHeight > 0 ? StartCollisionHeight : _spriteRenderer.Sprite.Height;
             }
 
             width *= (int)GameObject.Transform.Scale.X;
@@ -54,8 +54,8 @@ public class Collider : Component
 
             return new Rectangle
                 (
-                    (int)(pos.X - positionOffset.X),
-                    (int)(pos.Y - positionOffset.Y),
+                    (int)(pos.X - _positionOffset.X),
+                    (int)(pos.Y - _positionOffset.Y),
                     width,
                     height
                 );
@@ -68,9 +68,9 @@ public class Collider : Component
 
     public override void Start()
     {
-        animator = GameObject.GetComponent<Animator>();
-        spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
-        texture = GlobalTextures.Textures[TextureNames.Pixel];
+        _animator = GameObject.GetComponent<Animator>();
+        _spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
+        _texture = GlobalTextures.Textures[TextureNames.Pixel];
     }
 
     public override void Draw(SpriteBatch spriteBatch)
@@ -97,7 +97,7 @@ public class Collider : Component
     {
         StartCollisionWidth = width;
         StartCollisionHeight = height;
-        this.positionOffset = positionOffset;
+        this._positionOffset = positionOffset;
     }
 
     /// <summary>
@@ -105,7 +105,7 @@ public class Collider : Component
     /// </summary>
     public void ResetCustomCollsionBox()
     {
-        positionOffset = Vector2.Zero;
+        _positionOffset = Vector2.Zero;
         StartCollisionHeight = 0;
         StartCollisionWidth = 0;
     }
@@ -167,8 +167,8 @@ public class Collider : Component
         
         if (CenterCollisionBox)
         {
-            withinXBounds = MathF.Abs(rotatedPoint.X - center.X + positionOffset.X) <= halfWidth;
-            withinYBounds = MathF.Abs(rotatedPoint.Y - center.Y + positionOffset.Y) <= halfHeight;
+            withinXBounds = MathF.Abs(rotatedPoint.X - center.X + _positionOffset.X) <= halfWidth;
+            withinYBounds = MathF.Abs(rotatedPoint.Y - center.Y + _positionOffset.Y) <= halfHeight;
             
             // -60 point <= 48
             //float y = rotatedPoint.Y - center.Y;

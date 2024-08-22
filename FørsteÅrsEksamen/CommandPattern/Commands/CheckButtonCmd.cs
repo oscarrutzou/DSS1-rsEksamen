@@ -7,23 +7,23 @@ namespace DoctorsDungeon.CommandPattern.Commands;
 // Oscar
 public class CheckButtonCmd : Command
 {
-    private const double clickCooldown = 0.1f; // The delay between button clicks in seconds
-    private double timeSinceLastClick = 0;     // The time since the button was last clicked
+    private const double _clickCooldown = 0.1f; // The delay between button clicks in seconds
+    private double _timeSinceLastClick = 0;     // The time since the button was last clicked
 
     public CheckButtonCmd()
     {
-        timeSinceLastClick = clickCooldown;
+        _timeSinceLastClick = _clickCooldown;
     }
 
     public override void Update()
     {
-        if (timeSinceLastClick < clickCooldown)
-            timeSinceLastClick += GameWorld.DeltaTime;
+        if (_timeSinceLastClick < _clickCooldown)
+            _timeSinceLastClick += GameWorld.DeltaTime;
     }
 
     public override void Execute()
     {
-        if (timeSinceLastClick < clickCooldown) return;
+        if (_timeSinceLastClick < _clickCooldown) return;
 
         foreach (GameObject gameObject in SceneData.GameObjectLists[GameObjectTypes.Gui])
         {
@@ -35,7 +35,7 @@ public class CheckButtonCmd : Command
 
             button.OnClickButton();
 
-            timeSinceLastClick = 0;
+            _timeSinceLastClick = 0;
             break;
         }
     }

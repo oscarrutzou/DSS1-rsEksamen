@@ -22,7 +22,7 @@ namespace DoctorsDungeon.ComponentPattern.Particles.Modifiers
             Color.Violet,
             Color.Transparent,
         });
-        private bool spriteRainbow = false, textRainbow = false;
+        private bool _spriteRainbow = false, _textRainbow = false;
         public ColorRangeModifier(Color[] colors, Color[] textColors = null)
         {
             ColorInterval = new ColorInterval(colors);
@@ -33,13 +33,13 @@ namespace DoctorsDungeon.ComponentPattern.Particles.Modifiers
 
         public ColorRangeModifier(bool spriteRainbow, bool textRainbow = false)
         {
-            this.spriteRainbow = spriteRainbow;
-            this.textRainbow = textRainbow;
+            this._spriteRainbow = spriteRainbow;
+            this._textRainbow = textRainbow;
         }
 
         public override void Execute(Emitter e, double seconds, IParticle p)
         {
-            if (!spriteRainbow && !textRainbow)
+            if (!_spriteRainbow && !_textRainbow)
             {
                 p.Color = ColorInterval.GetValue(p.Age / p.MaxAge);
 
@@ -51,7 +51,7 @@ namespace DoctorsDungeon.ComponentPattern.Particles.Modifiers
             {
                 p.Color = _rainboxInterval.GetValue(p.Age / p.MaxAge);
 
-                if (textRainbow == false || p.TextOnSprite == null) return;
+                if (_textRainbow == false || p.TextOnSprite == null) return;
 
                 p.TextOnSprite.TextColor = _rainboxInterval.GetValue(p.Age / p.MaxAge);
             }

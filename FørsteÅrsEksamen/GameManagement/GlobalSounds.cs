@@ -20,39 +20,39 @@ public static class GlobalSounds
     //Sound effects
     public static Dictionary<SoundNames, SoundEffect> Sounds { get; private set; }
 
-    private static Dictionary<SoundNames, List<SoundEffectInstance>> soundInstancesPool;
-    private static int maxInstanceOfOneSound = 5; // There can only be 2 of the same sounds playing, otherwise it wont play.
+    private static Dictionary<SoundNames, List<SoundEffectInstance>> _soundInstancesPool;
+    private static int _maxInstanceOfOneSound = 5; // There can only be 2 of the same sounds playing, otherwise it wont play.
     //private static int maxInstanceOfGunSound = 10;
 
     public static bool InMenu { get; set; } = true;
 
-    private static SoundEffect menuMusic;
-    private static SoundEffect gameMusic;
+    private static SoundEffect _menuMusic;
+    private static SoundEffect _gameMusic;
 
-    private static SoundEffectInstance instanceMenuMusic;
-    private static SoundEffectInstance instanceGameMusic;
+    private static SoundEffectInstance _instanceMenuMusic;
+    private static SoundEffectInstance _instanceGameMusic;
 
-    private static int musicVolDivide = 4; //Makes the song less loud by dividing the real volume
-    private static Random rnd = new();
+    private static int _musicVolDivide = 4; //Makes the song less loud by dividing the real volume
+    private static Random _rnd = new();
     public static float MusicVolume = 0.0f;
     public static float SfxVolume = 0.0f;
-    private static bool musicCountDown;
-    private static bool sfxCountDown;
+    private static bool _musicCountDown;
+    private static bool _sfxCountDown;
 
     #endregion Properties
 
     public static void LoadContent()
     {
-        musicCountDown = MusicVolume != 0; // For the method to change up and down on volume
-        sfxCountDown = SfxVolume != 0;
+        _musicCountDown = MusicVolume != 0; // For the method to change up and down on volume
+        _sfxCountDown = SfxVolume != 0;
 
         ContentManager content = GameWorld.Instance.Content;
 
-        soundInstancesPool = new Dictionary<SoundNames, List<SoundEffectInstance>>();
+        _soundInstancesPool = new Dictionary<SoundNames, List<SoundEffectInstance>>();
 
         // Loads music
-        menuMusic = content.Load<SoundEffect>("Sound\\MenuTrack");
-        gameMusic = content.Load<SoundEffect>("Sound\\GameTrack");
+        _menuMusic = content.Load<SoundEffect>("Sound\\MenuTrack");
+        _gameMusic = content.Load<SoundEffect>("Sound\\GameTrack");
 
         // Loads SFX's
         Sounds = new Dictionary<SoundNames, SoundEffect>
@@ -65,47 +65,47 @@ public static class GlobalSounds
         //Create sound instances for the sound pool
         foreach (var sound in Sounds)
         {
-            soundInstancesPool[sound.Key] = new List<SoundEffectInstance>();
-            int max = maxInstanceOfOneSound;
+            _soundInstancesPool[sound.Key] = new List<SoundEffectInstance>();
+            int max = _maxInstanceOfOneSound;
             //if (sound.Key == SoundNames.Shot || sound.Key == SoundNames.Shotgun) max = maxInstanceOfGunSound;
 
             for (int i = 0; i < max; i++)
             {
-                soundInstancesPool[sound.Key].Add(sound.Value.CreateInstance());
+                _soundInstancesPool[sound.Key].Add(sound.Value.CreateInstance());
             }
         }
     }
 
     public static void MusicUpdate()
     {
-        if (instanceGameMusic == null || instanceMenuMusic == null)
+        if (_instanceGameMusic == null || _instanceMenuMusic == null)
         {
-            instanceMenuMusic = menuMusic.CreateInstance();
-            instanceGameMusic = gameMusic.CreateInstance();
+            _instanceMenuMusic = _menuMusic.CreateInstance();
+            _instanceGameMusic = _gameMusic.CreateInstance();
         }
 
         // Make sure the volume is lower that the SFX's, since the SFX are more impactfull.
-        instanceMenuMusic.Volume = Math.Clamp(MusicVolume, 0, 1) / musicVolDivide;
-        instanceGameMusic.Volume = Math.Clamp(MusicVolume, 0, 1) / musicVolDivide;
+        _instanceMenuMusic.Volume = Math.Clamp(MusicVolume, 0, 1) / _musicVolDivide;
+        _instanceGameMusic.Volume = Math.Clamp(MusicVolume, 0, 1) / _musicVolDivide;
 
         //Check if the music should be playing
         if (InMenu)
         {
-            instanceGameMusic.Stop(); // Stops it once and does nothing if its already stopped
+            _instanceGameMusic.Stop(); // Stops it once and does nothing if its already stopped
         }
         else
         {
-            instanceMenuMusic.Stop(); // Stops it once and does nothing if its already stopped
+            _instanceMenuMusic.Stop(); // Stops it once and does nothing if its already stopped
         }
 
-        if (instanceMenuMusic.State == SoundState.Stopped && InMenu)
+        if (_instanceMenuMusic.State == SoundState.Stopped && InMenu)
         {
-            instanceMenuMusic.Play(); // Play only plays it once and does nothing if it already plays
+            _instanceMenuMusic.Play(); // Play only plays it once and does nothing if it already plays
         }
 
-        if (instanceGameMusic.State == SoundState.Stopped && !InMenu)
+        if (_instanceGameMusic.State == SoundState.Stopped && !InMenu)
         {
-            instanceGameMusic.Play();// Play only plays it once and does nothing if it already plays
+            _instanceGameMusic.Play();// Play only plays it once and does nothing if it already plays
         }
     }
 
@@ -115,8 +115,8 @@ public static class GlobalSounds
     public static void ChangeMusicVolume()
     {
         // If the bool musicCountDown is true, we go down in volume towards 0, if its false we can go up until we hit 1.
-        MusicVolume = musicCountDown ? Math.Max(0, MusicVolume - 0.25f) : Math.Min(1, MusicVolume + 0.25f);
-        if (MusicVolume == 0 || MusicVolume == 1) musicCountDown = !musicCountDown; // Reverse the change direction
+        MusicVolume = _musicCountDown ? Math.Max(0, MusicVolume - 0.25f) : Math.Min(1, MusicVolume + 0.25f);
+        if (MusicVolume == 0 || MusicVolume == 1) _musicCountDown = !_musicCountDown; // Reverse the change direction
     }
 
     /// <summary>
@@ -125,8 +125,8 @@ public static class GlobalSounds
     public static void ChangeSfxVolume()
     {
         // If the bool sfxCountDown is true, we go down in volume towards 0, if its false we can go up until we hit 1.
-        SfxVolume = sfxCountDown ? Math.Max(0, SfxVolume - 0.25f) : Math.Min(1, SfxVolume + 0.25f);
-        if (SfxVolume == 0 || SfxVolume == 1) sfxCountDown = !sfxCountDown;// Reverse the change direction
+        SfxVolume = _sfxCountDown ? Math.Max(0, SfxVolume - 0.25f) : Math.Min(1, SfxVolume + 0.25f);
+        if (SfxVolume == 0 || SfxVolume == 1) _sfxCountDown = !_sfxCountDown;// Reverse the change direction
     }
 
     public static bool IsAnySoundPlaying(SoundNames[] soundArray)
@@ -134,7 +134,7 @@ public static class GlobalSounds
         //Check if any sound is playing
         foreach (SoundNames name in soundArray)
         {
-            foreach (SoundEffectInstance inst in soundInstancesPool[name])
+            foreach (SoundEffectInstance inst in _soundInstancesPool[name])
             {
                 if (inst.State == SoundState.Playing)
                 {
@@ -162,7 +162,7 @@ public static class GlobalSounds
         if (instance == null)
         {
             // All instances are playing, so stop and reuse the oldest one.
-            instance = soundInstancesPool[soundName][0];
+            instance = _soundInstancesPool[soundName][0];
             instance.Stop();
         }
 
@@ -181,7 +181,7 @@ public static class GlobalSounds
     public static void PlayRandomizedSound(SoundNames[] soundArray, int maxAmountPlaying, float soundVolDivided = 1f, bool enablePitch = false)
     {
         // Play a random sound from the array
-        int soundIndex = rnd.Next(0, soundArray.Length);
+        int soundIndex = _rnd.Next(0, soundArray.Length);
         SoundNames soundName = soundArray[soundIndex];
 
         int index = CountPlayingInstances(soundName);
@@ -196,7 +196,7 @@ public static class GlobalSounds
     // Helper method
     private static SoundEffectInstance GetAvailableInstance(SoundNames soundName)
     {
-        foreach (var inst in soundInstancesPool[soundName])
+        foreach (var inst in _soundInstancesPool[soundName])
         {
             if (inst.State != SoundState.Playing)
             {
@@ -210,7 +210,7 @@ public static class GlobalSounds
     private static int CountPlayingInstances(SoundNames soundName)
     {
         int count = 0;
-        foreach (SoundEffectInstance inst in soundInstancesPool[soundName])
+        foreach (SoundEffectInstance inst in _soundInstancesPool[soundName])
         {
             if (inst.State == SoundState.Playing)
             {
@@ -224,7 +224,7 @@ public static class GlobalSounds
     private static float GenerateRandomPitch(float minPitch = -0.3f, float maxPitch = 0.3f)
     {
         // Generate a random pitch within the specified range
-        float pitch = (float)rnd.NextDouble() * (maxPitch - minPitch) + minPitch;
+        float pitch = (float)_rnd.NextDouble() * (maxPitch - minPitch) + minPitch;
         return pitch;
     }
 }

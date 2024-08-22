@@ -14,18 +14,18 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
 
     public class TrainingDummy : Component
     {
-        private SpriteRenderer spriteRenderer;
-        private Health health;
-        private Animator animator;
-        private Collider collider;
-        private ParticleEmitter damageTakenEmitter;
+        private SpriteRenderer _spriteRenderer;
+        private Health _health;
+        private Animator _animator;
+        private Collider _collider;
+        private ParticleEmitter _damageTakenEmitter;
 
-        private int totalDmgTaken;
+        private int _totalDmg_Taken;
 
-        private double elapsedTime = 0f;
+        private double _elapsedTime = 0f;
         public int DamageAccumulated = 0;
-        private Queue<double> damageHistoryTime = new Queue<double>(); // To store damage history
-        private Queue<int> damageHistoryAmount = new Queue<int>(); // To store damage history
+        private Queue<double> _damageHistoryTime = new Queue<double>(); // To store damage history
+        private Queue<int> _damageHistoryAmount = new Queue<int>(); // To store damage history
 
         public double trackingTime = 5f; // Time window for tracking (5 seconds)
         
@@ -35,33 +35,33 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
 
         public override void Awake()
         {
-            spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
-            health = GameObject.GetComponent<Health>();
-            animator = GameObject.GetComponent<Animator>();
-            collider = GameObject.GetComponent<Collider>();
+            _spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
+            _health = GameObject.GetComponent<Health>();
+            _animator = GameObject.GetComponent<Animator>();
+            _collider = GameObject.GetComponent<Collider>();
 
 
-            collider.SetCollisionBox(15, 27, new Vector2(0, 19));
-            health.SetHealth(100_000_000);
+            _collider.SetCollisionBox(15, 27, new Vector2(0, 19));
+            _health.SetHealth(100_000_000);
 
             MakeEmitters();
         
-            health.AmountDamageTaken += AmountDamageTaken;
-            health.AmountDamageTaken += OnDamageTakenText;
+            _health.AmountDamageTaken += AmountDamageTaken;
+            _health.AmountDamageTaken += OnDamageTakenText;
         }
 
         public override void Start()
         {
-            spriteRenderer.SetLayerDepth(LayerDepth.EnemyUnder);
-            animator.PlayAnimation(AnimNames.SkeletonMageIdle);
-            spriteRenderer.DrawPosOffSet = Character.SmallSpriteOffset;
+            _spriteRenderer.SetLayerDepth(LayerDepth.EnemyUnder);
+            _animator.PlayAnimation(AnimNames.SkeletonMageIdle);
+            _spriteRenderer.DrawPosOffSet = Character.SmallSpriteOffset;
 
         }
 
         private void MakeEmitters()
         {
             GameObject textDamageEmitterGo = EmitterFactory.TextDamageEmitter(new Color[] { Color.OrangeRed, Color.DarkRed, Color.Transparent }, GameObject, new Vector2(-20, -95), new RectangleOrigin(50, 5));
-            damageTakenEmitter = textDamageEmitterGo.GetComponent<ParticleEmitter>();
+            _damageTakenEmitter = textDamageEmitterGo.GetComponent<ParticleEmitter>();
 
             GameWorld.Instance.Instantiate(textDamageEmitterGo);
         }
@@ -71,28 +71,28 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
             totalDmgTaken += damage;
             // Apply the damage
             DamageAccumulated += damage;
-            damageHistoryAmount.Enqueue(damage); // Add timestamp to history
-            damageHistoryTime.Enqueue(elapsedTime); // Add timestamp to history
+            _damageHistoryAmount.Enqueue(damage); // Add timestamp to history
+            _damageHistoryTime.Enqueue(_elapsedTime); // Add timestamp to history
         }
 
 
         private void OnDamageTakenText(int damage)
         {
-            damageTakenEmitter.LayerName = LayerDepth.DamageParticles;
-            damageTakenEmitter.SetParticleText(new TextOnSprite() { Text = damage.ToString() });
-            damageTakenEmitter.EmitParticles();
+            _damageTakenEmitter.LayerName = LayerDepth.DamageParticles;
+            _damageTakenEmitter.SetParticleText(new TextOnSprite() { Text = damage.ToString() });
+            _damageTakenEmitter.EmitParticles();
         }
 
         public override void Update() 
         {
             // Update the timer
-            elapsedTime += GameWorld.DeltaTime;
+            _elapsedTime += GameWorld.DeltaTime;
 
             // Remove old damage values from the history
-            while (damageHistoryTime.Count > 0 && elapsedTime - damageHistoryTime.Peek() > trackingTime)
+            while (_damageHistoryTime.Count > 0 && _elapsedTime - _damageHistoryTime.Peek() > trackingTime)
             {
-                damageHistoryTime.Dequeue();
-                DamageAccumulated -= damageHistoryAmount.Dequeue();
+                _damageHistoryTime.Dequeue();
+                DamageAccumulated -= _damageHistoryAmount.Dequeue();
             }
         }
 

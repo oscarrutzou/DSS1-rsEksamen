@@ -10,19 +10,19 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus;
 // Erik
 public class SaveFileMenu : MenuScene
 {
-    private Dictionary<int, Button> saveFileButtons;
-    private readonly string newSaveFile = "New Save";
+    private Dictionary<int, Button> _saveFileButtons;
+    private readonly string _newSaveFile = "New Save";
 
     protected override void InitFirstMenu()
     {
-        saveFileButtons = new Dictionary<int, Button>()
+        _saveFileButtons = new Dictionary<int, Button>()
         {
-            { 1, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(1); }, TextureNames.WideBtn).GetComponent<Button>() },
-            { 2, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(2); }, TextureNames.WideBtn).GetComponent<Button>()  },
-            { 3, ButtonFactory.Create(newSaveFile, true, () => { MakeNewSaveFile(3); }, TextureNames.WideBtn).GetComponent<Button>()  }
+            { 1, ButtonFactory.Create(_newSaveFile, true, () => { MakeNewSaveFile(1); }, TextureNames.WideBtn).GetComponent<Button>() },
+            { 2, ButtonFactory.Create(_newSaveFile, true, () => { MakeNewSaveFile(2); }, TextureNames.WideBtn).GetComponent<Button>()  },
+            { 3, ButtonFactory.Create(_newSaveFile, true, () => { MakeNewSaveFile(3); }, TextureNames.WideBtn).GetComponent<Button>()  }
         };
 
-        foreach (Button button in saveFileButtons.Values)
+        foreach (Button button in _saveFileButtons.Values)
         {
             FirstMenuObjects.Add(button.GameObject);
         }
@@ -73,9 +73,9 @@ public class SaveFileMenu : MenuScene
 
         foreach (SaveFileData saveFile in saveFiles)
         {
-            if (!saveFileButtons.ContainsKey(saveFile.Save_ID)) continue;
+            if (!_saveFileButtons.ContainsKey(saveFile.Save_ID)) continue;
 
-            Button saveFileBtn = saveFileButtons[saveFile.Save_ID];
+            Button saveFileBtn = _saveFileButtons[saveFile.Save_ID];
 
             saveFileBtn.Text =
                     $"Save {saveFile.Save_ID}" +

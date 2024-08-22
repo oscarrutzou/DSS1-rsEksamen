@@ -16,12 +16,12 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus;
 // Oscar
 public class CharacterSelectorMenu : MenuScene
 {
-    private Dictionary<ClassTypes, List<GameObject>> classWeaponButton;
-    private Dictionary<ClassTypes, Button> classButtons;
-    private Dictionary<WeaponTypes, Button> weaponButtons;
+    private Dictionary<ClassTypes, List<GameObject>> _classWeaponButton;
+    private Dictionary<ClassTypes, Button> _classButtons;
+    private Dictionary<WeaponTypes, Button> _weaponButtons;
 
     // Lists of what classes and weapons are done and the user can play as.
-    private List<ClassTypes> classTypesThatAreDone = new()
+    private List<ClassTypes> _classTypesThatAreDone = new()
     {
         ClassTypes.Warrior,
         ClassTypes.Rogue,
@@ -29,13 +29,13 @@ public class CharacterSelectorMenu : MenuScene
 
 
 
-    private int spaceBetween = 30;
+    private int _spaceBetween = 30;
 
     public override void Initialize()
     {
-        classWeaponButton = new();
-        classButtons = new();
-        weaponButtons = new();
+        _classWeaponButton = new();
+        _classButtons = new();
+        _weaponButtons = new();
 
         InputHandler.Instance.AddKeyButtonDownCommand(Keys.Escape, new CustomCmd(Back));
 
@@ -44,17 +44,17 @@ public class CharacterSelectorMenu : MenuScene
         InitBackButton();
     }
 
-    private int costAmount = 50;
+    private int _costAmount = 50;
 
     protected override void InitFirstMenu()
     {
-        foreach (ClassTypes type in classTypesThatAreDone)
+        foreach (ClassTypes type in _classTypesThatAreDone)
         {
             GameObject btnGo = ButtonFactory.Create($"{type} 50g", true, () => { SelectClass(type); }, TextureNames.WideBtn);
             FirstMenuObjects.Add(btnGo);
 
             Button btn = btnGo.GetComponent<Button>();
-            classButtons.Add(type, btn);
+            _classButtons.Add(type, btn);
 
             // Checks if we have the type of weapon
             if (!SaveData.UnlockedClasses.Contains(type)) continue;
@@ -69,11 +69,11 @@ public class CharacterSelectorMenu : MenuScene
         if (!SaveData.UnlockedClasses.Contains(type))
         {
             // The player cant buy the class
-            if (!DB.Instance.RemoveCurrency(costAmount)) return;
+            if (!DB.Instance.RemoveCurrency(_costAmount)) return;
 
             DB.Instance.UnlockClass(type);
 
-            classButtons[type].Text = $"{type}";
+            _classButtons[type].Text = $"{type}";
         }
 
         SaveData.SelectedClass = type;
@@ -98,7 +98,7 @@ public class CharacterSelectorMenu : MenuScene
 
                 // Adds the btn to the weapon buttons to change the text if the user have bought the weapon
                 Button btn = btnGo.GetComponent<Button>();
-                weaponButtons.Add(weaponType, btn);
+                _weaponButtons.Add(weaponType, btn);
 
                 // Checks if we have the type of weapon
                 if (!SaveData.UnlockedWeapons.Contains(weaponType)) continue;
@@ -106,10 +106,10 @@ public class CharacterSelectorMenu : MenuScene
                 btn.Text = $"{weaponType}";
             }
 
-            classWeaponButton.Add(classType, weaponButtonGameObjects);
+            _classWeaponButton.Add(classType, weaponButtonGameObjects);
         }
 
-        foreach (List<GameObject> goList in classWeaponButton.Values)
+        foreach (List<GameObject> goList in _classWeaponButton.Values)
         {
             ShowHideGameObjects(goList, false);
 
@@ -122,13 +122,13 @@ public class CharacterSelectorMenu : MenuScene
 
     public override void AfterFirstCleanUp()
     {
-        GuiMethods.PlaceGameObjectsHorizontal(FirstMenuObjects, Vector2.Zero, spaceBetween, true);
+        GuiMethods.PlaceGameObjectsHorizontal(FirstMenuObjects, Vector2.Zero, _spaceBetween, true);
 
-        foreach (List<GameObject> goList in classWeaponButton.Values)
+        foreach (List<GameObject> goList in _classWeaponButton.Values)
         {
             if (goList.Count == 0) continue;
 
-            GuiMethods.PlaceGameObjectsHorizontal(goList, Vector2.Zero, spaceBetween, true);
+            GuiMethods.PlaceGameObjectsHorizontal(goList, Vector2.Zero, _spaceBetween, true);
         }
     }
 
@@ -146,7 +146,7 @@ public class CharacterSelectorMenu : MenuScene
         if (!SaveData.UnlockedWeapons.Contains(weapon))
         {
             // The player cant buy the weapon, return
-            if (!DB.Instance.RemoveCurrency(costAmount)) return;
+            if (!DB.Instance.RemoveCurrency(_costAmount)) return;
 
             // Unlocked the weapon
             DB.Instance.UnlockWeapon(weapon);
@@ -183,12 +183,12 @@ public class CharacterSelectorMenu : MenuScene
         if (ShowSecondMenu)
         {
             ShowHideGameObjects(FirstMenuObjects, false);
-            ShowHideGameObjects(classWeaponButton[classType], true);
+            ShowHideGameObjects(_classWeaponButton[classType], true);
         }
         else
         {
             ShowHideGameObjects(FirstMenuObjects, true);
-            ShowHideGameObjects(classWeaponButton[classType], false);
+            ShowHideGameObjects(_classWeaponButton[classType], false);
         }
     }
 
@@ -203,7 +203,7 @@ public class CharacterSelectorMenu : MenuScene
         if (!ShowSecondMenu)
             pos = FirstMenuObjects.Last().Transform.Position + new Vector2(size.X / 2 - 30, -size.Y - 60);
         else
-            pos = classWeaponButton[SaveData.SelectedClass].Last().Transform.Position + new Vector2(size.X / 2 - 30, -size.Y - 60);
+            pos = _classWeaponButton[SaveData.SelectedClass].Last().Transform.Position + new Vector2(size.X / 2 - 30, -size.Y - 60);
         
         DrawString(spriteBatch, currentText, pos, new Color(250, 249, 246));
     }

@@ -17,13 +17,13 @@ namespace DoctorsDungeon.GameManagement.Scenes.TestScenes;
 
 public class OscarTestScene : Scene
 {
-    private GameObject drawRoomBtn, drawAstarPathBtn;
-    private Point PlayerSpawnPos;
-    private GameObject PlayerGo;
+    private GameObject _drawRoomBtn, _drawAstarPathBtn;
+    private Point _playerSpawnPos;
+    private GameObject _playerGo;
 
     public OscarTestScene()
     {
-        PlayerSpawnPos = new Point(6, 6);
+        _playerSpawnPos = new Point(6, 6);
     }
 
     public override void Initialize()
@@ -67,13 +67,13 @@ public class OscarTestScene : Scene
         if (GridManager.Instance.CurrentGrid != null)
         {
             SkeletonWarrior enemy = enemGo.GetComponent<SkeletonWarrior>();
-            enemy.SetStartPosition(PlayerGo, new Point(7, 13));
+            enemy.SetStartPosition(_playerGo, new Point(7, 13));
         }
     }
 
     private void MakeItem()
     {
-        GameObject itemGo = ItemFactory.Create(PlayerGo);
+        GameObject itemGo = ItemFactory.Create(_playerGo);
         GameWorld.Instance.Instantiate(itemGo);
 
         itemGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[new Point(3, 3)].Transform.Position;
@@ -81,18 +81,18 @@ public class OscarTestScene : Scene
 
     private void MakePlayer()
     {
-        PlayerGo = PlayerFactory.Create(ClassTypes.Warrior, WeaponTypes.Sword);
-        PlayerGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[PlayerSpawnPos].Transform.Position;
-        PlayerGo.Transform.GridPosition = PlayerSpawnPos;
-        GameWorld.Instance.WorldCam.Position = PlayerGo.Transform.Position;
-        GameWorld.Instance.Instantiate(PlayerGo);
+        _playerGo = PlayerFactory.Create(ClassTypes.Warrior, WeaponTypes.Sword);
+        _playerGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[_playerSpawnPos].Transform.Position;
+        _playerGo.Transform.GridPosition = _playerSpawnPos;
+        GameWorld.Instance.WorldCam.Position = _playerGo.Transform.Position;
+        GameWorld.Instance.Instantiate(_playerGo);
     }
 
     private Player player;
 
     private void SetCommands()
     {
-        player = PlayerGo.GetComponent<Player>();
+        player = _playerGo.GetComponent<Player>();
         InputHandler.Instance.AddKeyUpdateCommand(Keys.D, new MoveCmd(player, new Vector2(1, 0)));
         InputHandler.Instance.AddKeyUpdateCommand(Keys.A, new MoveCmd(player, new Vector2(-1, 0)));
         InputHandler.Instance.AddKeyUpdateCommand(Keys.W, new MoveCmd(player, new Vector2(0, -1)));
@@ -127,14 +127,14 @@ public class OscarTestScene : Scene
     {
         Camera uiCam = GameWorld.Instance.UiCam;
 
-        drawRoomBtn = ButtonFactory.Create("Draw Room", true, () => { });
-        drawRoomBtn.Transform.Translate(uiCam.TopRight + new Vector2(-100, 50));
+        _drawRoomBtn = ButtonFactory.Create("Draw Room", true, () => { });
+        _drawRoomBtn.Transform.Translate(uiCam.TopRight + new Vector2(-100, 50));
 
-        GameWorld.Instance.Instantiate(drawRoomBtn);
+        GameWorld.Instance.Instantiate(_drawRoomBtn);
 
-        drawAstarPathBtn = ButtonFactory.Create("Draw Valid Path", true, () => { });
-        drawAstarPathBtn.Transform.Translate(uiCam.TopRight + new Vector2(-100, 120));
-        GameWorld.Instance.Instantiate(drawAstarPathBtn);
+        _drawAstarPathBtn = ButtonFactory.Create("Draw Valid Path", true, () => { });
+        _drawAstarPathBtn.Transform.Translate(uiCam.TopRight + new Vector2(-100, 120));
+        GameWorld.Instance.Instantiate(_drawAstarPathBtn);
     }
 
     public override void Update()

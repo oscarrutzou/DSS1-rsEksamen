@@ -10,15 +10,15 @@ namespace DoctorsDungeon.CommandPattern.Commands;
 // where we -can- use more complex commands, but also this cmd that is essentially a longer Action.
 public class CustomCmd : Command
 {
-    private readonly Action action;
+    private readonly Action _action;
 
     public CustomCmd(Action action)
     {
-        this.action = action;
+        this._action = action;
     }
 
     public override void Execute()
     {
-        action?.Invoke();
+        _action?.Invoke();
     }
 }

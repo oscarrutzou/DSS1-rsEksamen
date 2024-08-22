@@ -47,7 +47,7 @@ public class Emitter : Component
     private double _stopTime;
     private float _stopCount;
 
-    private readonly double timeBeforeStopping;
+    private readonly double _timeBeforeStopping;
     public double Timer;
 
     public ParticlePool ParticlePool { get; set; } = new();
@@ -83,7 +83,7 @@ public class Emitter : Component
         MaxAge = maxAge;
         ParticlePool.MaxAmount = maxAmount;
 
-        timeBeforeStopping = timeBeforeStop;
+        _timeBeforeStopping = timeBeforeStop;
 
         if (rotation != null)
         {
@@ -199,11 +199,11 @@ public class Emitter : Component
             Position = FollowObject.Transform.Position + FollowObjectOffset;
         }
 
-        if (State == EmitterState.RUNNING && timeBeforeStopping != -1)
+        if (State == EmitterState.RUNNING && _timeBeforeStopping != -1)
         {
             Timer += GameWorld.DeltaTime;
 
-            if (Timer < timeBeforeStopping) return; // Dont do anything if the timer is not there yet
+            if (Timer < _timeBeforeStopping) return; // Dont do anything if the timer is not there yet
 
             StopEmitter();
         }

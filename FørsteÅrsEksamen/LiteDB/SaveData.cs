@@ -7,10 +7,10 @@ namespace DoctorsDungeon.LiteDB;
 // Oscar
 public static class SaveData
 {
-    private const int StartCurrency = 100; // Normal 100
-    private static double StartTimeLeft = 120f; // Normal 120f
+    private const int _startCurrency = 100; // Normal 100
+    private static double _startTimeLeft = 120f; // Normal 120f
 
-    private const int CheatMultiplier = 100;
+    private const int _cheatMultiplier = 100;
 
     public static int CurrentSaveID = 1; //Gets set by player and determins loaded data
     public const int MaxSaveID = 3;
@@ -23,7 +23,7 @@ public static class SaveData
 
     public static int Level_Reached { get; set; } = 1;
     public const int MaxRooms = 3;
-    public static double Time_Left { get; set; } = StartTimeLeft;
+    public static double Time_Left { get; set; } = _startTimeLeft;
     public static bool HasWon { get; set; }
     public static bool LostByTime;
 
@@ -33,12 +33,12 @@ public static class SaveData
 
     public static void SetBaseValues()
     {
-        Currency = StartCurrency;
-        Time_Left = StartTimeLeft;
+        Currency = _startCurrency;
+        Time_Left = _startTimeLeft;
         if (GameWorld.DebugAndCheats)
         {
-            Currency *= CheatMultiplier;
-            Time_Left *= CheatMultiplier;
+            Currency *= _cheatMultiplier;
+            Time_Left *= _cheatMultiplier;
         }
         Level_Reached = 1;
         UnlockedWeapons = new();

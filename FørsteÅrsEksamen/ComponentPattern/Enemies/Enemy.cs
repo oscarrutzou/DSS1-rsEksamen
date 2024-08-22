@@ -18,16 +18,16 @@ public abstract class Enemy : Character
     public Astar Astar { get; private set; }
     protected GameObject PlayerGo;
     public Player Player;
-    private SpriteRenderer weaponSpriteRenderer;
+    private SpriteRenderer _weaponSpriteRenderer;
 
-    private List<Enemy> enemyList = new();
+    private List<Enemy> _enemyList = new();
     /// <summary>
     /// Astar path with a list of Cell GameObjects. Gets set in astar
     /// </summary>
     public List<GameObject> Path { get; private set; }
-    private Vector2 nextTarget;
+    private Vector2 _nextTarget;
     public Point TargetPoint;
-    private readonly float thresholdToTargetCell = 10f; // For distance check
+    private readonly float _thresholdToTargetCell = 10f; // For distance check
     /// <summary>
     /// The frequency of new paths
     /// </summary>
@@ -37,13 +37,13 @@ public abstract class Enemy : Character
     public bool CanAttack = true;
     protected bool TargetPlayer;
 
-    private readonly Random rnd = new();
-    private double randomMoveTimer;
-    private readonly double randomMoveCoolDown = 1;
-    private List<GameObject> cellsInCollisionNr = new();
-    private List<GameObject> cellGameObjects = new();
+    private readonly Random _rnd = new();
+    private double _randomMoveTimer;
+    private readonly double _randomMoveCoolDown = 1;
+    private List<GameObject> _cellsInCollisionNr = new();
+    private List<GameObject> _cellGameObjects = new();
 
-    private readonly int distanceStopFromTarget = 2; // The amount of distance the enemy has to the player
+    private readonly int _distanceStopFromTarget = 2; // The amount of distance the enemy has to the player
 
 
     #endregion Properties
@@ -65,7 +65,7 @@ public abstract class Enemy : Character
 
         if (WeaponGo != null)
         {
-            weaponSpriteRenderer = WeaponGo.GetComponent<SpriteRenderer>();
+            _weaponSpriteRenderer = WeaponGo.GetComponent<SpriteRenderer>();
         }
 
         Collider.SetCollisionBox(15, 27, new Vector2(0, 15));
@@ -94,19 +94,19 @@ public abstract class Enemy : Character
     private void SetCellsCollision()
     {
         if (Grid.CellsCollisionDict.TryGetValue(CollisionNr, out var cellList))
-            cellsInCollisionNr = cellList;
+            _cellsInCollisionNr = cellList;
         else
             throw new Exception($"The collision Nr {CollisionNr} is not found in the saved grid");
     }
 
     public void SetStartEnemyRefs(List<Enemy> enemies)
     {
-        enemyList = enemies.Where(enemy => enemy != this).ToList();
+        _enemyList = enemies.Where(enemy => enemy != this).ToList();
     }
 
     public override void Start()
     {
-        Astar.Start(this, enemyList);
+        Astar.Start(this, _enemyList);
         SpriteRenderer.SetLayerDepth(LayerDepth.EnemyUnder);
 
         SetState(CharacterState.Idle);
@@ -187,16 +187,16 @@ public abstract class Enemy : Character
         if (Math.Abs(curPos.X - TargetPoint.X) <= 1 &&
             Math.Abs(curPos.Y - TargetPoint.Y) <= 1)
         {
-            randomMoveTimer += GameWorld.DeltaTime;
+            _randomMoveTimer += GameWorld.DeltaTime;
 
-            if (randomMoveTimer < randomMoveCoolDown) // If the timer is not ready to move yet, stay in Idle
+            if (_randomMoveTimer < _randomMoveCoolDown) // If the timer is not ready to move yet, stay in Idle
                 SetState(CharacterState.Idle);
             else // If the timer is over the cooldown, we first find a random target point and then sets the path.
             {
                 // Random cell
                 PickRandomPoint();
                 SetPath();
-                randomMoveTimer = 0;
+                _randomMoveTimer = 0;
             }
         }
     }
@@ -205,19 +205,19 @@ public abstract class Enemy : Character
     {
         Point randomPoint;
 
-        cellGameObjects = Grid.GetCellsInRadius(GameObject.Transform.Position, 1000, 2);
+        _cellGameObjects = Grid.GetCellsInRadius(GameObject.Transform.Position, 1000, 2);
         
-        if (cellGameObjects.Count > 0 )
-            randomPoint = cellGameObjects[rnd.Next(0, cellGameObjects.Count - 1)].Transform.GridPosition;
+        if (_cellGameObjects.Count > 0 )
+            randomPoint = _cellGameObjects[_rnd.Next(0, _cellGameObjects.Count - 1)].Transform.GridPosition;
         else
-            randomPoint = cellsInCollisionNr[rnd.Next(0, cellsInCollisionNr.Count - 1)].Transform.GridPosition;
+            randomPoint = _cellsInCollisionNr[_rnd.Next(0, _cellsInCollisionNr.Count - 1)].Transform.GridPosition;
 
 
         GameObject currentCellGo = Grid.GetCellGameObjectFromPoint(randomPoint);
         Cell cell = currentCellGo.GetComponent<Cell>();
         if (CollisionNr != cell.CollisionNr)
         {
-            randomPoint = cellsInCollisionNr[rnd.Next(0, cellsInCollisionNr.Count - 1)].Transform.GridPosition;
+            randomPoint = _cellsInCollisionNr[_rnd.Next(0, _cellsInCollisionNr.Count - 1)].Transform.GridPosition;
         }
 
         TargetPoint = randomPoint;
@@ -248,7 +248,7 @@ public abstract class Enemy : Character
         // If a new path is being set, set the next target to the enemy's current position
         SetState(CharacterState.Moving);
         if (GameObject.Transform.Position != Path[0].Transform.Position)
-            nextTarget = GameObject.Transform.Position;
+            _nextTarget = GameObject.Transform.Position;
         else
             SetNextTargetPos(Path[0]);
     }
@@ -259,10 +259,10 @@ public abstract class Enemy : Character
             return;
         Vector2 position = GameObject.Transform.Position;
 
-        if (Vector2.Distance(position, nextTarget) < thresholdToTargetCell)
+        if (Vector2.Distance(position, _nextTarget) < _thresholdToTargetCell)
         {
             bool enemyOnPath = false;
-            foreach (Enemy enemy in enemyList)
+            foreach (Enemy enemy in _enemyList)
             {
                 if (Path.Count <= 1) break;
 
@@ -276,7 +276,7 @@ public abstract class Enemy : Character
                 }
             }
 
-            if (Path.Count > distanceStopFromTarget || enemyOnPath) // If the second last in the path is the target, it should not stop inside the player
+            if (Path.Count > _distanceStopFromTarget || enemyOnPath) // If the second last in the path is the target, it should not stop inside the player
             {
                 GameObject.Transform.GridPosition = Path[0].Transform.GridPosition;
                 UpdateRoomNr(Path[0]);
@@ -284,7 +284,7 @@ public abstract class Enemy : Character
                 SetNextTargetPos(Path[0]);
                 
             }
-            else if (Path.Count == distanceStopFromTarget) // Stops the path.
+            else if (Path.Count == _distanceStopFromTarget) // Stops the path.
             {
                 GameObject.Transform.GridPosition = Path[0].Transform.GridPosition;
                 UpdateRoomNr(Path[0]);
@@ -293,7 +293,7 @@ public abstract class Enemy : Character
             }
         }
 
-        Direction = BaseMath.SafeNormalize(nextTarget - position);
+        Direction = BaseMath.SafeNormalize(_nextTarget - position);
 
         GameObject.Transform.Translate(Direction * Speed * (float)GameWorld.DeltaTime);
         RotateCharacterOnMove(true);
@@ -306,7 +306,7 @@ public abstract class Enemy : Character
             Attack();
         }
         
-        if (Path.Count == 1 && Vector2.Distance(position, nextTarget) < thresholdToTargetCell)
+        if (Path.Count == 1 && Vector2.Distance(position, _nextTarget) < _thresholdToTargetCell)
         {
             if (CanAttack)
             {
@@ -326,7 +326,7 @@ public abstract class Enemy : Character
 
     private void SetNextTargetPos(GameObject cellGo)
     {
-        nextTarget = cellGo.Transform.Position + new Vector2(0, -Cell.Dimension * Cell.Scale / 2);
+        _nextTarget = cellGo.Transform.Position + new Vector2(0, -Cell.Dimension * Cell.Scale / 2);
     }
     #endregion PathFinding
 }
