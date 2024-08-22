@@ -63,8 +63,6 @@ public abstract class Player : Character
         SetState(CharacterState.Idle);
     }
 
-
-
     public override void Update()
     {
         if (State != CharacterState.Dead)

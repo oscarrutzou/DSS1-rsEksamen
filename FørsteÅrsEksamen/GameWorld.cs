@@ -53,13 +53,13 @@ public class GameWorld : Game
 
     protected override void Initialize()
     {
-        //Frametime not limited to 16.66 Hz / 60 FPS
+        // Frametime not limited to 16.66 Hz / 60 FPS, and will drop if the mouse is outside the bounds
         IsFixedTimeStep = false;
         GfxManager.SynchronizeWithVerticalRetrace = true;
 
         SceneData.GenereateGameObjectDicionary();
-        Fullscreen();
-        //SetResolutionSize(1920 * 2, 1000);
+        //Fullscreen();
+        SetResolutionSize(800, 800);
 
         WorldCam = new Camera(true); // Camera that follows the player
         UiCam = new Camera(false); // Camera that is static
@@ -88,17 +88,20 @@ public class GameWorld : Game
     {
         DeltaTime = gameTime.ElapsedGameTime.TotalSeconds;
 
-        GlobalSounds.MusicUpdate(); // Updates the Music in the game, not SFX
         InputHandler.Instance.Update();
+        UpdateFPS(gameTime);
+
+        if (InputHandler.Instance.MouseOutOfBounds) return;
+        
+        GlobalSounds.MusicUpdate(); // Updates the Music in the game, not SFX
         IndependentBackground.Update();
 
         CurrentScene.Update(); // Updates all gameobjects and their componetents in the scene
         HandleSceneChange(); // Goes to the next scene
 
-        UpdateFPS(gameTime);
-
         base.Update(gameTime);
     }
+
 
     protected override void Draw(GameTime gameTime)
     {

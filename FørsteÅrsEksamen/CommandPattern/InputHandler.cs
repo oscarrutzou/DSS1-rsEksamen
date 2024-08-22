@@ -1,6 +1,7 @@
 ﻿using DoctorsDungeon.CommandPattern.Commands;
 using DoctorsDungeon.ComponentPattern;
 using DoctorsDungeon.ComponentPattern.Path;
+using DoctorsDungeon.GameManagement;
 using DoctorsDungeon.LiteDB;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -25,9 +26,14 @@ public class InputHandler
     #region Properties
 
     private static InputHandler instance;
-
     public static InputHandler Instance
     { get { return instance ??= instance = new InputHandler(); } }
+
+    public KeyboardState KeyState;
+    public MouseState MouseState;
+    public Vector2 MouseInWorld, MouseOnUI;
+    public bool MouseOutOfBounds, DebugMode;
+    public GameObject MouseGo;
 
     private Dictionary<Keys, List<Command>> keybindsUpdate = new();
     private Dictionary<Keys, List<Command>> keybindsButtonDown = new();
@@ -35,11 +41,10 @@ public class InputHandler
     private Dictionary<MouseCmdState, List<Command>> mouseButtonDownCommands = new();
     private Dictionary<ScrollWheelState, List<Command>> scrollWheelCommands = new();
 
-    public Vector2 MouseInWorld, MouseOnUI;
-    public bool MouseOutOfBounds, DebugMode;
-    public bool IsUpdating { get; private set; }
+    private KeyboardState previousKeyState;
+    private MouseState previousMouseState;
 
-    public GameObject MouseGo;
+    private List<Command> allCommands = new List<Command>();
 
     #endregion Properties
 
@@ -176,12 +181,7 @@ public class InputHandler
 
     #endregion Add/Remove
 
-    public KeyboardState KeyState;
-    public MouseState MouseState;
-    private KeyboardState previousKeyState;
-    private MouseState previousMouseState;
 
-    List<Command> allCommands = new List<Command>();
     private void SetAllCommands()
     {
         allCommands.AddRange(keybindsButtonDown.Values.SelectMany(cmdList => cmdList));
@@ -205,6 +205,8 @@ public class InputHandler
 
         MouseInWorld = GetMousePositionInWorld(MouseState);
         MouseOnUI = GetMousePositionOnUI(MouseState);
+
+        if (MouseOutOfBounds) return; // Dont update the commands, so the player e.g dont press attack, when the game is not running
 
         UpdateAllCommands();
 
@@ -318,10 +320,11 @@ public class InputHandler
 
     private Vector2 GetMousePositionOnUI(MouseState mouseState)
     {
+        Camera uiCam = GameWorld.Instance.UiCam;
         Vector2 pos = new Vector2(mouseState.X, mouseState.Y);
-        Matrix invMatrix = Matrix.Invert(GameWorld.Instance.UiCam.GetMatrix());
+        Matrix invMatrix = Matrix.Invert(uiCam.GetMatrix());
         Vector2 returnValue = Vector2.Transform(pos, invMatrix);
-        MouseOutOfBounds = (returnValue.X < 0 || returnValue.Y < 0 || returnValue.X > GameWorld.Instance.GfxManager.PreferredBackBufferWidth || returnValue.Y > GameWorld.Instance.GfxManager.PreferredBackBufferHeight);
+        MouseOutOfBounds = (returnValue.X < uiCam.TopLeft.X || returnValue.Y < uiCam.TopLeft.Y || returnValue.X > uiCam.BottomRight.X || returnValue.Y > uiCam.BottomRight.Y);
         return returnValue;
     }
 }

@@ -26,10 +26,14 @@ public class Room1Scene : RoomBase
 
         Point pos = new(10, 7);
         GameObject go = EnemyFactory.Create(EnemyTypes.OrcMiniBoss, WeaponTypes.Dagger);
-        miniBossEnemy = go.GetComponent<MiniBossEnemy>();
         go.Transform.GridPosition = pos;
         go.Transform.Position = GridManager.Instance.CurrentGrid.Cells[pos].Transform.Position;
+        
+        miniBossEnemy = go.GetComponent<MiniBossEnemy>();
         miniBossEnemy.SetStartPosition(PlayerGo, pos, false);
+        miniBossEnemy.SetRoom(this);
+        EnemiesInRoom.Add(miniBossEnemy);
+
         GameWorld.Instance.Instantiate(go);
 
 

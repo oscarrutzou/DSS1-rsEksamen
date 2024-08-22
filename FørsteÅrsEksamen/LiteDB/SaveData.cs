@@ -45,4 +45,9 @@ public static class SaveData
         UnlockedClasses = new();
         Player = null;
     }
+
+    public static void ResetPlayer()
+    {
+        Player = null;
+    }
 }

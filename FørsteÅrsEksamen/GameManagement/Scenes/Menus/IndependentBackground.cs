@@ -69,13 +69,12 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
         public static void Update()
         {
             mouseGo.Update();
-        }
 
-        public static void DrawBG(SpriteBatch spriteBatch)
-        {
+            BackgroundEmitter.Update();
+
             // Only stop the emitter if its already running. Otherwise it will keep being in STOPPING state:d
-            if (!GameWorld.Instance.ShowBG && 
-                BackgroundEmitter != null && 
+            if (!GameWorld.Instance.ShowBG &&
+                BackgroundEmitter != null &&
                 BackgroundEmitter.State == Emitter.EmitterState.RUNNING)
             {
                 BackgroundEmitter?.StopEmitter();
@@ -89,9 +88,10 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
                 colorMod.ColorInterval = menuColorInterval;
             else
                 colorMod.ColorInterval = roomColorInterval;
+        }
 
-            BackgroundEmitter.Update();
-
+        public static void DrawBG(SpriteBatch spriteBatch)
+        {
             // Should draw each in the pool.
             foreach (GameObject go in BackgroundEmitter.ParticlePool.Active)
             {

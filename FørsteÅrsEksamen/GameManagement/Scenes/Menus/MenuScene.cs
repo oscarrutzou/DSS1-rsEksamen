@@ -21,7 +21,7 @@ public abstract class MenuScene : Scene
 
     public override void Initialize()
     {
-        SaveData.SetBaseValues();
+        SaveData.ResetPlayer();
 
         FirstMenuObjects = new();
         SecondMenuObjects = new();

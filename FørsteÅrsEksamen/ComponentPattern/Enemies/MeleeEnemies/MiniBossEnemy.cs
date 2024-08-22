@@ -3,6 +3,7 @@ using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using DoctorsDungeon.ComponentPattern.WorldObjects;
 using DoctorsDungeon.Factory;
 using DoctorsDungeon.GameManagement;
+using DoctorsDungeon.GameManagement.Scenes.Rooms;
 using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
 using System;
@@ -27,10 +28,14 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
         private List<Point> points = new();
         private int maxAmountOfSpawns = 3;
 
+        private RoomBase roomBase;
+
         public MiniBossEnemy(GameObject gameObject) : base(gameObject)
         {
             CanAttack = false;
         }  
+
+        public void SetRoom(RoomBase roomBase) => this.roomBase = roomBase;
 
         public override void Awake()
         {
@@ -92,13 +97,18 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
             if (spawnedEnemiesHealth.Count >= maxAmountOfSpawns) return;
 
             spawnTimer = 0;
+
             // Spawn enemy at location.
             points.Clear();
+
+            // Select a random point
 
             // Amount to spawn
             points.Add(GameObject.Transform.GridPosition);
 
             List<Enemy> newEnemies = enemySpawner.SpawnEnemies(points, Player.GameObject, spawnAbleTypes);
+
+            roomBase.EnemiesInRoom.AddRange(newEnemies);
 
             spawnedEnemies.AddRange(newEnemies);
 

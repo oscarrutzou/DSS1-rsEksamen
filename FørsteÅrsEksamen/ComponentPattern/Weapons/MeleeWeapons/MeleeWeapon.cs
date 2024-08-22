@@ -118,7 +118,7 @@ public abstract class MeleeWeapon : Weapon
         }
 
         // Reset
-        if (Math.Abs(GameObject.Transform.Rotation - StartAnimationAngle) < 0.1f && IsRotatingBack)
+        if (NormalizedFullAttack >= 1f)
         {
             IsRotatingBack = false;
             Attacking = false;

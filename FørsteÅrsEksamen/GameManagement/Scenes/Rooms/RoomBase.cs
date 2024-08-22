@@ -45,7 +45,7 @@ public abstract class RoomBase : Scene
 
     private TransferDoor transferDoor;
     private SpriteRenderer transferDoorSpriteRenderer;
-    private List<Enemy> enemiesInRoom = new();
+    public List<Enemy> EnemiesInRoom { get; set; } = new();
     private List<Enemy> aliveEnemies;
 
     private Spawner spawner;
@@ -59,7 +59,6 @@ public abstract class RoomBase : Scene
 
     public override void Initialize()
     {
-        //GameWorld.Instance.IsMouseVisible = false;
 
         SetSpawnPotions();
 
@@ -169,7 +168,7 @@ public abstract class RoomBase : Scene
     {
         GameObject spawnerGo = new();
         spawner = spawnerGo.AddComponent<Spawner>();
-        enemiesInRoom = spawner.SpawnEnemies(EnemySpawnPoints, PlayerGo);
+        EnemiesInRoom = spawner.SpawnEnemies(EnemySpawnPoints, PlayerGo);
     }
 
     private void SpawnPotions()
@@ -231,7 +230,7 @@ public abstract class RoomBase : Scene
         }
 
         // Check if enemies has been killed
-        aliveEnemies = enemiesInRoom.Where(x => x.State != CharacterState.Dead).ToList();
+        aliveEnemies = EnemiesInRoom.Where(x => x.State != CharacterState.Dead).ToList();
 
         if (aliveEnemies.Count == 0) // All enemies are dead to
         {
@@ -269,10 +268,12 @@ public abstract class RoomBase : Scene
 
     private void DrawQuest(SpriteBatch spriteBatch)
     {
-        aliveEnemies = enemiesInRoom.Where(x => x.State != CharacterState.Dead).ToList();
-        int amountToKill = EnemySpawnPoints.Count - aliveEnemies.Count;
+        aliveEnemies = EnemiesInRoom.Where(x => x.State != CharacterState.Dead).ToList();
 
-        string text = $"Kill your way through {amountToKill}/{EnemySpawnPoints.Count}";//
+        int dead = EnemiesInRoom.Count - aliveEnemies.Count;
+        int amountToKill = EnemiesInRoom.Count - dead;
+
+        string text = $"Kill your way through {amountToKill}/{EnemiesInRoom.Count}";//
 
         Vector2 size = GlobalTextures.DefaultFont.MeasureString(text);
         Vector2 textPos = GameWorld.Instance.UiCam.TopRight + new Vector2(-260, 55);
