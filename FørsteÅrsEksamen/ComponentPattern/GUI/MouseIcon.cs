@@ -35,10 +35,11 @@ namespace DoctorsDungeon.ComponentPattern.GUI
 
         public override void Update()
         {
-            GameObject.Transform.Position = InputHandler.Instance.MouseOnUI;
-            IndependentBackground.BackgroundEmitter.FollowPoint = InputHandler.Instance.MouseInWorld;
-
             _mouseCooldownBarGo.Transform.Position = GameObject.Transform.Position + _cooldownBarOffset;
+            GameObject.Transform.Position = InputHandler.Instance.MouseOnUI;
+            
+            if (IndependentBackground.BackgroundEmitter != null ) 
+                IndependentBackground.BackgroundEmitter.FollowPoint = InputHandler.Instance.MouseInWorld;
 
             _mouseCooldownBarGo.Update();
         }

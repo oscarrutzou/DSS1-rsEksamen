@@ -87,9 +87,10 @@ public class ParticleEmitter : Emitter
             }
             else
             {
-                go.Transform.Position += (p.Velocity * (float)GameWorld.DeltaTime);
+                //go.Transform.Position += (p.Velocity * (float)GameWorld.DeltaTime);
+                p.PositionZ += (p.VelocityZ * (float)GameWorld.DeltaTime);
+                p.VelocityZ *= dampening; // If we a modifier to be able to change velocity, we need to have 0 dampening
 
-                p.Velocity *= dampening; // If we a modifier to be able to change velocity, we need to have 0 dampening
                 go.Transform.Rotation += p.RotationVelocity;
 
                 foreach (Modifier m in Modifiers.Values)
@@ -117,7 +118,12 @@ public class ParticleEmitter : Emitter
 
         particle.Velocity = Vector2.Transform(particle.Velocity, matrix);
 
+        int startZ = 20;
+      particle.VelocityZ = new Vector3(particle.Velocity, startZ);
+
         particle.Position = Position + data.Position;
+
+        particle.PositionZ = new Vector3(particle.Position, 0);
 
         particle.RotationVelocity = (float)RotationVelocity.GetValue();
 

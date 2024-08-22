@@ -35,8 +35,6 @@ public class GridManager
         }
     }
 
-    public bool DrawRoomNr { get; set; }
-
     private int _colliderNrIndex = 1;
     private int _roomNrIndex = 1;
 

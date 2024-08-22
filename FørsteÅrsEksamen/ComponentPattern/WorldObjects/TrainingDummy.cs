@@ -20,7 +20,7 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
         private Collider _collider;
         private ParticleEmitter _damageTakenEmitter;
 
-        private int _totalDmg_Taken;
+        private int _totalDmgTaken;
 
         private double _elapsedTime = 0f;
         public int DamageAccumulated = 0;
@@ -68,7 +68,7 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
 
         private void AmountDamageTaken(int damage)
         {
-            totalDmgTaken += damage;
+            _totalDmgTaken += damage;
             // Apply the damage
             DamageAccumulated += damage;
             _damageHistoryAmount.Enqueue(damage); // Add timestamp to history

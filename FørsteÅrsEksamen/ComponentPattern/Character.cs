@@ -288,7 +288,7 @@ public abstract class Character : Component
         _dustCloudEmitter.AddModifier(new ColorRangeModifier(new Color[] { new(142, 94, 52), new(82, 61, 42), Color.Transparent }));
 
         _dustCloudEmitter.AddBirthModifier(new ScaleBirthModifier(new Interval(1, 2)));
-        _dustCloudEmitter.AddModifier(new GravityModifier(20f));
+        _dustCloudEmitter.AddModifier(new GravityModifier());
 
         _dustCloudEmitter.Origin = new RectangleOrigin(80, 30);
 

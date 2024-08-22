@@ -22,6 +22,8 @@ public class WeaponTestScene : Scene
 {
     private GameObject _playerGo;
     private Player _player;
+    private MeleeWeapon _weapon;
+    private ParticleEmitter _emitter;
 
     public override void Initialize()
     {
@@ -34,7 +36,6 @@ public class WeaponTestScene : Scene
         SetCommands();
     }
 
-    MeleeWeapon _weapon;
     private void MakePlayer()
     {
         _playerGo = PlayerFactory.Create(ClassTypes.Rogue, WeaponTypes.Sword);
@@ -51,16 +52,15 @@ public class WeaponTestScene : Scene
         GameWorld.Instance.Instantiate(go);
     }
 
-    ParticleEmitter _emitter;
 
     private void MakeEmitters()
     {
         //FairyEmitter();
 
-        //DustEmitter();
+        BlodEmitter();
         //SpaceEmitter();
 
-        DoorEmitter();
+        //DoorEmitter();
     }
 
     private void DoorEmitter()
@@ -85,22 +85,31 @@ public class WeaponTestScene : Scene
         GameWorld.Instance.Instantiate(go);
     }
 
-    private void DustEmitter()
+
+    private void BlodEmitter()
     {
-        GameObject go = EmitterFactory.CreateParticleEmitter("Dust Cloud", new Vector2(200, -200), new Interval(100, 150), new Interval(-MathHelper.Pi, 0), 20, new Interval(2000, 2000), 1000, -1, new Interval(-MathHelper.Pi, 0), new Interval(-0.01, 0.01));
+        // Would need to make the direction a cone, so change that part. 
+        GameObject go = EmitterFactory.CreateParticleEmitter("Blod Cloud", new Vector2(200, 0), new Interval(250, 350), new Interval(-0.9, -0.9), 10, new Interval(5000, 5000), 1000, -1, new Interval(-MathHelper.Pi, 0), new Interval(-0.01, 0.01));
 
         _emitter = go.GetComponent<ParticleEmitter>();
-        _emitter.FollowGameObject(_playerGo, new Vector2(0, 25));
+        //_emitter.FollowGameObject(_playerGo, new Vector2(0, 25));
         _emitter.LayerName = LayerDepth.EnemyUnder;
         _emitter.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel4x4));
-        _emitter.AddModifier(new ColorRangeModifier(new Color[] { Color.DarkGray, Color.Moccasin, Color.Transparent }, new Color[] { Color.Yellow, Color.Transparent }));
+        _emitter.AddModifier(new ColorRangeModifier(new Color[] { new Color(100, 40, 40, 255), new Color(50, 10, 10, 255) }));
 
-        _emitter.AddBirthModifier(new ScaleBirthModifier(new Interval(4, 4)));
-        //emitter.AddModifier(new GravityModifier());
-        //emitter.AddModifier(new ScaleModifier(4, 10));
+        // Should have a force birth modifere, and a speed modifier. 
+        // Could change the birth speed
+        _emitter.AddModifier(new GravityModifier());
+
+        _emitter.AddModifier(new DrawModifier(_bounce, _friction, _stopAmount, _velocityDrag));
+        
+        _emitter.AddModifier(new ScaleModifier(4, 2));
+
+        //_emitter.Origin = new RectangleOrigin(20, 40);
 
         GameWorld.Instance.Instantiate(go);
     }
+
 
     private void FairyEmitter()
     {
@@ -172,8 +181,8 @@ public class WeaponTestScene : Scene
     {
         base.DrawOnScreen(spriteBatch);
 
-        Vector2 pos = GameWorld.Instance.UiCam.TopLeft;
         Vector2 offset = new Vector2(0, 30);
+        Vector2 pos = GameWorld.Instance.UiCam.TopLeft + offset * 2;
 
         //pos += offset;
         //DrawString(spriteBatch, $"Current anim: {weapon.CurrentAnim} | Rot: {weapon.Animations[weapon.CurrentAnim].AmountOfRotation}", pos);
@@ -182,14 +191,34 @@ public class WeaponTestScene : Scene
         //DrawString(spriteBatch, $"Next anim: {weapon.NextAnim} | Rot: {weapon.Animations[weapon.NextAnim].AmountOfRotation}", pos);
 
         pos += offset;
-        DrawString(spriteBatch, $"Active count: {_emitter.ParticlePool.Active.Count}", pos);
+        DrawString(spriteBatch, $"Bounce : {_bounce}", pos);
         pos += offset;
-        DrawString(spriteBatch, $"In Active count: {_emitter.ParticlePool.InActive.Count}", pos);
+        DrawString(spriteBatch, $"Friction : {_friction}", pos);
         pos += offset;
-        DrawString(spriteBatch, $"Mouse pos UI : {InputHandler.Instance.MouseOnUI}", pos);
+        DrawString(spriteBatch, $"Stop amount : {_stopAmount}", pos);
         pos += offset;
-        DrawString(spriteBatch, $"Mouse pos World: {InputHandler.Instance.MouseInWorld}", pos);
+        DrawString(spriteBatch, $"Vel Drag : {_velocityDrag}", pos);
+
+        //pos += offset;
+        //DrawString(spriteBatch, $"Active count: {_emitter.ParticlePool.Active.Count}", pos);
+        //pos += offset;
+        //DrawString(spriteBatch, $"In Active count: {_emitter.ParticlePool.InActive.Count}", pos);
+        //pos += offset;
+        //DrawString(spriteBatch, $"Mouse pos UI : {InputHandler.Instance.MouseOnUI}", pos);
+        //pos += offset;
+        //DrawString(spriteBatch, $"Mouse pos World: {InputHandler.Instance.MouseInWorld}", pos);
+
+        // To check if its any of these that makes it from
+        // QW for bounce 0.05
+        // ER for friction 0.05
+        // AS stop amount = change 5 each time
+        // DF for vel drag = change 0.05
     }
+    
+    private float _bounce = 0.25f;
+    private float _friction = 0.85f;
+    private int _stopAmount = 60;
+    private float _velocityDrag = 0.95f;
 
     protected void DrawString(SpriteBatch spriteBatch, string text, Vector2 position)
     {

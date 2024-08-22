@@ -27,6 +27,8 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
 
         public static void SpawnBG()
         {
+            MakeMouseGo();
+
             if (!GameWorld.Instance.ShowBG) return;
             GameObject go = EmitterFactory.CreateParticleEmitter("Space Dust", new Vector2(0, 0), new Interval(50, 100), new Interval(-MathHelper.Pi, MathHelper.Pi), 50, new Interval(1500, 2500), 100, -1, new Interval(-MathHelper.Pi, MathHelper.Pi));
 
@@ -50,8 +52,6 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
             _menuColorInterval = new ColorInterval(menuColors);
             _roomColorInterval = new ColorInterval(RoomColors);
 
-            MakeMouseGo();
-
             BackgroundEmitter.StartEmitter();
         }
 
@@ -63,14 +63,13 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
 
             mouseGo.Awake();
             mouseGo.Start();
-            
         }
 
         public static void Update()
         {
-            mouseGo.Update();
+            mouseGo?.Update();
 
-            BackgroundEmitter.Update();
+            if (!GameWorld.Instance.ShowBG) return;
 
             // Only stop the emitter if its already running. Otherwise it will keep being in STOPPING state:d
             if (!GameWorld.Instance.ShowBG &&
@@ -83,15 +82,19 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
 
             if (BackgroundEmitter == null) SpawnBG();
 
-            ColorRangeModifier colorMod = BackgroundEmitter.GetModifier<ColorRangeModifier>();
+            ColorRangeModifier colorMod = BackgroundEmitter?.GetModifier<ColorRangeModifier>();
             if (GameWorld.Instance.IsInMenu)
                 colorMod.ColorInterval = _menuColorInterval;
             else
                 colorMod.ColorInterval = _roomColorInterval;
+            
+            BackgroundEmitter.Update();
         }
 
         public static void DrawBG(SpriteBatch spriteBatch)
         {
+            if (!GameWorld.Instance.ShowBG) return;
+
             // Should draw each in the pool.
             foreach (GameObject go in BackgroundEmitter.ParticlePool.Active)
             {

@@ -129,10 +129,7 @@ public class Button : Component
     {
         // If the text is not visible or null, we don't need to do anything
         if (string.IsNullOrEmpty(Text)) return;
-        if (Text == "X")
-        {
 
-        }
         GuiMethods.DrawTextCentered(spriteBatch, _font, GameObject.Transform.Position, Text, BaseMath.TransitionColor(TextColor));
     }
 }
