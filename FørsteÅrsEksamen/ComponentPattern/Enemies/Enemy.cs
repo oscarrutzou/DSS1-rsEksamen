@@ -228,19 +228,9 @@ public abstract class Enemy : Character
         // Offset for layerdepth, so the enemies are not figting for which is shown.
         float offSet = GameObject.Transform.Position.Y / 10_000_000f; // IMPORTANT, THIS CAN CHANGE WHAT LAYER ITS DRAWN ON
         if (GameObject.Transform.Position.Y < PlayerGo.Transform.Position.Y)
-        {
             SpriteRenderer.SetLayerDepth(LayerDepth.EnemyUnder, offSet);
-
-            if (weaponSpriteRenderer == null) return;
-            weaponSpriteRenderer.SetLayerDepth(LayerDepth.EnemyUnderWeapon, offSet);
-        }
         else
-        {
             SpriteRenderer.SetLayerDepth(LayerDepth.EnemyOver, offSet);
-
-            if (weaponSpriteRenderer == null) return;
-            weaponSpriteRenderer.SetLayerDepth(LayerDepth.EnemyOverWeapon, offSet);
-        }
     }
 
     #region PathFinding

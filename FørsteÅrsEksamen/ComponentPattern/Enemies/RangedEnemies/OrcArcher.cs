@@ -10,14 +10,14 @@ public class OrcArcher : EnemyMelee
 {
     public OrcArcher(GameObject gameObject) : base(gameObject)
     {
-        Speed = 300;
+        Speed = 350;
     }
 
     public override void Awake()
     {
         base.Awake();
 
-        Health.SetHealth(100);
+        Health.SetHealth(150);
 
         CharacterStateAnimations.Add(CharacterState.Idle, AnimNames.OrcArcherIdle);
         CharacterStateAnimations.Add(CharacterState.Moving, AnimNames.OrcArcherRun);

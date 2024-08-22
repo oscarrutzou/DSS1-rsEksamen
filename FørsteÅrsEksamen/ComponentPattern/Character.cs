@@ -44,7 +44,7 @@ public abstract class Character : Component
     public CharacterState State { get; protected set; } = CharacterState.Moving; // We use the method SetState, to we can change the animations and other variables.
     public int CollisionNr { get; set; }
 
-    protected SpriteRenderer SpriteRenderer;
+    public SpriteRenderer SpriteRenderer { get; protected set; }
     protected Animator Animator;
     protected Collider Collider { get; set; }
     public Weapon Weapon { get; protected set; }
@@ -297,7 +297,7 @@ public abstract class Character : Component
 
     private void OnDamageTakenText(int damage)
     {
-        DamageTakenEmitter.LayerName = LayerDepth.PlayerWeapon;
+        DamageTakenEmitter.LayerName = LayerDepth.DamageParticles;
         DamageTakenEmitter.SetParticleText(new TextOnSprite() { Text = damage.ToString() });
         DamageTakenEmitter.EmitParticles();
     }

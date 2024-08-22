@@ -136,7 +136,7 @@ public class CharacterSelectorMenu : MenuScene
     {
         GameObject backBtn = ButtonFactory.Create("Back", true, Back);
 
-        backBtn.Transform.Position += new Vector2(0, 200 + FirstMenuObjects[0].Transform.Position.Y);
+        backBtn.Transform.Position = new Vector2(0, 190 + FirstMenuObjects[0].Transform.Position.Y);
         GameWorld.Instance.Instantiate(backBtn);
     }
 

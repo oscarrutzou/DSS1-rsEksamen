@@ -20,10 +20,6 @@ public static class GuiMethods
         if (center)
         {
             // Adjust the starting position to account for the total width of all buttons and spaces
-            //startPos -= new Vector2(
-            //    0,
-            //    (buttonHeight / 2 * (list.Count - 1)) +
-            //    (spaceBetween * (list.Count - 2)));
             startPos -= new Vector2(
                 0,
                 (buttonHeight / 2 * (list.Count - 1)) + (spaceBetween * (list.Count - 1)) / 2);

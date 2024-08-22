@@ -63,6 +63,8 @@ public abstract class Player : Character
         SetState(CharacterState.Idle);
     }
 
+
+
     public override void Update()
     {
         if (State != CharacterState.Dead)
@@ -171,24 +173,24 @@ public abstract class Player : Character
         Vector2 yMovement = new Vector2(0, velocity.Y);
 
         bool hasMoved = false;
-        // Try moving along the X axis
-        //if (xMovement.X != 0f && TryMove(xMovement))
-        //{
-        //    // Update the previous position after a successful move
-        //    previousPosition = GameObject.Transform.Position;
-        //    hasMoved = true;
-        //}
+        //Try moving along the X axis
+        if (xMovement.X != 0f && TryMove(xMovement))
+        {
+            // Update the previous position after a successful move
+            previousPosition = GameObject.Transform.Position;
+            hasMoved = true;
+        }
 
-        //// Try moving along the Y axis
-        //if (yMovement.Y != 0f && TryMove(yMovement))
-        //{
-        //    // Update the previous position after a successful move
-        //    previousPosition = GameObject.Transform.Position;
-        //    hasMoved = true;
-        //}
-        hasMoved = true;
+        // Try moving along the Y axis
+        if (yMovement.Y != 0f && TryMove(yMovement))
+        {
+            // Update the previous position after a successful move
+            previousPosition = GameObject.Transform.Position;
+            hasMoved = true;
+        }
+        //hasMoved = true;
 
-        GameObject.Transform.Translate(velocity);
+        //GameObject.Transform.Translate(velocity);
 
         RotateCharacterOnMove(hasMoved);
     }

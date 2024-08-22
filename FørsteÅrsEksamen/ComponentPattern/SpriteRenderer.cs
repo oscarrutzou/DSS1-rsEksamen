@@ -17,14 +17,15 @@ public enum LayerDepth
     BackgroundDecoration,
 
     EnemyUnder,
-    EnemyUnderWeapon,
+    //EnemyUnderWeapon,
 
     Player,
-    PlayerWeapon,
+    //PlayerWeapon,
 
     EnemyOver,
-    EnemyOverWeapon,
+    //EnemyOverWeapon,
 
+    DamageParticles,
     WorldForeground,
 
     Cells,
@@ -124,6 +125,10 @@ public class SpriteRenderer : Component
     {
         LayerName = layerName;
         LayerDepth = ((float)LayerName / (Enum.GetNames(typeof(LayerDepth)).Length)) + offSet;
+    }
+    public void SetLayerDepth(float layerDepth, float offSet = 0)
+    {
+        LayerDepth = layerDepth + offSet;
     }
 
     public static float GetLayerDepth(LayerDepth layerName, float offSet = 0)

@@ -67,11 +67,5 @@ namespace DoctorsDungeon.ComponentPattern.Particles
             spriteRenderer.TextOnSprite = TextOnSprite;
         }
 
-        //public override void Draw(SpriteBatch spriteBatch)
-        //{
-        //    int dem = spriteRenderer.Sprite.Width * (int)Scale.X;
-        //    Rectangle spriteRec = new Rectangle((int)Position.X, (int)Position.Y, dem, dem);
-        //    Collider.DrawRectangleNoSprite(spriteRec, Color.HotPink, spriteBatch);
-        //}
     }
 }

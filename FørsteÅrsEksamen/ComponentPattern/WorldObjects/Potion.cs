@@ -4,6 +4,14 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DoctorsDungeon.ComponentPattern.WorldObjects;
 
+// Potions could be like a buff. 
+/*
+ * Need amount of time buff is on = -1 for permeant.
+ * Need value to contain the previous value
+ * Need to save the different buffs given, if loading a save
+ * Need to have the name on.
+ */
+
 // Asser
 public class Potion : Component
 {
@@ -13,8 +21,8 @@ public class Potion : Component
     private Health health;
     private GameObject playerGo;
 
-    public string Name = "Health Potion";
-    private int healAmount = 50;
+    public string Name = "Strong Health Potion";
+    private int healAmount = 100;
 
     public Potion(GameObject gameObject) : base(gameObject)
     { 

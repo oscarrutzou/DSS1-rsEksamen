@@ -20,7 +20,8 @@ public class Sword : MeleeWeapon
 
         Animations = new()
         {
-            { WeaponAnimTypes.Light, new WeaponAnimation(1.5f, MathHelper.Pi, 25, BaseMath.EaseInOutBack, WeaponAnimTypes.Light)},
+            { WeaponAnimTypes.Light, new WeaponAnimation(0.7f, MathHelper.Pi, 25, BaseMath.EaseInOutBack, WeaponAnimTypes.Medium, 2)},
+            { WeaponAnimTypes.Medium, new WeaponAnimation(1.0f, MathHelper.Pi + MathHelper.PiOver2, 40, BaseMath.EaseInOutBack, WeaponAnimTypes.Light, 1)},
         };
 
         CurrentAnim = WeaponAnimTypes.Light;

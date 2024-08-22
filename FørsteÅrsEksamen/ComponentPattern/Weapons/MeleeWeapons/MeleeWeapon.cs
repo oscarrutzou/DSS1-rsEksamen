@@ -1,4 +1,5 @@
 ﻿using DoctorsDungeon.CommandPattern;
+using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using DoctorsDungeon.ComponentPattern.WorldObjects;
 using DoctorsDungeon.GameManagement.Scenes;
 using DoctorsDungeon.Other;
@@ -34,6 +35,7 @@ public abstract class MeleeWeapon : Weapon
     private double totalElapsedTime;
     public float NormalizedFullAttack { get; private set; } // The normalized value for how far the attack is to be dont
     private float _fullAttackTimer;
+    protected bool CanDealDamage = true;
 
     protected MeleeWeapon(GameObject gameObject) : base(gameObject)
     {
@@ -48,7 +50,6 @@ public abstract class MeleeWeapon : Weapon
 
         if (Attacking)
         {
-            AttackedTotalElapsedTime += GameWorld.DeltaTime;
             AttackAnimation();
 
             CheckCollisionAndDmg();
@@ -60,8 +61,10 @@ public abstract class MeleeWeapon : Weapon
 
     private void AttackAnimation()
     {
+        AttackedTotalElapsedTime += GameWorld.DeltaTime;
+
         // This should be changed to another animation method if its a stab attack
-        if (Animations[CurrentAnim].SelectedAttackType == WeaponAnimAttackTypes.Slash)
+        if (Animations[CurrentAnim].SelectedAttackType == WeaponAnimAttackTypes.TwoWaySlash)
         {
             AttackAnimSlash();
         }
@@ -122,19 +125,10 @@ public abstract class MeleeWeapon : Weapon
             FinnishedAttack = true;
             ResetAttackTimers();
         }
-
     }
+
     private void ResetAttackTimers()
     {
-        WeaponAnimation curAnim = Animations[CurrentAnim];
-        NormalizedFullAttack = _fullAttackTimer / Animations[CurrentAnim].TotalTime;
-
-        // With easedTime
-        // Total time 1.5
-        // timer 1.23
-        // 8.22
-        // rotation 5.89
-        // start rotation 5.926
         _fullAttackTimer = 0f;
         NormalizedFullAttack = 0f;
         AttackedTotalElapsedTime = 0f;
@@ -161,6 +155,8 @@ public abstract class MeleeWeapon : Weapon
 
     public void CheckCollisionAndDmg()
     {
+        if (!CanDealDamage) return;
+
         GameObjectTypes type;
         if (EnemyUser != null)
             type = GameObjectTypes.Player;

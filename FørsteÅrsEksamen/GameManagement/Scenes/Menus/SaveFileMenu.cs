@@ -85,7 +85,7 @@ public class SaveFileMenu : MenuScene
             GameObject deleteBtn = ButtonFactory.Create("X", true, () => { DeleteSave(saveFile.Save_ID); }, TextureNames.DeleteSaveBtn);
             Button delete = deleteBtn.GetComponent<Button>();
 
-            deleteBtn.Transform.Position = saveFileBtn.GameObject.Transform.Position + new Vector2(180, 0);
+            deleteBtn.Transform.Position = saveFileBtn.GameObject.Transform.Position + new Vector2(150, 0);
             GameWorld.Instance.Instantiate(deleteBtn);
         }
     }

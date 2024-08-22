@@ -7,14 +7,14 @@ public class Warrior : Player
 {
     public Warrior(GameObject gameObject) : base(gameObject)
     {
-        Speed = 300;
+        Speed = 350;
     }
 
     public override void Awake()
     {
         base.Awake();
 
-        Health.SetHealth(100);
+        Health.SetHealth(200);
 
         CharacterStateAnimations.Add(CharacterState.Idle, AnimNames.KnightIdle);
         CharacterStateAnimations.Add(CharacterState.Moving, AnimNames.KnightRun);

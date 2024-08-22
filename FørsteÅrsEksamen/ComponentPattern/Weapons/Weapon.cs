@@ -32,7 +32,7 @@ public abstract class Weapon : Component
     protected int CurrentAnimRepeats;
     public Player PlayerUser { get; set; }
     public Enemy EnemyUser { get; set; }
-
+    protected Character User { get; private set; } // So avoid making the check if its a player or enemy
     public SpriteRenderer SpriteRenderer { get; set; }
 
     protected float StartAnimationAngle { get; set; }
@@ -72,18 +72,22 @@ public abstract class Weapon : Component
         AttackTimer = AttackCooldown;
 
         SpriteRenderer = GameObject.GetComponent<SpriteRenderer>();
-        SpriteRenderer.SetLayerDepth(LayerDepth.PlayerWeapon); // Should not matter?
         SpriteRenderer.IsCentered = false;
 
         if (EnemyUser != null)
         {
+            User = EnemyUser;
             EnemyWeaponSprite();
         }
         else
         {
+            User = PlayerUser;
             PlayerWeaponSprite();
         }
     }
+    
+
+
     public override void Start()
     {
         animRotation = Animations[CurrentAnim].AmountOfRotation;
@@ -95,8 +99,21 @@ public abstract class Weapon : Component
 
     public override void Update()
     {
+        CheckLayerDepth();
+
         if (UseAttackCooldown && AttackTimer < AttackCooldown)
             AttackTimer += GameWorld.DeltaTime;
+    }
+
+    private void CheckLayerDepth()
+    {
+        // Offset for layerdepth, so the enemies are not figting for which is shown.
+        float offSet = GameObject.Transform.Position.Y / 10_000_000f; // IMPORTANT, THIS CAN CHANGE WHAT LAYER ITS DRAWN ON
+
+        if (GameObject.Transform.Position.Y < User.GameObject.Transform.Position.Y)
+            offSet = -offSet;
+
+        SpriteRenderer.SetLayerDepth(User.SpriteRenderer.LayerDepth, offSet);
     }
 
     public void StartAttack()

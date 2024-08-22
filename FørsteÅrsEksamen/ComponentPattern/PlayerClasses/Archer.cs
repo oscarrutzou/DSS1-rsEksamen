@@ -7,13 +7,13 @@ public class Archer : Player
 {
     public Archer(GameObject gameObject) : base(gameObject)
     {
-        Speed = 325;
+        Speed = 425;
     }
 
     public override void Awake()
     {
         base.Awake();
-        Health.SetHealth(80);
+        Health.SetHealth(150);
 
         CharacterStateAnimations.Add(CharacterState.Idle, AnimNames.ArcherIdle);
         CharacterStateAnimations.Add(CharacterState.Moving, AnimNames.ArcherRun);

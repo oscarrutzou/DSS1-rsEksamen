@@ -40,6 +40,7 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
             animator = GameObject.GetComponent<Animator>();
             collider = GameObject.GetComponent<Collider>();
 
+
             collider.SetCollisionBox(15, 27, new Vector2(0, 19));
             health.SetHealth(100_000_000);
 
@@ -77,7 +78,7 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
 
         private void OnDamageTakenText(int damage)
         {
-            damageTakenEmitter.LayerName = LayerDepth.PlayerWeapon;
+            damageTakenEmitter.LayerName = LayerDepth.DamageParticles;
             damageTakenEmitter.SetParticleText(new TextOnSprite() { Text = damage.ToString() });
             damageTakenEmitter.EmitParticles();
         }

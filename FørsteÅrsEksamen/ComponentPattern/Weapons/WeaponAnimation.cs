@@ -16,9 +16,11 @@ public enum WeaponAnimTypes
 
 public enum WeaponAnimAttackTypes
 {
-    Slash,
+    TwoWaySlash,
+    OneWaySlash,
     Stab,
 }
+
 // A weapon will always have a light attack. It goes though the enum, enum.default = first in.
 // Need to save how many that attack has been picked, with how many times it should repeat
 // Could do it with a int that
@@ -27,7 +29,8 @@ public delegate float AnimationFunction(float x);
 
 // Play with some other methods, for different weapons, to make them feel slow or fast https://easings.net/
 
-public class WeaponAnimation
+// Could add some random chance. Like if attacking with a selectedAttack type, we can have 50% change to a special attack
+public struct WeaponAnimation
 {
     public float TotalTime;
     public float AmountOfRotation;
@@ -42,7 +45,7 @@ public class WeaponAnimation
                            AnimationFunction animationMethod,
                            WeaponAnimTypes nextAnimation,
                            int repeats = 1,
-                           WeaponAnimAttackTypes selectedAttackType = WeaponAnimAttackTypes.Slash)
+                           WeaponAnimAttackTypes selectedAttackType = WeaponAnimAttackTypes.TwoWaySlash)
     {
         TotalTime = totalTime;
         AmountOfRotation = amountOfRotation;

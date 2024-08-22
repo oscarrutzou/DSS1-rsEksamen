@@ -36,7 +36,7 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
         {
             base.Awake();
 
-            Health.SetHealth(100);
+            Health.SetHealth(400);
 
             CharacterStateAnimations.Add(CharacterState.Idle, AnimNames.OrcShamanIdle);
             CharacterStateAnimations.Add(CharacterState.Moving, AnimNames.OrcShamanRun);

@@ -34,9 +34,9 @@ public class GameWorld : Game
     public Camera UiCam { get; private set; } //Static on the ui
     public SceneNames? NextScene { get; private set; } = null;
     public bool ShowBG { get; set; } = true; // If we should show our background
-
-    public int DisplayWidth => GraphicsDevice.DisplayMode.Width;
-    public int DisplayHeight => GraphicsDevice.DisplayMode.Height;
+     
+    public int DisplayWidth => GfxManager.PreferredBackBufferWidth;
+    public int DisplayHeight => GfxManager.PreferredBackBufferHeight;
 
     private SpriteBatch _spriteBatch;
     private readonly string _menuString = "Menu";
@@ -59,6 +59,7 @@ public class GameWorld : Game
 
         SceneData.GenereateGameObjectDicionary();
         Fullscreen();
+        //SetResolutionSize(1920 * 2, 1000);
 
         WorldCam = new Camera(true); // Camera that follows the player
         UiCam = new Camera(false); // Camera that is static
@@ -147,12 +148,6 @@ public class GameWorld : Game
     /// </summary>
     public void Fullscreen()
     {
-        if (GraphicsDevice.DisplayMode.Width > 1920) // Too big screen, so dont open in fullscreen
-        {
-            SetResolutionSize(1920, 1080);
-            return;
-        }
-
         GfxManager.HardwareModeSwitch = false;
         GfxManager.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
         GfxManager.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
