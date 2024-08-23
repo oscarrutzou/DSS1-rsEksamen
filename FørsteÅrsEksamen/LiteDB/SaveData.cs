@@ -22,7 +22,7 @@ public static class SaveData
     public static List<ClassTypes> UnlockedClasses { get; set; } = new();
 
     public static int Level_Reached { get; set; } = 1;
-    public const int MaxRooms = 3;
+    public const int MaxRooms = 4;
     public static double Time_Left { get; set; } = _startTimeLeft;
     public static bool HasWon { get; set; }
     public static bool LostByTime;

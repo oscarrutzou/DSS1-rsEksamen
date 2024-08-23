@@ -34,7 +34,7 @@ public abstract class RoomBase : Scene
     protected TextureNames BackGroundTexture = TextureNames.TestLevelBG;
     protected TextureNames ForeGroundTexture = TextureNames.TestLevelFG;
 
-    public Point PlayerSpawnPos, EndPointSpawnPos = new(6, 6);
+    public Point PlayerSpawnPos, EndPointSpawnPos;
     protected GameObject PlayerGo;
     private Player _player;
     private Health _playerHealth;

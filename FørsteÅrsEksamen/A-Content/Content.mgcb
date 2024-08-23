@@ -2709,6 +2709,30 @@
 /processorParam:TextureFormat=Color
 /build:World/Levels/Level3Under.png
 
+#begin World/Levels/Room4/Level4Over.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/Levels/Room4/Level4Over.png
+
+#begin World/Levels/Room4/Level4Under.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/Levels/Room4/Level4Under.png
+
 #begin World/Levels/Test1OverPlayer.png
 /importer:TextureImporter
 /processor:TextureProcessor

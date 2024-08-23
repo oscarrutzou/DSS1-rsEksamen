@@ -67,7 +67,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
 
         public static void Update()
         {
-            mouseGo?.Update();
+            mouseGo.Update();
 
             if (!GameWorld.Instance.ShowBG) return;
 

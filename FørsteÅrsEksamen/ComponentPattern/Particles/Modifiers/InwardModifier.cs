@@ -20,7 +20,7 @@ namespace DoctorsDungeon.ComponentPattern.Particles.Modifiers
 
         public override void Execute(Emitter e, double seconds, IParticle p)
         {
-            float v = p.Velocity.Length();
+            float v = p.VelocityZ.Length();
             Vector2 targetPos;
             if (e.FollowPoint != Vector2.Zero) targetPos = e.FollowPoint;
             else targetPos = e.Position;
@@ -35,7 +35,7 @@ namespace DoctorsDungeon.ComponentPattern.Particles.Modifiers
             if (temp != Vector2.Zero)
             {
                 temp.Normalize();
-                p.Velocity = temp * v;
+                p.VelocityZ = new Vector3(temp, 0) * v;
             }
 
             // Growing it in size (this was for a emitter that made 10.000 per sec)

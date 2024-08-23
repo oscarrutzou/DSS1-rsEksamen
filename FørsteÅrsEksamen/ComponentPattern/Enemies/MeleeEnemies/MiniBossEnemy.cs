@@ -30,6 +30,15 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
 
         private RoomBase _roomBase;
 
+        private List<EnemyTypes> _spawnAbleTypes = new List<EnemyTypes>()
+        {
+            EnemyTypes.OrcArcher,
+            EnemyTypes.OrcWarrior,
+        };
+
+        // Could have it when its health is under a certain amount it begins to flee or spawn faster.
+        // Maybe make a easy way to add it, Like a normalized health * 100. So u can write ActionOnCertainHealth 25 for 25% and then the action?
+
         public MiniBossEnemy(GameObject gameObject) : base(gameObject)
         {
             CanAttack = false;
@@ -48,6 +57,15 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
             CharacterStateAnimations.Add(CharacterState.Dead, AnimNames.OrcShamanDeath);
 
             MakeSpawner();
+        }
+
+        public override void Start()
+        {
+            base.Start();
+
+            // Random cell
+            //PickRandomPoint();
+            //SetPath();
         }
 
         private void MakeSpawner()
@@ -77,8 +95,10 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
             }
 
             if (Health.IsDead) return;
-            SpawnEnemy();
+            //SpawnEnemy();
         }
+
+
         private void SpawnEnemy()
         {
             if (_spawnTimer < _spawnCooldown) return;
@@ -106,7 +126,7 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
             // Amount to spawn
             _points.Add(GameObject.Transform.GridPosition);
 
-            List<Enemy> newEnemies = _enemySpawner.SpawnEnemies(_points, Player.GameObject, spawnAbleTypes);
+            List<Enemy> newEnemies = _enemySpawner.SpawnEnemies(_points, Player.GameObject, _spawnAbleTypes);
 
             _roomBase.EnemiesInRoom.AddRange(newEnemies);
 
@@ -119,11 +139,6 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
             }
         }
 
-        private List<EnemyTypes> spawnAbleTypes = new List<EnemyTypes>()
-        {
-            EnemyTypes.OrcArcher,
-            EnemyTypes.OrcWarrior,
-        };
 
     }
 }

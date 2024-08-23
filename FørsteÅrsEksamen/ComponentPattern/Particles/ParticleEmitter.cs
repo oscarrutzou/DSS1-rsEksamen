@@ -114,12 +114,10 @@ public class ParticleEmitter : Emitter
 
         Matrix matrix = Matrix.CreateRotationZ((float)Direction.GetValue());
 
-        particle.Velocity = new Vector2((float)Speed.GetValue(), 0);
-
-        particle.Velocity = Vector2.Transform(particle.Velocity, matrix);
-
         int startZ = 20;
-      particle.VelocityZ = new Vector3(particle.Velocity, startZ);
+        Vector3 velocity = new Vector3((float)Speed.GetValue(), 0, startZ);
+
+        particle.VelocityZ = Vector3.Transform(velocity, matrix);
 
         particle.Position = Position + data.Position;
 

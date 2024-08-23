@@ -8,7 +8,6 @@ public class Room3Scene : RoomBase
 {
     public override void Initialize()
     {
-        //throw new System.Exception("This next room is not made yet");
         GridName = "Level3";
         GridWidth = 24;
         GridHeight = 24;

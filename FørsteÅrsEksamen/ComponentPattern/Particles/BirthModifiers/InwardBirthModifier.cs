@@ -6,7 +6,7 @@ namespace DoctorsDungeon.ComponentPattern.Particles.BirthModifiers
     {
         public override void Execute(Emitter e, GameObject go, IParticle p)
         {
-            float v = p.Velocity.Length();
+            float v = p.VelocityZ.Length();
             Vector2 targetPos;
             if (e.FollowPoint != Vector2.Zero) targetPos = e.FollowPoint;
             else targetPos = e.Position;
@@ -15,11 +15,11 @@ namespace DoctorsDungeon.ComponentPattern.Particles.BirthModifiers
             if (temp != Vector2.Zero)
             {
                 temp.Normalize();
-                p.Velocity = temp * v;
+                p.VelocityZ = new Vector3(temp, 0) * v;
             }
             else
             {
-                p.Velocity = OutwardBirthModifier.OnSpawnOriginPoint * v;
+                p.VelocityZ = OutwardBirthModifier.OnSpawnOriginPoint * v;
             }
         }
     }

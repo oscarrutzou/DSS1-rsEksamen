@@ -9,7 +9,7 @@ namespace DoctorsDungeon.ComponentPattern.Particles
     {
         public double Age { get; set; }
         public double MaxAge { get; set; }
-        public Vector2 Velocity { get; set; }
+        //public Vector2 Velocity { get; set; }
         private Vector3 _velocityZ;
         public Vector3 VelocityZ
         {
@@ -20,7 +20,7 @@ namespace DoctorsDungeon.ComponentPattern.Particles
             set
             {
                 _velocityZ = value;
-                Velocity = new Vector2(_velocityZ.X, _velocityZ.Y);
+                //Velocity = new Vector2(_velocityZ.X, _velocityZ.Y);
             }
         }
         public float RotationVelocity { get; set; }

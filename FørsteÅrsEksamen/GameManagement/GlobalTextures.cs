@@ -18,6 +18,9 @@ public enum TextureNames
     Level2FG,
     Level3BG,
     Level3FG,
+    Level4BG,
+    Level4FG,
+
 
     TestLevelBG,
     TestLevelFG,
@@ -77,6 +80,9 @@ public static class GlobalTextures
 
             {TextureNames.Level3BG, content.Load<Texture2D>("World\\Levels\\Level3Under") },
             {TextureNames.Level3FG, content.Load<Texture2D>("World\\Levels\\Level3Over") },
+
+            {TextureNames.Level4BG, content.Load<Texture2D>("World\\Levels\\Room4\\Level4Under") },
+            {TextureNames.Level4FG, content.Load<Texture2D>("World\\Levels\\Room4\\Level4Over") },
 
             {TextureNames.TestLevelBG, content.Load<Texture2D>("World\\Levels\\Test1UnderPlayer") },
             {TextureNames.TestLevelFG, content.Load<Texture2D>("World\\Levels\\Test1OverPlayer") },

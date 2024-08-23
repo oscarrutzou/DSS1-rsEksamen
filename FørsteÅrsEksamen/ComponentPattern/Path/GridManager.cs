@@ -269,6 +269,16 @@ public class GridManager
         GameObject go = cell.GameObject;
         SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
 
+        if (InputHandler.Instance.DebugMode)
+        {
+            // Show the cells
+            go.IsEnabled = true;
+            sr.ShouldDrawSprite = true;
+            sr.Color = new Color(0, 0, 0, 125);
+
+            return;
+        }
+
         // If the player already have unloacked the room, or if the room nr have not been set
         if (PlayerDiscoveredRoomNmbers.Contains(cell.RoomNr) || cell.RoomNr == -1)
         {
@@ -285,6 +295,8 @@ public class GridManager
             sr.Color = cell.NotDiscoveredColor;
         }
     }
+
+    
 
     #endregion Return Methods
 }

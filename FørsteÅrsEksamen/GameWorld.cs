@@ -71,7 +71,7 @@ public class GameWorld : Game
 
         GenerateScenes(); // Makes a instance of all the scene we need
 
-        CurrentScene = Scenes[SceneNames.WeaponTestScene];
+        CurrentScene = Scenes[SceneNames.MainMenu];
         CurrentScene.Initialize(); // Starts the main menu 
 
         IndependentBackground.SpawnBG(); // The background that dont get deleted
@@ -200,6 +200,7 @@ public class GameWorld : Game
             [SceneNames.DungeonRoom1] = new Room1Scene(),
             [SceneNames.DungeonRoom2] = new Room2Scene(),
             [SceneNames.DungeonRoom3] = new Room3Scene(),
+            [SceneNames.DungeonRoom4] = new Room4Scene(),
 
             // Test scenes
             [SceneNames.WeaponTestScene] = new WeaponTestScene(),

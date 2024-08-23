@@ -23,6 +23,7 @@ public enum SceneNames
     DungeonRoom1,
     DungeonRoom2,
     DungeonRoom3,
+    DungeonRoom4,
 
     WeaponTestScene,
 

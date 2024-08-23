@@ -1,6 +1,7 @@
 ﻿using DoctorsDungeon.ComponentPattern.Path;
 using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using DoctorsDungeon.Other;
+using LiteDB;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -163,23 +164,37 @@ public abstract class Enemy : Character
 
         Point playerPos = PlayerGo.Transform.GridPosition;
 
+        if (Player.CollisionNr == CollisionNr && !HasBeenAwoken)
+        {
+            TargetPoint = playerPos;
+            SetPath();
+        }
+
         // If X is more that z cells away, it should start a new target. The same with Y
         if (Math.Abs(playerPos.X - TargetPoint.X) >= CellPlayerMoveBeforeNewTarget ||
             Math.Abs(playerPos.Y - TargetPoint.Y) >= CellPlayerMoveBeforeNewTarget)
         {
-            TargetPoint = PlayerGo.Transform.GridPosition;
-            HasBeenAwoken = true;
+            TargetPoint = playerPos;
             SetPath();
+            HasBeenAwoken = true;
         }
     }
 
     protected virtual void RandomMoveInRoom()
     {
-        HasBeenAwoken = true;
-
         if (Player.CollisionNr != CollisionNr 
             && !HasBeenAwoken 
             || State == CharacterState.Dead) return; // Cant move if the player isnt in the same room.
+
+        if (Player.CollisionNr == CollisionNr && !HasBeenAwoken)
+        {
+            // Random cell
+            PickRandomPoint();
+            SetPath();
+            _randomMoveTimer = 0;
+
+            HasBeenAwoken = true; // Will now search each time
+        }
 
         // Pick a random point, and set a random target
         Point curPos = GameObject.Transform.GridPosition;
@@ -201,17 +216,17 @@ public abstract class Enemy : Character
         }
     }
 
-    private void PickRandomPoint()
+    protected void PickRandomPoint()
     {
         Point randomPoint;
 
-        _cellGameObjects = Grid.GetCellsInRadius(GameObject.Transform.Position, 1000, 2);
+        int searchRadius = 1000;
+        _cellGameObjects = Grid.GetCellsInRadius(GameObject.Transform.Position, searchRadius, 2);
         
         if (_cellGameObjects.Count > 0 )
             randomPoint = _cellGameObjects[_rnd.Next(0, _cellGameObjects.Count - 1)].Transform.GridPosition;
         else
             randomPoint = _cellsInCollisionNr[_rnd.Next(0, _cellsInCollisionNr.Count - 1)].Transform.GridPosition;
-
 
         GameObject currentCellGo = Grid.GetCellGameObjectFromPoint(randomPoint);
         Cell cell = currentCellGo.GetComponent<Cell>();

@@ -112,8 +112,16 @@ public class Cell : Component
 
         if (!InputHandler.Instance.DebugMode) return;
         Vector2 offset = new Vector2(10, 0);
-        GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, GameObject.Transform.Position - offset, RoomNr.ToString(), Color.Yellow);
-        GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, GameObject.Transform.Position + offset, CollisionNr.ToString(), Color.HotPink);
+
+        Color roomColor = Color.Yellow;
+        Color collisionNrColor = Color.HotPink;
+        if (RoomNr == CollisionNr)
+        {
+            roomColor = Color.Green;
+            collisionNrColor = Color.Green;
+        }
+        GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, GameObject.Transform.Position - offset, RoomNr.ToString(), roomColor);
+        GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, GameObject.Transform.Position + offset, CollisionNr.ToString(), collisionNrColor);
     }
 
     public void ChangeCellWalkalbeType(CellWalkableType cellWalkableType)
@@ -124,17 +132,11 @@ public class Cell : Component
 
         if (InputHandler.Instance.DebugMode)
         {
-            if (CollisionNr == -1) GameObject.IsEnabled = false;
+            //GameObject.IsEnabled = true;
+            if (CollisionNr == -1 && RoomNr == -1) GameObject.IsEnabled = false;
             else GameObject.IsEnabled = true;
         }
 
         CellWalkableType = cellWalkableType;
-
-        switch (CellWalkableType)
-        {
-            case CellWalkableType.FullValid:
-                _spriteRenderer.Color = Color.DarkOliveGreen;
-                break;
-        }
     }
 }
