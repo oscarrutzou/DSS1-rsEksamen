@@ -35,7 +35,7 @@ public class WeaponTestScene : Scene
 
         SetCommands();
     }
-
+    #region Make
     private void MakePlayer()
     {
         _playerGo = PlayerFactory.Create(ClassTypes.Rogue, WeaponTypes.Sword);
@@ -65,7 +65,7 @@ public class WeaponTestScene : Scene
 
     private void DoorEmitter()
     {
-        GameObject go = EmitterFactory.CreateParticleEmitter("Dust Cloud", new Vector2(0, 0), new Interval(100, 150), new Interval(-MathHelper.Pi, MathHelper.Pi), 50, new Interval(500, 1000), 1000, -1, new Interval(-MathHelper.Pi, MathHelper.Pi), new Interval(-0.01, 0.01));
+        GameObject go = EmitterFactory.CreateParticleEmitter("Dust Cloud", new Vector2(0, 0), new Interval(100, 150), new Interval(100, 150), new Interval(-MathHelper.Pi, MathHelper.Pi), 50, new Interval(500, 1000), 1000, -1, new Interval(-MathHelper.Pi, MathHelper.Pi), new Interval(-0.01, 0.01));
 
         _emitter = go.GetComponent<ParticleEmitter>();
 
@@ -86,34 +86,10 @@ public class WeaponTestScene : Scene
     }
 
 
-    private void BlodEmitter()
-    {
-        // Would need to make the direction a cone, so change that part. 
-        GameObject go = EmitterFactory.CreateParticleEmitter("Blod Cloud", new Vector2(200, 0), new Interval(250, 350), new Interval(-0.9, -0.9), 10, new Interval(5000, 5000), 1000, -1, new Interval(-MathHelper.Pi, 0), new Interval(-0.01, 0.01));
-
-        _emitter = go.GetComponent<ParticleEmitter>();
-        //_emitter.FollowGameObject(_playerGo, new Vector2(0, 25));
-        _emitter.LayerName = LayerDepth.EnemyUnder;
-        _emitter.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel4x4));
-        _emitter.AddModifier(new ColorRangeModifier(new Color[] { new Color(100, 40, 40, 255), new Color(50, 10, 10, 255) }));
-
-        // Should have a force birth modifere, and a speed modifier. 
-        // Could change the birth speed
-        _emitter.AddModifier(new GravityModifier());
-
-        _emitter.AddModifier(new DrawModifier(_bounce, _friction, _stopAmount, _velocityDrag));
-        
-        _emitter.AddModifier(new ScaleModifier(4, 2));
-
-        //_emitter.Origin = new RectangleOrigin(20, 40);
-
-        GameWorld.Instance.Instantiate(go);
-    }
-
 
     private void FairyEmitter()
     {
-        GameObject go = EmitterFactory.CreateParticleEmitter("Dust Cloud", new Vector2(0, 0), new Interval(250, 550), new Interval(-MathHelper.Pi, 0), 300, new Interval(1500, 2000), 1000, -1, new Interval(-MathHelper.Pi, 0));
+        GameObject go = EmitterFactory.CreateParticleEmitter("Dust Cloud", new Vector2(0, 0), new Interval(250, 550), new Interval(250, 550), new Interval(-MathHelper.Pi, 0), 300, new Interval(1500, 2000), 1000, -1, new Interval(-MathHelper.Pi, 0));
 
         _emitter = go.GetComponent<ParticleEmitter>();
         _emitter.LayerName = LayerDepth.EnemyUnder;
@@ -134,7 +110,7 @@ public class WeaponTestScene : Scene
 
     private void SpaceEmitter()
     {
-        GameObject go = EmitterFactory.CreateParticleEmitter("Space Dust", new Vector2(0, 0), new Interval(50, 100), new Interval(-MathHelper.Pi, MathHelper.Pi), 200, new Interval(3000, 4000), 300, -1, new Interval(-MathHelper.Pi, MathHelper.Pi));
+        GameObject go = EmitterFactory.CreateParticleEmitter("Space Dust", new Vector2(0, 0), new Interval(50, 100), new Interval(50, 100), new Interval(-MathHelper.Pi, MathHelper.Pi), 200, new Interval(3000, 4000), 300, -1, new Interval(-MathHelper.Pi, MathHelper.Pi));
 
         _emitter = go.GetComponent<ParticleEmitter>();
         _emitter.LayerName = LayerDepth.WorldBackground;
@@ -148,29 +124,117 @@ public class WeaponTestScene : Scene
 
         GameWorld.Instance.Instantiate(go);
     }
+    #endregion
 
-    //int nmb = 100;
-    Random rnd = new();
+
+
+    private void BlodEmitter()
+    {
+        // Would need to make the direction a cone, so change that part. 
+        GameObject go = EmitterFactory.CreateParticleEmitter("Blod Cloud", _playerGo.Transform.Position, _speed, _speed, _direction, 100, new Interval(1000, 5000), 1000, 0.1f, new Interval(-MathHelper.Pi, 0), new Interval(-0.001, 0.001));
+
+        _emitter = go.GetComponent<ParticleEmitter>();
+        _emitter.FollowGameObject(_playerGo, new Vector2(0, 25));
+        _emitter.LayerName = LayerDepth.DamageParticles;
+        _emitter.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel4x4));
+        _emitter.AddModifier(new ColorRangeModifier(new Color[] { new Color(100, 40, 40, 255), new Color(50, 10, 10, 255) }));
+
+        // Should have a force birth modifere, and a speed modifier. 
+        // Could change the birth speed
+        _emitter.AddModifier(new GravityModifier(_gravity));
+
+        _dragModifier = new DragModifier(_bounce, _friction, _stopAmount, _velocityDrag);
+        _emitter.AddModifier(_dragModifier);
+
+        _emitter.AddModifier(new ScaleModifier(4, 2));
+
+        _emitter.Origin = new RectangleOrigin(40, 20);
+
+        GameWorld.Instance.Instantiate(go);
+    }
+
+
+    private DragModifier _dragModifier;
+    private Random _rnd = new();
+    private float _bounce = 0.2f;
+    private float _friction = 0.5f;
+    private int _stopAmount = 55;
+    private float _velocityDrag = 1f;
+    private Interval _speed = new Interval(200, 500);
+    private Interval _direction = new Interval(0, MathHelper.PiOver2);
+    private int _gravity = 30;
+
+    private float _angle;
+    private float _cone = MathHelper.PiOver4;
+    private void TestDirection()
+    {
+        Vector2 mousePos = InputHandler.Instance.MouseInWorld;
+        Vector2 playerPos = _playerGo.Transform.Position;
+
+        // From player to mouse
+        Vector2 direction = playerPos - mousePos;
+        _angle = (float)Math.Atan2(direction.Y, direction.X);
+
+        _emitter.Direction = new Interval(_angle - _cone, _angle + _cone);
+    }
+
     private void SetCommands()
     {
         //InputHandler.Instance.AddMouseButtonDownCommand(MouseCmdState.Right, new CustomCmd(player.Attack));
         InputHandler.Instance.AddKeyButtonDownCommand(Keys.V, new CustomCmd(_emitter.StartEmitter));
         InputHandler.Instance.AddKeyButtonDownCommand(Keys.B, new CustomCmd(_emitter.StopEmitter));
 
-        //InputHandler.Instance.AddKeyButtonDownCommand(Keys.E, new CustomCmd(() => { player.GameObject.GetComponent<Health>().TakeDamage(rnd.Next(10, 50)); }));
-        //InputHandler.Instance.AddKeyButtonDownCommand(Keys.N, new CustomCmd(() =>
-        //{
-        //    nmb++;
-        //    emitter.SetParticleText(new TextOnSprite()
-        //    {
-        //        Text = nmb.ToString()
-        //    });
-        //}));
-        InputHandler.Instance.AddKeyButtonDownCommand(Keys.W, new CustomCmd(() => { _player.GameObject.GetComponent<Health>().TakeDamage(1000000); }));
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.Q, new CustomCmd(() => { _bounce += -0.005f; }));
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.W, new CustomCmd(() => { _bounce += 0.005f; }));
 
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.E, new CustomCmd(() => { _friction += -0.005f; }));
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.R, new CustomCmd(() => { _friction += 0.005f; }));
+
+
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.A, new CustomCmd(() => { _stopAmount += -1; }));
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.S, new CustomCmd(() => { _stopAmount += 1; }));
+
+
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.D, new CustomCmd(() => { _velocityDrag += -0.05f; }));
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.F, new CustomCmd(() => { _velocityDrag += 0.05f; }));
+
+
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.Z, new CustomCmd(() => { _emitter.StartZVel += -1; }));
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.X, new CustomCmd(() => { _emitter.StartZVel += 1; }));
+
+        int speedChangeAmount = 20;
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.D1, new CustomCmd(() => {
+            _emitter.SpeedX.Min += -speedChangeAmount;
+            _emitter.SpeedX.Max += -speedChangeAmount;
+        }));
+
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.D2, new CustomCmd(() => {
+            _emitter.SpeedX.Min += speedChangeAmount;
+            _emitter.SpeedX.Max += speedChangeAmount;
+        }));
+
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.NumPad3, new CustomCmd(() => { _emitter.Direction = new Interval(0, MathHelper.PiOver2); }));
+
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.NumPad1, new CustomCmd(() => { _emitter.Direction = new Interval(MathHelper.PiOver2, MathHelper.Pi); }));
+
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.NumPad7, new CustomCmd(() => { _emitter.Direction = new Interval(MathHelper.Pi, MathHelper.Pi * 1.5); }));
+
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.NumPad9, new CustomCmd(() => { _emitter.Direction = new Interval(MathHelper.Pi * 1.5 + MathHelper.TwoPi, MathHelper.TwoPi * 2); }));
 
         InputHandler.Instance.AddKeyButtonDownCommand(Keys.Escape, new CustomCmd(GameWorld.Instance.Exit));
     }
+
+
+    public override void Update()
+    {
+        if (_dragModifier != null)
+        {
+            _dragModifier.UpdateValue(_bounce, _friction, _stopAmount, _velocityDrag);
+        }
+        TestDirection();
+        base.Update();
+    }
+
 
     public override void DrawInWorld(SpriteBatch spriteBatch)
     {
@@ -189,15 +253,24 @@ public class WeaponTestScene : Scene
 
         //pos += offset;
         //DrawString(spriteBatch, $"Next anim: {weapon.NextAnim} | Rot: {weapon.Animations[weapon.NextAnim].AmountOfRotation}", pos);
+        pos += offset;
+        DrawString(spriteBatch, $"Bounce QW: {_bounce}", pos);
+        pos += offset;
+        DrawString(spriteBatch, $"Friction ER: {_friction}", pos);
+        pos += offset;
+        DrawString(spriteBatch, $"Stop amount AS: {_stopAmount}", pos);
+        pos += offset;
+        DrawString(spriteBatch, $"Vel Drag DF: {_velocityDrag}", pos);
+        pos += offset;
+        DrawString(spriteBatch, $"Start Z vel ZX: {_emitter.StartZVel}", pos);
+        pos += offset;
+        DrawString(spriteBatch, $"Speed 12: Min:{_emitter.SpeedX.Min}, Max: {_emitter.SpeedX.Max}", pos);
 
         pos += offset;
-        DrawString(spriteBatch, $"Bounce : {_bounce}", pos);
         pos += offset;
-        DrawString(spriteBatch, $"Friction : {_friction}", pos);
+        DrawString(spriteBatch, $"Mouse to player Direction: {_angle}", pos);
         pos += offset;
-        DrawString(spriteBatch, $"Stop amount : {_stopAmount}", pos);
-        pos += offset;
-        DrawString(spriteBatch, $"Vel Drag : {_velocityDrag}", pos);
+        DrawString(spriteBatch, $"Direction: Min:{_emitter.Direction.Min}, Max: {_emitter.Direction.Max}", pos);
 
         //pos += offset;
         //DrawString(spriteBatch, $"Active count: {_emitter.ParticlePool.Active.Count}", pos);
@@ -209,16 +282,9 @@ public class WeaponTestScene : Scene
         //DrawString(spriteBatch, $"Mouse pos World: {InputHandler.Instance.MouseInWorld}", pos);
 
         // To check if its any of these that makes it from
-        // QW for bounce 0.05
-        // ER for friction 0.05
-        // AS stop amount = change 5 each time
-        // DF for vel drag = change 0.05
+
     }
-    
-    private float _bounce = 0.25f;
-    private float _friction = 0.85f;
-    private int _stopAmount = 60;
-    private float _velocityDrag = 0.95f;
+
 
     protected void DrawString(SpriteBatch spriteBatch, string text, Vector2 position)
     {

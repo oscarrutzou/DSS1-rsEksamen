@@ -27,12 +27,12 @@ public class CharacterSelectorMenu : MenuScene
         ClassTypes.Rogue,
     };
 
-
-
     private int _spaceBetween = 30;
 
     public override void Initialize()
     {
+        SaveData.SetBaseValues();
+
         _classWeaponButton = new();
         _classButtons = new();
         _weaponButtons = new();

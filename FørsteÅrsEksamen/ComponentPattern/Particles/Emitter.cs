@@ -32,14 +32,16 @@ public class Emitter : Component
     public Origin Origin { get; set; } = new PointOrigin();
     protected bool ShouldShowSprite { get; set; } = true;
     public double TotalSeconds { get; set; }
-    protected Interval Speed;
+    public Interval SpeedX;
+    public Interval SpeedY;
+    public Interval SpeedZ;
 
     public Dictionary<Type, Modifier> Modifiers { get; set; } = new();
     public Dictionary<Type, BirthModifier> BirthModifiers { get; set; } = new();
     protected Interval MaxAge;
     public EmitterState State = EmitterState.INIT;
     protected double ReleaseTime { get; set; } = 0;
-    protected Interval Direction;
+    public Interval Direction;
     protected Interval Rotation;
     protected Interval RotationVelocity;
     protected TextOnSprite TextOnSprite;
@@ -65,18 +67,19 @@ public class Emitter : Component
     /// <param name="gameObject"></param>
     /// <param name="name"></param>
     /// <param name="pos"></param>
-    /// <param name="speed"></param>
+    /// <param name="speedX"></param>
     /// <param name="direction"></param>
     /// <param name="particlesPerSecond"></param>
     /// <param name="maxAge"></param>
     /// <param name="maxAmount"></param>
     /// <param name="timeBeforeStop">If the time is not set, the emitter will not stop</param>
     /// <param name="rotationVelocity"></param>
-    public Emitter(GameObject gameObject, string name, Vector2 pos, Interval speed, Interval direction, float particlesPerSecond, Interval maxAge, int maxAmount, double timeBeforeStop = -1, Interval rotation = null, Interval rotationVelocity = null) : base(gameObject)
+    public Emitter(GameObject gameObject, string name, Vector2 pos, Interval speedX, Interval speedY, Interval direction, float particlesPerSecond, Interval maxAge, int maxAmount, double timeBeforeStop = -1, Interval rotation = null, Interval rotationVelocity = null) : base(gameObject)
     {
         EmitterName = name;
         Position = pos;
-        Speed = speed;
+        SpeedX = speedX;
+        SpeedY = speedY;
         Direction = direction;
         MaxParticlesPerSecond = particlesPerSecond;
         ParticlesPerSecond = MaxParticlesPerSecond;
@@ -212,10 +215,12 @@ public class Emitter : Component
         {
             _stopTime += GameWorld.DeltaTime;
             ParticlesPerSecond = MathHelper.SmoothStep(_stopCount, 0, (float)_stopTime);
-            if (ParticlesPerSecond <= 0)
+            if (ParticlesPerSecond <= 0 || AbrubtStop)
             {
                 State = EmitterState.STOPPED;
             }
         }
     }
+
+    public bool AbrubtStop;
 }

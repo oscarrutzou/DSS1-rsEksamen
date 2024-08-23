@@ -226,7 +226,8 @@ public abstract class RoomBase : Scene
         {
             SaveData.Time_Left = 0;
             SaveData.LostByTime = true;
-            _playerHealth.TakeDamage(1000); // Kills the player
+            // Makes the blood spray up, could make it positive or negative depending of the direction
+            _playerHealth.TakeDamage(1000, _player.GameObject.Transform.Position + new Vector2(30, -30)); // Kills the player
         }
 
         // Check if enemies has been killed

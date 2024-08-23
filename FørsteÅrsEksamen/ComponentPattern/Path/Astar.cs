@@ -40,11 +40,11 @@ public class Astar
     public List<GameObject> FindPath(Point start, Point goal)
     {
         // Maybe check if the found path is the same as any of the others here.
-        Point newPoint = GetNewPointIfOcupated();
-        if (newPoint != new Point(-1, -1))
-        {
-            goal = newPoint;
-        }
+        //Point newPoint = GetNewPointIfOcupated();
+        //if (newPoint != new Point(-1, -1))
+        //{
+        //    goal = newPoint;
+        //}
 
         this._start = start;
         ResetCells(); // Gets the Cells ready
@@ -254,7 +254,8 @@ public class Astar
             if (!(nx >= 0 && nx < _gridDem && ny >= 0 && ny < _gridDem) || !_cells.ContainsKey(newPoint)) continue;
 
             Cell newPointCell = _cells[newPoint].GetComponent<Cell>();
-            if (newPointCell.CellWalkableType == CellWalkableType.NotValid) continue;
+            if (newPointCell.CellWalkableType == CellWalkableType.NotValid 
+                || newPointCell.CollisionNr == -1) continue;
 
             //Check if the cell is diagonally adjacent
             if (Math.Abs(point.X - nx) == 1 && Math.Abs(point.Y - ny) == 1)

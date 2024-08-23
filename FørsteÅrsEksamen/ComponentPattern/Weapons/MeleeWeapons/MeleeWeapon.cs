@@ -209,7 +209,8 @@ public abstract class MeleeWeapon : Weapon
         if (EnemyUser != null)
             damage /= EnemyWeakness;
 
-        health.TakeDamage((int)damage);
+
+        health.TakeDamage((int)damage, User.GameObject.Transform.Position);
     }
 
 

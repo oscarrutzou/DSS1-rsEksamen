@@ -82,6 +82,7 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
 
             if (!HasBeenAwoken || Health.IsDead) return;
 
+
             if (_spawnTimer < _spawnCooldown)
             {
                 _spawnTimer += GameWorld.DeltaTime;
@@ -89,7 +90,6 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
 
             SpawnEnemy();
         }
-
 
         private void SpawnEnemy()
         {
@@ -138,7 +138,6 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
             }
 
         }
-
 
     }
 }

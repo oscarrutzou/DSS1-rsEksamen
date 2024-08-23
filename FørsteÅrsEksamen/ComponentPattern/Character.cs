@@ -14,6 +14,9 @@ using static System.Net.Mime.MediaTypeNames;
 using SharpDX.X3DAudio;
 using DoctorsDungeon.ComponentPattern.Path;
 using DoctorsDungeon.Other;
+using System;
+using DoctorsDungeon.ComponentPattern.Enemies;
+using DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons;
 
 namespace DoctorsDungeon.ComponentPattern;
 
@@ -43,7 +46,7 @@ public abstract class Character : Component
     public Vector2 Direction { get; protected set; } 
     public CharacterState State { get; protected set; } = CharacterState.Moving; // We use the method SetState, to we can change the animations and other variables.
     public int CollisionNr { get; set; }
-
+    protected bool IsEnemy;
     public SpriteRenderer SpriteRenderer { get; protected set; }
     protected Animator Animator;
     protected Collider Collider { get; set; }
@@ -54,11 +57,14 @@ public abstract class Character : Component
     protected AnimationDirectionState DirectionState = AnimationDirectionState.Right;
     protected int Speed { get; set; }
     protected Grid Grid;
+
+    #region DamageEmitter
     public ParticleEmitter DamageTakenEmitter { get; private set; }
     protected Color[] DamageTakenAmountTextColor = new Color[] { Color.OrangeRed, Color.DarkRed, Color.Transparent };
+    #endregion
 
+    #region DustCloudEmitter
     private ParticleEmitter _dustCloudEmitter;
-
     private const float _startTimeToRotate = 0.3f;                // Initial time to complete rotation
     private const float _amountToRotationWhenWalking = 0.05f;     // Amount to rotate when walking
     private float _walkRotationTimer;                             // Timer for rotation
@@ -66,6 +72,19 @@ public abstract class Character : Component
     private bool _rotateRight = true;                             // Direction of rotation
     private bool _firstRot = true;                                // Flag for initial rotation
     private float _startRot;                                      // Starting rotation value
+
+    #endregion
+
+    #region Blood Emitter
+    private Color[] _playerBlood = new Color[] { new Color(100, 40, 40, 255), new Color(50, 10, 10, 255) };
+    private Color[] _orcBlood = new Color[] { new Color(75, 114, 65, 255), new Color(35, 66, 42, 255) };
+    private ParticleEmitter _bloodCloud;
+    private float _angle;
+    private float _cone = MathHelper.PiOver4 * 0.5f;
+    private float _bloodPrDmg = 4.0f;
+    private int _maxBloodParticles = 200;
+    #endregion
+
     #endregion Properties
 
     public Character(GameObject gameObject) : base(gameObject)
@@ -82,6 +101,12 @@ public abstract class Character : Component
 
         Health = GameObject.GetComponent<Health>();
         SetActionInHealth();
+
+        if (GameObject.GetComponent<Enemy>() != null)
+        {
+            IsEnemy = true;
+        }
+        else IsEnemy = false;
 
         if (WeaponGo != null)
         {
@@ -273,13 +298,65 @@ public abstract class Character : Component
     {
         MakeDustEmitter();
         MakeDamageTakenEmitter();
+        
+        MakeBlodEmitter();
 
+        Health.AttackerPositionDamageTaken += SetBloodDirection;
+        Health.AmountDamageTaken += SetBloodAmountOfParticles;
         Health.AmountDamageTaken += OnDamageTakenText;
+    }
+
+    private void SetBloodAmountOfParticles(int damage)
+    {
+        // If this is a enemy, we dont multiple since the other would be a player
+        if (!IsEnemy) damage = (int)(damage * MeleeWeapon.EnemyWeakness);
+
+        int minAmount = Math.Min((int)(damage * _bloodPrDmg), _maxBloodParticles);
+        _bloodCloud.MaxParticlesPerSecond = minAmount;
+        _bloodCloud.ParticlesPerSecond = _bloodCloud.MaxParticlesPerSecond;
+    }
+
+
+    private void MakeBlodEmitter()
+    {
+        // Would need to make the direction a cone, so change that part. 
+        GameObject go = EmitterFactory.CreateParticleEmitter("Blood Cloud", GameObject.Transform.Position, new Interval(300, 400), new Interval(0, 0), new Interval(0, MathHelper.PiOver2), _maxBloodParticles, new Interval(1000, 5000), 1000, 0.1f, new Interval(-MathHelper.Pi, 0), new Interval(-0.001, 0.001));
+
+        _bloodCloud = go.GetComponent<ParticleEmitter>();
+        _bloodCloud.FollowGameObject(GameObject, new Vector2(0, 0));
+        _bloodCloud.LayerName = LayerDepth.DamageParticles;
+        _bloodCloud.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel4x4));
+        _bloodCloud.AbrubtStop = true;
+
+        Color[] color;
+        if (GameObject.GetComponent<Player>() != null)
+            color = _playerBlood;
+        else color = _orcBlood;
+        
+        _bloodCloud.AddModifier(new ColorRangeModifier(color));
+        _bloodCloud.AddModifier(new GravityModifier(30));
+        _bloodCloud.AddModifier(new DragModifier(0.2f, 0.5f, 55, 1f));
+        _bloodCloud.AddModifier(new ScaleModifier(2.5f, 1.5f));
+
+        _bloodCloud.Origin = new RectangleOrigin(40, 20);
+
+        GameWorld.Instance.Instantiate(go);
+    }
+
+    private void SetBloodDirection(Vector2 attackingPos)
+    {
+        // From this character to the character that has attacked it.
+        Vector2 direction = GameObject.Transform.Position - attackingPos;
+        _angle = (float)Math.Atan2(direction.Y, direction.X);
+
+        _bloodCloud.Direction = new Interval(_angle - _cone, _angle + _cone);
+
+        _bloodCloud.StartEmitter();
     }
 
     private void MakeDustEmitter()
     {
-        GameObject go = EmitterFactory.CreateParticleEmitter("Dust Cloud", new Vector2(200, -200), new Interval(50, 100), new Interval(-MathHelper.Pi, 0), 20, new Interval(500, 1000), 1000, -1, new Interval(-MathHelper.Pi, 0), new Interval(-0.01, 0.01));
+        GameObject go = EmitterFactory.CreateParticleEmitter("Dust Cloud", new Vector2(200, -200), new Interval(50, 100), new Interval(50, 100), new Interval(-MathHelper.Pi, 0), 20, new Interval(500, 1000), 1000, -1, new Interval(-MathHelper.Pi, 0), new Interval(-0.01, 0.01));
 
         _dustCloudEmitter = go.GetComponent<ParticleEmitter>();
         _dustCloudEmitter.FollowGameObject(GameObject, new Vector2(0, 25));

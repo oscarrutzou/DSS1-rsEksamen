@@ -23,7 +23,7 @@ public class ParticleEmitter : Emitter
     {
     }
 
-    public ParticleEmitter(GameObject gameObject, string name, Vector2 pos, Interval speed, Interval direction, float particlesPerSecond, Interval maxAge, int maxAmount, double timeBeforeStop = -1, Interval rotation = null, Interval rotationVelocity = null) : base(gameObject, name, pos, speed, direction, particlesPerSecond, maxAge, maxAmount, timeBeforeStop, rotation, rotationVelocity)
+    public ParticleEmitter(GameObject gameObject, string name, Vector2 pos, Interval speedX, Interval speedY, Interval direction, float particlesPerSecond, Interval maxAge, int maxAmount, double timeBeforeStop = -1, Interval rotation = null, Interval rotationVelocity = null) : base(gameObject, name, pos, speedX, speedY, direction, particlesPerSecond, maxAge, maxAmount, timeBeforeStop, rotation, rotationVelocity)
     {
     }
 
@@ -100,6 +100,7 @@ public class ParticleEmitter : Emitter
             }
         }
     }
+    public int StartZVel = 10;
 
     private void AddParticle()
     {
@@ -114,9 +115,14 @@ public class ParticleEmitter : Emitter
 
         Matrix matrix = Matrix.CreateRotationZ((float)Direction.GetValue());
 
-        int startZ = 20;
-        Vector3 velocity = new Vector3((float)Speed.GetValue(), 0, startZ);
+        // Calculate the cone angle (in radians)
+        float coneAngle = MathHelper.ToRadians(45); // Example: 45 degrees
 
+        // Calculate the desired SpeedY based on the cone angle
+        float desiredSpeedY = (float)Math.Tan(coneAngle) * StartZVel;
+
+        // Use the desiredSpeedY to set the VelocityZ
+        Vector3 velocity = new Vector3((float)SpeedX.GetValue(), 0, StartZVel);
         particle.VelocityZ = Vector3.Transform(velocity, matrix);
 
         particle.Position = Position + data.Position;

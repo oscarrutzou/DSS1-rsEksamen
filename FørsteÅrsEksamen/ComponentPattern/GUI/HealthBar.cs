@@ -1,4 +1,6 @@
-﻿using DoctorsDungeon.ComponentPattern.WorldObjects;
+﻿using DoctorsDungeon.ComponentPattern.Enemies;
+using DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies;
+using DoctorsDungeon.ComponentPattern.WorldObjects;
 using DoctorsDungeon.GameManagement;
 using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
@@ -14,6 +16,7 @@ namespace DoctorsDungeon.ComponentPattern.GUI
     public class HealthBar : ScalableBar
     {
         private GameObject _characterGo;
+        private Enemy _bossEnemy;
         private Health _characterHealth;
         private bool _playerHealth;
 
@@ -61,11 +64,15 @@ namespace DoctorsDungeon.ComponentPattern.GUI
                 Position = GameWorld.Instance.UiCam.BottomCenter + _bossBarOffset;
                 SpriteRenderer.SetSprite(TextureNames.BossHealthOver);
                 Collider.SetCollisionBox(_bossHealthBarWidth, _bossHealthBarHeight);
+
+                _bossEnemy = _characterGo.GetComponent<Enemy>();
             }
         }
 
         public override void Update()
         {
+            HideBarIfBossNotAwake();
+
             sizeOfDrawnBar = (float)_characterHealth.CurrentHealth / _characterHealth.MaxHealth;
 
             if (!_characterHealth.IsDead) return;
@@ -77,8 +84,17 @@ namespace DoctorsDungeon.ComponentPattern.GUI
             _timer = 0;
         }
 
+        private void HideBarIfBossNotAwake()
+        {
+            if (_bossEnemy == null) return;
+
+            SpriteRenderer.ShouldDrawSprite = _bossEnemy.HasBeenAwoken;
+        }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
+            if (!SpriteRenderer.ShouldDrawSprite) return;
+
             base.Draw(spriteBatch);
 
             Vector2 pos = Collider.CollisionBox.Center.ToVector2();

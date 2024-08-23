@@ -171,14 +171,8 @@ public abstract class Enemy : Character
 
         Point playerPos = PlayerGo.Transform.GridPosition;
 
-        if (Player.CollisionNr == CollisionNr && !HasBeenAwoken)
-        {
-            TargetPoint = playerPos;
-            SetPath();
-        }
-
         // If X is more that z cells away, it should start a new target. The same with Y
-        if (Math.Abs(playerPos.X - TargetPoint.X) >= CellPlayerMoveBeforeNewTarget ||
+        if (Player.CollisionNr == CollisionNr && !HasBeenAwoken || Math.Abs(playerPos.X - TargetPoint.X) >= CellPlayerMoveBeforeNewTarget ||
             Math.Abs(playerPos.Y - TargetPoint.Y) >= CellPlayerMoveBeforeNewTarget)
         {
             TargetPoint = playerPos;

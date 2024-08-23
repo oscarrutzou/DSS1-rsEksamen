@@ -38,7 +38,7 @@ public abstract class Weapon : Component
     protected float StartAnimationAngle { get; set; }
 
     protected double AttackedTotalElapsedTime { get; set; }
-    protected float EnemyWeakness = 2.5f; // What to divide with, to make enemie attacks weaker.
+    public static float EnemyWeakness = 2.5f; // What to divide with, to make enemie attacks weaker.
 
     public bool Attacking { get; protected set; }
 

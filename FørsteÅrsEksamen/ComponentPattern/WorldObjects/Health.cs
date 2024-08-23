@@ -27,6 +27,7 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
         public Action OnResetColor { get; set; }
         public bool IsDead { get; private set; }
         public Action<int> AmountDamageTaken { get; set; }
+        public Action<Vector2> AttackerPositionDamageTaken { get; set; }
         public Health(GameObject gameObject) : base(gameObject)
         {
         }
@@ -78,11 +79,18 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
         }
 
 
-        public void TakeDamage(int damage)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="damage"></param>
+        /// <param name="attackersPosition">This is what will later be used if the character gets hit with a projectile.
+        /// <para>So we dont make it spray blood out from where the magic caster was (Would be weird)</para></param>
+        public void TakeDamage(int damage, Vector2 attackersPosition)
         {
             if (CurrentHealth <= 0) return; // Already dead
 
             AmountDamageTaken?.Invoke(damage);
+            AttackerPositionDamageTaken?.Invoke(attackersPosition);
 
             int newHealth = CurrentHealth - damage;
 

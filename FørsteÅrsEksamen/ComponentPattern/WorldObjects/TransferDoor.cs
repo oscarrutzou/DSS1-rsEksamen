@@ -38,7 +38,7 @@ public class TransferDoor : Component
 
     private void MakeEmitter()
     {
-        GameObject go = EmitterFactory.CreateParticleEmitter("Dust Cloud", GameObject.Transform.Position, new Interval(50, 80), new Interval(-MathHelper.Pi, MathHelper.Pi), 20, new Interval(1000, 2000), 100, -1, new Interval(-MathHelper.Pi, MathHelper.Pi), new Interval(-0.01, 0.01));
+        GameObject go = EmitterFactory.CreateParticleEmitter("Dust Cloud", GameObject.Transform.Position, new Interval(50, 80), new Interval(50, 80), new Interval(-MathHelper.Pi, MathHelper.Pi), 20, new Interval(1000, 2000), 100, -1, new Interval(-MathHelper.Pi, MathHelper.Pi), new Interval(-0.01, 0.01));
 
         emitter = go.GetComponent<ParticleEmitter>();
         emitter.LayerName = LayerDepth.EnemyUnder;
