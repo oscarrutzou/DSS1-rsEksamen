@@ -17,13 +17,8 @@ public enum LayerDepth
     BackgroundDecoration,
 
     EnemyUnder,
-    //EnemyUnderWeapon,
-
     Player,
-    //PlayerWeapon,
-
     EnemyOver,
-    //EnemyOverWeapon,
 
     DamageParticles,
     WorldForeground,

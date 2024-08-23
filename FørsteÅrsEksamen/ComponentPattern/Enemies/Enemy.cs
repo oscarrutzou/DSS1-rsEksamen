@@ -21,7 +21,7 @@ public abstract class Enemy : Character
     public Player Player;
     private SpriteRenderer _weaponSpriteRenderer;
 
-    private List<Enemy> _enemyList = new();
+    private List<Enemy> _enemyListRefs = new();
     /// <summary>
     /// Astar path with a list of Cell GameObjects. Gets set in astar
     /// </summary>
@@ -46,7 +46,7 @@ public abstract class Enemy : Character
 
     private readonly int _distanceStopFromTarget = 2; // The amount of distance the enemy has to the player
 
-
+    private float _randomOffsetSeed;
     #endregion Properties
 
     public Enemy(GameObject gameObject) : base(gameObject)
@@ -102,14 +102,16 @@ public abstract class Enemy : Character
 
     public void SetStartEnemyRefs(List<Enemy> enemies)
     {
-        _enemyList = enemies.Where(enemy => enemy != this).ToList();
+        _enemyListRefs = enemies.Where(enemy => enemy != this).ToList();
+        Astar.UpdateEnemyListReferences(_enemyListRefs);
     }
 
     public override void Start()
     {
-        Astar.Start(this, _enemyList);
-        SpriteRenderer.SetLayerDepth(LayerDepth.EnemyUnder);
+        Astar.Start(this, _enemyListRefs);
 
+        SetRandomOffsetSeed();
+        
         SetState(CharacterState.Idle);
 
         // Sets start position
@@ -119,6 +121,11 @@ public abstract class Enemy : Character
 
         if (Player.CollisionNr == CollisionNr) SetPath(); // We know that the player the targetPoint has been set
     }
+    private void SetRandomOffsetSeed()
+    {
+        _randomOffsetSeed = (float)_rnd.NextDouble();
+    }
+
 
     public override void Update()
     {
@@ -241,7 +248,7 @@ public abstract class Enemy : Character
     private void CheckLayerDepth()
     {
         // Offset for layerdepth, so the enemies are not figting for which is shown.
-        float offSet = GameObject.Transform.Position.Y / 10_000_000f; // IMPORTANT, THIS CAN CHANGE WHAT LAYER ITS DRAWN ON
+        float offSet = (GameObject.Transform.Position.Y + _randomOffsetSeed) / 10_000_000f; // IMPORTANT, THIS CAN CHANGE WHAT LAYER ITS DRAWN ON
         if (GameObject.Transform.Position.Y < PlayerGo.Transform.Position.Y)
             SpriteRenderer.SetLayerDepth(LayerDepth.EnemyUnder, offSet);
         else
@@ -277,7 +284,7 @@ public abstract class Enemy : Character
         if (Vector2.Distance(position, _nextTarget) < _thresholdToTargetCell)
         {
             bool enemyOnPath = false;
-            foreach (Enemy enemy in _enemyList)
+            foreach (Enemy enemy in _enemyListRefs)
             {
                 if (Path.Count <= 1) break;
 

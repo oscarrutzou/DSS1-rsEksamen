@@ -32,7 +32,7 @@ public class Astar
         );
     }
 
-    public void SetEnemyListReferences(List<Enemy> enemyList)
+    public void UpdateEnemyListReferences(List<Enemy> enemyList)
     {
         _otherEnemies = enemyList;
     }
@@ -170,10 +170,14 @@ public class Astar
         List<GameObject> availableTargets = new();
 
         bool shouldChange = false;
+
         foreach (Enemy otherEnemy in _otherEnemies)
         {
-            if (otherEnemy.TargetPoint != _thisEnemy.TargetPoint) continue;
+            if (otherEnemy.TargetPoint != _thisEnemy.TargetPoint
+                && otherEnemy.GameObject.Transform.GridPosition != _thisEnemy.TargetPoint) continue;
+
             shouldChange = true;
+            break;
         }
 
         if (!shouldChange) return retPoint;
@@ -186,9 +190,11 @@ public class Astar
 
             foreach (Enemy otherEnemy in _otherEnemies)
             {
-                if (neighborGo.Transform.GridPosition != otherEnemy.TargetPoint) continue;
-
+                if (neighborGo.Transform.GridPosition != otherEnemy.TargetPoint
+                    && neighborGo.Transform.GridPosition != otherEnemy.GameObject.Transform.GridPosition) continue;
+                
                 cellBeingUsed = true;
+
                 break;
             }
 
@@ -196,11 +202,20 @@ public class Astar
         }
 
         GameObject closestTarget = null;
-
         // To select one of the targets, to spread out the enemies. Dosent take into account the classes
-        // Also have the bug where if the target is on the other side of the player, it will stop inside the player
-        // This is caused since the enemy only follows to a certain point and stop a bit before the end target. (More in CoDecks)
         closestTarget = availableTargets[_rnd.Next(0, availableTargets.Count)];
+
+        //float closestDistance = 100000;
+        //foreach (GameObject targetTile in availableTargets)
+        //{
+        //    float currentDistanceToThis = Vector2.Distance(_thisEnemy.GameObject.Transform.Position, targetTile.Transform.Position);
+
+        //    if (currentDistanceToThis < closestDistance)
+        //    {
+        //        closestDistance = currentDistanceToThis;
+        //        closestTarget = targetTile;
+        //    }
+        //}
 
         retPoint = closestTarget.Transform.GridPosition;
         _thisEnemy.TargetPoint = retPoint;
@@ -215,6 +230,8 @@ public class Astar
     /// <returns></returns>
     private List<GameObject> GetNeighbors(Point point)
     {
+        // Could make this return alle neighbors inside a rectangle. Just the point then the amount.
+        // Go to -amount, -amount, and check each towards amount x and y. Just not the same point
         List<GameObject> temp = new List<GameObject>();
         List<(int dx, int dy)> directions = new List<(int, int)>
         {

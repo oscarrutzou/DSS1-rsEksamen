@@ -59,15 +59,6 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
             MakeSpawner();
         }
 
-        public override void Start()
-        {
-            base.Start();
-
-            // Random cell
-            //PickRandomPoint();
-            //SetPath();
-        }
-
         private void MakeSpawner()
         {
             GameObject spawnerGo = new();
@@ -89,13 +80,14 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
         {
             base.Update();
 
+            if (!HasBeenAwoken || Health.IsDead) return;
+
             if (_spawnTimer < _spawnCooldown)
             {
                 _spawnTimer += GameWorld.DeltaTime;
             }
 
-            if (Health.IsDead) return;
-            //SpawnEnemy();
+            SpawnEnemy();
         }
 
 
@@ -121,7 +113,8 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
             // Spawn enemy at location.
             _points.Clear();
 
-            // Select a random point
+            // Select a random point to spawn the enemy, within a certain radius.
+            // Also where it should spawn a visual effect for the spawner, before it spawns.
 
             // Amount to spawn
             _points.Add(GameObject.Transform.GridPosition);
@@ -132,11 +125,18 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
 
             _spawnedEnemies.AddRange(newEnemies);
 
+            // All spawned enemies know where the player is
             foreach (Enemy enemy in _spawnedEnemies)
             {
-                enemy.Astar.SetEnemyListReferences(_spawnedEnemies);
                 enemy.HasBeenAwoken = true;
             }
+
+            // Need to update them all
+            foreach (Enemy enemy in _roomBase.EnemiesInRoom)
+            {
+                enemy.SetStartEnemyRefs(_roomBase.EnemiesInRoom);
+            }
+
         }
 
 
