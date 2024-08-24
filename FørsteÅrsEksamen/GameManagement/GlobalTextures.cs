@@ -59,9 +59,15 @@ public static class GlobalTextures
     public static SpriteFont DefaultFont { get; private set; }
     public static SpriteFont BigFont { get; private set; }
 
+    public static Effect TeleportEffect, BloomEffect;
+
     public static void LoadContent()
     {
         ContentManager content = GameWorld.Instance.Content;
+
+        TeleportEffect = content.Load<Effect>("Shaders\\Teleport");
+        BloomEffect = content.Load<Effect>("Shaders\\Bloom");
+
         // Load all textures
         Textures = new Dictionary<TextureNames, Texture2D>
         {

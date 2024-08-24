@@ -209,12 +209,26 @@ public abstract class Scene
     /// <param name="spriteBatch"></param>
     public virtual void DrawOnScreen(SpriteBatch spriteBatch)
     {
+        DrawMouse(spriteBatch);
+
         // Draw all Gui GameObjects in the active scene.
         foreach (GameObject gameObject in SceneData.GameObjectLists[GameObjectTypes.Gui])
         {
             gameObject.Draw(spriteBatch);
         }
     }
+
+    private void CheckForEffects(SpriteBatch spriteBatch)
+    {
+        spriteBatch.GraphicsDevice.GraphicsDebug.TryDequeueMessage(out _);
+    }
+
+    private void DrawMouse(SpriteBatch spriteBatch)
+    {
+        InputHandler.Instance.MouseGo?.Draw(spriteBatch);
+        spriteBatch.DrawString(GlobalTextures.DefaultFont, $"FPS: {GameWorld.Instance.AvgFPS}", GameWorld.Instance.UiCam.TopLeft, Color.DarkGreen);
+    }
+
 
     public virtual void DrawSceenColor()
     {

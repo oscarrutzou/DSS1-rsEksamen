@@ -34,7 +34,7 @@ public class GameObject : ICloneable
 
     public GameObjectTypes Type { get; set; } = GameObjectTypes.Default;
     public bool IsEnabled { get; set; } = true;
-
+    public List<Effect> Effects { get; set;} = new List<Effect>(); // Can use a initial Capacity, and then use TrimExess.
     /// <summary>
     /// Adds a component to the GameObject, with a empty contructer.
     /// </summary>

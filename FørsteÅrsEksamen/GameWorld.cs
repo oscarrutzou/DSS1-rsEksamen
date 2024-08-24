@@ -6,6 +6,7 @@ using DoctorsDungeon.GameManagement.Scenes;
 using DoctorsDungeon.GameManagement.Scenes.Menus;
 using DoctorsDungeon.GameManagement.Scenes.Rooms;
 using DoctorsDungeon.GameManagement.Scenes.TestScenes;
+using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -53,13 +54,15 @@ public class GameWorld : Game
 
     protected override void Initialize()
     {
+        _canvas = new(GraphicsDevice, 1920, 1080);
+
         // Frametime not limited to 16.66 Hz / 60 FPS, and will drop if the mouse is outside the bounds
         IsFixedTimeStep = false;
         GfxManager.SynchronizeWithVerticalRetrace = true;
 
         SceneData.GenereateGameObjectDicionary();
-        Fullscreen();
-        //SetResolutionSize(800, 800);
+        //Fullscreen();
+        SetResolutionSize(800, 800);
 
         WorldCam = new Camera(true); // Camera that follows the player
         UiCam = new Camera(false);   // Camera that is static
@@ -79,14 +82,27 @@ public class GameWorld : Game
         base.Initialize();
     }
 
+
+
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
+
     }
 
+    private Canvas _canvas;
+    private float _teleportEffectAmount = 1;
+    private float _dir = -1;
     protected override void Update(GameTime gameTime)
     {
         DeltaTime = gameTime.ElapsedGameTime.TotalSeconds;
+
+        // Updates teleport value
+        _teleportEffectAmount += (float)DeltaTime * _dir;
+        if (_teleportEffectAmount < 0 || _teleportEffectAmount > 1) _dir *= -1; // Changes the direction
+
+        GlobalTextures.TeleportEffect.Parameters["amount"].SetValue(_teleportEffectAmount);
+
 
         InputHandler.Instance.Update();
         UpdateFPS(gameTime);
@@ -101,10 +117,12 @@ public class GameWorld : Game
 
         base.Update(gameTime);
     }
-
+    public bool HalfRes = false;
 
     protected override void Draw(GameTime gameTime)
     {
+        _canvas.Activate();
+
         CurrentScene.DrawSceenColor();
 
         // This spriteBatch is for drawing a non pixelart background
@@ -114,13 +132,12 @@ public class GameWorld : Game
         IndependentBackground.DrawBG(_spriteBatch);
         _spriteBatch.End();
 
-        //Draw in world objects. Uses pixel perfect and a WorldCam, that can be moved around
+        ////Draw in world objects. Uses pixel perfect and a WorldCam, that can be moved around
         _spriteBatch.Begin(sortMode: SpriteSortMode.FrontToBack, BlendState.AlphaBlend,
             SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise,
             transformMatrix: WorldCam.GetMatrix());
 
         CurrentScene.DrawInWorld(_spriteBatch);
-
         _spriteBatch.End();
 
         //Draw on screen objects. Use pixel perfect and a stationary UiCam that dosent move around
@@ -129,10 +146,10 @@ public class GameWorld : Game
             transformMatrix: UiCam.GetMatrix());
 
         CurrentScene.DrawOnScreen(_spriteBatch);
-        InputHandler.Instance.MouseGo?.Draw(_spriteBatch);
-
-        _spriteBatch.DrawString(GlobalTextures.DefaultFont, $"FPS: {AvgFPS}", UiCam.TopLeft, Color.DarkGreen);
         _spriteBatch.End();
+
+
+        _canvas.Draw(_spriteBatch);
 
         base.Draw(gameTime);
     }
@@ -144,6 +161,8 @@ public class GameWorld : Game
         GfxManager.PreferredBackBufferHeight = height;
         GfxManager.IsFullScreen = false;
         GfxManager.ApplyChanges();
+
+        _canvas.SetDestinationRectangle();
     }
 
     /// <summary>
@@ -156,6 +175,8 @@ public class GameWorld : Game
         GfxManager.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
         GfxManager.IsFullScreen = true;
         GfxManager.ApplyChanges();
+
+        _canvas.SetDestinationRectangle();
     }
 
     private void UpdateFPS(GameTime gameTime)
@@ -286,8 +307,63 @@ public class GameWorld : Game
 
         NextScene = null;
     }
-   
 
 
     #endregion Scene
+}
+
+public class Canvas
+{
+    private readonly RenderTarget2D _target;
+    private readonly GraphicsDevice _graphicsDevice;
+    //private Rectangle _destinationRectangle;
+
+    public Canvas(GraphicsDevice graphicsDevice, int width, int height)
+    {
+        _graphicsDevice = graphicsDevice;
+        _target = new(_graphicsDevice, width, height);
+    }
+
+    /// <summary>
+    /// This is so we can set the base game to be a smaller scale and then just upscale everything. 
+    /// <para>Does nothing right now</para>
+    /// </summary>
+    public void SetDestinationRectangle()
+    {
+        //var screenSize = _graphicsDevice.PresentationParameters.Bounds;
+        //var screenSize = _graphicsDevice.PresentationParameters.Bounds;
+
+        //float scaleX = (float)screenSize.Width / _target.Width;
+        //float scaleY = (float)screenSize.Height / _target.Height;
+        //float scale = Math.Min(scaleX, scaleY);
+
+        //int newWidth = (int)(_target.Width * scale);
+        //int newHeight = (int)(_target.Height * scale);
+
+        //int posX = (screenSize.Width - newWidth) / 2;
+        //int posY = (screenSize.Height - newHeight) / 2;
+
+
+        //_destinationRectangle = new Rectangle(0, 0, newWidth, newHeight);
+    }
+
+    public void Activate()
+    {
+        _graphicsDevice.SetRenderTarget(_target);
+        _graphicsDevice.Clear(Color.DarkGray);
+    }
+
+    public void Draw(SpriteBatch spriteBatch)
+    {
+        // Everthing drawn before this, will be used for the effect
+
+        // First draw the high contrast places and put into a texture. 
+        // Then draw bloom texture too with an additive.  GlobalTextures.BloomEffect
+        // Draw your _target onto the temporary render target
+        _graphicsDevice.SetRenderTarget(null);
+        _graphicsDevice.Clear(Color.Black);
+        spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, effect: GlobalTextures.BloomEffect);
+        spriteBatch.Draw(_target, Vector2.Zero, Color.White);
+        spriteBatch.End();
+    }
 }
