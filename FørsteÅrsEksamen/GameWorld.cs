@@ -31,7 +31,7 @@ public class GameWorld : Game
     public GraphicsDeviceManager GfxManager { get; private set; } 
     public float AvgFPS { get; private set; }
     public Dictionary<SceneNames, Scene> Scenes { get; private set; }
-    public Scene CurrentScene { get; private set; }
+    public Scene CurrentScene { get; private set; } 
     public Camera WorldCam { get; private set; } // Follows player
     public Camera UiCam { get; private set; } //Static on the ui
     public SceneNames? NextScene { get; private set; } = null;
@@ -42,7 +42,8 @@ public class GameWorld : Game
 
     private SpriteBatch _spriteBatch;
     private readonly string _menuString = "Menu";
-    public bool IsInMenu { get; private set; } = true; 
+    public bool IsInMenu { get; private set; } = true;
+
     #endregion
 
     public GameWorld()
@@ -83,30 +84,41 @@ public class GameWorld : Game
         base.Initialize();
     }
 
-
+    public float HighlightsEffect_Threshold = 0.25f;
+    public float GaussianBlurEffect_BlurAmount = 7.5f;
 
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+        //GlobalTextures.SingleColorEffect.Parameters["uniformColor"].SetValue(new float[] { TextColor.R, TextColor.G, TextColor.B, TextColor.A}); 
+        Vector4 color = new Vector4(TextColor.R, TextColor.G, TextColor.B, TextColor.A);
+        GlobalTextures.SingleColorEffect.Parameters["singleColor"].SetValue(color);
+        GlobalTextures.SingleColorEffect.Parameters["threshold"].SetValue(0.23f);
+
+        GlobalTextures.HighlightsEffect.Parameters["threshold"].SetValue(HighlightsEffect_Threshold);
+        GlobalTextures.GaussianBlurEffect.Parameters["blurAmount"].SetValue(GaussianBlurEffect_BlurAmount);
+
+        GlobalTextures.GaussianBlurEffect.CurrentTechnique = GlobalTextures.GaussianBlurEffect.Techniques["Blur"];
     }
 
+
+    public bool SingleColorEffect = false;
+    public double GameWorldSpeed = 1.0f;
     private Canvas _canvas;
     public float TeleportEffectAmount = 1;
     private float _dir = -1;
     protected override void Update(GameTime gameTime)
     {
-        DeltaTime = gameTime.ElapsedGameTime.TotalSeconds;
+        DeltaTime = gameTime.ElapsedGameTime.TotalSeconds * GameWorldSpeed;
 
         // Updates teleport value
-        TeleportEffectAmount += (float)DeltaTime * _dir;
-        if (TeleportEffectAmount < 0 || TeleportEffectAmount > 1) _dir *= -1; // Changes the direction
+        //TeleportEffectAmount += (float)DeltaTime * _dir;
+        //if (TeleportEffectAmount < 0 || TeleportEffectAmount > 1) _dir *= -1; // Changes the direction
 
         //GlobalTextures.TeleportEffect.Parameters["amount"].SetValue(TeleportEffectAmount);
-
-        GlobalTextures.BloomEffect.Parameters["strength"].SetValue(0.3f);
-        GlobalTextures.BloomEffect.Parameters["textureSize"].SetValue(new Vector2(DisplayWidth, DisplayHeight));
-
+        //GlobalTextures.BloomEffect.Parameters["strength"].SetValue(0.3f);threashold
+        //GlobalTextures.BloomEffect.Parameters["textureSize"].SetValue(new Vector2(DisplayWidth, DisplayHeight));
 
         InputHandler.Instance.Update();
         UpdateFPS(gameTime);
@@ -121,7 +133,6 @@ public class GameWorld : Game
 
         base.Update(gameTime);
     }
-    public bool HalfRes = false;
 
     protected override void Draw(GameTime gameTime)
     {
@@ -144,16 +155,21 @@ public class GameWorld : Game
         CurrentScene.DrawInWorld(_spriteBatch);
         _spriteBatch.End();
 
+        // Draws the screen with the effects on
+        _canvas.Draw(_spriteBatch);
+
         //Draw on screen objects. Use pixel perfect and a stationary UiCam that dosent move around
         _spriteBatch.Begin(sortMode: SpriteSortMode.FrontToBack, BlendState.AlphaBlend,
             SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise,
             transformMatrix: UiCam.GetMatrix());
 
         CurrentScene.DrawOnScreen(_spriteBatch);
+
+        Vector2 pos = UiCam.LeftCenter;
+        _spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Thredshold: {HighlightsEffect_Threshold}", pos, Color.White);
+        pos += new Vector2(0, 30);
+        _spriteBatch.DrawString(GlobalTextures.DefaultFont, $"BlurAmount: {GaussianBlurEffect_BlurAmount}", pos, Color.White);
         _spriteBatch.End();
-
-
-        _canvas.Draw(_spriteBatch);
 
         base.Draw(gameTime);
     }
@@ -166,7 +182,7 @@ public class GameWorld : Game
         GfxManager.IsFullScreen = false;
         GfxManager.ApplyChanges();
 
-        _canvas.SetDestinationRectangle();
+        ScreenChanged();
     }
 
     /// <summary>
@@ -180,6 +196,11 @@ public class GameWorld : Game
         GfxManager.IsFullScreen = true;
         GfxManager.ApplyChanges();
 
+        ScreenChanged();
+    }
+
+    private void ScreenChanged()
+    {
         _canvas.SetDestinationRectangle();
     }
 
@@ -312,7 +333,6 @@ public class GameWorld : Game
         NextScene = null;
     }
 
-
     #endregion Scene
 }
 
@@ -321,6 +341,9 @@ public class Canvas
     private RenderTarget2D _target;
     private readonly GraphicsDevice _graphicsDevice;
     //private Rectangle _destinationRectangle;
+
+    private RenderTarget2D _highlightsTarget;
+    private RenderTarget2D _blurTarget;
 
     public Canvas(GraphicsDevice graphicsDevice)
     {
@@ -334,7 +357,23 @@ public class Canvas
     public void SetDestinationRectangle()
     {
         _target = new(_graphicsDevice, GameWorld.Instance.DisplayWidth, GameWorld.Instance.DisplayHeight);
+        _highlightsTarget = new(_graphicsDevice, GameWorld.Instance.DisplayWidth, GameWorld.Instance.DisplayHeight);
+        _blurTarget = new(_graphicsDevice, GameWorld.Instance.DisplayWidth, GameWorld.Instance.DisplayHeight);
+        //var screenSize = _graphicsDevice.PresentationParameters.Bounds;
+        //var screenSize = _graphicsDevice.PresentationParameters.Bounds;
 
+        //float scaleX = (float)screenSize.Width / _target.Width;
+        //float scaleY = (float)screenSize.Height / _target.Height;
+        //float scale = Math.Min(scaleX, scaleY);
+
+        //int newWidth = (int)(_target.Width * scale);
+        //int newHeight = (int)(_target.Height * scale);
+
+        //int posX = (screenSize.Width - newWidth) / 2;
+        //int posY = (screenSize.Height - newHeight) / 2;
+
+
+        //_destinationRectangle = new Rectangle(0, 0, newWidth, newHeight);
     }
 
     public void Activate()
@@ -344,33 +383,74 @@ public class Canvas
 
     public void Draw(SpriteBatch spriteBatch)
     {
+        // Everthing drawn before this, will be used for the effect
 
+        // First draw the high contrast places and put into a texture. 
+        // Then draw bloom texture too with an additive.  GlobalTextures.BloomEffect
+        // Draw your _target onto the temporary render target
+
+        // Need first to scale down the image 4x?
+        // Then take the amount all the colors over a certain value.
+        // Apply the bloom/blur onto it.
+        // Scale up
+        // Draw the normal target with a scaled up texture.
+        Texture2D finnishedScene = _target;
+        //int scaleAmount = 4;
+
+        //int smallerWidth = _target.Width / scaleAmount;
+        //int smallerHeight = _target.Height / scaleAmount;
+
+        //// Set the smaller render target
+        ///
+        if (GameWorld.Instance.SingleColorEffect)
+        {
+            DrawSingleColorEffect(spriteBatch);
+            return;
+        }
+
+        _graphicsDevice.SetRenderTarget(_highlightsTarget);
+
+        // Draw your scene onto the smaller render target
+        spriteBatch.Begin(effect: GlobalTextures.HighlightsEffect);
+        spriteBatch.Draw(finnishedScene, Vector2.Zero, Color.White);
+        spriteBatch.End();
+
+        // Set the smaller render target
+        _graphicsDevice.SetRenderTarget(_blurTarget);
+
+        // Draw your scene onto the smaller render target
+        spriteBatch.Begin(effect: GlobalTextures.GaussianBlurEffect);
+        spriteBatch.Draw(_highlightsTarget, Vector2.Zero, Color.White);
+        spriteBatch.End();
+
+        // Reset the render target
         _graphicsDevice.SetRenderTarget(null);
 
-
+        // Clear the screen
         _graphicsDevice.Clear(Color.Transparent);
-        spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, effect: GlobalTextures.BloomEffect);
-        spriteBatch.Draw(_target, Vector2.Zero, Color.White);
+
+        // Draw the scaled-down texture onto the screen
+        spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.Additive);
+
+        spriteBatch.Draw(_highlightsTarget, Vector2.Zero, Color.White);
+        //spriteBatch.Draw(finnishedScene, Vector2.Zero, Color.White);
+
         spriteBatch.End();
     }
-}        // Everthing drawn before this, will be used for the effect
 
-// First draw the high contrast places and put into a texture. 
-// Then draw bloom texture too with an additive.  GlobalTextures.BloomEffect
-// Draw your _target onto the temporary render target
+    private void DrawSingleColorEffect(SpriteBatch spriteBatch)
+    {
+        // Reset the render target
+        _graphicsDevice.SetRenderTarget(null);
 
-//var screenSize = _graphicsDevice.PresentationParameters.Bounds;
-//var screenSize = _graphicsDevice.PresentationParameters.Bounds;
+        // Clear the screen
+        _graphicsDevice.Clear(Color.Transparent);
 
-//float scaleX = (float)screenSize.Width / _target.Width;
-//float scaleY = (float)screenSize.Height / _target.Height;
-//float scale = Math.Min(scaleX, scaleY);
+        // Draw the scaled-down texture onto the screen
+        spriteBatch.Begin(effect: GlobalTextures.SingleColorEffect);
 
-//int newWidth = (int)(_target.Width * scale);
-//int newHeight = (int)(_target.Height * scale);
+        spriteBatch.Draw(_target, Vector2.Zero, Color.White);
 
-//int posX = (screenSize.Width - newWidth) / 2;
-//int posY = (screenSize.Height - newHeight) / 2;
-
-
-//_destinationRectangle = new Rectangle(0, 0, newWidth, newHeight);
+        spriteBatch.End();
+    }
+}       

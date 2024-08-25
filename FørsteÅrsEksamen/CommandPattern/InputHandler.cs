@@ -59,6 +59,27 @@ public class InputHandler
 
         if (!GameWorld.DebugAndCheats) return;
 
+
+        AddKeyButtonDownCommand(Keys.Left, new CustomCmd(() => {
+            GameWorld.Instance.GaussianBlurEffect_BlurAmount += 0.5f;
+            GlobalTextures.GaussianBlurEffect.Parameters["blurAmount"].SetValue(GameWorld.Instance.GaussianBlurEffect_BlurAmount);
+        }));
+
+        AddKeyButtonDownCommand(Keys.Right, new CustomCmd(() => {
+            GameWorld.Instance.GaussianBlurEffect_BlurAmount -= 0.5f;
+            GlobalTextures.GaussianBlurEffect.Parameters["blurAmount"].SetValue(GameWorld.Instance.GaussianBlurEffect_BlurAmount);
+        }));
+
+        AddKeyButtonDownCommand(Keys.Up, new CustomCmd(() => {
+            GameWorld.Instance.HighlightsEffect_Threshold += 0.005f;
+            GlobalTextures.HighlightsEffect.Parameters["threshold"].SetValue(GameWorld.Instance.HighlightsEffect_Threshold);
+        }));
+
+        AddKeyButtonDownCommand(Keys.Down, new CustomCmd(() => {
+            GameWorld.Instance.HighlightsEffect_Threshold -= 0.005f;
+            GlobalTextures.HighlightsEffect.Parameters["threshold"].SetValue(GameWorld.Instance.HighlightsEffect_Threshold);
+        }));
+
         // For debugging
         AddKeyButtonDownCommand(Keys.Q, new CustomCmd(() => { GridManager.Instance.ChangeNumberIndex(-1); }));
         AddKeyButtonDownCommand(Keys.E, new CustomCmd(() => { GridManager.Instance.ChangeNumberIndex(1); }));

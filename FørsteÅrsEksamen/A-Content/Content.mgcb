@@ -39,6 +39,12 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/GaussianBlur.fx
 
+#begin Shaders/Highlights.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Highlights.fx
+
 #begin Shaders/Teleport.fx
 /importer:EffectImporter
 /processor:EffectProcessor
