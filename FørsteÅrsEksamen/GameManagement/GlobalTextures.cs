@@ -59,7 +59,7 @@ public static class GlobalTextures
     public static SpriteFont DefaultFont { get; private set; }
     public static SpriteFont BigFont { get; private set; }
 
-    public static Effect TeleportEffect, BloomEffect;
+    public static Effect TeleportEffect, BloomEffect, GaussianBlurEffect;
 
     public static void LoadContent()
     {
@@ -67,6 +67,7 @@ public static class GlobalTextures
 
         TeleportEffect = content.Load<Effect>("Shaders\\Teleport");
         BloomEffect = content.Load<Effect>("Shaders\\Bloom");
+        GaussianBlurEffect = content.Load<Effect>("Shaders\\GaussianBlur");
 
         // Load all textures
         Textures = new Dictionary<TextureNames, Texture2D>

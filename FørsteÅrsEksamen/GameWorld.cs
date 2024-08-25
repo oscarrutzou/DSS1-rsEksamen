@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace DoctorsDungeon;
@@ -41,7 +42,7 @@ public class GameWorld : Game
 
     private SpriteBatch _spriteBatch;
     private readonly string _menuString = "Menu";
-    public bool IsInMenu { get; private set; } = true;
+    public bool IsInMenu { get; private set; } = true; 
     #endregion
 
     public GameWorld()
@@ -54,7 +55,7 @@ public class GameWorld : Game
 
     protected override void Initialize()
     {
-        _canvas = new(GraphicsDevice, 1920, 1080);
+        _canvas = new(GraphicsDevice);
 
         // Frametime not limited to 16.66 Hz / 60 FPS, and will drop if the mouse is outside the bounds
         IsFixedTimeStep = false;
@@ -91,17 +92,20 @@ public class GameWorld : Game
     }
 
     private Canvas _canvas;
-    private float _teleportEffectAmount = 1;
+    public float TeleportEffectAmount = 1;
     private float _dir = -1;
     protected override void Update(GameTime gameTime)
     {
         DeltaTime = gameTime.ElapsedGameTime.TotalSeconds;
 
         // Updates teleport value
-        _teleportEffectAmount += (float)DeltaTime * _dir;
-        if (_teleportEffectAmount < 0 || _teleportEffectAmount > 1) _dir *= -1; // Changes the direction
+        TeleportEffectAmount += (float)DeltaTime * _dir;
+        if (TeleportEffectAmount < 0 || TeleportEffectAmount > 1) _dir *= -1; // Changes the direction
 
-        GlobalTextures.TeleportEffect.Parameters["amount"].SetValue(_teleportEffectAmount);
+        //GlobalTextures.TeleportEffect.Parameters["amount"].SetValue(TeleportEffectAmount);
+
+        GlobalTextures.BloomEffect.Parameters["strength"].SetValue(0.3f);
+        GlobalTextures.BloomEffect.Parameters["textureSize"].SetValue(new Vector2(DisplayWidth, DisplayHeight));
 
 
         InputHandler.Instance.Update();
@@ -314,14 +318,13 @@ public class GameWorld : Game
 
 public class Canvas
 {
-    private readonly RenderTarget2D _target;
+    private RenderTarget2D _target;
     private readonly GraphicsDevice _graphicsDevice;
     //private Rectangle _destinationRectangle;
 
-    public Canvas(GraphicsDevice graphicsDevice, int width, int height)
+    public Canvas(GraphicsDevice graphicsDevice)
     {
         _graphicsDevice = graphicsDevice;
-        _target = new(_graphicsDevice, width, height);
     }
 
     /// <summary>
@@ -330,40 +333,44 @@ public class Canvas
     /// </summary>
     public void SetDestinationRectangle()
     {
-        //var screenSize = _graphicsDevice.PresentationParameters.Bounds;
-        //var screenSize = _graphicsDevice.PresentationParameters.Bounds;
+        _target = new(_graphicsDevice, GameWorld.Instance.DisplayWidth, GameWorld.Instance.DisplayHeight);
 
-        //float scaleX = (float)screenSize.Width / _target.Width;
-        //float scaleY = (float)screenSize.Height / _target.Height;
-        //float scale = Math.Min(scaleX, scaleY);
-
-        //int newWidth = (int)(_target.Width * scale);
-        //int newHeight = (int)(_target.Height * scale);
-
-        //int posX = (screenSize.Width - newWidth) / 2;
-        //int posY = (screenSize.Height - newHeight) / 2;
-
-
-        //_destinationRectangle = new Rectangle(0, 0, newWidth, newHeight);
     }
 
     public void Activate()
     {
         _graphicsDevice.SetRenderTarget(_target);
-        _graphicsDevice.Clear(Color.DarkGray);
     }
 
     public void Draw(SpriteBatch spriteBatch)
     {
-        // Everthing drawn before this, will be used for the effect
 
-        // First draw the high contrast places and put into a texture. 
-        // Then draw bloom texture too with an additive.  GlobalTextures.BloomEffect
-        // Draw your _target onto the temporary render target
         _graphicsDevice.SetRenderTarget(null);
-        _graphicsDevice.Clear(Color.Black);
-        spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, effect: GlobalTextures.BloomEffect);
+
+
+        _graphicsDevice.Clear(Color.Transparent);
+        spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, effect: GlobalTextures.BloomEffect);
         spriteBatch.Draw(_target, Vector2.Zero, Color.White);
         spriteBatch.End();
     }
-}
+}        // Everthing drawn before this, will be used for the effect
+
+// First draw the high contrast places and put into a texture. 
+// Then draw bloom texture too with an additive.  GlobalTextures.BloomEffect
+// Draw your _target onto the temporary render target
+
+//var screenSize = _graphicsDevice.PresentationParameters.Bounds;
+//var screenSize = _graphicsDevice.PresentationParameters.Bounds;
+
+//float scaleX = (float)screenSize.Width / _target.Width;
+//float scaleY = (float)screenSize.Height / _target.Height;
+//float scale = Math.Min(scaleX, scaleY);
+
+//int newWidth = (int)(_target.Width * scale);
+//int newHeight = (int)(_target.Height * scale);
+
+//int posX = (screenSize.Width - newWidth) / 2;
+//int posY = (screenSize.Height - newHeight) / 2;
+
+
+//_destinationRectangle = new Rectangle(0, 0, newWidth, newHeight);
