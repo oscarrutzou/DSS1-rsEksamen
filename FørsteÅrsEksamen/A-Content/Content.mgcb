@@ -27,11 +27,11 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/SmallFont.spritefont
 
-#begin Shaders/Bloom.fx
+#begin Shaders/ChromaticAberration.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
-/build:Shaders/Bloom.fx
+/build:Shaders/ChromaticAberration.fx
 
 #begin Shaders/GaussianBlur.fx
 /importer:EffectImporter
@@ -45,11 +45,23 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/Highlights.fx
 
+#begin Shaders/SingleColor.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/SingleColor.fx
+
 #begin Shaders/Teleport.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Shaders/Teleport.fx
+
+#begin Shaders/Vignette.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Vignette.fx
 
 #begin Sound/GameTrack.wav
 /importer:WavImporter

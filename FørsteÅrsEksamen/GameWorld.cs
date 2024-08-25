@@ -63,8 +63,8 @@ public class GameWorld : Game
         GfxManager.SynchronizeWithVerticalRetrace = true;
 
         SceneData.GenereateGameObjectDicionary();
-        //Fullscreen();
-        SetResolutionSize(800, 800);
+        Fullscreen();   
+        //SetResolutionSize(800, 800);
 
         WorldCam = new Camera(true); // Camera that follows the player
         UiCam = new Camera(false);   // Camera that is static
@@ -84,14 +84,13 @@ public class GameWorld : Game
         base.Initialize();
     }
 
-    public float HighlightsEffect_Threshold = 0.25f;
-    public float GaussianBlurEffect_BlurAmount = 7.5f;
+    public float HighlightsEffect_Threshold = 0.5f; // 0.25f shows a lot
+    public float GaussianBlurEffect_BlurAmount = 2.5f;
 
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        //GlobalTextures.SingleColorEffect.Parameters["uniformColor"].SetValue(new float[] { TextColor.R, TextColor.G, TextColor.B, TextColor.A}); 
         Vector4 color = new Vector4(TextColor.R, TextColor.G, TextColor.B, TextColor.A);
         GlobalTextures.SingleColorEffect.Parameters["singleColor"].SetValue(color);
         GlobalTextures.SingleColorEffect.Parameters["threshold"].SetValue(0.23f);
@@ -99,7 +98,7 @@ public class GameWorld : Game
         GlobalTextures.HighlightsEffect.Parameters["threshold"].SetValue(HighlightsEffect_Threshold);
         GlobalTextures.GaussianBlurEffect.Parameters["blurAmount"].SetValue(GaussianBlurEffect_BlurAmount);
 
-        GlobalTextures.GaussianBlurEffect.CurrentTechnique = GlobalTextures.GaussianBlurEffect.Techniques["Blur"];
+        GlobalTextures.GaussianBlurEffect.CurrentTechnique = GlobalTextures.GaussianBlurEffect.Techniques["Blur"]; // Basic ; Blur
     }
 
 
@@ -171,6 +170,8 @@ public class GameWorld : Game
         _spriteBatch.DrawString(GlobalTextures.DefaultFont, $"BlurAmount: {GaussianBlurEffect_BlurAmount}", pos, Color.White);
         _spriteBatch.End();
 
+
+  
         base.Draw(gameTime);
     }
 
@@ -340,7 +341,7 @@ public class Canvas
 {
     private RenderTarget2D _target;
     private readonly GraphicsDevice _graphicsDevice;
-    //private Rectangle _destinationRectangle;
+    private Rectangle _destinationRectangle;
 
     private RenderTarget2D _highlightsTarget;
     private RenderTarget2D _blurTarget;
@@ -359,21 +360,20 @@ public class Canvas
         _target = new(_graphicsDevice, GameWorld.Instance.DisplayWidth, GameWorld.Instance.DisplayHeight);
         _highlightsTarget = new(_graphicsDevice, GameWorld.Instance.DisplayWidth, GameWorld.Instance.DisplayHeight);
         _blurTarget = new(_graphicsDevice, GameWorld.Instance.DisplayWidth, GameWorld.Instance.DisplayHeight);
-        //var screenSize = _graphicsDevice.PresentationParameters.Bounds;
-        //var screenSize = _graphicsDevice.PresentationParameters.Bounds;
-
-        //float scaleX = (float)screenSize.Width / _target.Width;
-        //float scaleY = (float)screenSize.Height / _target.Height;
-        //float scale = Math.Min(scaleX, scaleY);
-
-        //int newWidth = (int)(_target.Width * scale);
-        //int newHeight = (int)(_target.Height * scale);
-
-        //int posX = (screenSize.Width - newWidth) / 2;
-        //int posY = (screenSize.Height - newHeight) / 2;
+        var screenSize = _graphicsDevice.PresentationParameters.Bounds;
 
 
-        //_destinationRectangle = new Rectangle(0, 0, newWidth, newHeight);
+        float scaleX = (float)screenSize.Width / _target.Width;
+        float scaleY = (float)screenSize.Height / _target.Height;
+        float scale = Math.Min(scaleX, scaleY);
+
+        int newWidth = (int)(_target.Width * scale);
+        int newHeight = (int)(_target.Height * scale);
+
+        int posX = (screenSize.Width - newWidth) / 2;
+        int posY = (screenSize.Height - newHeight) / 2;
+
+        _destinationRectangle = new Rectangle(0, 0, newWidth, newHeight);
     }
 
     public void Activate()
@@ -412,7 +412,7 @@ public class Canvas
 
         // Draw your scene onto the smaller render target
         spriteBatch.Begin(effect: GlobalTextures.HighlightsEffect);
-        spriteBatch.Draw(finnishedScene, Vector2.Zero, Color.White);
+        spriteBatch.Draw(finnishedScene, _destinationRectangle, Color.White);
         spriteBatch.End();
 
         // Set the smaller render target
@@ -420,7 +420,7 @@ public class Canvas
 
         // Draw your scene onto the smaller render target
         spriteBatch.Begin(effect: GlobalTextures.GaussianBlurEffect);
-        spriteBatch.Draw(_highlightsTarget, Vector2.Zero, Color.White);
+        spriteBatch.Draw(_highlightsTarget, _destinationRectangle, Color.White);
         spriteBatch.End();
 
         // Reset the render target
@@ -430,10 +430,13 @@ public class Canvas
         _graphicsDevice.Clear(Color.Transparent);
 
         // Draw the scaled-down texture onto the screen
-        spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.Additive);
+        // Vignette
+        // ChromaticAberrationEffect
 
-        spriteBatch.Draw(_highlightsTarget, Vector2.Zero, Color.White);
-        //spriteBatch.Draw(finnishedScene, Vector2.Zero, Color.White);
+        spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.Additive, effect: GlobalTextures.VignetteEffect);
+
+        spriteBatch.Draw(_blurTarget, _destinationRectangle, Color.White);
+        spriteBatch.Draw(finnishedScene, _destinationRectangle, Color.White);
 
         spriteBatch.End();
     }
@@ -449,7 +452,7 @@ public class Canvas
         // Draw the scaled-down texture onto the screen
         spriteBatch.Begin(effect: GlobalTextures.SingleColorEffect);
 
-        spriteBatch.Draw(_target, Vector2.Zero, Color.White);
+        spriteBatch.Draw(_target, _destinationRectangle, Color.White);
 
         spriteBatch.End();
     }

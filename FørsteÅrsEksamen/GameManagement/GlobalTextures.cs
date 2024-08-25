@@ -59,16 +59,18 @@ public static class GlobalTextures
     public static SpriteFont DefaultFont { get; private set; }
     public static SpriteFont BigFont { get; private set; }
 
-    public static Effect TeleportEffect, SingleColorEffect, GaussianBlurEffect, HighlightsEffect;
+    public static Effect TeleportEffect, SingleColorEffect, GaussianBlurEffect, HighlightsEffect, VignetteEffect, ChromaticAberrationEffect;
 
     public static void LoadContent()
     {
         ContentManager content = GameWorld.Instance.Content;
 
         TeleportEffect = content.Load<Effect>("Shaders\\Teleport");
-        SingleColorEffect = content.Load<Effect>("Shaders\\Bloom");
+        SingleColorEffect = content.Load<Effect>("Shaders\\SingleColor");
         GaussianBlurEffect = content.Load<Effect>("Shaders\\GaussianBlur");
         HighlightsEffect = content.Load<Effect>("Shaders\\Highlights");
+        VignetteEffect = content.Load<Effect>("Shaders\\Vignette");
+        ChromaticAberrationEffect = content.Load<Effect>("Shaders\\ChromaticAberration");
 
         // Load all textures
         Textures = new Dictionary<TextureNames, Texture2D>
