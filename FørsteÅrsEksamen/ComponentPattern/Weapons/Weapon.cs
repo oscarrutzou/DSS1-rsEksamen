@@ -4,6 +4,7 @@ using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using DoctorsDungeon.GameManagement;
 using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -34,21 +35,24 @@ public abstract class Weapon : Component
     public Enemy EnemyUser { get; set; }
     protected Character User { get; private set; } // So avoid making the check if its a player or enemy
     public SpriteRenderer SpriteRenderer { get; set; }
-
     protected float StartAnimationAngle { get; set; }
-
     protected double AttackedTotalElapsedTime { get; set; }
     public static float EnemyWeakness = 2.5f; // What to divide with, to make enemie attacks weaker.
-
     public bool Attacking { get; protected set; }
 
     // A lot of this data is being copied on many different weapons, even though it has the same data.
     // Could use a GlobalPool or something that contains data, that are the same and wont be changed on each object
     protected SoundNames[] AttackSoundNames { get; set;}
+    protected SoundNames[] AttackHitSoundNames { get; set; } = new SoundNames[]
+    {
+        SoundNames.WoodHitFlesh,
+        SoundNames.WoodHitLeather,
+        //SoundNames.WoodHitMetal,
+    };
 
     protected Vector2 StartPosOffset = new(40, 20);
     private Vector2 lastOffSetPos, startRelativePos = new(0, 60), startRelativeOffsetPos = new Vector2(0, -20);
-    public float angle; // Public for test
+    private float _weaponAngleToUser { get; set; }
     protected bool LeftSide;
     protected double TimeBeforeNewDirection { get; set;}
     protected float animRotation, nextAnimRotation;
@@ -61,6 +65,8 @@ public abstract class Weapon : Component
     protected double AttackTimer { get; set; }
     protected double AttackCooldown = 2.0;
     public bool UseAttackCooldown = true;
+
+    private SoundEffectInstance _currentHitSound, _currentAttackSound;
     #endregion
 
     protected Weapon(GameObject gameObject) : base(gameObject)
@@ -86,8 +92,6 @@ public abstract class Weapon : Component
         }
     }
     
-
-
     public override void Start()
     {
         animRotation = Animations[CurrentAnim].AmountOfRotation;
@@ -99,10 +103,14 @@ public abstract class Weapon : Component
 
     public override void Update()
     {
+        // Check layer
         CheckLayerDepth();
 
+        // Update normal timer
         if (UseAttackCooldown && AttackTimer < AttackCooldown)
             AttackTimer += GameWorld.DeltaTime;
+
+        UpdateSound();
     }
 
     private void CheckLayerDepth()
@@ -178,12 +186,29 @@ public abstract class Weapon : Component
     protected virtual void SetAttackDirection()
     { }
 
+    private void UpdateSound()
+    {
+        // Update normal attack sound
+        if (_currentAttackSound != null && _currentAttackSound.State == SoundState.Playing)
+            GlobalSounds.ChangeSoundVolumeDistance(GameObject.Transform.Position, 50, 250, 0.8f, _currentAttackSound);
+
+        // Update hit sound
+        if (_currentHitSound != null && _currentHitSound.State == SoundState.Playing)
+            GlobalSounds.ChangeSoundVolumeDistance(GameObject.Transform.Position, 50, 250, 0.8f, _currentHitSound);
+    }
+
     protected void PlayAttackSound()
     {
         if (AttackSoundNames == null || AttackSoundNames.Length == 0) return;
 
-        // This should be played with a distance sound. From weapon to player pos.
-        GlobalSounds.PlayRandomizedSound(AttackSoundNames, 2, 0.8f, true);
+        _currentAttackSound = GlobalSounds.PlayRandomizedSound(AttackSoundNames, 3, 1f, true);
+    }
+
+    protected void PlayHitSound()
+    {
+        if (AttackHitSoundNames == null ||AttackHitSoundNames.Length == 0) return;
+
+        _currentHitSound = GlobalSounds.PlayRandomizedSound(AttackHitSoundNames, 3, 1, true);
     }
 
     public void MoveWeaponAndAngle()
@@ -202,34 +227,34 @@ public abstract class Weapon : Component
         }
 
         if (EnemyUser != null && EnemyUser.CanAttack)
-            angle = GetAngleToMouseEnemy(userPos);
+            _weaponAngleToUser = GetAngleToMouseEnemy(userPos);
         else if (PlayerUser != null)
-            angle = GetAngleToMousePlayer();
+            _weaponAngleToUser = GetAngleToMousePlayer();
         else // If the weapon shouldnt rotate to the player
-            angle = 0f;
+            _weaponAngleToUser = 0f;
         
         // Adjust the angle to be in the range of 0 to 2π
-        if (angle < 0)
+        if (_weaponAngleToUser < 0)
         {
-            angle += 2 * MathHelper.Pi;
+            _weaponAngleToUser += 2 * MathHelper.Pi;
         }
 
-        lastOffSetPos = BaseMath.Rotate(startRelativePos, angle - MathHelper.PiOver2) + startRelativeOffsetPos;
+        lastOffSetPos = BaseMath.Rotate(startRelativePos, _weaponAngleToUser - MathHelper.PiOver2) + startRelativeOffsetPos;
         GameObject.Transform.Position = userPos + lastOffSetPos;
 
         SetAngleToCorrectSide();
         if (EnemyUser != null && !EnemyUser.CanAttack) return;
 
-        StartAnimationAngle = angle;
+        StartAnimationAngle = _weaponAngleToUser;
         GameObject.Transform.Rotation = StartAnimationAngle;
     }
 
     private void SetAngleToCorrectSide()
     {
-        if (angle > 0.5 * MathHelper.Pi && angle < 1.5 * MathHelper.Pi)
+        if (_weaponAngleToUser > 0.5 * MathHelper.Pi && _weaponAngleToUser < 1.5 * MathHelper.Pi)
         {
-            angle += MathHelper.Pi;
-            untouchedAngle = angle;
+            _weaponAngleToUser += MathHelper.Pi;
+            untouchedAngle = _weaponAngleToUser;
 
             LeftSide = true;
             SetAngleToFitWithNextAnimation();
@@ -237,7 +262,7 @@ public abstract class Weapon : Component
         }
         else
         {
-            untouchedAngle = angle;
+            untouchedAngle = _weaponAngleToUser;
 
             LeftSide = false;
             SetAngleToFitWithNextAnimation();
@@ -253,12 +278,12 @@ public abstract class Weapon : Component
         float leftOver = nextAnimRotation - MathHelper.Pi;
 
         // Resets angle
-        angle = untouchedAngle;
+        _weaponAngleToUser = untouchedAngle;
 
         FinalLerp = LeftSide ? -nextAnimRotation : nextAnimRotation;
         AddLeftOverToAngle(LeftSide, leftOver, nextAnimRotation);
 
-        StartAnimationAngle = angle;
+        StartAnimationAngle = _weaponAngleToUser;
     }
 
     private void SetAngleToFitWithNextAnimation()
@@ -281,7 +306,7 @@ public abstract class Weapon : Component
 
     private void AddLeftOverToAngle(bool leftSide, float leftOver, float rotation)
     {
-        angle += leftSide ? (leftOver < 0 ? -rotation / divideBy : leftOver / 2) :
+        _weaponAngleToUser += leftSide ? (leftOver < 0 ? -rotation / divideBy : leftOver / 2) :
                             (leftOver < 0 ? rotation / divideBy : -leftOver / 2);
     }
 

@@ -229,7 +229,7 @@ public static class GlobalSounds
         return false;
     }
 
-    public static void ChangeSoundVolumeDistance(Vector2 soundPosition, int minDistance, int maxDistance, float maxVolume, SoundEffectInstance soundEffect)
+    public static void ChangeSoundVolumeDistance(Vector2 soundPosition, int minDistance, int maxDistance, float maxSoundVolume, SoundEffectInstance soundEffect)
     {
         Vector2 playerPos = Vector2.Zero;
         if (SaveData.Player != null) playerPos = SaveData.Player.GameObject.Transform.Position;
@@ -238,18 +238,18 @@ public static class GlobalSounds
 
         // Calculate the volume based on distance
         float normalizedDistance = MathHelper.Clamp((distance - (float)minDistance) / ((float)maxDistance - (float)minDistance), 0f, 1f);
-        float lerpedVolume = MathHelper.Lerp(maxVolume, 0f, normalizedDistance);
+        float lerpedVolume = MathHelper.Lerp(maxSoundVolume, 0f, normalizedDistance);
 
-        soundEffect.Volume = lerpedVolume;
+        soundEffect.Volume = SfxVolume * lerpedVolume;
     }
 
     /// <summary>
     /// Plays a sound
     /// </summary>
     /// <param name="soundName">The sound to play</param>
-    /// <param name="soundVolDivided">Can change how loud the sound is</param>
+    /// <param name="soundVolume">Can change how loud the sound is</param>
     /// <param name="enablePitch">If it should add a random pitch to the sounds</param>
-    public static SoundEffectInstance PlaySound(SoundNames soundName, float soundVolDivided = 1f, bool enablePitch = false)
+    public static SoundEffectInstance PlaySound(SoundNames soundName, float soundVolume = 1f, bool enablePitch = false)
     {
         // Play a sound with an optional random pitch
         float pitch = enablePitch ? GenerateRandomPitch() : 0f; // Base pitch is 0f
@@ -264,19 +264,19 @@ public static class GlobalSounds
         }
 
         instance.Pitch = pitch;
-        instance.Volume = SfxVolume / soundVolDivided;
+        instance.Volume = SfxVolume * soundVolume;
         instance.Play();
 
         return instance;
     }
 
-    public static SoundEffectInstance PlaySound(SoundNames soundName, int maxAmountPlaying, float soundVolDivided = 1f, bool enablePitch = false)
+    public static SoundEffectInstance PlaySound(SoundNames soundName, int maxAmountPlaying, float soundVolume = 1f, bool enablePitch = false)
     {
         int index = CountPlayingInstances(soundName);
 
         if (index >= maxAmountPlaying) return null;
 
-        return PlaySound(soundName, soundVolDivided, enablePitch);
+        return PlaySound(soundName, soundVolume, enablePitch);
     }
 
     /// <summary>
@@ -286,19 +286,16 @@ public static class GlobalSounds
     /// <param name="maxAmountPlaying">How many of the sounds that can play at once</param>
     /// <param name="soundVolDivided">Can change how loud the sound is</param>
     /// <param name="enablePitch">If it should add a random pitch to the sounds</param>
-    public static void PlayRandomizedSound(SoundNames[] soundArray, int maxAmountPlaying, float soundVolDivided = 1f, bool enablePitch = false)
+    public static SoundEffectInstance PlayRandomizedSound(SoundNames[] soundArray, int maxAmountPlaying, float soundVolDivided = 1f, bool enablePitch = false)
     {
         // Play a random sound from the array
         int soundIndex = _rnd.Next(0, soundArray.Length);
         SoundNames soundName = soundArray[soundIndex];
 
         int index = CountPlayingInstances(soundName);
-        if (index >= maxAmountPlaying)
-        {
-            return;
-        }
+        if (index >= maxAmountPlaying) return null;
 
-        PlaySound(soundName, soundVolDivided, enablePitch);
+        return PlaySound(soundName, soundVolDivided, enablePitch);
     }
 
 

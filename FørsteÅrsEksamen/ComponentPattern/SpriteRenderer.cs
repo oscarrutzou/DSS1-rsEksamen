@@ -106,6 +106,8 @@ public class SpriteRenderer : Component
     public override void Start()
     {
         _animator = GameObject.GetComponent<Animator>();
+
+        StartColor = Color;
     }
 
     // Maybe do something with the Y of the GameObject transform, and maybe each SpriteRendere have a list
@@ -184,9 +186,9 @@ public class SpriteRenderer : Component
                          SpriteEffects,
                          layerDepth);
     }
+
     /// <summary>
     ///         
-
     /// </summary>
     /// <param name="spriteBatch"></param>
     /// <param name=""></param>

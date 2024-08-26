@@ -1,9 +1,11 @@
 ﻿using DoctorsDungeon.CommandPattern;
 using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using DoctorsDungeon.ComponentPattern.WorldObjects;
+using DoctorsDungeon.GameManagement;
 using DoctorsDungeon.GameManagement.Scenes;
 using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -177,6 +179,7 @@ public abstract class MeleeWeapon : Weapon
                 if (weaponRectangle.Rectangle.Intersects(otherCollider.CollisionBox))
                 {
                     _hitGameObjects.Add(otherGo, new(_totalElapsedTime, IsRotatingBack));
+                    PlayHitSound();
                     DealDamage(otherGo);
                     break;
                 }
@@ -199,6 +202,8 @@ public abstract class MeleeWeapon : Weapon
         }
 
     }
+
+
 
     public void DealDamage(GameObject damageGo)
     {

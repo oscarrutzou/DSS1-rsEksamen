@@ -108,8 +108,8 @@ public class GameWorld : Game
     public bool SingleColorEffect = false;
     public double GameWorldSpeed = 1.0f;
     private Canvas _canvas;
-    public float TeleportEffectAmount = 1;
-    private float _dir = -1;
+    //public float TeleportEffectAmount = 1;
+    //private float _dir = -1;
 
     protected override void Update(GameTime gameTime)
     {

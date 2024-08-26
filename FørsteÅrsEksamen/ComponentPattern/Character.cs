@@ -81,7 +81,7 @@ public abstract class Character : Component
     #region Blood Emitter
     private Color[] _playerBlood = new Color[] { new Color(100, 40, 40, 255), new Color(50, 10, 10, 255) }; // 
     private Color[] _orcBlood = new Color[] { new Color(75, 114, 65, 255), new Color(35, 66, 42, 255) };
-    private ParticleEmitter _bloodCloud;
+    private ParticleEmitter _bloodCloud { get; set; }
     private float _angle;
     private float _cone = MathHelper.PiOver4 * 0.5f;
     private float _bloodPrDmg = 4.0f;
@@ -324,7 +324,6 @@ public abstract class Character : Component
         _bloodCloud.MaxParticlesPerSecond = minAmount;
         _bloodCloud.ParticlesPerSecond = _bloodCloud.MaxParticlesPerSecond;
     }
-
 
     private void MakeBlodEmitter()
     {

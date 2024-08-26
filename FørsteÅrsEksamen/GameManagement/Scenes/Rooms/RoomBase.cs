@@ -41,7 +41,7 @@ public abstract class RoomBase : Scene
 
     protected List<Point> EnemySpawnPoints = new();
     protected List<Point> PotionSpawnPoints = new();
-    protected Dictionary<Point, GameObject> MiscGameObjectsInRoom = new();
+    protected Dictionary<Point, GameObject> MiscGameObjectsInRoom { get; set; } = new();
 
     private TransferDoor _transferDoor;
     private SpriteRenderer _transferDoorSpriteRenderer;

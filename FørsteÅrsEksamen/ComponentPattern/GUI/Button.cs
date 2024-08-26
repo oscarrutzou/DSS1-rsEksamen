@@ -127,13 +127,13 @@ public class Button : Component
         else
             OnClick?.Invoke();
 
-        GlobalSounds.PlaySound(SoundNames.ButtonClicked, maxAmountPlaying: 5, soundVolDivided: 1, enablePitch: true);
+        GlobalSounds.PlaySound(SoundNames.ButtonClicked, maxAmountPlaying: 5, soundVolume: 1, enablePitch: true);
     }
 
     private void PlayHoverSound()
     {
         if (_hasPlayedHoverSound) return;
-        GlobalSounds.PlaySound(SoundNames.ButtonHover, maxAmountPlaying: 5, soundVolDivided: 1, enablePitch: true);
+        GlobalSounds.PlaySound(SoundNames.ButtonHover, maxAmountPlaying: 5, soundVolume: 1, enablePitch: true);
         _hasPlayedHoverSound = true;
     }
 

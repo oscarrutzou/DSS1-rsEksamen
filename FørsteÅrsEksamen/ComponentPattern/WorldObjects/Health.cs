@@ -11,7 +11,7 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
 {
     public class Health : Component
     {
-        private float _damageTimerTotal = 0.2f;
+        private float _damageTimerTotal = 0.05f;
         private double _damageTimer;
         public Color DamageTakenColor { get; private set; } = Color.Red;
         private SpriteRenderer _spriteRenderer;
@@ -87,10 +87,11 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
         /// <para>So we dont make it spray blood out from where the magic caster was (Would be weird)</para></param>
         public void TakeDamage(int damage, Vector2 attackersPosition)
         {
-            if (CurrentHealth <= 0) return; // Already dead
+            AttackerPositionDamageTaken?.Invoke(attackersPosition);
+
+            if (IsDead) return; // Already dead
 
             AmountDamageTaken?.Invoke(damage);
-            AttackerPositionDamageTaken?.Invoke(attackersPosition);
 
             int newHealth = CurrentHealth - damage;
 
@@ -111,13 +112,13 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
         private void DamageTaken()
         {
             _damageTimer = _damageTimerTotal;
-            //spriteRenderer.Color = DamageTakenColor;
+            _spriteRenderer.Color = DamageTakenColor;
             OnDamageTaken?.Invoke(); // For specific behavor when Damage taken
         }
 
         private void ResetColor()
         {
-            //spriteRenderer.Color = Color.White;
+            _spriteRenderer.Color = _spriteRenderer.StartColor;
             OnResetColor?.Invoke();
         }
 
@@ -129,9 +130,7 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
 
             // Count down
             if (_damageTimer <= 0)
-            {
                 ResetColor();
-            }
         }
     }
 }
