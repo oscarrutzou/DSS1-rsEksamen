@@ -3,6 +3,7 @@ using DoctorsDungeon.ComponentPattern.Path;
 using DoctorsDungeon.ComponentPattern.Weapons;
 using DoctorsDungeon.ComponentPattern.WorldObjects;
 using DoctorsDungeon.Factory;
+using DoctorsDungeon.GameManagement;
 using DoctorsDungeon.LiteDB;
 using DoctorsDungeon.ObserverPattern;
 using DoctorsDungeon.Other;
@@ -33,6 +34,17 @@ public abstract class Player : Character
 
     private double _onDeadTimer;
     private readonly double _timeTillSceneChange = 3f;
+    private static SoundNames[] _playerHit = new SoundNames[]
+    {
+        SoundNames.PlayerHit1,
+        SoundNames.PlayerHit2,
+        SoundNames.PlayerHit3,
+        SoundNames.PlayerHit4,
+        SoundNames.PlayerHit5,
+        SoundNames.PlayerHit6,
+        SoundNames.PlayerHit7,
+        SoundNames.PlayerHit8,
+    };  
 
     public Player(GameObject gameObject) : base(gameObject)
     {
@@ -49,6 +61,9 @@ public abstract class Player : Character
     public override void Awake()
     {
         base.Awake();
+
+        CharacterHitHurt = _playerHit;
+
         movementCollider = MovementColliderGo.GetComponent<Collider>();
         Collider.SetCollisionBox(15, 24, new Vector2(0, 30));
 

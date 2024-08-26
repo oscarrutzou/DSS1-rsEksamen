@@ -31,7 +31,7 @@ public class Button : Component
 
     private Vector2 _scaleUpAmount;
     private readonly float _scaleDownOnClickAmount = 0.95f;
-
+    private bool _hasPlayedHoverSound;
     #endregion Properties
 
     public Button(GameObject gameObject) : base(gameObject)
@@ -76,10 +76,13 @@ public class Button : Component
             }
 
             _spriteRenderer.Color = OnHoverColor;
+
+            PlayHoverSound();
         }
         else
         {
             _spriteRenderer.Color = _baseColor;
+            _hasPlayedHoverSound = false;
         }
 
         Vector2 scale = GameObject.Transform.Scale;
@@ -123,6 +126,15 @@ public class Button : Component
             _hasPressed = true;
         else
             OnClick?.Invoke();
+
+        GlobalSounds.PlaySound(SoundNames.ButtonClicked, maxAmountPlaying: 5, soundVolDivided: 1, enablePitch: true);
+    }
+
+    private void PlayHoverSound()
+    {
+        if (_hasPlayedHoverSound) return;
+        GlobalSounds.PlaySound(SoundNames.ButtonHover, maxAmountPlaying: 5, soundVolDivided: 1, enablePitch: true);
+        _hasPlayedHoverSound = true;
     }
 
     public override void Draw(SpriteBatch spriteBatch)

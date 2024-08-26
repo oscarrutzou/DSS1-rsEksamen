@@ -5,6 +5,7 @@ using DoctorsDungeon.Factory;
 using DoctorsDungeon.Factory.Gui;
 using DoctorsDungeon.LiteDB;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 
 namespace DoctorsDungeon.GameManagement.Scenes.Rooms;
 
@@ -46,4 +47,32 @@ public class Room1Scene : RoomBase
         };
 
     }
+
+    public override void Update()
+    {
+        base.Update();
+        _soundPos = GridManager.Instance.CurrentGrid.PosFromGridPos(new Point(10, 21));
+
+        TestSoundDistance();
+    }
+
+    private SoundEffectInstance _currentPlayingSoundEffect;
+    private Vector2 _soundPos;
+    private void TestSoundDistance()
+    {
+        
+        if (_currentPlayingSoundEffect != null && _currentPlayingSoundEffect.State == SoundState.Playing)
+        {
+            // Update sound
+            GlobalSounds.ChangeSoundVolumeDistance(_soundPos, 200, 500, 1, _currentPlayingSoundEffect);
+        }
+        else
+        {
+            if (GlobalSounds.IsAnySoundPlaying(SoundNames.ButtonClicked)) return;
+
+            _currentPlayingSoundEffect = GlobalSounds.PlaySound(SoundNames.ButtonClicked, 1, 0.5f, true);
+        }
+    }
+
+
 }

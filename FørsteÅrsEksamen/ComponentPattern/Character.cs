@@ -58,6 +58,9 @@ public abstract class Character : Component
     protected int Speed { get; set; }
     protected Grid Grid;
 
+    protected SoundNames[] CharacterHitHurt;
+    protected int MaxAmountCharacterHitSoundsPlaying = 5;
+
     #region DamageEmitter
     public ParticleEmitter DamageTakenEmitter { get; private set; }
     protected Color[] DamageTakenAmountTextColor = new Color[] { Color.OrangeRed, Color.DarkRed, Color.Transparent };
@@ -76,7 +79,7 @@ public abstract class Character : Component
     #endregion
 
     #region Blood Emitter
-    private Color[] _playerBlood = new Color[] { new Color(100, 40, 40, 255), new Color(50, 10, 10, 255) };
+    private Color[] _playerBlood = new Color[] { new Color(100, 40, 40, 255), new Color(50, 10, 10, 255) }; // 
     private Color[] _orcBlood = new Color[] { new Color(75, 114, 65, 255), new Color(35, 66, 42, 255) };
     private ParticleEmitter _bloodCloud;
     private float _angle;
@@ -120,7 +123,7 @@ public abstract class Character : Component
     private void SetActionInHealth()
     {
         Health.OnZeroHealth += OnDie;
-        //Health.OnDamageTaken += OnDamageTaken;
+        Health.OnDamageTaken += OnDamageTaken;
         //Health.OnResetColor += OnResetColor;
     }
 
@@ -220,6 +223,12 @@ public abstract class Character : Component
         SpriteRenderer.Color = Color.LightPink;
 
         Health.OnZeroHealth -= OnDie;
+    }
+
+    private void OnDamageTaken()
+    {
+        // Play random sound from array
+        GlobalSounds.PlayRandomizedSound(CharacterHitHurt, MaxAmountCharacterHitSoundsPlaying, 1, true);
     }
 
     public override void Draw(SpriteBatch spriteBatch)

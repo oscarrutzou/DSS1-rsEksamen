@@ -63,35 +63,245 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/Vignette.fx
 
-#begin Sound/GameTrack.wav
+#begin Sound/Attack/Slash_Attack_Heavy_1.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:Sound/GameTrack.wav
+/build:Sound/Attack/Slash_Attack_Heavy_1.wav
 
-#begin Sound/MenuTrack.wav
+#begin Sound/Attack/Slash_Attack_Heavy_2.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:Sound/MenuTrack.wav
+/build:Sound/Attack/Slash_Attack_Heavy_2.wav
 
-#begin Sound/SwipeFast1.mp3
+#begin Sound/Attack/Slash_Attack_Heavy_3.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Attack/Slash_Attack_Heavy_3.wav
+
+#begin Sound/Attack/Slash_Attack_Light_1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Attack/Slash_Attack_Light_1.wav
+
+#begin Sound/Attack/Slash_Attack_Light_2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Attack/Slash_Attack_Light_2.wav
+
+#begin Sound/Attack/Slash_Attack_Light_3.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Attack/Slash_Attack_Light_3.wav
+
+#begin Sound/Attack/SwipeFast1.mp3
 /importer:Mp3Importer
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:Sound/SwipeFast1.mp3
+/build:Sound/Attack/SwipeFast1.mp3
 
-#begin Sound/SwipeFast2.mp3
+#begin Sound/Attack/SwipeFast2.mp3
 /importer:Mp3Importer
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:Sound/SwipeFast2.mp3
+/build:Sound/Attack/SwipeFast2.mp3
 
-#begin Sound/SwipeSlow1.mp3
+#begin Sound/Attack/SwipeSlow1.mp3
 /importer:Mp3Importer
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:Sound/SwipeSlow1.mp3
+/build:Sound/Attack/SwipeSlow1.mp3
+
+#begin Sound/EnemyHurt/Hit (1).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/EnemyHurt/Hit (1).wav
+
+#begin Sound/EnemyHurt/Hit (2).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/EnemyHurt/Hit (2).wav
+
+#begin Sound/EnemyHurt/Hit (3).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/EnemyHurt/Hit (3).wav
+
+#begin Sound/EnemyHurt/Hit (4).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/EnemyHurt/Hit (4).wav
+
+#begin Sound/EnemyHurt/Hit (5).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/EnemyHurt/Hit (5).wav
+
+#begin Sound/EnemyHurt/Hit (6).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/EnemyHurt/Hit (6).wav
+
+#begin Sound/EnemyHurt/Hit (7).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/EnemyHurt/Hit (7).wav
+
+#begin Sound/Gui/HoverButton.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Gui/HoverButton.mp3
+
+#begin Sound/Gui/PressedButton.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Gui/PressedButton.mp3
+
+#begin Sound/Gui/PressedButton2.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Gui/PressedButton2.mp3
+
+#begin Sound/Hit/Hit_Metal_on_flesh.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Hit/Hit_Metal_on_flesh.wav
+
+#begin Sound/Hit/Hit_Metal_on_leather.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Hit/Hit_Metal_on_leather.wav
+
+#begin Sound/Hit/Hit_Metal_on_metal.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Hit/Hit_Metal_on_metal.wav
+
+#begin Sound/Hit/Hit_Metal_on_stone.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Hit/Hit_Metal_on_stone.wav
+
+#begin Sound/Hit/Hit_Metal_on_wood_heavy.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Hit/Hit_Metal_on_wood_heavy.wav
+
+#begin Sound/Hit/Hit_Metal_on_wood.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Hit/Hit_Metal_on_wood.wav
+
+#begin Sound/Hit/Hit_Wood_on_flesh.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Hit/Hit_Wood_on_flesh.wav
+
+#begin Sound/Hit/Hit_Wood_on_leather.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Hit/Hit_Wood_on_leather.wav
+
+#begin Sound/Hit/Hit_Wood_on_metal.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Hit/Hit_Wood_on_metal.wav
+
+#begin Sound/Hit/Hit_Wood_on_stone.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Hit/Hit_Wood_on_stone.wav
+
+#begin Sound/Hit/Hit_Wood_on_wood.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Hit/Hit_Wood_on_wood.wav
+
+#begin Sound/Music/GameTrack.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Music/GameTrack.wav
+
+#begin Sound/Music/MenuTrack.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Music/MenuTrack.wav
+
+#begin Sound/PlayerHurt/Hit (1).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/PlayerHurt/Hit (1).wav
+
+#begin Sound/PlayerHurt/Hit (2).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/PlayerHurt/Hit (2).wav
+
+#begin Sound/PlayerHurt/Hit (3).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/PlayerHurt/Hit (3).wav
+
+#begin Sound/PlayerHurt/Hit (4).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/PlayerHurt/Hit (4).wav
+
+#begin Sound/PlayerHurt/Hit (5).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/PlayerHurt/Hit (5).wav
+
+#begin Sound/PlayerHurt/Hit (6).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/PlayerHurt/Hit (6).wav
+
+#begin Sound/PlayerHurt/Hit (7).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/PlayerHurt/Hit (7).wav
+
+#begin Sound/PlayerHurt/Hit (8).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/PlayerHurt/Hit (8).wav
 
 #begin Test/MultipleFilesAnim/wizardRight (1).png
 /importer:TextureImporter

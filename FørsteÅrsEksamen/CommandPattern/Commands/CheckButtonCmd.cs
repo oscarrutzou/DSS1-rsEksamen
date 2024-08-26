@@ -7,8 +7,8 @@ namespace DoctorsDungeon.CommandPattern.Commands;
 // Oscar
 public class CheckButtonCmd : Command
 {
-    private const double _clickCooldown = 0.1f; // The delay between button clicks in seconds
-    private double _timeSinceLastClick = 0;     // The time since the button was last clicked
+    private const double _clickCooldown = 0.2f; // The delay between button clicks in seconds
+    private static double _timeSinceLastClick = 0;     // The time since the button was last clicked
 
     public CheckButtonCmd()
     {

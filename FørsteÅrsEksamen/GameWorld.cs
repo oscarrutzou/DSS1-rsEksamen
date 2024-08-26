@@ -8,6 +8,7 @@ using DoctorsDungeon.GameManagement.Scenes.Rooms;
 using DoctorsDungeon.GameManagement.Scenes.TestScenes;
 using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -62,19 +63,21 @@ public class GameWorld : Game
         IsFixedTimeStep = false;
         GfxManager.SynchronizeWithVerticalRetrace = true;
 
-        SceneData.GenereateGameObjectDicionary();
-        Fullscreen();   
-        //SetResolutionSize(800, 800);
-
-        WorldCam = new Camera(true); // Camera that follows the player
-        UiCam = new Camera(false);   // Camera that is static
-
         // Put some of this into threads to load faster in a loading menu, insted of running it here.
         GlobalTextures.LoadContent();
         GlobalSounds.LoadContent();
         GlobalAnimations.LoadContent();
 
+        //Fullscreen();   
+        SetResolutionSize(800, 800); // Need to be before the camera
+        SceneData.GenereateGameObjectDicionary();
+        
+        WorldCam = new Camera(true); // Camera that follows the player
+        UiCam = new Camera(false);   // Camera that is static
+
         GenerateScenes(); // Makes a instance of all the scene we need
+
+
 
         CurrentScene = Scenes[SceneNames.MainMenu];
         CurrentScene.Initialize(); // Starts the main menu 
@@ -84,8 +87,8 @@ public class GameWorld : Game
         base.Initialize();
     }
 
-    public float HighlightsEffect_Threshold = 0.5f; // 0.25f shows a lot
-    public float GaussianBlurEffect_BlurAmount = 2.5f;
+    public float HighlightsEffect_Threshold = 0.465f; // 0.25f shows a lot
+    public float GaussianBlurEffect_BlurAmount = 5f;
 
     protected override void LoadContent()
     {
@@ -107,6 +110,7 @@ public class GameWorld : Game
     private Canvas _canvas;
     public float TeleportEffectAmount = 1;
     private float _dir = -1;
+
     protected override void Update(GameTime gameTime)
     {
         DeltaTime = gameTime.ElapsedGameTime.TotalSeconds * GameWorldSpeed;
@@ -132,6 +136,7 @@ public class GameWorld : Game
 
         base.Update(gameTime);
     }
+
 
     protected override void Draw(GameTime gameTime)
     {
@@ -337,19 +342,42 @@ public class GameWorld : Game
     #endregion Scene
 }
 
+
+public class ShaderEffectData
+{
+    public RenderTarget2D RenderTarget { get; set; }
+    public Effect ShaderEffect {  get; set; }
+
+    public ShaderEffectData(GraphicsDevice graphicsDevice, int width, int height, Effect effect)
+    {
+        RenderTarget = new RenderTarget2D(graphicsDevice, width, height);
+        ShaderEffect = effect;
+    }
+}
+
 public class Canvas
 {
-    private RenderTarget2D _target;
+    private RenderTarget2D _baseScreen;
     private readonly GraphicsDevice _graphicsDevice;
     private Rectangle _destinationRectangle;
 
-    private RenderTarget2D _highlightsTarget;
-    private RenderTarget2D _blurTarget;
+    //private RenderTarget2D _highlightsTarget;
+    //private RenderTarget2D _blurTarget;
 
+    private enum ShaderEffectNames
+    {
+        // The name for each effect
+        Bloom,
+        
+    }
+    // The list should be in a correct rækkefølge
+    private Dictionary<ShaderEffectNames, List<ShaderEffectData>> ShaderEffects = new();
     public Canvas(GraphicsDevice graphicsDevice)
     {
         _graphicsDevice = graphicsDevice;
     }
+
+    
 
     /// <summary>
     /// This is so we can set the base game to be a smaller scale and then just upscale everything. 
@@ -357,18 +385,32 @@ public class Canvas
     /// </summary>
     public void SetDestinationRectangle()
     {
-        _target = new(_graphicsDevice, GameWorld.Instance.DisplayWidth, GameWorld.Instance.DisplayHeight);
-        _highlightsTarget = new(_graphicsDevice, GameWorld.Instance.DisplayWidth, GameWorld.Instance.DisplayHeight);
-        _blurTarget = new(_graphicsDevice, GameWorld.Instance.DisplayWidth, GameWorld.Instance.DisplayHeight);
+        int width = GameWorld.Instance.DisplayWidth;
+        int height = GameWorld.Instance.DisplayHeight;
+
+        _baseScreen = new(_graphicsDevice, width, height);
+
+        // Makes a new shader list
+        if (ShaderEffects.ContainsKey(ShaderEffectNames.Bloom)) ShaderEffects.Remove(ShaderEffectNames.Bloom);
+
+        ShaderEffects.Add(ShaderEffectNames.Bloom, new List<ShaderEffectData>()
+        {
+            { new ShaderEffectData(_graphicsDevice, width, height, GlobalTextures.HighlightsEffect)  },
+            { new ShaderEffectData(_graphicsDevice, width, height, GlobalTextures.GaussianBlurEffect)  },
+        });
+
+        //_highlightsTarget = new(_graphicsDevice, GameWorld.Instance.DisplayWidth, GameWorld.Instance.DisplayHeight);
+        //_blurTarget = new(_graphicsDevice, GameWorld.Instance.DisplayWidth, GameWorld.Instance.DisplayHeight);
+
         var screenSize = _graphicsDevice.PresentationParameters.Bounds;
 
 
-        float scaleX = (float)screenSize.Width / _target.Width;
-        float scaleY = (float)screenSize.Height / _target.Height;
+        float scaleX = (float)screenSize.Width / _baseScreen.Width;
+        float scaleY = (float)screenSize.Height / _baseScreen.Height;
         float scale = Math.Min(scaleX, scaleY);
 
-        int newWidth = (int)(_target.Width * scale);
-        int newHeight = (int)(_target.Height * scale);
+        int newWidth = (int)(_baseScreen.Width * scale);
+        int newHeight = (int)(_baseScreen.Height * scale);
 
         int posX = (screenSize.Width - newWidth) / 2;
         int posY = (screenSize.Height - newHeight) / 2;
@@ -378,50 +420,58 @@ public class Canvas
 
     public void Activate()
     {
-        _graphicsDevice.SetRenderTarget(_target);
+        _graphicsDevice.SetRenderTarget(_baseScreen);
     }
 
     public void Draw(SpriteBatch spriteBatch)
     {
         // Everthing drawn before this, will be used for the effect
 
-        // First draw the high contrast places and put into a texture. 
-        // Then draw bloom texture too with an additive.  GlobalTextures.BloomEffect
-        // Draw your _target onto the temporary render target
-
-        // Need first to scale down the image 4x?
-        // Then take the amount all the colors over a certain value.
-        // Apply the bloom/blur onto it.
-        // Scale up
-        // Draw the normal target with a scaled up texture.
-        Texture2D finnishedScene = _target;
-        //int scaleAmount = 4;
-
-        //int smallerWidth = _target.Width / scaleAmount;
-        //int smallerHeight = _target.Height / scaleAmount;
-
-        //// Set the smaller render target
-        ///
+        Texture2D finnishedScene = _baseScreen;
+        
         if (GameWorld.Instance.SingleColorEffect)
         {
             DrawSingleColorEffect(spriteBatch);
             return;
         }
 
-        _graphicsDevice.SetRenderTarget(_highlightsTarget);
 
-        // Draw your scene onto the smaller render target
-        spriteBatch.Begin(effect: GlobalTextures.HighlightsEffect);
-        spriteBatch.Draw(finnishedScene, _destinationRectangle, Color.White);
-        spriteBatch.End();
+        foreach (var shaderEffectPair in ShaderEffects)
+        {
+            Texture2D baseScene = _baseScreen;
 
-        // Set the smaller render target
-        _graphicsDevice.SetRenderTarget(_blurTarget);
+            ShaderEffectNames shaderEffectName = shaderEffectPair.Key;
 
-        // Draw your scene onto the smaller render target
-        spriteBatch.Begin(effect: GlobalTextures.GaussianBlurEffect);
-        spriteBatch.Draw(_highlightsTarget, _destinationRectangle, Color.White);
-        spriteBatch.End();
+            // Iterate over the inner dictionary (RenderTarget2D and Effect pairs)
+            foreach (ShaderEffectData shaderEffectData in shaderEffectPair.Value)
+            {
+                RenderTarget2D renderTarget = shaderEffectData.RenderTarget;
+                Effect shaderEFfect = shaderEffectData.ShaderEffect;
+
+                _graphicsDevice.SetRenderTarget(renderTarget);
+
+                spriteBatch.Begin(effect: shaderEFfect);
+                spriteBatch.Draw(baseScene, Vector2.Zero, Color.White);
+                spriteBatch.End();
+
+                baseScene = renderTarget;
+            }
+        }
+
+        //_graphicsDevice.SetRenderTarget(_highlightsTarget);
+
+        //// Draw your scene onto the smaller render target
+        //spriteBatch.Begin(effect: GlobalTextures.HighlightsEffect);
+        //spriteBatch.Draw(finnishedScene, _destinationRectangle, Color.White);
+        //spriteBatch.End();
+
+        //// Set the smaller render target
+        //_graphicsDevice.SetRenderTarget(_blurTarget);
+
+        //// Draw your scene onto the smaller render target
+        //spriteBatch.Begin(effect: GlobalTextures.GaussianBlurEffect);
+        //spriteBatch.Draw(_highlightsTarget, _destinationRectangle, Color.White);
+        //spriteBatch.End();
 
         // Reset the render target
         _graphicsDevice.SetRenderTarget(null);
@@ -435,7 +485,17 @@ public class Canvas
 
         spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.Additive, effect: GlobalTextures.VignetteEffect);
 
-        spriteBatch.Draw(_blurTarget, _destinationRectangle, Color.White);
+
+        foreach (var shaderEffectPair in ShaderEffects)
+        {
+            ShaderEffectNames shaderEffectName = shaderEffectPair.Key;
+
+            // The last has the final effect
+            RenderTarget2D shaderTarget = shaderEffectPair.Value.Last().RenderTarget;
+            spriteBatch.Draw(shaderTarget, Vector2.Zero, Color.White); // Draw last of the effect
+        }
+
+
         spriteBatch.Draw(finnishedScene, _destinationRectangle, Color.White);
 
         spriteBatch.End();
@@ -452,7 +512,7 @@ public class Canvas
         // Draw the scaled-down texture onto the screen
         spriteBatch.Begin(effect: GlobalTextures.SingleColorEffect);
 
-        spriteBatch.Draw(_target, _destinationRectangle, Color.White);
+        spriteBatch.Draw(_baseScreen, _destinationRectangle, Color.White);
 
         spriteBatch.End();
     }

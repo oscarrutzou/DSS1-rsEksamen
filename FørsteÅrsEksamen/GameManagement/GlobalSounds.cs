@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework.Audio;
+﻿using DoctorsDungeon.LiteDB;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using System;
 using System.Collections.Generic;
@@ -7,9 +9,45 @@ namespace DoctorsDungeon.GameManagement;
 
 public enum SoundNames
 {
-    SwipeFast1,
-    SwipeFast2,
-    SwipeSlow1,
+    // UI -----------------------------------
+    ButtonHover,
+    ButtonClicked,
+
+    // Weapon  ------------------------------
+    //SwipeFast1,
+    //SwipeFast2,
+    //SwipeFast3,
+    SwipeFast4,
+    SwipeFast5,
+
+    SwipeHeavy1,
+    SwipeHeavy2,
+    SwipeHeavy3,
+    //SwipeHeavy4,
+
+    // Weapon Hit  --------------------------
+    WoodHitFlesh,
+    WoodHitLeather,
+    WoodHitMetal,
+
+    // Enemy Hit   --------------------------
+    EnemyHit1,
+    EnemyHit2,
+    EnemyHit3,
+    EnemyHit4,
+    EnemyHit5,
+    EnemyHit6,
+    EnemyHit7,
+
+    // Player Hit  --------------------------
+    PlayerHit1,
+    PlayerHit2,
+    PlayerHit3,
+    PlayerHit4,
+    PlayerHit5,
+    PlayerHit6,
+    PlayerHit7,
+    PlayerHit8,
 }
 
 // Oscar
@@ -35,7 +73,7 @@ public static class GlobalSounds
     private static int _musicVolDivide = 4; //Makes the song less loud by dividing the real volume
     private static Random _rnd = new();
     public static float MusicVolume = 0.0f;
-    public static float SfxVolume = 0.0f;
+    public static float SfxVolume = 0.5f;
     private static bool _musicCountDown;
     private static bool _sfxCountDown;
 
@@ -51,15 +89,50 @@ public static class GlobalSounds
         _soundInstancesPool = new Dictionary<SoundNames, List<SoundEffectInstance>>();
 
         // Loads music
-        _menuMusic = content.Load<SoundEffect>("Sound\\MenuTrack");
-        _gameMusic = content.Load<SoundEffect>("Sound\\GameTrack");
+        _menuMusic = content.Load<SoundEffect>("Sound\\Music\\MenuTrack");
+        _gameMusic = content.Load<SoundEffect>("Sound\\Music\\GameTrack");
 
         // Loads SFX's
         Sounds = new Dictionary<SoundNames, SoundEffect>
         {
-            {SoundNames.SwipeFast1, content.Load<SoundEffect>("Sound\\SwipeFast1") },
-            {SoundNames.SwipeFast2, content.Load<SoundEffect>("Sound\\SwipeFast2") },
-            {SoundNames.SwipeSlow1, content.Load<SoundEffect>("Sound\\SwipeSlow1") },
+            {SoundNames.ButtonHover, content.Load<SoundEffect>("Sound\\Gui\\HoverButton") },
+            {SoundNames.ButtonClicked, content.Load<SoundEffect>("Sound\\Gui\\PressedButton2") },
+
+
+            //{SoundNames.SwipeFast1, content.Load<SoundEffect>("Sound\\Attack\\Slash_Attack_Light_1") },
+            //{SoundNames.SwipeFast2, content.Load<SoundEffect>("Sound\\Attack\\Slash_Attack_Light_2") },
+            //{SoundNames.SwipeFast3, content.Load<SoundEffect>("Sound\\Attack\\Slash_Attack_Light_3") },
+            {SoundNames.SwipeFast4, content.Load<SoundEffect>("Sound\\Attack\\SwipeFast1") },
+            {SoundNames.SwipeFast5, content.Load<SoundEffect>("Sound\\Attack\\SwipeFast2") },
+
+            {SoundNames.SwipeHeavy1, content.Load<SoundEffect>("Sound\\Attack\\Slash_Attack_Heavy_1") },
+            {SoundNames.SwipeHeavy2, content.Load<SoundEffect>("Sound\\Attack\\Slash_Attack_Heavy_2") },
+            {SoundNames.SwipeHeavy3, content.Load<SoundEffect>("Sound\\Attack\\Slash_Attack_Heavy_3") },
+            //{SoundNames.SwipeHeavy4, content.Load<SoundEffect>("Sound\\Attack\\SwipeSlow1") },
+
+
+            {SoundNames.WoodHitFlesh, content.Load<SoundEffect>("Sound\\Hit\\Hit_Wood_on_flesh") },
+            {SoundNames.WoodHitLeather, content.Load<SoundEffect>("Sound\\Hit\\Hit_Wood_on_leather") },
+            {SoundNames.WoodHitMetal, content.Load<SoundEffect>("Sound\\Hit\\Hit_Wood_on_metal") },
+
+
+            {SoundNames.EnemyHit1, content.Load<SoundEffect>("Sound\\EnemyHurt\\Hit (1)") },
+            {SoundNames.EnemyHit2, content.Load<SoundEffect>("Sound\\EnemyHurt\\Hit (2)") },
+            {SoundNames.EnemyHit3, content.Load<SoundEffect>("Sound\\EnemyHurt\\Hit (3)") },
+            {SoundNames.EnemyHit4, content.Load<SoundEffect>("Sound\\EnemyHurt\\Hit (4)") },
+            {SoundNames.EnemyHit5, content.Load<SoundEffect>("Sound\\EnemyHurt\\Hit (5)") },
+            {SoundNames.EnemyHit6, content.Load<SoundEffect>("Sound\\EnemyHurt\\Hit (6)") },
+            {SoundNames.EnemyHit7, content.Load<SoundEffect>("Sound\\EnemyHurt\\Hit (7)") },
+
+
+            {SoundNames.PlayerHit1, content.Load<SoundEffect>("Sound\\PlayerHurt\\Hit (1)") },
+            {SoundNames.PlayerHit2, content.Load<SoundEffect>("Sound\\PlayerHurt\\Hit (2)") },
+            {SoundNames.PlayerHit3, content.Load<SoundEffect>("Sound\\PlayerHurt\\Hit (3)") },
+            {SoundNames.PlayerHit4, content.Load<SoundEffect>("Sound\\PlayerHurt\\Hit (4)") },
+            {SoundNames.PlayerHit5, content.Load<SoundEffect>("Sound\\PlayerHurt\\Hit (5)") },
+            {SoundNames.PlayerHit6, content.Load<SoundEffect>("Sound\\PlayerHurt\\Hit (6)") },
+            {SoundNames.PlayerHit7, content.Load<SoundEffect>("Sound\\PlayerHurt\\Hit (7)") },
+            {SoundNames.PlayerHit8, content.Load<SoundEffect>("Sound\\PlayerHurt\\Hit (8)") },
         };
 
         //Create sound instances for the sound pool
@@ -145,6 +218,30 @@ public static class GlobalSounds
 
         return false;
     }
+    public static bool IsAnySoundPlaying(SoundNames soundName)
+    {
+        //Check if any sound is playing
+        SoundEffectInstance instance = GetAvailableInstance(soundName);
+
+        if (instance == null) return false;
+        if (instance.State == SoundState.Playing) return true;
+
+        return false;
+    }
+
+    public static void ChangeSoundVolumeDistance(Vector2 soundPosition, int minDistance, int maxDistance, float maxVolume, SoundEffectInstance soundEffect)
+    {
+        Vector2 playerPos = Vector2.Zero;
+        if (SaveData.Player != null) playerPos = SaveData.Player.GameObject.Transform.Position;
+
+        float distance = Vector2.Distance(playerPos, soundPosition);
+
+        // Calculate the volume based on distance
+        float normalizedDistance = MathHelper.Clamp((distance - (float)minDistance) / ((float)maxDistance - (float)minDistance), 0f, 1f);
+        float lerpedVolume = MathHelper.Lerp(maxVolume, 0f, normalizedDistance);
+
+        soundEffect.Volume = lerpedVolume;
+    }
 
     /// <summary>
     /// Plays a sound
@@ -152,7 +249,7 @@ public static class GlobalSounds
     /// <param name="soundName">The sound to play</param>
     /// <param name="soundVolDivided">Can change how loud the sound is</param>
     /// <param name="enablePitch">If it should add a random pitch to the sounds</param>
-    public static void PlaySound(SoundNames soundName, float soundVolDivided = 1f, bool enablePitch = false)
+    public static SoundEffectInstance PlaySound(SoundNames soundName, float soundVolDivided = 1f, bool enablePitch = false)
     {
         // Play a sound with an optional random pitch
         float pitch = enablePitch ? GenerateRandomPitch() : 0f; // Base pitch is 0f
@@ -169,6 +266,17 @@ public static class GlobalSounds
         instance.Pitch = pitch;
         instance.Volume = SfxVolume / soundVolDivided;
         instance.Play();
+
+        return instance;
+    }
+
+    public static SoundEffectInstance PlaySound(SoundNames soundName, int maxAmountPlaying, float soundVolDivided = 1f, bool enablePitch = false)
+    {
+        int index = CountPlayingInstances(soundName);
+
+        if (index >= maxAmountPlaying) return null;
+
+        return PlaySound(soundName, soundVolDivided, enablePitch);
     }
 
     /// <summary>
@@ -192,6 +300,9 @@ public static class GlobalSounds
 
         PlaySound(soundName, soundVolDivided, enablePitch);
     }
+
+
+
 
     // Helper method
     private static SoundEffectInstance GetAvailableInstance(SoundNames soundName)

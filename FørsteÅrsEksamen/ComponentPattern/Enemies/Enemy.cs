@@ -1,5 +1,6 @@
 ﻿using DoctorsDungeon.ComponentPattern.Path;
 using DoctorsDungeon.ComponentPattern.PlayerClasses;
+using DoctorsDungeon.GameManagement;
 using DoctorsDungeon.Other;
 using LiteDB;
 using Microsoft.Xna.Framework;
@@ -47,6 +48,18 @@ public abstract class Enemy : Character
     private readonly int _distanceStopFromTarget = 2; // The amount of distance the enemy has to the player
 
     private float _randomOffsetSeed;
+
+    private static SoundNames[] _enemyHit = new SoundNames[]
+    {
+        SoundNames.EnemyHit1,
+        SoundNames.EnemyHit2,
+        SoundNames.EnemyHit3,
+        SoundNames.EnemyHit4,
+        SoundNames.EnemyHit5,
+        SoundNames.EnemyHit6,
+        SoundNames.EnemyHit7,
+    };
+
     #endregion Properties
 
     public Enemy(GameObject gameObject) : base(gameObject)
@@ -63,6 +76,9 @@ public abstract class Enemy : Character
     public override void Awake()
     {
         base.Awake();
+
+        CharacterHitHurt = _enemyHit;
+        MaxAmountCharacterHitSoundsPlaying = 5;
 
         if (WeaponGo != null)
         {

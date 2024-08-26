@@ -44,7 +44,7 @@ public abstract class Weapon : Component
 
     // A lot of this data is being copied on many different weapons, even though it has the same data.
     // Could use a GlobalPool or something that contains data, that are the same and wont be changed on each object
-    protected SoundNames[] AttackSoundNames;
+    protected SoundNames[] AttackSoundNames { get; set;}
 
     protected Vector2 StartPosOffset = new(40, 20);
     private Vector2 lastOffSetPos, startRelativePos = new(0, 60), startRelativeOffsetPos = new Vector2(0, -20);
@@ -182,7 +182,8 @@ public abstract class Weapon : Component
     {
         if (AttackSoundNames == null || AttackSoundNames.Length == 0) return;
 
-        GlobalSounds.PlayRandomizedSound(AttackSoundNames, 5, 1f, true);
+        // This should be played with a distance sound. From weapon to player pos.
+        GlobalSounds.PlayRandomizedSound(AttackSoundNames, 2, 0.8f, true);
     }
 
     public void MoveWeaponAndAngle()
