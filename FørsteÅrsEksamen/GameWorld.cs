@@ -68,8 +68,8 @@ public class GameWorld : Game
         GlobalSounds.LoadContent();
         GlobalAnimations.LoadContent();
 
-        //Fullscreen();   
-        SetResolutionSize(800, 800); // Need to be before the camera
+        Fullscreen();
+        //SetResolutionSize(800, 800); // Need to be before the camera
         SceneData.GenereateGameObjectDicionary();
         
         WorldCam = new Camera(true); // Camera that follows the player
@@ -160,7 +160,9 @@ public class GameWorld : Game
         _spriteBatch.End();
 
         // Draws the screen with the effects on
-        _canvas.Draw(_spriteBatch);
+        // We dont want our normal effects to show on the canvas, but we do want to show the single color effect 
+        if (!SingleColorEffect)
+            _canvas.Draw(_spriteBatch);
 
         //Draw on screen objects. Use pixel perfect and a stationary UiCam that dosent move around
         _spriteBatch.Begin(sortMode: SpriteSortMode.FrontToBack, BlendState.AlphaBlend,
@@ -175,8 +177,9 @@ public class GameWorld : Game
         _spriteBatch.DrawString(GlobalTextures.DefaultFont, $"BlurAmount: {GaussianBlurEffect_BlurAmount}", pos, Color.White);
         _spriteBatch.End();
 
+        if (SingleColorEffect)
+            _canvas.Draw(_spriteBatch);
 
-  
         base.Draw(gameTime);
     }
 
@@ -368,7 +371,7 @@ public class Canvas
     {
         // The name for each effect
         Bloom,
-        
+        SingleColor,
     }
     // The list should be in a correct rækkefølge
     private Dictionary<ShaderEffectNames, List<ShaderEffectData>> ShaderEffects = new();
@@ -377,7 +380,19 @@ public class Canvas
         _graphicsDevice = graphicsDevice;
     }
 
-    
+    private void AddBloom()
+    {
+        int width = GameWorld.Instance.DisplayWidth;
+        int height = GameWorld.Instance.DisplayHeight;
+
+        if (ShaderEffects.ContainsKey(ShaderEffectNames.Bloom)) ShaderEffects.Remove(ShaderEffectNames.Bloom);
+
+        ShaderEffects.Add(ShaderEffectNames.Bloom, new List<ShaderEffectData>()
+        {
+            { new ShaderEffectData(_graphicsDevice, width, height, GlobalTextures.HighlightsEffect)  },
+            { new ShaderEffectData(_graphicsDevice, width, height, GlobalTextures.GaussianBlurEffect)  },
+        });
+    }
 
     /// <summary>
     /// This is so we can set the base game to be a smaller scale and then just upscale everything. 
@@ -391,20 +406,9 @@ public class Canvas
         _baseScreen = new(_graphicsDevice, width, height);
 
         // Makes a new shader list
-        if (ShaderEffects.ContainsKey(ShaderEffectNames.Bloom)) ShaderEffects.Remove(ShaderEffectNames.Bloom);
-
-        ShaderEffects.Add(ShaderEffectNames.Bloom, new List<ShaderEffectData>()
-        {
-            { new ShaderEffectData(_graphicsDevice, width, height, GlobalTextures.HighlightsEffect)  },
-            { new ShaderEffectData(_graphicsDevice, width, height, GlobalTextures.GaussianBlurEffect)  },
-        });
-
-        //_highlightsTarget = new(_graphicsDevice, GameWorld.Instance.DisplayWidth, GameWorld.Instance.DisplayHeight);
-        //_blurTarget = new(_graphicsDevice, GameWorld.Instance.DisplayWidth, GameWorld.Instance.DisplayHeight);
+        AddBloom();
 
         var screenSize = _graphicsDevice.PresentationParameters.Bounds;
-
-
         float scaleX = (float)screenSize.Width / _baseScreen.Width;
         float scaleY = (float)screenSize.Height / _baseScreen.Height;
         float scale = Math.Min(scaleX, scaleY);
@@ -429,13 +433,6 @@ public class Canvas
 
         Texture2D finnishedScene = _baseScreen;
         
-        if (GameWorld.Instance.SingleColorEffect)
-        {
-            DrawSingleColorEffect(spriteBatch);
-            return;
-        }
-
-
         foreach (var shaderEffectPair in ShaderEffects)
         {
             Texture2D baseScene = _baseScreen;
@@ -458,33 +455,20 @@ public class Canvas
             }
         }
 
-        //_graphicsDevice.SetRenderTarget(_highlightsTarget);
-
-        //// Draw your scene onto the smaller render target
-        //spriteBatch.Begin(effect: GlobalTextures.HighlightsEffect);
-        //spriteBatch.Draw(finnishedScene, _destinationRectangle, Color.White);
-        //spriteBatch.End();
-
-        //// Set the smaller render target
-        //_graphicsDevice.SetRenderTarget(_blurTarget);
-
-        //// Draw your scene onto the smaller render target
-        //spriteBatch.Begin(effect: GlobalTextures.GaussianBlurEffect);
-        //spriteBatch.Draw(_highlightsTarget, _destinationRectangle, Color.White);
-        //spriteBatch.End();
-
         // Reset the render target
         _graphicsDevice.SetRenderTarget(null);
 
         // Clear the screen
         _graphicsDevice.Clear(Color.Transparent);
 
-        // Draw the scaled-down texture onto the screen
-        // Vignette
-        // ChromaticAberrationEffect
 
-        spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.Additive, effect: GlobalTextures.VignetteEffect);
+        if (GameWorld.Instance.SingleColorEffect)
+            DrawBaseScreen(spriteBatch, GlobalTextures.SingleColorEffect); // Need to make this effect also contain vignette
+        else
+            DrawBaseScreen(spriteBatch, GlobalTextures.VignetteEffect);
 
+        // Draw the rest of the effects (All are going to be having chromatic aberration on them
+        spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.Additive, effect: GameWorld.Instance.SingleColorEffect ? null : GlobalTextures.ChromaticAberrationEffect);
 
         foreach (var shaderEffectPair in ShaderEffects)
         {
@@ -495,25 +479,14 @@ public class Canvas
             spriteBatch.Draw(shaderTarget, Vector2.Zero, Color.White); // Draw last of the effect
         }
 
-
-        spriteBatch.Draw(finnishedScene, _destinationRectangle, Color.White);
-
         spriteBatch.End();
     }
 
-    private void DrawSingleColorEffect(SpriteBatch spriteBatch)
+    private void DrawBaseScreen(SpriteBatch spriteBatch, Effect effect)
     {
-        // Reset the render target
-        _graphicsDevice.SetRenderTarget(null);
-
-        // Clear the screen
-        _graphicsDevice.Clear(Color.Transparent);
-
-        // Draw the scaled-down texture onto the screen
-        spriteBatch.Begin(effect: GlobalTextures.SingleColorEffect);
-
-        spriteBatch.Draw(_baseScreen, _destinationRectangle, Color.White);
-
+        spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.Additive, effect: effect);
+        spriteBatch.Draw(_baseScreen, Vector2.Zero, Color.White);
         spriteBatch.End();
     }
+    
 }       

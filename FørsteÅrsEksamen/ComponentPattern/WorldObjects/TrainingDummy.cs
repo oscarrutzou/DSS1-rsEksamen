@@ -14,10 +14,6 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
 
     public class TrainingDummy : Component
     {
-        public Vector2 TextPosition;
-        public string Text;
-        private static double _trackingTime = 5f; // Time window for tracking (5 seconds)
-
         private SpriteRenderer _spriteRenderer;
         private Health _health;
         private Animator _animator;
@@ -31,6 +27,7 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
         private Queue<double> _damageHistoryTime = new Queue<double>(); // To store damage history
         private Queue<int> _damageHistoryAmount = new Queue<int>(); // To store damage history
 
+        public double trackingTime = 5f; // Time window for tracking (5 seconds)
         
         public TrainingDummy(GameObject gameObject) : base(gameObject)
         {
@@ -88,19 +85,23 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
 
         public override void Update() 
         {
-            TextPosition = GameObject.Transform.Position + new Vector2(0, 25);
-            float dps = DamageAccumulated / (int)_trackingTime;
-            Text = $"DPS: {dps}";
-
             // Update the timer
             _elapsedTime += GameWorld.DeltaTime;
 
             // Remove old damage values from the history
-            while (_damageHistoryTime.Count > 0 && _elapsedTime - _damageHistoryTime.Peek() > _trackingTime)
+            while (_damageHistoryTime.Count > 0 && _elapsedTime - _damageHistoryTime.Peek() > trackingTime)
             {
                 _damageHistoryTime.Dequeue();
                 DamageAccumulated -= _damageHistoryAmount.Dequeue();
             }
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            Vector2 pos = GameObject.Transform.Position + new Vector2(-45, 25);
+            int dps = DamageAccumulated / (int)trackingTime;
+            string text = $"DPS: {dps}";
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, text, pos, BaseMath.TransitionColor(GameWorld.TextColor), 0f, Vector2.Zero, 1, SpriteEffects.None, 1);
         }
     }
 }

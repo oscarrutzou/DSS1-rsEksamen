@@ -38,6 +38,8 @@ public abstract class Enemy : Character
     public bool HasBeenAwoken;
     public bool CanAttack = true;
     protected bool TargetPlayer;
+    protected int SearchDistancePx = 1000;
+    protected int MinimumRandomMoveDistance = 2;
 
     private readonly Random _rnd = new();
     private double _randomMoveTimer;
@@ -237,8 +239,7 @@ public abstract class Enemy : Character
     {
         Point randomPoint;
 
-        int searchRadius = 1000;
-        _cellGameObjects = Grid.GetCellsInRadius(GameObject.Transform.Position, searchRadius, 2);
+        _cellGameObjects = Grid.GetCellsInRadius(GameObject.Transform.Position, SearchDistancePx, MinimumRandomMoveDistance);
         
         if (_cellGameObjects.Count > 0 )
             randomPoint = _cellGameObjects[_rnd.Next(0, _cellGameObjects.Count - 1)].Transform.GridPosition;

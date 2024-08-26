@@ -194,21 +194,21 @@ public abstract class Weapon : Component
 
         // Update hit sound
         if (_currentHitSound != null && _currentHitSound.State == SoundState.Playing)
-            GlobalSounds.ChangeSoundVolumeDistance(GameObject.Transform.Position, 50, 250, 0.8f, _currentHitSound);
+            GlobalSounds.ChangeSoundVolumeDistance(GameObject.Transform.Position, 50, 250, 0.4f, _currentHitSound);
     }
 
     protected void PlayAttackSound()
     {
         if (AttackSoundNames == null || AttackSoundNames.Length == 0) return;
 
-        _currentAttackSound = GlobalSounds.PlayRandomizedSound(AttackSoundNames, 3, 1f, true);
+        _currentAttackSound = GlobalSounds.PlayRandomizedSound(AttackSoundNames, 5, 1f, true);
     }
 
     protected void PlayHitSound()
     {
         if (AttackHitSoundNames == null ||AttackHitSoundNames.Length == 0) return;
 
-        _currentHitSound = GlobalSounds.PlayRandomizedSound(AttackHitSoundNames, 3, 1, true);
+        _currentHitSound = GlobalSounds.PlayRandomizedSound(AttackHitSoundNames, 3, 0.4f, true);
     }
 
     public void MoveWeaponAndAngle()

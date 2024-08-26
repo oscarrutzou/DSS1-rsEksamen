@@ -25,6 +25,9 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
         public Action OnDamageTaken { get; set; }
         public Action OnZeroHealth { get; set; }
         public Action OnResetColor { get; set; }
+        public Action On75Hp { get; set; }
+        public Action On50Hp { get; set; }
+        public Action On25Hp { get; set; }
         public bool IsDead { get; private set; }
         public Action<int> AmountDamageTaken { get; set; }
         public Action<Vector2> AttackerPositionDamageTaken { get; set; }
@@ -101,23 +104,52 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
             if (CurrentHealth > 0)
             {
                 DamageTaken();
+                CheckDmgLeft();
                 return;
             }
 
             IsDead = true;
             ResetColor();
+
             OnZeroHealth?.Invoke();
+            OnZeroHealth = null;
         }
 
         private void DamageTaken()
         {
+            OnDamageTaken?.Invoke(); // For specific behavor when Damage taken
+
+            if (GameWorld.Instance.SingleColorEffect) return; // To avoid it changing color when hit. It causes characters to dissapear.
             _damageTimer = _damageTimerTotal;
             _spriteRenderer.Color = DamageTakenColor;
-            OnDamageTaken?.Invoke(); // For specific behavor when Damage taken
+        }
+
+        private void CheckDmgLeft()
+        {
+            float normalizedHealth = (float)CurrentHealth / (float)MaxHealth;
+            if (normalizedHealth <= 0.75f)
+            {
+                On75Hp?.Invoke();
+                On75Hp = null;
+            }
+
+            if (normalizedHealth <= 0.5f)
+            {
+                On50Hp?.Invoke();
+                On50Hp = null;
+            }
+
+            if (normalizedHealth <= 0.25f)
+            {
+                On25Hp?.Invoke();
+                On25Hp = null;
+            }
         }
 
         private void ResetColor()
         {
+            if (IsDead) return;
+
             _spriteRenderer.Color = _spriteRenderer.StartColor;
             OnResetColor?.Invoke();
         }

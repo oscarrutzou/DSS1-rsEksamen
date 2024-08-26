@@ -115,7 +115,7 @@ public class Animator : Component
         // Reset spriterenderer
         _spriteRenderer.UsingAnimation = true; // This gets set to false if you have played a Animation, then want to use a normal sprite again
 
-        _spriteRenderer.ShouldDrawSprite = true;
+        //_spriteRenderer.ShouldDrawSprite = true;
         _spriteRenderer.Rotation = -1;
 
         _frameDuration = 1f / CurrentAnimation.FPS; //Sets how long each frame should be

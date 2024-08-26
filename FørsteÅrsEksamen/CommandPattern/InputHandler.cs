@@ -59,6 +59,7 @@ public class InputHandler
 
         if (!GameWorld.DebugAndCheats) return;
 
+        AddKeyButtonDownCommand(Keys.Tab, new CustomCmd(() => { GameWorld.Instance.SingleColorEffect = !GameWorld.Instance.SingleColorEffect; }));
 
         AddKeyButtonDownCommand(Keys.Left, new CustomCmd(() => {
             GameWorld.Instance.GaussianBlurEffect_BlurAmount += 0.5f;

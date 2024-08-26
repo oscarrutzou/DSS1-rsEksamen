@@ -36,6 +36,10 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
             EnemyTypes.OrcWarrior,
         };
 
+        private double _showHideTransitionCooldown = 2;
+        private double _showHideTransitionTimer;
+        private bool _showHideTransition;
+
         // Could have it when its health is under a certain amount it begins to flee or spawn faster.
         // Maybe make a easy way to add it, Like a normalized health * 100. So u can write ActionOnCertainHealth 25 for 25% and then the action?
 
@@ -57,6 +61,34 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
             CharacterStateAnimations.Add(CharacterState.Dead, AnimNames.OrcShamanDeath);
 
             MakeSpawner();
+
+            SetLowHealthStates();
+        }
+
+        private void SetLowHealthStates()
+        {
+            Health.On75Hp += () => { GameWorld.Instance.SingleColorEffect = true; }; // Together with a sound effect
+
+            Health.On50Hp += () => { 
+                Speed = 700;
+                MinimumRandomMoveDistance = 5;
+                SearchDistancePx = 2000;
+            };
+
+            Health.On25Hp += () => {
+                _showHideTransition = true;
+                SpriteRenderer.ShouldDrawSprite = false;
+                if (Weapon != null)
+                    Weapon.SpriteRenderer.ShouldDrawSprite = false;
+            };
+
+            Health.OnZeroHealth += () => {
+                _showHideTransition = false;
+                SpriteRenderer.ShouldDrawSprite = true;
+                if (Weapon != null)
+                    Weapon.SpriteRenderer.ShouldDrawSprite = true;
+            };
+            Health.OnZeroHealth += () => { GameWorld.Instance.SingleColorEffect = false; }; // Together with a sound effect
         }
 
         private void MakeSpawner()
@@ -89,6 +121,26 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
             }
 
             SpawnEnemy();
+
+            TransitionShowHide();
+        }
+
+        private void TransitionShowHide()
+        {
+            if (!_showHideTransition) return;
+
+            if (_showHideTransitionTimer < _showHideTransitionCooldown)
+                _showHideTransitionTimer += GameWorld.DeltaTime;
+
+            if (_showHideTransitionTimer >= _showHideTransitionCooldown)
+            {
+                // Reset timer
+                _showHideTransitionTimer = 0;
+
+                SpriteRenderer.ShouldDrawSprite = !SpriteRenderer.ShouldDrawSprite;
+                if (Weapon != null)
+                    Weapon.SpriteRenderer.ShouldDrawSprite = !Weapon.SpriteRenderer.ShouldDrawSprite;
+            }
         }
 
         private void SpawnEnemy()

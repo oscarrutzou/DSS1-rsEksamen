@@ -27,7 +27,7 @@ public abstract class MenuScene : Scene
         SecondMenuObjects = new();
         ShowSecondMenu = false;
 
-        GlobalSounds.InMenu = true;
+        //GlobalSounds.PlayMenuMusic = true;
         GameWorld.Instance.ShowBG = true;
 
         Font = GlobalTextures.BigFont;

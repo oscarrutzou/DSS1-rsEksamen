@@ -133,7 +133,7 @@ public class Button : Component
     private void PlayHoverSound()
     {
         if (_hasPlayedHoverSound) return;
-        GlobalSounds.PlaySound(SoundNames.ButtonHover, maxAmountPlaying: 5, soundVolume: 1, enablePitch: true);
+        GlobalSounds.PlaySound(SoundNames.ButtonHover, maxAmountPlaying: 5, soundVolume: 0.7f, enablePitch: true);
         _hasPlayedHoverSound = true;
     }
 

@@ -62,7 +62,7 @@ public static class GlobalSounds
     private static int _maxInstanceOfOneSound = 5; // There can only be 2 of the same sounds playing, otherwise it wont play.
     //private static int maxInstanceOfGunSound = 10;
 
-    public static bool InMenu { get; set; } = true;
+    public static bool PlayMenuMusic { get; set; } = true;
 
     private static SoundEffect _menuMusic;
     private static SoundEffect _gameMusic;
@@ -72,8 +72,8 @@ public static class GlobalSounds
 
     private static int _musicVolDivide = 4; //Makes the song less loud by dividing the real volume
     private static Random _rnd = new();
-    public static float MusicVolume = 0.0f;
-    public static float SfxVolume = 0.5f;
+    public static float MusicVolume = 1.0f;
+    public static float SfxVolume = 1.0f;
     private static bool _musicCountDown;
     private static bool _sfxCountDown;
 
@@ -162,24 +162,16 @@ public static class GlobalSounds
         _instanceGameMusic.Volume = Math.Clamp(MusicVolume, 0, 1) / _musicVolDivide;
 
         //Check if the music should be playing
-        if (InMenu)
-        {
+        if (PlayMenuMusic)
             _instanceGameMusic.Stop(); // Stops it once and does nothing if its already stopped
-        }
         else
-        {
             _instanceMenuMusic.Stop(); // Stops it once and does nothing if its already stopped
-        }
 
-        if (_instanceMenuMusic.State == SoundState.Stopped && InMenu)
-        {
+        if (_instanceMenuMusic.State == SoundState.Stopped && PlayMenuMusic)
             _instanceMenuMusic.Play(); // Play only plays it once and does nothing if it already plays
-        }
 
-        if (_instanceGameMusic.State == SoundState.Stopped && !InMenu)
-        {
+        if (_instanceGameMusic.State == SoundState.Stopped && !PlayMenuMusic)
             _instanceGameMusic.Play();// Play only plays it once and does nothing if it already plays
-        }
     }
 
     /// <summary>
