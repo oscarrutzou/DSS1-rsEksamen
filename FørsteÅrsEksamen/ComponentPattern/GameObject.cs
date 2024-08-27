@@ -31,10 +31,10 @@ public class GameObject : ICloneable
 {
     private Dictionary<Type, Component> _components = new Dictionary<Type, Component>();
     public Transform Transform { get; private set; } = new Transform();
-
+    public Effect ShaderEffect { get; set; }
     public GameObjectTypes Type { get; set; } = GameObjectTypes.Default;
     public bool IsEnabled { get; set; } = true;
-    public List<Effect> Effects { get; set;} = new List<Effect>(); // Can use a initial Capacity, and then use TrimExess.
+    //public List<Effect> Effects { get; set;} = new List<Effect>(); // Can use a initial Capacity, and then use TrimExess.
     /// <summary>
     /// Adds a component to the GameObject, with a empty contructer.
     /// </summary>
@@ -180,7 +180,7 @@ public class GameObject : ICloneable
 
         Collider thisGoCollider = GetComponent<Collider>() ?? throw new Exception("This Gameobject need a collider to check for collision");
 
-        foreach (GameObject otherGo in SceneData.GameObjectLists[gameobjectType])
+        foreach (GameObject otherGo in SceneData.Instance.GameObjectLists[gameobjectType])
         {
             if (!otherGo.IsEnabled) continue;
 

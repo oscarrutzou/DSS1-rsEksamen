@@ -80,6 +80,8 @@ public abstract class Player : Character
 
     public override void Update()
     {
+        base.Update();
+
         if (State != CharacterState.Dead)
             CheckForMovement();
 

@@ -134,7 +134,7 @@ public static class GuiMethods
     {
         Vector2 mousePosUI = InputHandler.Instance.MouseOnUI;
 
-        foreach (GameObject gui in SceneData.GameObjectLists[GameObjectTypes.Gui])
+        foreach (GameObject gui in SceneData.Instance.GameObjectLists[GameObjectTypes.Gui])
         {
             if (!gui.IsEnabled) continue; // So we only check GameObjects that are enabled
 

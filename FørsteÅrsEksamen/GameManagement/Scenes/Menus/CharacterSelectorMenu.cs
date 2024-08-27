@@ -5,6 +5,7 @@ using DoctorsDungeon.ComponentPattern.GUI;
 using DoctorsDungeon.Factory;
 using DoctorsDungeon.Factory.Gui;
 using DoctorsDungeon.LiteDB;
+using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -204,7 +205,7 @@ public class CharacterSelectorMenu : MenuScene
         else
             pos = _classWeaponButton[SaveData.SelectedClass].Last().Transform.Position + new Vector2(size.X / 2 - 30, -size.Y - 60);
         
-        DrawString(spriteBatch, currentText, pos, new Color(250, 249, 246));
+        DrawString(spriteBatch, currentText, pos, CurrentTextColor);
     }
 
     protected void DrawString(SpriteBatch spriteBatch, string text, Vector2 position, Color color)

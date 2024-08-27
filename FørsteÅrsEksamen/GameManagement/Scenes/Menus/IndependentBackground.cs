@@ -30,7 +30,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
             MakeMouseGo();
 
             if (!GameWorld.Instance.ShowBG) return;
-            GameObject go = EmitterFactory.CreateParticleEmitter("Space Dust", new Vector2(0, 0), new Interval(50, 100), new Interval(50, 100), new Interval(-MathHelper.Pi, MathHelper.Pi), 50, new Interval(1500, 2500), 100, -1, new Interval(-MathHelper.Pi, MathHelper.Pi));
+            GameObject go = EmitterFactory.CreateParticleEmitter("Space Dust", new Vector2(0, 0), new Interval(50, 100), new Interval(-MathHelper.Pi, MathHelper.Pi), 50, new Interval(1500, 2500), 100, -1, new Interval(-MathHelper.Pi, MathHelper.Pi));
 
             BackgroundEmitter = go.GetComponent<ParticleEmitter>();
             BackgroundEmitter.LayerName = LayerDepth.WorldBackground;

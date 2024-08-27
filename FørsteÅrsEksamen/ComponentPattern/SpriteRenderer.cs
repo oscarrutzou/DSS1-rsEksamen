@@ -1,11 +1,13 @@
 ﻿using DoctorsDungeon.ComponentPattern.GUI;
 using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using DoctorsDungeon.GameManagement;
+using DoctorsDungeon.ObserverPattern;
 using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SharpDX.Direct3D9;
 using System;
+using System.Collections.Generic;
 
 namespace DoctorsDungeon.ComponentPattern;
 
@@ -53,7 +55,7 @@ public class TextOnSprite: ICloneable
 }
 
 // Oscar
-public class SpriteRenderer : Component
+public class SpriteRenderer : Component, ILayerDepthSubject
 {
     #region Properties
 
@@ -88,7 +90,22 @@ public class SpriteRenderer : Component
     private float _rotation = -1;
     public LayerDepth LayerName { get; private set; } = ComponentPattern.LayerDepth.Default;
     public SpriteEffects SpriteEffects { get; set; } = SpriteEffects.None;
-    public float LayerDepth { get; private set; }
+
+
+    public float OldLayerDepth { get; set; }
+    private float _layerDepth;
+    public float LayerDepth { get => _layerDepth; 
+        private set
+        {
+            if (_layerDepth != value)
+            {
+                _layerDepth = value;
+                NotifyLayerDepthChanged();
+            }
+            OldLayerDepth = value; // Will happend after the notify so we dont mess with the scenedata layer stuff
+        }
+    }
+            
     private Vector2 _drawPos;
 
     // For the animation draw calls
@@ -97,6 +114,7 @@ public class SpriteRenderer : Component
     public bool UsingAnimation;
     private Animator _animator;
 
+    private List<ILayerDepthObserver> _observers = new List<ILayerDepthObserver>();
     #endregion Properties
 
     public SpriteRenderer(GameObject gameObject) : base(gameObject)
@@ -221,5 +239,18 @@ public class SpriteRenderer : Component
         DrawPosOffSet = Vector2.Zero;
         Sprite = GlobalTextures.Textures[spriteName];
         Rotation = -1;
+    }
+
+    public void AddObserver(ILayerDepthObserver observer)
+    {
+        _observers.Add(observer);
+    }
+
+    public void NotifyLayerDepthChanged()
+    {
+        foreach (var observer in _observers)
+        {
+            observer.OnLayerDepthChanged(this);
+        }
     }
 }

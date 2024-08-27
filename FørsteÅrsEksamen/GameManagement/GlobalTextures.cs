@@ -60,8 +60,8 @@ public static class GlobalTextures
     public static SpriteFont DefaultFont { get; private set; }
     public static SpriteFont BigFont { get; private set; }
 
-    public static Effect TeleportEffect, SingleColorEffect, GaussianBlurEffect, HighlightsEffect, VignetteEffect, ChromaticAberrationEffect;
-
+    public static Effect SingleColorEffect, GaussianBlurEffect, HighlightsEffect, VignetteEffect, ChromaticAberrationEffect;
+    public static Effect TeleportEffect;
     public static void LoadContent()
     {
         ContentManager content = GameWorld.Instance.Content;

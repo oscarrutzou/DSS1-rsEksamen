@@ -45,6 +45,16 @@ public class GameWorld : Game
     private readonly string _menuString = "Menu";
     public bool IsInMenu { get; private set; } = true;
 
+
+
+    public float HighlightsEffect_Threshold = 0.465f; // 0.25f shows a lot
+    public float GaussianBlurEffect_BlurAmount = 5f;
+    public float VignetteInner = 0.54f;
+    public float VignetteOuter = 0.77f;
+
+    public bool SingleColorEffect = false;
+    public double GameWorldSpeed = 1.0f;
+    private Canvas _canvas;
     #endregion
 
     public GameWorld()
@@ -70,14 +80,12 @@ public class GameWorld : Game
 
         Fullscreen();
         //SetResolutionSize(800, 800); // Need to be before the camera
-        SceneData.GenereateGameObjectDicionary();
+        SceneData.Instance.GenereateGameObjectDicionary();
         
         WorldCam = new Camera(true); // Camera that follows the player
         UiCam = new Camera(false);   // Camera that is static
 
         GenerateScenes(); // Makes a instance of all the scene we need
-
-
 
         CurrentScene = Scenes[SceneNames.MainMenu];
         CurrentScene.Initialize(); // Starts the main menu 
@@ -87,10 +95,7 @@ public class GameWorld : Game
         base.Initialize();
     }
 
-    public float HighlightsEffect_Threshold = 0.465f; // 0.25f shows a lot
-    public float GaussianBlurEffect_BlurAmount = 5f;
-    public float VignetteInner = 0.54f;
-    public float VignetteOuter = 0.77f;
+
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -106,23 +111,14 @@ public class GameWorld : Game
 
         GlobalTextures.VignetteEffect.Parameters["innerRadius"].SetValue(VignetteInner);
         GlobalTextures.VignetteEffect.Parameters["outerRadius"].SetValue(VignetteOuter);
-
-
     }
-
-
-    public bool SingleColorEffect = false;
-    public double GameWorldSpeed = 1.0f;
-    private Canvas _canvas;
 
 
     protected override void Update(GameTime gameTime)
     {
         DeltaTime = gameTime.ElapsedGameTime.TotalSeconds * GameWorldSpeed;
 
-
-
-    InputHandler.Instance.Update();
+        InputHandler.Instance.Update();
         UpdateFPS(gameTime);
 
         if (InputHandler.Instance.MouseOutOfBounds) return;
@@ -150,14 +146,9 @@ public class GameWorld : Game
         IndependentBackground.DrawBG(_spriteBatch);
         _spriteBatch.End();
 
-        ////Draw in world objects. Uses pixel perfect and a WorldCam, that can be moved around
-        _spriteBatch.Begin(sortMode: SpriteSortMode.FrontToBack, BlendState.AlphaBlend,
-            SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise,
-            transformMatrix: WorldCam.GetMatrix());
-
         CurrentScene.DrawInWorld(_spriteBatch);
-        _spriteBatch.End();
 
+        
         // Draws the screen with the effects on
         // We dont want our normal effects to show on the canvas, but we do want to show the single color effect 
         if (!SingleColorEffect)
@@ -336,7 +327,7 @@ public class GameWorld : Game
         // Wait for current scene to turn down alpha on objects
         if (CurrentScene.IsChangingScene) return;
 
-        SceneData.DeleteAllGameObjects(); 
+        SceneData.Instance.DeleteAllGameObjects(); 
 
         WorldCam.Position = Vector2.Zero; // Resets world cam position
         CurrentScene = Scenes[NextScene.Value]; // Changes to new scene
@@ -366,9 +357,6 @@ public class Canvas
     private RenderTarget2D _baseScreen;
     private readonly GraphicsDevice _graphicsDevice;
     private Rectangle _destinationRectangle;
-
-    //private RenderTarget2D _highlightsTarget;
-    //private RenderTarget2D _blurTarget;
 
     private enum ShaderEffectNames
     {
@@ -493,11 +481,3 @@ public class Canvas
     }
     
 }
-
-// Updates teleport value
-//public float TeleportEffectAmount = 1;
-//private float _dir = -1;
-//TeleportEffectAmount += (float)DeltaTime * _dir;
-//if (TeleportEffectAmount < 0 || TeleportEffectAmount > 1) _dir *= -1; // Changes the direction
-
-//GlobalTextures.TeleportEffect.Parameters["amount"].SetValue(TeleportEffectAmount);

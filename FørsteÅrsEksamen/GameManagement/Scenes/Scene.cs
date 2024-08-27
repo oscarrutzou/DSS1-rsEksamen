@@ -64,9 +64,9 @@ public abstract class Scene
 
         if (GameWorld.IsPaused) return;
 
-        foreach (GameObjectTypes type in SceneData.GameObjectLists.Keys)
+        foreach (GameObjectTypes type in SceneData.Instance.GameObjectLists.Keys)
         {
-            foreach (GameObject gameObject in SceneData.GameObjectLists[type])
+            foreach (GameObject gameObject in SceneData.Instance.GameObjectLists[type])
             {
                 gameObject.Update();
             }
@@ -86,7 +86,6 @@ public abstract class Scene
     public virtual void OnPlayerChanged()
     { }
 
-
     public void StartSceneChange()
     {
         IsChangingScene = true;
@@ -98,12 +97,12 @@ public abstract class Scene
         TransitionProgress += GameWorld.DeltaTime / _transitionDuration;
         TransitionProgress = Math.Clamp(TransitionProgress, 0, 1);
 
-        foreach (GameObjectTypes type in SceneData.GameObjectLists.Keys)
+        foreach (GameObjectTypes type in SceneData.Instance.GameObjectLists.Keys)
         {
             // The cells shouldnt be turned transparent, since that allows the player to see whats under them.
             if (type == GameObjectTypes.Cell) continue; 
 
-            foreach (GameObject gameObject in SceneData.GameObjectLists[type])
+            foreach (GameObject gameObject in SceneData.Instance.GameObjectLists[type])
             {
                 SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer>();
                 if (sr == null) continue;
@@ -174,7 +173,10 @@ public abstract class Scene
         // We know the Lists gets made and only gets Cleared when changing scene,
         // so we can assume that the lists are already there.
         // If something went wrong, the compiler will send a error anyway, so we dont need a extra check, for small projects like these.
-        SceneData.GameObjectLists[gameObject.Type].Add(gameObject);
+        SceneData.Instance.GameObjectLists[gameObject.Type].Add(gameObject);
+
+        // Checks if the gameobject has any effects on it.
+        SceneData.Instance.AddGameObject(gameObject);
     }
 
     /// <summary>
@@ -183,25 +185,53 @@ public abstract class Scene
     /// <param name="gameObject"></param>
     private void RemoveFromCategory(GameObject gameObject)
     {
-        SceneData.GameObjectLists[gameObject.Type].Remove(gameObject);
+        SceneData.Instance.GameObjectLists[gameObject.Type].Remove(gameObject);
+
+        // Removes the gameobject if its in the list
+        SceneData.Instance.RemoveGameObject(gameObject);
     }
 
     /// <summary>
     /// Draws everything that is not the Gui GameObjectType with the WorldCam.
     /// </summary>
     /// <param name="spriteBatch"></param>
+    private Dictionary<Effect, List<GameObject>> effectGroups = new Dictionary<Effect, List<GameObject>>();
+
     public virtual void DrawInWorld(SpriteBatch spriteBatch)
     {
-        foreach (GameObjectTypes type in SceneData.GameObjectLists.Keys)
-        {
-            if (type == GameObjectTypes.Gui) continue; //Skip GUI list
+        bool usesSimpleDrawCall = false;
 
-            foreach (GameObject gameObject in SceneData.GameObjectLists[type])
+        foreach (var spriteRenderer in SceneData.Instance.GetSortedGameObjects())
+        {
+            if (spriteRenderer.GameObject.ShaderEffect == null)
             {
-                gameObject.Draw(spriteBatch);
+                if (!usesSimpleDrawCall)
+                {
+                    spriteBatch.Begin(sortMode: SpriteSortMode.FrontToBack, BlendState.AlphaBlend,
+                        SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise,
+                        transformMatrix: GameWorld.Instance.WorldCam.GetMatrix());
+                    usesSimpleDrawCall = true;
+                }
+                spriteRenderer.GameObject.Draw(spriteBatch);
+            }
+            else
+            {
+                if (usesSimpleDrawCall)
+                {
+                    spriteBatch.End();
+                    usesSimpleDrawCall = false;
+                }
+                spriteBatch.Begin(sortMode: SpriteSortMode.FrontToBack, BlendState.AlphaBlend,
+                    SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise,
+                    transformMatrix: GameWorld.Instance.WorldCam.GetMatrix(), effect: spriteRenderer.GameObject.ShaderEffect);
+                spriteRenderer.GameObject.Draw(spriteBatch);
+                spriteBatch.End();
             }
         }
+
+        if (usesSimpleDrawCall) spriteBatch.End();
     }
+
 
     /// <summary>
     /// Draws the Gui GameObjects on the UiCam.
@@ -212,7 +242,7 @@ public abstract class Scene
         DrawMouse(spriteBatch);
 
         // Draw all Gui GameObjects in the active scene.
-        foreach (GameObject gameObject in SceneData.GameObjectLists[GameObjectTypes.Gui])
+        foreach (GameObject gameObject in SceneData.Instance.GameObjectLists[GameObjectTypes.Gui])
         {
             gameObject.Draw(spriteBatch);
         }

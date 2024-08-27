@@ -118,6 +118,32 @@ public abstract class Character : Component
         }
 
         MakeEmitters();
+        MakeShader();
+    }
+
+
+    private float _teleportEffectAmount = 1;
+    private float _dir = -1;
+    private void MakeShader()
+    {
+        //GameObject.ShaderEffect = GlobalTextures.TeleportEffect.Clone();
+        //GameObject.ShaderEffect.Parameters["amount"].SetValue(_teleportEffectAmount);
+        //GameObject.ShaderEffect = GlobalTextures.GaussianBlurEffect.Clone();
+
+        //GameObject.ShaderEffect.Parameters["blurAmount"].SetValue(10);
+
+        //GameObject.ShaderEffect.CurrentTechnique = GameObject.ShaderEffect.Techniques["Blur"]; // Basic ; Blur
+
+    }
+
+    private Random _rnd = new();
+    public override void Update()
+    {
+        
+        _teleportEffectAmount += (float)GameWorld.DeltaTime * _dir * (float)Math.Min(_rnd.NextDouble() + 1, 2);
+        if (_teleportEffectAmount < 0 || _teleportEffectAmount > 1) _dir *= -1; // Changes the direction
+
+        //GameObject.ShaderEffect.Parameters["amount"].SetValue(_teleportEffectAmount);
     }
 
     private void SetActionInHealth()
@@ -126,6 +152,8 @@ public abstract class Character : Component
         Health.OnDamageTaken += OnDamageTaken;
         //Health.OnResetColor += OnResetColor;
     }
+
+
 
     public Cell SetStartCollisionNr()
     {
@@ -328,7 +356,7 @@ public abstract class Character : Component
     private void MakeBlodEmitter()
     {
         // Would need to make the direction a cone, so change that part. 
-        GameObject go = EmitterFactory.CreateParticleEmitter("Blood Cloud", GameObject.Transform.Position, new Interval(300, 400), new Interval(0, 0), new Interval(0, MathHelper.PiOver2), _maxBloodParticles, new Interval(1000, 5000), 1000, 0.1f, new Interval(-MathHelper.Pi, 0), new Interval(-0.001, 0.001));
+        GameObject go = EmitterFactory.CreateParticleEmitter("Blood Cloud", GameObject.Transform.Position, new Interval(300, 400), new Interval(0, MathHelper.PiOver2), _maxBloodParticles, new Interval(1000, 5000), 1000, 0.1f, new Interval(-MathHelper.Pi, 0), new Interval(-0.001, 0.001));
 
         _bloodCloud = go.GetComponent<ParticleEmitter>();
         _bloodCloud.FollowGameObject(GameObject, new Vector2(0, 0));
@@ -364,7 +392,7 @@ public abstract class Character : Component
 
     private void MakeDustEmitter()
     {
-        GameObject go = EmitterFactory.CreateParticleEmitter("Dust Cloud", new Vector2(200, -200), new Interval(50, 100), new Interval(50, 100), new Interval(-MathHelper.Pi, 0), 20, new Interval(500, 1000), 1000, -1, new Interval(-MathHelper.Pi, 0), new Interval(-0.01, 0.01));
+        GameObject go = EmitterFactory.CreateParticleEmitter("Dust Cloud", new Vector2(200, -200), new Interval(50, 100), new Interval(-MathHelper.Pi, 0), 20, new Interval(500, 1000), 1000, -1, new Interval(-MathHelper.Pi, 0), new Interval(-0.01, 0.01));
 
         _dustCloudEmitter = go.GetComponent<ParticleEmitter>();
         _dustCloudEmitter.FollowGameObject(GameObject, new Vector2(0, 25));

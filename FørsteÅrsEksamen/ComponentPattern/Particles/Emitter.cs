@@ -33,7 +33,6 @@ public class Emitter : Component
     protected bool ShouldShowSprite { get; set; } = true;
     public double TotalSeconds { get; set; }
     public Interval SpeedX;
-    public Interval SpeedY;
     public Interval SpeedZ;
 
     public Dictionary<Type, Modifier> Modifiers { get; set; } = new();
@@ -41,7 +40,7 @@ public class Emitter : Component
     protected Interval MaxAge;
     public EmitterState State = EmitterState.INIT;
     protected double ReleaseTime { get; set; } = 0;
-    public Interval Direction;
+    public Interval Direction { get; set; }
     protected Interval Rotation;
     protected Interval RotationVelocity;
     protected TextOnSprite TextOnSprite;
@@ -67,19 +66,18 @@ public class Emitter : Component
     /// <param name="gameObject"></param>
     /// <param name="name"></param>
     /// <param name="pos"></param>
-    /// <param name="speedX"></param>
+    /// <param name="speed"></param>
     /// <param name="direction"></param>
     /// <param name="particlesPerSecond"></param>
     /// <param name="maxAge"></param>
     /// <param name="maxAmount"></param>
     /// <param name="timeBeforeStop">If the time is not set, the emitter will not stop</param>
     /// <param name="rotationVelocity"></param>
-    public Emitter(GameObject gameObject, string name, Vector2 pos, Interval speedX, Interval speedY, Interval direction, float particlesPerSecond, Interval maxAge, int maxAmount, double timeBeforeStop = -1, Interval rotation = null, Interval rotationVelocity = null) : base(gameObject)
+    public Emitter(GameObject gameObject, string name, Vector2 pos, Interval speed, Interval direction, float particlesPerSecond, Interval maxAge, int maxAmount, double timeBeforeStop = -1, Interval rotation = null, Interval rotationVelocity = null) : base(gameObject)
     {
         EmitterName = name;
         Position = pos;
-        SpeedX = speedX;
-        SpeedY = speedY;
+        SpeedX = speed;
         Direction = direction;
         MaxParticlesPerSecond = particlesPerSecond;
         ParticlesPerSecond = MaxParticlesPerSecond;

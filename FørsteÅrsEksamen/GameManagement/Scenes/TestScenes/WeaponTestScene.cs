@@ -57,15 +57,16 @@ public class WeaponTestScene : Scene
     {
         //FairyEmitter();
 
-        BlodEmitter();
+        //BlodEmitter();
         //SpaceEmitter();
 
         //DoorEmitter();
+        BossSpawnEmitter();
     }
 
     private void DoorEmitter()
     {
-        GameObject go = EmitterFactory.CreateParticleEmitter("Dust Cloud", new Vector2(0, 0), new Interval(100, 150), new Interval(100, 150), new Interval(-MathHelper.Pi, MathHelper.Pi), 50, new Interval(500, 1000), 1000, -1, new Interval(-MathHelper.Pi, MathHelper.Pi), new Interval(-0.01, 0.01));
+        GameObject go = EmitterFactory.CreateParticleEmitter("Dust Cloud", new Vector2(0, 0), new Interval(100, 150), new Interval(-MathHelper.Pi, MathHelper.Pi), 50, new Interval(500, 1000), 1000, -1, new Interval(-MathHelper.Pi, MathHelper.Pi), new Interval(-0.01, 0.01));
 
         _emitter = go.GetComponent<ParticleEmitter>();
 
@@ -85,11 +86,9 @@ public class WeaponTestScene : Scene
         GameWorld.Instance.Instantiate(go);
     }
 
-
-
     private void FairyEmitter()
     {
-        GameObject go = EmitterFactory.CreateParticleEmitter("Dust Cloud", new Vector2(0, 0), new Interval(250, 550), new Interval(250, 550), new Interval(-MathHelper.Pi, 0), 300, new Interval(1500, 2000), 1000, -1, new Interval(-MathHelper.Pi, 0));
+        GameObject go = EmitterFactory.CreateParticleEmitter("Dust Cloud", new Vector2(0, 0), new Interval(250, 550), new Interval(-MathHelper.Pi, 0), 300, new Interval(1500, 2000), 1000, -1, new Interval(-MathHelper.Pi, 0));
 
         _emitter = go.GetComponent<ParticleEmitter>();
         _emitter.LayerName = LayerDepth.EnemyUnder;
@@ -110,7 +109,7 @@ public class WeaponTestScene : Scene
 
     private void SpaceEmitter()
     {
-        GameObject go = EmitterFactory.CreateParticleEmitter("Space Dust", new Vector2(0, 0), new Interval(50, 100), new Interval(50, 100), new Interval(-MathHelper.Pi, MathHelper.Pi), 200, new Interval(3000, 4000), 300, -1, new Interval(-MathHelper.Pi, MathHelper.Pi));
+        GameObject go = EmitterFactory.CreateParticleEmitter("Space Dust", new Vector2(0, 0), new Interval(50, 100), new Interval(-MathHelper.Pi, MathHelper.Pi), 200, new Interval(3000, 4000), 300, -1, new Interval(-MathHelper.Pi, MathHelper.Pi));
 
         _emitter = go.GetComponent<ParticleEmitter>();
         _emitter.LayerName = LayerDepth.WorldBackground;
@@ -124,6 +123,30 @@ public class WeaponTestScene : Scene
 
         GameWorld.Instance.Instantiate(go);
     }
+
+    private void BossSpawnEmitter()
+    {
+        
+        GameObject go = EmitterFactory.CreateParticleEmitter("Dust Cloud", new Vector2(200, 0), new Interval(50, 50), new Interval(-MathHelper.Pi, MathHelper.Pi), 300, new Interval(1500, 1500), 1000, -1, new Interval(-MathHelper.Pi, MathHelper.Pi), new Interval(-0.01, 0.01));
+        
+        _emitter = go.GetComponent<ParticleEmitter>();
+        
+        _emitter.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel4x4));
+        _emitter.AddBirthModifier(new ScaleBirthModifier(new Interval(0.5, 2)));
+
+        _emitter.AddModifier(new ColorRangeModifier(IndependentBackground.RoomColors));
+
+        //RectangleOrigin origin = new RectangleOrigin(width, height, true);
+        //origin.OffCenter(_emitter);
+        _emitter.AddModifier(new GravityModifier());
+        //_emitter.AddModifier(new InwardModifier());
+        _dragModifier = new DragModifier(_bounce, _friction, _stopAmount, _velocityDrag);
+        _emitter.AddModifier(_dragModifier);
+
+        _emitter.Origin = new CircleOrigin(50, true);
+
+        GameWorld.Instance.Instantiate(go);
+    }
     #endregion
 
 
@@ -131,7 +154,7 @@ public class WeaponTestScene : Scene
     private void BlodEmitter()
     {
         // Would need to make the direction a cone, so change that part. 
-        GameObject go = EmitterFactory.CreateParticleEmitter("Blod Cloud", _playerGo.Transform.Position, _speed, _speed, _direction, 100, new Interval(1000, 5000), 1000, 0.1f, new Interval(-MathHelper.Pi, 0), new Interval(-0.001, 0.001));
+        GameObject go = EmitterFactory.CreateParticleEmitter("Blod Cloud", _playerGo.Transform.Position, _speed, _direction, 100, new Interval(1000, 5000), 1000, 0.1f, new Interval(-MathHelper.Pi, 0), new Interval(-0.001, 0.001));
 
         _emitter = go.GetComponent<ParticleEmitter>();
         _emitter.FollowGameObject(_playerGo, new Vector2(0, 25));
@@ -203,23 +226,25 @@ public class WeaponTestScene : Scene
         InputHandler.Instance.AddKeyButtonDownCommand(Keys.X, new CustomCmd(() => { _emitter.StartZVel += 1; }));
 
         int speedChangeAmount = 20;
-        InputHandler.Instance.AddKeyButtonDownCommand(Keys.D1, new CustomCmd(() => {
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.D1, new CustomCmd(() =>
+        {
             _emitter.SpeedX.Min += -speedChangeAmount;
             _emitter.SpeedX.Max += -speedChangeAmount;
         }));
 
-        InputHandler.Instance.AddKeyButtonDownCommand(Keys.D2, new CustomCmd(() => {
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.D2, new CustomCmd(() =>
+        {
             _emitter.SpeedX.Min += speedChangeAmount;
             _emitter.SpeedX.Max += speedChangeAmount;
         }));
 
-        InputHandler.Instance.AddKeyButtonDownCommand(Keys.NumPad3, new CustomCmd(() => { _emitter.Direction = new Interval(0, MathHelper.PiOver2); }));
+        //InputHandler.Instance.AddKeyButtonDownCommand(Keys.NumPad3, new CustomCmd(() => { _emitter.Direction = new Interval(0, MathHelper.PiOver2); }));
 
-        InputHandler.Instance.AddKeyButtonDownCommand(Keys.NumPad1, new CustomCmd(() => { _emitter.Direction = new Interval(MathHelper.PiOver2, MathHelper.Pi); }));
+        //InputHandler.Instance.AddKeyButtonDownCommand(Keys.NumPad1, new CustomCmd(() => { _emitter.Direction = new Interval(MathHelper.PiOver2, MathHelper.Pi); }));
 
-        InputHandler.Instance.AddKeyButtonDownCommand(Keys.NumPad7, new CustomCmd(() => { _emitter.Direction = new Interval(MathHelper.Pi, MathHelper.Pi * 1.5); }));
+        //InputHandler.Instance.AddKeyButtonDownCommand(Keys.NumPad7, new CustomCmd(() => { _emitter.Direction = new Interval(MathHelper.Pi, MathHelper.Pi * 1.5); }));
 
-        InputHandler.Instance.AddKeyButtonDownCommand(Keys.NumPad9, new CustomCmd(() => { _emitter.Direction = new Interval(MathHelper.Pi * 1.5 + MathHelper.TwoPi, MathHelper.TwoPi * 2); }));
+        //InputHandler.Instance.AddKeyButtonDownCommand(Keys.NumPad9, new CustomCmd(() => { _emitter.Direction = new Interval(MathHelper.Pi * 1.5 + MathHelper.TwoPi, MathHelper.TwoPi * 2); }));
 
         InputHandler.Instance.AddKeyButtonDownCommand(Keys.Escape, new CustomCmd(GameWorld.Instance.Exit));
     }
@@ -227,11 +252,11 @@ public class WeaponTestScene : Scene
 
     public override void Update()
     {
-        if (_dragModifier != null)
-        {
-            _dragModifier.UpdateValue(_bounce, _friction, _stopAmount, _velocityDrag);
-        }
-        TestDirection();
+        //if (_dragModifier != null)
+        //{
+        //    _dragModifier.UpdateValue(_bounce, _friction, _stopAmount, _velocityDrag);
+        //}
+        //TestDirection();
         base.Update();
     }
 

@@ -25,7 +25,7 @@ public class CheckButtonCmd : Command
     {
         if (_timeSinceLastClick < _clickCooldown) return;
 
-        foreach (GameObject gameObject in SceneData.GameObjectLists[GameObjectTypes.Gui])
+        foreach (GameObject gameObject in SceneData.Instance.GameObjectLists[GameObjectTypes.Gui])
         {
             if (gameObject.IsEnabled == false) continue;
 

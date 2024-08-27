@@ -5,8 +5,8 @@ namespace DoctorsDungeon.ComponentPattern.Particles
     public class Interval
     {
         private static Random _rnd = new();
-        public double Min;
-        public double Max;
+        public double Min { get; set; }
+        public double Max { get; set; }
 
         public Interval(double min, double max)
         {

@@ -163,7 +163,7 @@ public class OscarTestScene : Scene
 
         DrawCellPos(spriteBatch);
 
-        SceneData.GameObjectLists.TryGetValue(GameObjectTypes.Cell, out list);
+        SceneData.Instance.GameObjectLists.TryGetValue(GameObjectTypes.Cell, out list);
         spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Cell GameObjects in scene {list.Count}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 90), Color.Black);
 
         spriteBatch.DrawString(GlobalTextures.DefaultFont, $"RoomNr {GridManager.Instance.ColliderNrIndex}", GameWorld.Instance.UiCam.TopLeft + new Vector2(0, 120), Color.Black);

@@ -165,7 +165,7 @@ public abstract class MeleeWeapon : Weapon
         else
             type = GameObjectTypes.Enemy;
 
-        foreach (GameObject otherGo in SceneData.GameObjectLists[type])
+        foreach (GameObject otherGo in SceneData.Instance.GameObjectLists[type])
         {
             if (!otherGo.IsEnabled || _hitGameObjects.ContainsKey(otherGo)) continue;
             
