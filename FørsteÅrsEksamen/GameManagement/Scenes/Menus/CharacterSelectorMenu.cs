@@ -31,7 +31,6 @@ public class CharacterSelectorMenu : MenuScene
 
     public override void Initialize()
     {
-        SaveData.SetBaseValues();
 
         _classWeaponButton = new();
         _classButtons = new();

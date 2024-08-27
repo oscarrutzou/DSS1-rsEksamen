@@ -89,7 +89,8 @@ public class GameWorld : Game
 
     public float HighlightsEffect_Threshold = 0.465f; // 0.25f shows a lot
     public float GaussianBlurEffect_BlurAmount = 5f;
-
+    public float VignetteInner = 0.54f;
+    public float VignetteOuter = 0.77f;
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -102,28 +103,26 @@ public class GameWorld : Game
         GlobalTextures.GaussianBlurEffect.Parameters["blurAmount"].SetValue(GaussianBlurEffect_BlurAmount);
 
         GlobalTextures.GaussianBlurEffect.CurrentTechnique = GlobalTextures.GaussianBlurEffect.Techniques["Blur"]; // Basic ; Blur
+
+        GlobalTextures.VignetteEffect.Parameters["innerRadius"].SetValue(VignetteInner);
+        GlobalTextures.VignetteEffect.Parameters["outerRadius"].SetValue(VignetteOuter);
+
+
     }
 
 
     public bool SingleColorEffect = false;
     public double GameWorldSpeed = 1.0f;
     private Canvas _canvas;
-    //public float TeleportEffectAmount = 1;
-    //private float _dir = -1;
+
 
     protected override void Update(GameTime gameTime)
     {
         DeltaTime = gameTime.ElapsedGameTime.TotalSeconds * GameWorldSpeed;
 
-        // Updates teleport value
-        //TeleportEffectAmount += (float)DeltaTime * _dir;
-        //if (TeleportEffectAmount < 0 || TeleportEffectAmount > 1) _dir *= -1; // Changes the direction
 
-        //GlobalTextures.TeleportEffect.Parameters["amount"].SetValue(TeleportEffectAmount);
-        //GlobalTextures.BloomEffect.Parameters["strength"].SetValue(0.3f);threashold
-        //GlobalTextures.BloomEffect.Parameters["textureSize"].SetValue(new Vector2(DisplayWidth, DisplayHeight));
 
-        InputHandler.Instance.Update();
+    InputHandler.Instance.Update();
         UpdateFPS(gameTime);
 
         if (InputHandler.Instance.MouseOutOfBounds) return;
@@ -175,6 +174,10 @@ public class GameWorld : Game
         _spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Thredshold: {HighlightsEffect_Threshold}", pos, Color.White);
         pos += new Vector2(0, 30);
         _spriteBatch.DrawString(GlobalTextures.DefaultFont, $"BlurAmount: {GaussianBlurEffect_BlurAmount}", pos, Color.White);
+        pos += new Vector2(0, 30);
+        _spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Vignet Inner: {VignetteInner}", pos, Color.White);
+        pos += new Vector2(0, 30);
+        _spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Vignet Outer: {VignetteOuter}", pos, Color.White);
         _spriteBatch.End();
 
         if (SingleColorEffect)
@@ -489,4 +492,12 @@ public class Canvas
         spriteBatch.End();
     }
     
-}       
+}
+
+// Updates teleport value
+//public float TeleportEffectAmount = 1;
+//private float _dir = -1;
+//TeleportEffectAmount += (float)DeltaTime * _dir;
+//if (TeleportEffectAmount < 0 || TeleportEffectAmount > 1) _dir *= -1; // Changes the direction
+
+//GlobalTextures.TeleportEffect.Parameters["amount"].SetValue(TeleportEffectAmount);

@@ -455,7 +455,7 @@ public class DB
     public void OnChangeSceneEnd()
     {
         DeleteRun(SaveData.CurrentSaveID);
-
+        List<WeaponTypes> data = SaveData.UnlockedWeapons;
         GameWorld.Instance.ChangeScene(SceneNames.EndMenu);
     }
 

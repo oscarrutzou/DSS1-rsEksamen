@@ -8,8 +8,8 @@
 #endif
 
 Texture2D SpriteTexture;
-float innerRadius = 0.55; 
-float outerRadius = 0.7; 
+float innerRadius; 
+float outerRadius; 
 
 sampler2D SpriteTextureSampler = sampler_state
 {

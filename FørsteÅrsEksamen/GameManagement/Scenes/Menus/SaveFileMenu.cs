@@ -15,6 +15,8 @@ public class SaveFileMenu : MenuScene
 
     protected override void InitFirstMenu()
     {
+        SaveData.SetBaseValues();
+
         _saveFileButtons = new Dictionary<int, Button>()
         {
             { 1, ButtonFactory.Create(_newSaveFile, true, () => { MakeNewSaveFile(1); }, TextureNames.WideBtn).GetComponent<Button>() },

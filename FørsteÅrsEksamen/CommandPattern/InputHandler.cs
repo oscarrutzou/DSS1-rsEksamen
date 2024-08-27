@@ -62,25 +62,40 @@ public class InputHandler
         AddKeyButtonDownCommand(Keys.Tab, new CustomCmd(() => { GameWorld.Instance.SingleColorEffect = !GameWorld.Instance.SingleColorEffect; }));
 
         AddKeyButtonDownCommand(Keys.Left, new CustomCmd(() => {
-            GameWorld.Instance.GaussianBlurEffect_BlurAmount += 0.5f;
-            GlobalTextures.GaussianBlurEffect.Parameters["blurAmount"].SetValue(GameWorld.Instance.GaussianBlurEffect_BlurAmount);
+            //GameWorld.Instance.GaussianBlurEffect_BlurAmount += 0.5f;
+            //GlobalTextures.GaussianBlurEffect.Parameters["blurAmount"].SetValue(GameWorld.Instance.GaussianBlurEffect_BlurAmount);
+            GameWorld.Instance.VignetteOuter -= 0.005f;
+            GlobalTextures.VignetteEffect.Parameters["outerRadius"].SetValue(GameWorld.Instance.VignetteOuter);
         }));
 
         AddKeyButtonDownCommand(Keys.Right, new CustomCmd(() => {
-            GameWorld.Instance.GaussianBlurEffect_BlurAmount -= 0.5f;
-            GlobalTextures.GaussianBlurEffect.Parameters["blurAmount"].SetValue(GameWorld.Instance.GaussianBlurEffect_BlurAmount);
+            //GameWorld.Instance.GaussianBlurEffect_BlurAmount -= 0.5f;
+            //GlobalTextures.GaussianBlurEffect.Parameters["blurAmount"].SetValue(GameWorld.Instance.GaussianBlurEffect_BlurAmount);
+            GameWorld.Instance.VignetteOuter += 0.005f;
+            GlobalTextures.VignetteEffect.Parameters["outerRadius"].SetValue(GameWorld.Instance.VignetteOuter);
+
         }));
 
         AddKeyButtonDownCommand(Keys.Up, new CustomCmd(() => {
-            GameWorld.Instance.HighlightsEffect_Threshold += 0.005f;
-            GlobalTextures.HighlightsEffect.Parameters["threshold"].SetValue(GameWorld.Instance.HighlightsEffect_Threshold);
+            //GameWorld.Instance.HighlightsEffect_Threshold += 0.005f;
+            //GlobalTextures.HighlightsEffect.Parameters["threshold"].SetValue(GameWorld.Instance.HighlightsEffect_Threshold);
+            GameWorld.Instance.VignetteInner += 0.005f;
+            GlobalTextures.VignetteEffect.Parameters["innerRadius"].SetValue(GameWorld.Instance.VignetteInner);
         }));
 
         AddKeyButtonDownCommand(Keys.Down, new CustomCmd(() => {
-            GameWorld.Instance.HighlightsEffect_Threshold -= 0.005f;
-            GlobalTextures.HighlightsEffect.Parameters["threshold"].SetValue(GameWorld.Instance.HighlightsEffect_Threshold);
-        }));
+            //GameWorld.Instance.HighlightsEffect_Threshold -= 0.005f;
+            //GlobalTextures.HighlightsEffect.Parameters["threshold"].SetValue(GameWorld.Instance.HighlightsEffect_Threshold);
 
+
+            GameWorld.Instance.VignetteInner -= 0.005f;
+            GlobalTextures.VignetteEffect.Parameters["innerRadius"].SetValue(GameWorld.Instance.VignetteInner);
+        }));
+        /*
+         * float innerRadius = 0.55; 
+float outerRadius = 0.7;         GlobalTextures.VignetteEffect.Parameters["innerRadius"].SetValue(VignetteInner);
+        GlobalTextures.VignetteEffect.Parameters["outerRadius"].SetValue(VignetteOuter);
+        */
         // For debugging
         AddKeyButtonDownCommand(Keys.Q, new CustomCmd(() => { GridManager.Instance.ChangeNumberIndex(-1); }));
         AddKeyButtonDownCommand(Keys.E, new CustomCmd(() => { GridManager.Instance.ChangeNumberIndex(1); }));
