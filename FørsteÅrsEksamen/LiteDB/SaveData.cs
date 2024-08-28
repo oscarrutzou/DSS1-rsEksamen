@@ -8,7 +8,7 @@ namespace DoctorsDungeon.LiteDB;
 public static class SaveData
 {
     private const int _startCurrency = 100; // Normal 100
-    private static double _startTimeLeft = 120f; // Normal 120f
+    private static double _startTimeLeft = 150f; // Normal 120f
 
     private const int _cheatMultiplier = 100;
 

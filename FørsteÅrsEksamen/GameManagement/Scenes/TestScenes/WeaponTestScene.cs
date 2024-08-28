@@ -35,6 +35,7 @@ public class WeaponTestScene : Scene
 
         SetCommands();
     }
+
     #region Make
     private void MakePlayer()
     {
@@ -52,16 +53,15 @@ public class WeaponTestScene : Scene
         GameWorld.Instance.Instantiate(go);
     }
 
-
     private void MakeEmitters()
     {
         //FairyEmitter();
 
         //BlodEmitter();
-        //SpaceEmitter();
+        SpaceEmitter();
 
         //DoorEmitter();
-        BossSpawnEmitter();
+        //BossSpawnEmitter();
     }
 
     private void DoorEmitter()
@@ -126,31 +126,22 @@ public class WeaponTestScene : Scene
 
     private void BossSpawnEmitter()
     {
-        
-        GameObject go = EmitterFactory.CreateParticleEmitter("Dust Cloud", new Vector2(200, 0), new Interval(50, 50), new Interval(-MathHelper.Pi, MathHelper.Pi), 300, new Interval(1500, 1500), 1000, -1, new Interval(-MathHelper.Pi, MathHelper.Pi), new Interval(-0.01, 0.01));
+        GameObject go = EmitterFactory.CreateParticleEmitter("Boss Spawn", new Vector2(0, 0), new Interval(60, 60), new Interval(-MathHelper.Pi, MathHelper.Pi), 300, new Interval(1500, 1500), 1000, 0.1f, new Interval(-MathHelper.Pi, MathHelper.Pi), new Interval(-0.01, 0.01));
         
         _emitter = go.GetComponent<ParticleEmitter>();
-        
+        _emitter.FollowGameObject(_playerGo, new Vector2(0, -15));
+
         _emitter.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel4x4));
         _emitter.AddBirthModifier(new ScaleBirthModifier(new Interval(0.5, 2)));
-
+        _emitter.AddBirthModifier(new OutwardBirthModifier());
         _emitter.AddModifier(new ColorRangeModifier(IndependentBackground.RoomColors));
 
-        //RectangleOrigin origin = new RectangleOrigin(width, height, true);
-        //origin.OffCenter(_emitter);
-        _emitter.AddModifier(new GravityModifier());
-        //_emitter.AddModifier(new InwardModifier());
-        _dragModifier = new DragModifier(_bounce, _friction, _stopAmount, _velocityDrag);
-        _emitter.AddModifier(_dragModifier);
-
+        _emitter.AddModifier(new DragModifier(0.2f, 0.5f, 40, 0.8f));
         _emitter.Origin = new CircleOrigin(50, true);
 
         GameWorld.Instance.Instantiate(go);
     }
-    #endregion
-
-
-
+    
     private void BlodEmitter()
     {
         // Would need to make the direction a cone, so change that part. 
@@ -175,15 +166,15 @@ public class WeaponTestScene : Scene
 
         GameWorld.Instance.Instantiate(go);
     }
-
+    #endregion
 
     private DragModifier _dragModifier;
     private Random _rnd = new();
     private float _bounce = 0.2f;
     private float _friction = 0.5f;
-    private int _stopAmount = 55;
-    private float _velocityDrag = 1f;
-    private Interval _speed = new Interval(200, 500);
+    private int _stopAmount = 40;
+    private float _velocityDrag = 0.8f;
+    private Interval _speed = new Interval(60, 60);
     private Interval _direction = new Interval(0, MathHelper.PiOver2);
     private int _gravity = 30;
 
@@ -204,14 +195,14 @@ public class WeaponTestScene : Scene
     private void SetCommands()
     {
         //InputHandler.Instance.AddMouseButtonDownCommand(MouseCmdState.Right, new CustomCmd(player.Attack));
-        InputHandler.Instance.AddKeyButtonDownCommand(Keys.V, new CustomCmd(_emitter.StartEmitter));
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.V, new CustomCmd(_emitter.PlayEmitter));
         InputHandler.Instance.AddKeyButtonDownCommand(Keys.B, new CustomCmd(_emitter.StopEmitter));
 
-        InputHandler.Instance.AddKeyButtonDownCommand(Keys.Q, new CustomCmd(() => { _bounce += -0.005f; }));
-        InputHandler.Instance.AddKeyButtonDownCommand(Keys.W, new CustomCmd(() => { _bounce += 0.005f; }));
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.Q, new CustomCmd(() => { _bounce += -0.05f; }));
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.W, new CustomCmd(() => { _bounce += 0.05f; }));
 
-        InputHandler.Instance.AddKeyButtonDownCommand(Keys.E, new CustomCmd(() => { _friction += -0.005f; }));
-        InputHandler.Instance.AddKeyButtonDownCommand(Keys.R, new CustomCmd(() => { _friction += 0.005f; }));
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.E, new CustomCmd(() => { _friction += -0.05f; }));
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.R, new CustomCmd(() => { _friction += 0.05f; }));
 
 
         InputHandler.Instance.AddKeyButtonDownCommand(Keys.A, new CustomCmd(() => { _stopAmount += -1; }));

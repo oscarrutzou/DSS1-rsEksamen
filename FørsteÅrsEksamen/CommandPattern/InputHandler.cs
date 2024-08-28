@@ -32,7 +32,7 @@ public class InputHandler
     public KeyboardState KeyState;
     public MouseState MouseState;
     public Vector2 MouseInWorld, MouseOnUI;
-    public bool MouseOutOfBounds, DebugMode;
+    public bool DebugMode;
     public GameObject MouseGo;
 
     private Dictionary<Keys, List<Command>> _keybindsUpdate = new();
@@ -243,7 +243,7 @@ float outerRadius = 0.7;         GlobalTextures.VignetteEffect.Parameters["inner
         MouseInWorld = GetMousePositionInWorld(MouseState);
         MouseOnUI = GetMousePositionOnUI(MouseState);
 
-        if (MouseOutOfBounds) return; // Dont update the commands, so the player e.g dont press attack, when the game is not running
+        if (!GameWorld.Instance.IsActive) return;
 
         UpdateAllCommands();
 
@@ -361,7 +361,7 @@ float outerRadius = 0.7;         GlobalTextures.VignetteEffect.Parameters["inner
         Vector2 pos = new Vector2(mouseState.X, mouseState.Y);
         Matrix invMatrix = Matrix.Invert(uiCam.GetMatrix());
         Vector2 returnValue = Vector2.Transform(pos, invMatrix);
-        MouseOutOfBounds = (returnValue.X < uiCam.TopLeft.X || returnValue.Y < uiCam.TopLeft.Y || returnValue.X > uiCam.BottomRight.X || returnValue.Y > uiCam.BottomRight.Y);
+        //MouseOutOfBounds = (returnValue.X < uiCam.TopLeft.X || returnValue.Y < uiCam.TopLeft.Y || returnValue.X > uiCam.BottomRight.X || returnValue.Y > uiCam.BottomRight.Y);
         return returnValue;
     }
 }

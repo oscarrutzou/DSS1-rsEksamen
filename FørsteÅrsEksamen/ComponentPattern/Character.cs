@@ -17,6 +17,7 @@ using DoctorsDungeon.Other;
 using System;
 using DoctorsDungeon.ComponentPattern.Enemies;
 using DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons;
+using Microsoft.Xna.Framework.Audio;
 
 namespace DoctorsDungeon.ComponentPattern;
 
@@ -58,8 +59,12 @@ public abstract class Character : Component
     protected int Speed { get; set; }
     protected Grid Grid;
 
-    protected SoundNames[] CharacterHitHurt;
-    protected int MaxAmountCharacterHitSoundsPlaying = 5;
+    protected SoundNames[] CharacterHitHurt { get; set; }
+    protected int MaxAmountCharacterHitSoundsPlaying = 3;
+    protected SoundNames[] CharacterDeath { get; set; }
+    private SoundEffectInstance _characterHitHurt, _characterDeath;
+    private float _maxHitHurtVolume = 1.0f;
+    private float _maxDeathVolume = 1.0f;
 
     #region DamageEmitter
     public ParticleEmitter DamageTakenEmitter { get; private set; }
@@ -118,33 +123,8 @@ public abstract class Character : Component
         }
 
         MakeEmitters();
-        MakeShader();
     }
 
-
-    private float _teleportEffectAmount = 1;
-    private float _dir = -1;
-    private void MakeShader()
-    {
-        //GameObject.ShaderEffect = GlobalTextures.TeleportEffect.Clone();
-        //GameObject.ShaderEffect.Parameters["amount"].SetValue(_teleportEffectAmount);
-        //GameObject.ShaderEffect = GlobalTextures.GaussianBlurEffect.Clone();
-
-        //GameObject.ShaderEffect.Parameters["blurAmount"].SetValue(10);
-
-        //GameObject.ShaderEffect.CurrentTechnique = GameObject.ShaderEffect.Techniques["Blur"]; // Basic ; Blur
-
-    }
-
-    private Random _rnd = new();
-    public override void Update()
-    {
-        
-        _teleportEffectAmount += (float)GameWorld.DeltaTime * _dir * (float)Math.Min(_rnd.NextDouble() + 1, 2);
-        if (_teleportEffectAmount < 0 || _teleportEffectAmount > 1) _dir *= -1; // Changes the direction
-
-        //GameObject.ShaderEffect.Parameters["amount"].SetValue(_teleportEffectAmount);
-    }
 
     private void SetActionInHealth()
     {
@@ -153,7 +133,12 @@ public abstract class Character : Component
         //Health.OnResetColor += OnResetColor;
     }
 
+    public override void Update()
+    {
+        base.Update();
 
+        UpdateSoundEffects();
+    }
 
     public Cell SetStartCollisionNr()
     {
@@ -177,7 +162,7 @@ public abstract class Character : Component
         State = newState;
 
         if (State == CharacterState.Moving)
-            _dustCloudEmitter.StartEmitter();
+            _dustCloudEmitter.PlayEmitter();
         else
             _dustCloudEmitter.StopEmitter();
 
@@ -244,19 +229,34 @@ public abstract class Character : Component
     private void OnDie()
     {
         SetState(CharacterState.Dead);
+
+        if (CharacterDeath != null && CharacterDeath.Length > 0)
+        {
+            _characterDeath = GlobalSounds.PlayRandomizedSound(CharacterDeath, 2, 1.0f, true);
+        }
+
         GameWorld.Instance.Destroy(WeaponGo);
         Weapon = null;
 
         // Remove hands
         SpriteRenderer.Color = Color.LightPink;
+        SpriteRenderer.StartColor = SpriteRenderer.Color;
 
         Health.OnZeroHealth -= OnDie;
     }
 
     private void OnDamageTaken()
     {
+        if (_characterHitHurt != null && _characterHitHurt.State == SoundState.Playing) return;
+
         // Play random sound from array
-        GlobalSounds.PlayRandomizedSound(CharacterHitHurt, MaxAmountCharacterHitSoundsPlaying, 1, true);
+        _characterHitHurt = GlobalSounds.PlayRandomizedSound(CharacterHitHurt, MaxAmountCharacterHitSoundsPlaying, 1.0f, true);
+    }
+    
+    private void UpdateSoundEffects()
+    {
+        GlobalSounds.ChangeSoundVolumeDistance(GameObject.Transform.Position, 150, 550, _maxHitHurtVolume, _characterHitHurt);
+        GlobalSounds.ChangeSoundVolumeDistance(GameObject.Transform.Position, 150, 550, _maxDeathVolume, _characterDeath);
     }
 
     public override void Draw(SpriteBatch spriteBatch)
@@ -387,7 +387,7 @@ public abstract class Character : Component
 
         _bloodCloud.Direction = new Interval(_angle - _cone, _angle + _cone);
 
-        _bloodCloud.StartEmitter();
+        _bloodCloud.PlayEmitter();
     }
 
     private void MakeDustEmitter()

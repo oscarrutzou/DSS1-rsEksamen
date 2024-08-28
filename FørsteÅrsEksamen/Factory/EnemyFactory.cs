@@ -1,4 +1,5 @@
 ﻿using DoctorsDungeon.ComponentPattern;
+using DoctorsDungeon.ComponentPattern.Effects;
 using DoctorsDungeon.ComponentPattern.Enemies;
 using DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies;
 using DoctorsDungeon.ComponentPattern.Enemies.RangedEnemies;
@@ -45,6 +46,7 @@ public static class EnemyFactory
         enemyGo.AddComponent<Animator>();
         enemyGo.AddComponent<Collider>();
         enemyGo.AddComponent<Health>();
+        enemyGo.AddComponent<TeleportEffect>();
 
         enemyGo = AddEnemyComponent(enemyGo, enemyType);
 

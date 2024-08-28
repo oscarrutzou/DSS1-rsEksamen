@@ -29,7 +29,6 @@ public class ParticleEmitter : Emitter
 
     public override void Update()
     {
-        Interval direction = Direction;
         base.Update();
 
         if (State == EmitterState.RUNNING || State == EmitterState.STOPPING)
@@ -89,6 +88,10 @@ public class ParticleEmitter : Emitter
             else
             {
                 //go.Transform.Position += (p.Velocity * (float)GameWorld.DeltaTime);
+                if (p.VelocityZ.Z < 0)
+                {
+
+                }
                 p.PositionZ += (p.VelocityZ * (float)GameWorld.DeltaTime);
                 p.VelocityZ *= dampening; // If we a modifier to be able to change velocity, we need to have 0 dampening
 

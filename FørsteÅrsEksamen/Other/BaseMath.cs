@@ -171,7 +171,7 @@ public static class BaseMath
         Scene crntScene = GameWorld.Instance.CurrentScene;
 
         if (crntScene.IsChangingScene)
-            return Color.Lerp(startColor, Color.Transparent, (float)crntScene.TransitionProgress);
+            return Color.Lerp(startColor, Color.Transparent, (float)crntScene.NormalizedTransitionProgress);
         else
             return startColor;
     }

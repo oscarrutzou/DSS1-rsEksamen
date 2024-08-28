@@ -248,7 +248,7 @@ public abstract class RoomBase : Scene
 
         _transferDoorSpriteRenderer.ShouldDrawSprite = false;
         _transferDoor.CanTranser = true;
-        _transferDoor.emitter.StartEmitter();
+        _transferDoor.emitter.PlayEmitter();
     }
 
     #region Draw
@@ -274,14 +274,14 @@ public abstract class RoomBase : Scene
         int dead = EnemiesInRoom.Count - _aliveEnemies.Count;
         int amountToKill = EnemiesInRoom.Count - dead;
 
-        string text = $"Kill your way through {amountToKill}/{EnemiesInRoom.Count}";//
+        string text = $"Enemies left {amountToKill}/{EnemiesInRoom.Count}";//
 
         Vector2 size = GlobalTextures.DefaultFont.MeasureString(text);
         Vector2 textPos = GameWorld.Instance.UiCam.TopRight + new Vector2(-260, 55);
 
         Color questUnderColor = Color.White;
         if (IsChangingScene)
-            questUnderColor = Color.Lerp(Color.White, Color.Transparent, (float)TransitionProgress);
+            questUnderColor = Color.Lerp(Color.White, Color.Transparent, (float)NormalizedTransitionProgress);
 
         SpriteRenderer.DrawCenteredSprite(spriteBatch, TextureNames.QuestUnder, textPos, questUnderColor, LayerDepth.Default);
 

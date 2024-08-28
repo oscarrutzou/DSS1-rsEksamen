@@ -9,6 +9,7 @@
 
 Texture2D SpriteTexture;
 float amount;
+float sizeOfTeleport = 0.05f;
 
 sampler2D SpriteTextureSampler = sampler_state
 {
@@ -21,7 +22,7 @@ struct VertexShaderOutput
     float4 Color : COLOR0;
     float2 TextureCoordinates : TEXCOORD0;
 };
-
+// The teleport effect. Works by checking the y axis of the tex coord and either showing it with an amount color or not
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
     float4 col = tex2D(SpriteTextureSampler, input.TextureCoordinates) * input.Color;
@@ -30,7 +31,7 @@ float4 MainPS(VertexShaderOutput input) : COLOR
     {
         col.rgba = 0;
     }
-    else if (col.a > 0 && input.TextureCoordinates.y > amount && input.TextureCoordinates.y < amount + 0.1f)
+    else if (col.a > 0 && input.TextureCoordinates.y > amount && input.TextureCoordinates.y < amount + sizeOfTeleport)
     {
         col.rg = (col.r + col.g) / 2.0f;
         col.b = 1;
@@ -39,10 +40,26 @@ float4 MainPS(VertexShaderOutput input) : COLOR
     return col;
 }
 
-technique SpriteDrawing
+technique Teleport
 {
     pass P0
     {
         PixelShader = compile PS_SHADERMODEL MainPS();
+    }
+};
+
+
+float4 RegularPS(VertexShaderOutput input) : COLOR
+{
+    float4 color = tex2D(SpriteTextureSampler, input.TextureCoordinates);
+	// Color here is the input color from spriteBatch.Draw(, ,, Color.White , , , );  white doesn't change anything.
+    return color * input.Color;
+}
+
+technique Basic
+{
+    pass P0
+    {
+        PixelShader = compile PS_SHADERMODEL RegularPS();
     }
 };

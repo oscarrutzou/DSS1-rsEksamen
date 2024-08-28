@@ -17,7 +17,7 @@ public class Grid : Component
     public Dictionary<Point, GameObject> Cells { get; private set; } = new();
     // Evt. tag og lav en dict af en dict
     // Declare a dictionary to store multiple GameObjects per key
-    public Dictionary<int, List<GameObject>> CellsCollisionDict = new Dictionary<int, List<GameObject>>();
+    public Dictionary<int, List<GameObject>> CellsCollisionDict { get; set; } = new Dictionary<int, List<GameObject>>();
     public List<Point> TargetPoints { get; private set; } = new List<Point>(); //Target cell points
 
     public int Width, Height;
@@ -106,7 +106,6 @@ public class Grid : Component
                         float dis = Distance(startPos, gridPosVec);
 
                         // Check if the position is within the radius from the center position
-                        // gridPos - start pos >= minDis gridPos - startCellGo.Transform.GridPosition >= minimumCellDistance
                         if (dis <= searchRadius &&
                             gridPos.X - startCellGo.Transform.GridPosition.X >= minimumCellDistance &&
                             gridPos.Y - startCellGo.Transform.GridPosition.Y >= minimumCellDistance)
@@ -117,6 +116,24 @@ public class Grid : Component
                 }
             }
         }
+
+        return tilesInRadius;
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="pos">Position of the gameobject</param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    public List<GameObject> GetCellsInRoom(Point gridPos)
+    {
+        List<GameObject> tilesInRadius;
+        Cell cell = GetCellFromPoint(gridPos) ?? throw new Exception("Not a tile under pos");
+
+        if (CellsCollisionDict.ContainsKey(cell.CollisionNr))
+            tilesInRadius = CellsCollisionDict[cell.CollisionNr];
+        else
+            tilesInRadius = new List<GameObject>();
 
         return tilesInRadius;
     }
@@ -137,8 +154,8 @@ public class Grid : Component
         }
 
         // Calculates the position of each point. Maybe remove the zoom
-        int gridX = (int)((pos.X - StartPostion.X) / (Cell.Dimension * Cell.Scale * GameWorld.Instance.WorldCam.zoom));
-        int gridY = (int)((pos.Y - StartPostion.Y) / (Cell.Dimension * Cell.Scale * GameWorld.Instance.WorldCam.zoom));
+        int gridX = (int)((pos.X - StartPostion.X) / (Cell.Dimension * Cell.Scale * GameWorld.Instance.WorldCam.Zoom));
+        int gridY = (int)((pos.Y - StartPostion.Y) / (Cell.Dimension * Cell.Scale * GameWorld.Instance.WorldCam.Zoom));
 
         // Checks if its inside the grid.
         if (0 <= gridX && gridX < Width && 0 <= gridY && gridY < Height)

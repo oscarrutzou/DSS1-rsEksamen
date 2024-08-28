@@ -117,48 +117,6 @@
 /processorParam:Quality=Best
 /build:Sound/Attack/SwipeSlow1.mp3
 
-#begin Sound/EnemyHurt/Hit (1).wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sound/EnemyHurt/Hit (1).wav
-
-#begin Sound/EnemyHurt/Hit (2).wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sound/EnemyHurt/Hit (2).wav
-
-#begin Sound/EnemyHurt/Hit (3).wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sound/EnemyHurt/Hit (3).wav
-
-#begin Sound/EnemyHurt/Hit (4).wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sound/EnemyHurt/Hit (4).wav
-
-#begin Sound/EnemyHurt/Hit (5).wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sound/EnemyHurt/Hit (5).wav
-
-#begin Sound/EnemyHurt/Hit (6).wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sound/EnemyHurt/Hit (6).wav
-
-#begin Sound/EnemyHurt/Hit (7).wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sound/EnemyHurt/Hit (7).wav
-
 #begin Sound/Gui/HoverButton.mp3
 /importer:Mp3Importer
 /processor:SoundEffectProcessor
@@ -254,6 +212,162 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sound/Music/MenuTrack.wav
+
+#begin Sound/Orc/Death/OrcDeath (1).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Orc/Death/OrcDeath (1).wav
+
+#begin Sound/Orc/Death/OrcDeath (10).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Orc/Death/OrcDeath (10).wav
+
+#begin Sound/Orc/Death/OrcDeath (2).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Orc/Death/OrcDeath (2).wav
+
+#begin Sound/Orc/Death/OrcDeath (3).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Orc/Death/OrcDeath (3).wav
+
+#begin Sound/Orc/Death/OrcDeath (4).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Orc/Death/OrcDeath (4).wav
+
+#begin Sound/Orc/Death/OrcDeath (5).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Orc/Death/OrcDeath (5).wav
+
+#begin Sound/Orc/Death/OrcDeath (6).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Orc/Death/OrcDeath (6).wav
+
+#begin Sound/Orc/Death/OrcDeath (7).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Orc/Death/OrcDeath (7).wav
+
+#begin Sound/Orc/Death/OrcDeath (8).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Orc/Death/OrcDeath (8).wav
+
+#begin Sound/Orc/Death/OrcDeath (9).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Orc/Death/OrcDeath (9).wav
+
+#begin Sound/Orc/Hurt/Hit (1).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Orc/Hurt/Hit (1).wav
+
+#begin Sound/Orc/Hurt/Hit (2).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Orc/Hurt/Hit (2).wav
+
+#begin Sound/Orc/Hurt/Hit (3).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Orc/Hurt/Hit (3).wav
+
+#begin Sound/Orc/Hurt/Hit (4).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Orc/Hurt/Hit (4).wav
+
+#begin Sound/Orc/Hurt/Hit (5).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Orc/Hurt/Hit (5).wav
+
+#begin Sound/Orc/Hurt/Hit (6).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Orc/Hurt/Hit (6).wav
+
+#begin Sound/Orc/Hurt/Hit (7).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Orc/Hurt/Hit (7).wav
+
+#begin Sound/Orc/Hurt/Hit (8).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Orc/Hurt/Hit (8).wav
+
+#begin Sound/Orc/Hurt/Hit (9).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Orc/Hurt/Hit (9).wav
+
+#begin Sound/Orc/MiniBoss/BossDeath.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Orc/MiniBoss/BossDeath.wav
+
+#begin Sound/Orc/MiniBoss/ComeForthMyMinions.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Orc/MiniBoss/ComeForthMyMinions.wav
+
+#begin Sound/Orc/MiniBoss/Mocking (1).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Orc/MiniBoss/Mocking (1).wav
+
+#begin Sound/Orc/MiniBoss/Mocking (2).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Orc/MiniBoss/Mocking (2).wav
+
+#begin Sound/Orc/MiniBoss/Mocking (3).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Orc/MiniBoss/Mocking (3).wav
+
+#begin Sound/Orc/MiniBoss/Mocking (4).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Orc/MiniBoss/Mocking (4).wav
+
+#begin Sound/Orc/MiniBoss/Mocking (5).wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Orc/MiniBoss/Mocking (5).wav
 
 #begin Sound/PlayerHurt/Hit (1).wav
 /importer:WavImporter

@@ -7,8 +7,6 @@
 	#define PS_SHADERMODEL ps_4_0_level_9_1
 #endif
 
-
-
 float threshold;
 float4 singleColor;
 

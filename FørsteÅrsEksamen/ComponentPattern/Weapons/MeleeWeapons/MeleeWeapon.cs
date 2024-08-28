@@ -60,7 +60,6 @@ public abstract class MeleeWeapon : Weapon
         UpdateCollisionBoxesPos(GameObject.Transform.Rotation);
     }
 
-
     private void AttackAnimation()
     {
         AttackedTotalElapsedTime += GameWorld.DeltaTime;
@@ -179,7 +178,6 @@ public abstract class MeleeWeapon : Weapon
                 if (weaponRectangle.Rectangle.Intersects(otherCollider.CollisionBox))
                 {
                     _hitGameObjects.Add(otherGo, new(_totalElapsedTime, IsRotatingBack));
-                    PlayHitSound();
                     DealDamage(otherGo);
                     break;
                 }
@@ -206,6 +204,11 @@ public abstract class MeleeWeapon : Weapon
     public void DealDamage(GameObject damageGo)
     {
         Health health = damageGo.GetComponent<Health>();
+
+        if (!health.IsDead)
+        {
+            PlayHitSound();
+        }
 
         // Float so we can divide with enemy weakness
         float damage = Animations[CurrentAnim].Damage;

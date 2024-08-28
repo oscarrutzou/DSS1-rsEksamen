@@ -28,7 +28,6 @@ public class GameWorld : Game
     public static bool IsPaused = false;
     public static Color BackGroundColor { get; private set; } = new Color(20, 20, 18, 255);
     public static Color TextColor { get; private set; } = new Color(250, 249, 246);
-
     public GraphicsDeviceManager GfxManager { get; private set; } 
     public float AvgFPS { get; private set; }
     public Dictionary<SceneNames, Scene> Scenes { get; private set; }
@@ -46,7 +45,7 @@ public class GameWorld : Game
     public bool IsInMenu { get; private set; } = true;
 
 
-
+    #region Shader Params
     public float HighlightsEffect_Threshold = 0.465f; // 0.25f shows a lot
     public float GaussianBlurEffect_BlurAmount = 5f;
     public float VignetteInner = 0.54f;
@@ -54,7 +53,8 @@ public class GameWorld : Game
 
     public bool SingleColorEffect = false;
     public double GameWorldSpeed = 1.0f;
-    private Canvas _canvas;
+    private Canvas _canvas; // The canvas is a render target that handles the shader stuff
+    #endregion
     #endregion
 
     public GameWorld()
@@ -78,60 +78,49 @@ public class GameWorld : Game
         GlobalSounds.LoadContent();
         GlobalAnimations.LoadContent();
 
-        Fullscreen();
-        //SetResolutionSize(800, 800); // Need to be before the camera
+        Fullscreen(); // Need to be before the camera
+        //SetResolutionSize(800, 800); 
+
         SceneData.Instance.GenereateGameObjectDicionary();
         
-        WorldCam = new Camera(true); // Camera that follows the player
-        UiCam = new Camera(false);   // Camera that is static
+        WorldCam = new Camera(); // Camera that follows the player
+        UiCam = new Camera();    // Camera that is static
+
 
         GenerateScenes(); // Makes a instance of all the scene we need
 
         CurrentScene = Scenes[SceneNames.MainMenu];
         CurrentScene.Initialize(); // Starts the main menu 
-
+         
         IndependentBackground.SpawnBG(); // The background that dont get deleted
 
         base.Initialize();
     }
 
-
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-        Vector4 color = new Vector4(TextColor.R, TextColor.G, TextColor.B, TextColor.A);
-        GlobalTextures.SingleColorEffect.Parameters["singleColor"].SetValue(color);
-        GlobalTextures.SingleColorEffect.Parameters["threshold"].SetValue(0.23f);
-
-        GlobalTextures.HighlightsEffect.Parameters["threshold"].SetValue(HighlightsEffect_Threshold);
-        GlobalTextures.GaussianBlurEffect.Parameters["blurAmount"].SetValue(GaussianBlurEffect_BlurAmount);
-
-        GlobalTextures.GaussianBlurEffect.CurrentTechnique = GlobalTextures.GaussianBlurEffect.Techniques["Blur"]; // Basic ; Blur
-
-        GlobalTextures.VignetteEffect.Parameters["innerRadius"].SetValue(VignetteInner);
-        GlobalTextures.VignetteEffect.Parameters["outerRadius"].SetValue(VignetteOuter);
+        SetShaderParams();
     }
-
 
     protected override void Update(GameTime gameTime)
     {
         DeltaTime = gameTime.ElapsedGameTime.TotalSeconds * GameWorldSpeed;
 
-        InputHandler.Instance.Update();
         UpdateFPS(gameTime);
 
-        if (InputHandler.Instance.MouseOutOfBounds) return;
-        
-        GlobalSounds.MusicUpdate(); // Updates the Music in the game, not SFX
         IndependentBackground.Update();
+        InputHandler.Instance.Update();
+
+        if (!this.IsActive) return;
+
+        GlobalSounds.MusicUpdate(); // Updates the Music in the game, not SFX
 
         CurrentScene.Update(); // Updates all gameobjects and their componetents in the scene
         HandleSceneChange(); // Goes to the next scene
 
         base.Update(gameTime);
     }
-
 
     protected override void Draw(GameTime gameTime)
     {
@@ -148,7 +137,6 @@ public class GameWorld : Game
 
         CurrentScene.DrawInWorld(_spriteBatch);
 
-        
         // Draws the screen with the effects on
         // We dont want our normal effects to show on the canvas, but we do want to show the single color effect 
         if (!SingleColorEffect)
@@ -160,7 +148,32 @@ public class GameWorld : Game
             transformMatrix: UiCam.GetMatrix());
 
         CurrentScene.DrawOnScreen(_spriteBatch);
+        DrawDebugShaderStrings();
 
+        if (SingleColorEffect)
+            _canvas.Draw(_spriteBatch);
+
+        base.Draw(gameTime);
+    }
+
+    private void SetShaderParams()
+    {
+
+        Vector4 color = new Vector4(TextColor.R, TextColor.G, TextColor.B, TextColor.A);
+        GlobalTextures.SingleColorEffect.Parameters["singleColor"].SetValue(color);
+        GlobalTextures.SingleColorEffect.Parameters["threshold"].SetValue(0.23f);
+
+        GlobalTextures.HighlightsEffect.Parameters["threshold"].SetValue(HighlightsEffect_Threshold);
+        GlobalTextures.GaussianBlurEffect.Parameters["blurAmount"].SetValue(GaussianBlurEffect_BlurAmount);
+
+        GlobalTextures.GaussianBlurEffect.CurrentTechnique = GlobalTextures.GaussianBlurEffect.Techniques["Blur"]; // Basic ; Blur
+
+        GlobalTextures.VignetteEffect.Parameters["innerRadius"].SetValue(VignetteInner);
+        GlobalTextures.VignetteEffect.Parameters["outerRadius"].SetValue(VignetteOuter);
+    }
+
+    private void DrawDebugShaderStrings()
+    {
         Vector2 pos = UiCam.LeftCenter;
         _spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Thredshold: {HighlightsEffect_Threshold}", pos, Color.White);
         pos += new Vector2(0, 30);
@@ -170,11 +183,6 @@ public class GameWorld : Game
         pos += new Vector2(0, 30);
         _spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Vignet Outer: {VignetteOuter}", pos, Color.White);
         _spriteBatch.End();
-
-        if (SingleColorEffect)
-            _canvas.Draw(_spriteBatch);
-
-        base.Draw(gameTime);
     }
 
     public void SetResolutionSize(int width, int height)
@@ -317,6 +325,8 @@ public class GameWorld : Game
     {
         if (NextScene == null || Scenes[NextScene.Value] == null) return;
 
+        SingleColorEffect = false;
+
         if (!CurrentScene.IsChangingScene)
         {
             CurrentScene.StartSceneChange();
@@ -326,15 +336,18 @@ public class GameWorld : Game
 
         // Wait for current scene to turn down alpha on objects
         if (CurrentScene.IsChangingScene) return;
-
+        
         SceneData.Instance.DeleteAllGameObjects(); 
 
         WorldCam.Position = Vector2.Zero; // Resets world cam position
         CurrentScene = Scenes[NextScene.Value]; // Changes to new scene
         CurrentScene.Initialize(); // Starts the new scene
 
+        // Set color of all scene objects
+
         NextScene = null;
     }
+
 
     #endregion Scene
 }
@@ -418,6 +431,10 @@ public class Canvas
         _graphicsDevice.SetRenderTarget(_baseScreen);
     }
 
+    // Make this so it can be split up.
+    // Then take some of the part and use with the normal object,
+    // and another for the bg. Then the bg can be drawn with its own shader.
+    // Then we can use the gameobject layer to draw out what we like with a sprite offset, or dissolver.
     public void Draw(SpriteBatch spriteBatch)
     {
         // Everthing drawn before this, will be used for the effect
@@ -451,7 +468,6 @@ public class Canvas
 
         // Clear the screen
         _graphicsDevice.Clear(Color.Transparent);
-
 
         if (GameWorld.Instance.SingleColorEffect)
             DrawBaseScreen(spriteBatch, GlobalTextures.SingleColorEffect); // Need to make this effect also contain vignette

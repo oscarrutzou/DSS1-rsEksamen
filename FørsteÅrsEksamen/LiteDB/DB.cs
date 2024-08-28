@@ -431,10 +431,10 @@ public class DB
         return true;
     }
 
-    public async void CheckChangeDungeonScene()
+    public void CheckChangeDungeonScene()
     {
         // After it has saved the palyer it will change scene
-        await Task.Run(() => { SaveGame(SaveData.CurrentSaveID); });
+        SaveGame(SaveData.CurrentSaveID);
 
         int newRoomNr = SaveData.Level_Reached + 1;
 

@@ -31,13 +31,36 @@ public enum SoundNames
     WoodHitMetal,
 
     // Enemy Hit   --------------------------
-    EnemyHit1,
-    EnemyHit2,
-    EnemyHit3,
-    EnemyHit4,
-    EnemyHit5,
-    EnemyHit6,
-    EnemyHit7,
+    OrcHit1,
+    OrcHit2,
+    OrcHit3,
+    OrcHit4,
+    OrcHit5,
+    OrcHit6,
+    OrcHit7,
+    OrcHit8,
+    OrcHit9,
+
+    // Orc Death   --------------------------
+    OrcDeath1,
+    OrcDeath2,
+    OrcDeath3,
+    OrcDeath4,
+    OrcDeath5,
+    OrcDeath6,
+    OrcDeath7,
+    OrcDeath8,
+    OrcDeath9,
+    OrcDeath10, // Also in the boss death
+
+    // Orc Boss    --------------------------
+    OrcBossDeath1,
+    OrcBossComeForthMyMinions,
+    OrcBossMocking1,
+    OrcBossMocking2,
+    OrcBossMocking3,
+    OrcBossMocking4,
+    OrcBossMocking5,
 
     // Player Hit  --------------------------
     PlayerHit1,
@@ -70,10 +93,9 @@ public static class GlobalSounds
     private static SoundEffectInstance _instanceMenuMusic;
     private static SoundEffectInstance _instanceGameMusic;
 
-    private static int _musicVolDivide = 4; //Makes the song less loud by dividing the real volume
     private static Random _rnd = new();
-    public static float MusicVolume = 1.0f;
-    public static float SfxVolume = 1.0f;
+    public static float MusicVolume = 0.0f;
+    public static float SfxVolume = 0.5f;
     private static bool _musicCountDown;
     private static bool _sfxCountDown;
 
@@ -116,13 +138,34 @@ public static class GlobalSounds
             {SoundNames.WoodHitMetal, content.Load<SoundEffect>("Sound\\Hit\\Hit_Wood_on_metal") },
 
 
-            {SoundNames.EnemyHit1, content.Load<SoundEffect>("Sound\\EnemyHurt\\Hit (1)") },
-            {SoundNames.EnemyHit2, content.Load<SoundEffect>("Sound\\EnemyHurt\\Hit (2)") },
-            {SoundNames.EnemyHit3, content.Load<SoundEffect>("Sound\\EnemyHurt\\Hit (3)") },
-            {SoundNames.EnemyHit4, content.Load<SoundEffect>("Sound\\EnemyHurt\\Hit (4)") },
-            {SoundNames.EnemyHit5, content.Load<SoundEffect>("Sound\\EnemyHurt\\Hit (5)") },
-            {SoundNames.EnemyHit6, content.Load<SoundEffect>("Sound\\EnemyHurt\\Hit (6)") },
-            {SoundNames.EnemyHit7, content.Load<SoundEffect>("Sound\\EnemyHurt\\Hit (7)") },
+            {SoundNames.OrcHit1, content.Load<SoundEffect>("Sound\\Orc\\Hurt\\Hit (1)") },
+            {SoundNames.OrcHit2, content.Load<SoundEffect>("Sound\\Orc\\Hurt\\Hit (2)") },
+            {SoundNames.OrcHit3, content.Load<SoundEffect>("Sound\\Orc\\Hurt\\Hit (3)") },
+            {SoundNames.OrcHit4, content.Load<SoundEffect>("Sound\\Orc\\Hurt\\Hit (4)") },
+            {SoundNames.OrcHit5, content.Load<SoundEffect>("Sound\\Orc\\Hurt\\Hit (5)") },
+            {SoundNames.OrcHit6, content.Load<SoundEffect>("Sound\\Orc\\Hurt\\Hit (6)") },
+            {SoundNames.OrcHit7, content.Load<SoundEffect>("Sound\\Orc\\Hurt\\Hit (7)") },
+            {SoundNames.OrcHit8, content.Load<SoundEffect>("Sound\\Orc\\Hurt\\Hit (8)") },
+            {SoundNames.OrcHit9, content.Load<SoundEffect>("Sound\\Orc\\Hurt\\Hit (9)") },
+
+            {SoundNames.OrcDeath1, content.Load<SoundEffect>("Sound\\Orc\\Death\\OrcDeath (1)") },
+            {SoundNames.OrcDeath2, content.Load<SoundEffect>("Sound\\Orc\\Death\\OrcDeath (2)") },
+            {SoundNames.OrcDeath3, content.Load<SoundEffect>("Sound\\Orc\\Death\\OrcDeath (3)") },
+            {SoundNames.OrcDeath4, content.Load<SoundEffect>("Sound\\Orc\\Death\\OrcDeath (4)") },
+            {SoundNames.OrcDeath5, content.Load<SoundEffect>("Sound\\Orc\\Death\\OrcDeath (5)") },
+            {SoundNames.OrcDeath6, content.Load<SoundEffect>("Sound\\Orc\\Death\\OrcDeath (6)") },
+            {SoundNames.OrcDeath7, content.Load<SoundEffect>("Sound\\Orc\\Death\\OrcDeath (7)") },
+            {SoundNames.OrcDeath8, content.Load<SoundEffect>("Sound\\Orc\\Death\\OrcDeath (8)") },
+            {SoundNames.OrcDeath9, content.Load<SoundEffect>("Sound\\Orc\\Death\\OrcDeath (9)") },
+            {SoundNames.OrcDeath10, content.Load<SoundEffect>("Sound\\Orc\\Death\\OrcDeath (10)") },
+
+            {SoundNames.OrcBossComeForthMyMinions, content.Load<SoundEffect>("Sound\\Orc\\MiniBoss\\ComeForthMyMinions") },
+            {SoundNames.OrcBossDeath1, content.Load<SoundEffect>("Sound\\Orc\\MiniBoss\\BossDeath") },
+            {SoundNames.OrcBossMocking1, content.Load<SoundEffect>("Sound\\Orc\\MiniBoss\\Mocking (1)") },
+            {SoundNames.OrcBossMocking2, content.Load<SoundEffect>("Sound\\Orc\\MiniBoss\\Mocking (2)") },
+            {SoundNames.OrcBossMocking3, content.Load<SoundEffect>("Sound\\Orc\\MiniBoss\\Mocking (3)") },
+            {SoundNames.OrcBossMocking4, content.Load<SoundEffect>("Sound\\Orc\\MiniBoss\\Mocking (4)") },
+            {SoundNames.OrcBossMocking5, content.Load<SoundEffect>("Sound\\Orc\\MiniBoss\\Mocking (5)") },
 
 
             {SoundNames.PlayerHit1, content.Load<SoundEffect>("Sound\\PlayerHurt\\Hit (1)") },
@@ -148,7 +191,7 @@ public static class GlobalSounds
             }
         }
     }
-
+    private static float _musicVolumeMakeSmallerBy = 0.3f;
     public static void MusicUpdate()
     {
         if (_instanceGameMusic == null || _instanceMenuMusic == null)
@@ -158,8 +201,8 @@ public static class GlobalSounds
         }
 
         // Make sure the volume is lower that the SFX's, since the SFX are more impactfull.
-        _instanceMenuMusic.Volume = Math.Clamp(MusicVolume, 0, 1) / _musicVolDivide;
-        _instanceGameMusic.Volume = Math.Clamp(MusicVolume, 0, 1) / _musicVolDivide;
+        _instanceMenuMusic.Volume = MusicVolume * _musicVolumeMakeSmallerBy;
+        _instanceGameMusic.Volume = MusicVolume * _musicVolumeMakeSmallerBy;
 
         //Check if the music should be playing
         if (PlayMenuMusic)
@@ -221,8 +264,13 @@ public static class GlobalSounds
         return false;
     }
 
-    public static void ChangeSoundVolumeDistance(Vector2 soundPosition, int minDistance, int maxDistance, float maxSoundVolume, SoundEffectInstance soundEffect)
+    public static void ChangeSoundVolumeDistance(Vector2 soundPosition, int minDistance, int maxDistance, float maxSoundVolume, SoundEffectInstance soundEffect, bool checkEffectRunning = true)
     {
+        if (checkEffectRunning)
+        {
+            if (soundEffect == null || soundEffect.State != SoundState.Playing) return;
+        }
+
         Vector2 playerPos = Vector2.Zero;
         if (SaveData.Player != null) playerPos = SaveData.Player.GameObject.Transform.Position;
 
@@ -241,10 +289,10 @@ public static class GlobalSounds
     /// <param name="soundName">The sound to play</param>
     /// <param name="soundVolume">Can change how loud the sound is</param>
     /// <param name="enablePitch">If it should add a random pitch to the sounds</param>
-    public static SoundEffectInstance PlaySound(SoundNames soundName, float soundVolume = 1f, bool enablePitch = false)
+    public static SoundEffectInstance PlaySound(SoundNames soundName, float soundVolume, bool enablePitch, float minPitch , float maxPitch)
     {
         // Play a sound with an optional random pitch
-        float pitch = enablePitch ? GenerateRandomPitch() : 0f; // Base pitch is 0f
+        float pitch = enablePitch ? GenerateRandomPitch(minPitch, maxPitch) : 0f; // Base pitch is 0f
 
         // Play a sound
         SoundEffectInstance instance = GetAvailableInstance(soundName);
@@ -262,13 +310,13 @@ public static class GlobalSounds
         return instance;
     }
 
-    public static SoundEffectInstance PlaySound(SoundNames soundName, int maxAmountPlaying, float soundVolume = 1f, bool enablePitch = false)
+    public static SoundEffectInstance PlaySound(SoundNames soundName, int maxAmountPlaying, float soundVolume = 1f, bool enablePitch = false, float minPitch = -0.4f, float maxPitch = 0.2f)
     {
         int index = CountPlayingInstances(soundName);
 
         if (index >= maxAmountPlaying) return null;
 
-        return PlaySound(soundName, soundVolume, enablePitch);
+        return PlaySound(soundName, soundVolume, enablePitch, minPitch, maxPitch);
     }
 
     /// <summary>
@@ -276,18 +324,20 @@ public static class GlobalSounds
     /// </summary>
     /// <param name="soundArray">The array of different sound effets that can be played</param>
     /// <param name="maxAmountPlaying">How many of the sounds that can play at once</param>
-    /// <param name="soundVolDivided">Can change how loud the sound is</param>
+    /// <param name="soundVolume">Can change how loud the sound is</param>
     /// <param name="enablePitch">If it should add a random pitch to the sounds</param>
-    public static SoundEffectInstance PlayRandomizedSound(SoundNames[] soundArray, int maxAmountPlaying, float soundVolDivided = 1f, bool enablePitch = false)
+    public static SoundEffectInstance PlayRandomizedSound(SoundNames[] soundArray, int maxAmountPlaying, float soundVolume = 1f, bool enablePitch = false, float minPitch = -0.2f, float maxPitch = 0.2f)
     {
+        _rnd = new(); // To try and see if it can remove some of the non random
         // Play a random sound from the array
         int soundIndex = _rnd.Next(0, soundArray.Length);
+
         SoundNames soundName = soundArray[soundIndex];
 
         int index = CountPlayingInstances(soundName);
         if (index >= maxAmountPlaying) return null;
 
-        return PlaySound(soundName, soundVolDivided, enablePitch);
+        return PlaySound(soundName, soundVolume, enablePitch, minPitch, maxPitch);
     }
 
 
@@ -321,10 +371,11 @@ public static class GlobalSounds
     }
 
     // Helper method
-    private static float GenerateRandomPitch(float minPitch = -0.3f, float maxPitch = 0.3f)
+    private static float GenerateRandomPitch(float minPitch, float maxPitch)
     {
         // Generate a random pitch within the specified range
         float pitch = (float)_rnd.NextDouble() * (maxPitch - minPitch) + minPitch;
         return pitch;
     }
+
 }

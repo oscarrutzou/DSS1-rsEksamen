@@ -22,6 +22,7 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
         /// Gets set in Start of Health component
         /// </summary>
         public int CurrentHealth { get; set; } = -1;
+        public bool CanTakeDamage = true;
         public Action OnDamageTaken { get; set; }
         public Action OnZeroHealth { get; set; }
         public Action OnResetColor { get; set; }
@@ -31,6 +32,7 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
         public bool IsDead { get; private set; }
         public Action<int> AmountDamageTaken { get; set; }
         public Action<Vector2> AttackerPositionDamageTaken { get; set; }
+
         public Health(GameObject gameObject) : base(gameObject)
         {
         }
@@ -51,17 +53,13 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
             HandleOnDamage();
         }
 
-        public void SetHealth(int maxhealth, int currenthealth = -1)
+        public void SetHealth(int maxhealth)
         {
             if (MaxHealth != -1) return; // Already have set maxHealth like in cheats
 
             MaxHealth = maxhealth;
             
-            if (currenthealth != -1)
-            {
-                CurrentHealth = currenthealth;
-            }
-            else
+            if (CurrentHealth == -1)
             {
                 CurrentHealth = MaxHealth;
             }
@@ -90,10 +88,9 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
         /// <para>So we dont make it spray blood out from where the magic caster was (Would be weird)</para></param>
         public void TakeDamage(int damage, Vector2 attackersPosition)
         {
+            if (IsDead || !CanTakeDamage) return; // Already dead
+
             AttackerPositionDamageTaken?.Invoke(attackersPosition);
-
-            if (IsDead) return; // Already dead
-
             AmountDamageTaken?.Invoke(damage);
 
             int newHealth = CurrentHealth - damage;
@@ -119,7 +116,8 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
         {
             OnDamageTaken?.Invoke(); // For specific behavor when Damage taken
 
-            if (GameWorld.Instance.SingleColorEffect) return; // To avoid it changing color when hit. It causes characters to dissapear.
+            // To avoid it changing color when hit. It causes characters to dissapear.
+            if (GameWorld.Instance.SingleColorEffect) return; 
             _damageTimer = _damageTimerTotal;
             _spriteRenderer.Color = DamageTakenColor;
         }

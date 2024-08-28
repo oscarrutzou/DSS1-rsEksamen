@@ -52,7 +52,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
             _menuColorInterval = new ColorInterval(menuColors);
             _roomColorInterval = new ColorInterval(RoomColors);
 
-            BackgroundEmitter.StartEmitter();
+            BackgroundEmitter.PlayEmitter();
         }
 
         private static GameObject mouseGo;

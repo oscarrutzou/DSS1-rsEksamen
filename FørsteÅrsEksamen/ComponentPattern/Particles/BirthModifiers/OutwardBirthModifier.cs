@@ -9,16 +9,19 @@ namespace DoctorsDungeon.ComponentPattern.Particles.BirthModifiers
         public override void Execute(Emitter e, GameObject go, IParticle p)
         {
             float v = p.VelocityZ.Length();
-            Vector2 temp = p.Position - e.Position; 
-            if (temp != Vector2.Zero)
+
+            Vector2 temp = p.Position - e.Position;
+
+            if (temp == Vector2.Zero) return;
+            temp.Normalize();
+
+            float z = 0;
+            if (p.VelocityZ != Vector3.Zero)
             {
-                temp.Normalize();
-                p.VelocityZ = new Vector3(temp, 0) * v;
+                Vector3 normalizedVel = Vector3.Normalize(p.VelocityZ);
+                z = normalizedVel.Z;
             }
-            else
-            {
-                p.VelocityZ = OnSpawnOriginPoint * v;
-            }
+            p.VelocityZ = new Vector3(temp, z) * v;
         }
     }
 }

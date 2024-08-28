@@ -189,26 +189,24 @@ public abstract class Weapon : Component
     private void UpdateSound()
     {
         // Update normal attack sound
-        if (_currentAttackSound != null && _currentAttackSound.State == SoundState.Playing)
-            GlobalSounds.ChangeSoundVolumeDistance(GameObject.Transform.Position, 50, 250, 0.8f, _currentAttackSound);
-
-        // Update hit sound
-        if (_currentHitSound != null && _currentHitSound.State == SoundState.Playing)
-            GlobalSounds.ChangeSoundVolumeDistance(GameObject.Transform.Position, 50, 250, 0.4f, _currentHitSound);
+        GlobalSounds.ChangeSoundVolumeDistance(GameObject.Transform.Position, 50, 250, _hitMaxSound, _currentAttackSound);
+        GlobalSounds.ChangeSoundVolumeDistance(GameObject.Transform.Position, 50, 250, _attackMaxSound, _currentHitSound);
     }
 
+    private float _hitMaxSound = 0.4f;
+    private float _attackMaxSound = 0.8f;
     protected void PlayAttackSound()
     {
         if (AttackSoundNames == null || AttackSoundNames.Length == 0) return;
 
-        _currentAttackSound = GlobalSounds.PlayRandomizedSound(AttackSoundNames, 5, 1f, true);
+        _currentAttackSound = GlobalSounds.PlayRandomizedSound(AttackSoundNames, 5, _attackMaxSound, true);
     }
 
     protected void PlayHitSound()
     {
         if (AttackHitSoundNames == null ||AttackHitSoundNames.Length == 0) return;
 
-        _currentHitSound = GlobalSounds.PlayRandomizedSound(AttackHitSoundNames, 3, 0.4f, true);
+        _currentHitSound = GlobalSounds.PlayRandomizedSound(AttackHitSoundNames, 3, _hitMaxSound, true);
     }
 
     public void MoveWeaponAndAngle()

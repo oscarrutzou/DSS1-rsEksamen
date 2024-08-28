@@ -171,7 +171,7 @@ public class Emitter : Component
     /// <summary>
     /// Starts the normal emitter
     /// </summary>
-    public void StartEmitter()
+    public void PlayEmitter()
     {
         ReleaseTime = 0;
         ParticlesPerSecond = MaxParticlesPerSecond;
@@ -220,5 +220,5 @@ public class Emitter : Component
         }
     }
 
-    public bool AbrubtStop;
+    public bool AbrubtStop = true;
 }

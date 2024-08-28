@@ -42,8 +42,9 @@ public abstract class Scene
     public bool IsChangingScene { get; set; }
 
     protected Color CurrentTextColor { get; set; }
-    public double TransitionProgress { get; private set; }
-    private double _transitionDuration = 0.3; // Desired duration in seconds
+    public double NormalizedTransitionProgress { get; private set; }
+    private double _transitionDuration { get; set; } = 0.3; // Desired duration in seconds
+    private double _transitionTimer;
 
     public abstract void Initialize();
 
@@ -89,18 +90,21 @@ public abstract class Scene
     public void StartSceneChange()
     {
         IsChangingScene = true;
-        TransitionProgress = 0; // Start with full opacity
+        NormalizedTransitionProgress = 0; // Start with full opacity
+        _transitionTimer = 0;
     }
 
     private void LerpGameObjects()
     {
-        TransitionProgress += GameWorld.DeltaTime / _transitionDuration;
-        TransitionProgress = Math.Clamp(TransitionProgress, 0, 1);
+        // Maybe a shader offset, that just tweaks the values for the gameobjects? 
+        _transitionTimer += GameWorld.DeltaTime;
+
+        NormalizedTransitionProgress = Math.Clamp(_transitionTimer / _transitionDuration, 0, 1);
 
         foreach (GameObjectTypes type in SceneData.Instance.GameObjectLists.Keys)
         {
             // The cells shouldnt be turned transparent, since that allows the player to see whats under them.
-            if (type == GameObjectTypes.Cell) continue; 
+            if (type == GameObjectTypes.Cell) continue;
 
             foreach (GameObject gameObject in SceneData.Instance.GameObjectLists[type])
             {
@@ -110,11 +114,11 @@ public abstract class Scene
                 if (sr.StartColor == Color.Transparent)
                     sr.StartColor = sr.Color;
 
-                sr.Color = Color.Lerp(sr.StartColor, Color.Transparent, (float)TransitionProgress);
+                sr.Color = Color.Lerp(sr.StartColor, Color.Transparent, (float)NormalizedTransitionProgress);
             }
         }
-
     }
+
     
     private void LerpTextColor()
     {
@@ -126,7 +130,7 @@ public abstract class Scene
         LerpGameObjects();
 
         // If the progrss of the lerp has not finnished, we wont change scenes
-        if (TransitionProgress != 1) return;
+        if (NormalizedTransitionProgress != 1) return;
 
         IsChangingScene = false;
         

@@ -43,8 +43,8 @@ public abstract class Enemy : Character
 
     private readonly Random _rnd = new();
     private double _randomMoveTimer;
-    private readonly double _randomMoveCoolDown = 1;
-    private List<GameObject> _cellsInCollisionNr = new();
+    protected double RandomMoveCoolDown = 1;
+    private List<GameObject> _cellsInCollisionNr { get; set; } = new();
     private List<GameObject> _cellGameObjects = new();
 
     private readonly int _distanceStopFromTarget = 2; // The amount of distance the enemy has to the player
@@ -53,15 +53,29 @@ public abstract class Enemy : Character
 
     private static SoundNames[] _enemyHit = new SoundNames[]
     {
-        SoundNames.EnemyHit1,
-        SoundNames.EnemyHit2,
-        SoundNames.EnemyHit3,
-        SoundNames.EnemyHit4,
-        SoundNames.EnemyHit5,
-        SoundNames.EnemyHit6,
-        SoundNames.EnemyHit7,
+        SoundNames.OrcHit1,
+        SoundNames.OrcHit2,
+        SoundNames.OrcHit3,
+        SoundNames.OrcHit4,
+        SoundNames.OrcHit5,
+        SoundNames.OrcHit6,
+        SoundNames.OrcHit7,
+        SoundNames.OrcHit8,
+        SoundNames.OrcHit9,
     };
 
+    private static SoundNames[] _orcDeath = new SoundNames[]
+    {
+        SoundNames.OrcDeath1,
+        SoundNames.OrcDeath2,
+        SoundNames.OrcDeath3,
+        SoundNames.OrcDeath4,
+        SoundNames.OrcDeath5,
+        SoundNames.OrcDeath6,
+        SoundNames.OrcDeath7,
+        SoundNames.OrcDeath8,
+        SoundNames.OrcDeath9,
+    };
     #endregion Properties
 
     public Enemy(GameObject gameObject) : base(gameObject)
@@ -81,6 +95,7 @@ public abstract class Enemy : Character
 
         CharacterHitHurt = _enemyHit;
         MaxAmountCharacterHitSoundsPlaying = 5;
+        CharacterDeath = _orcDeath;
 
         if (WeaponGo != null)
         {
@@ -105,17 +120,8 @@ public abstract class Enemy : Character
         else
         {
             SetStartCollisionNr();
-            SetCellsCollision();
-            PickRandomPoint();
+            PickRandomTargetPoint();
         }
-    }
-
-    private void SetCellsCollision()
-    {
-        if (Grid.CellsCollisionDict.TryGetValue(CollisionNr, out var cellList))
-            _cellsInCollisionNr = cellList;
-        else
-            throw new Exception($"The collision Nr {CollisionNr} is not found in the saved grid");
     }
 
     public void SetStartEnemyRefs(List<Enemy> enemies)
@@ -143,8 +149,7 @@ public abstract class Enemy : Character
     {
         _randomOffsetSeed = (float)_rnd.NextDouble();
     }
-
-
+    public bool CanMove = true;
     public override void Update()
     {
         base.Update();
@@ -154,6 +159,10 @@ public abstract class Enemy : Character
         //To make a new path towards the player, if they have moved.
         if (TargetPlayer) PlayerMovedInRoom();
         else RandomMoveInRoom();
+
+        if (!CanMove) SetState(CharacterState.Idle);
+
+        if (Health.IsDead) SetState(CharacterState.Dead);
 
         switch (State)
         {
@@ -187,18 +196,31 @@ public abstract class Enemy : Character
 
     private void PlayerMovedInRoom()
     {
-        if (Player.CollisionNr != CollisionNr && !HasBeenAwoken || State == CharacterState.Dead) return; // Cant move if the player isnt in the same room.
+        if (Player.CollisionNr != CollisionNr
+            && !HasBeenAwoken
+            || State == CharacterState.Dead) return; // Cant move if the player isnt in the same room.
+
+        if (Player.CollisionNr == CollisionNr && !HasBeenAwoken)
+        {
+            SetPathAfterPlayer();
+        }
 
         Point playerPos = PlayerGo.Transform.GridPosition;
 
         // If X is more that z cells away, it should start a new target. The same with Y
-        if (Player.CollisionNr == CollisionNr && !HasBeenAwoken || Math.Abs(playerPos.X - TargetPoint.X) >= CellPlayerMoveBeforeNewTarget ||
-            Math.Abs(playerPos.Y - TargetPoint.Y) >= CellPlayerMoveBeforeNewTarget)
+        if (Player.CollisionNr == CollisionNr && !HasBeenAwoken 
+            || Math.Abs(playerPos.X - TargetPoint.X) >= CellPlayerMoveBeforeNewTarget 
+            || Math.Abs(playerPos.Y - TargetPoint.Y) >= CellPlayerMoveBeforeNewTarget)
         {
-            TargetPoint = playerPos;
-            SetPath();
-            HasBeenAwoken = true;
+            SetPathAfterPlayer();
         }
+    }
+
+    public void SetPathAfterPlayer()
+    {
+        TargetPoint = PlayerGo.Transform.GridPosition;
+        SetPath();
+        HasBeenAwoken = true;
     }
 
     protected virtual void RandomMoveInRoom()
@@ -209,10 +231,7 @@ public abstract class Enemy : Character
 
         if (Player.CollisionNr == CollisionNr && !HasBeenAwoken)
         {
-            // Random cell
-            PickRandomPoint();
-            SetPath();
-            _randomMoveTimer = 0;
+            SetNewRandomPath();
 
             HasBeenAwoken = true; // Will now search each time
         }
@@ -225,37 +244,33 @@ public abstract class Enemy : Character
         {
             _randomMoveTimer += GameWorld.DeltaTime;
 
-            if (_randomMoveTimer < _randomMoveCoolDown) // If the timer is not ready to move yet, stay in Idle
+            if (_randomMoveTimer < RandomMoveCoolDown) // If the timer is not ready to move yet, stay in Idle
                 SetState(CharacterState.Idle);
             else // If the timer is over the cooldown, we first find a random target point and then sets the path.
             {
-                // Random cell
-                PickRandomPoint();
-                SetPath();
-                _randomMoveTimer = 0;
+                SetNewRandomPath();
             }
         }
     }
 
-    protected void PickRandomPoint()
+    protected void SetNewRandomPath()
+    {
+        // Random cell
+        PickRandomTargetPoint();
+        SetPath();
+        _randomMoveTimer = 0;
+    }
+
+    protected void PickRandomTargetPoint() => TargetPoint = PickRandomPointInRoom();
+
+    protected Point PickRandomPointInRoom()
     {
         Point randomPoint;
 
-        _cellGameObjects = Grid.GetCellsInRadius(GameObject.Transform.Position, SearchDistancePx, MinimumRandomMoveDistance);
-        
-        if (_cellGameObjects.Count > 0 )
-            randomPoint = _cellGameObjects[_rnd.Next(0, _cellGameObjects.Count - 1)].Transform.GridPosition;
-        else
-            randomPoint = _cellsInCollisionNr[_rnd.Next(0, _cellsInCollisionNr.Count - 1)].Transform.GridPosition;
+        List<GameObject> list = GridManager.Instance.CurrentGrid.GetCellsInRoom(GameObject.Transform.GridPosition);
+        randomPoint = list[_rnd.Next(0, list.Count - 1)].Transform.GridPosition;
 
-        GameObject currentCellGo = Grid.GetCellGameObjectFromPoint(randomPoint);
-        Cell cell = currentCellGo.GetComponent<Cell>();
-        if (CollisionNr != cell.CollisionNr)
-        {
-            randomPoint = _cellsInCollisionNr[_rnd.Next(0, _cellsInCollisionNr.Count - 1)].Transform.GridPosition;
-        }
-
-        TargetPoint = randomPoint;
+        return randomPoint;
     }
 
     private void CheckLayerDepth()

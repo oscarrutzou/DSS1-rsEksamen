@@ -5,21 +5,19 @@ namespace DoctorsDungeon.GameManagement;
 // Oscar
 public class Camera
 {
-    public Vector2 Position;           // The camera's position in the game world.
-    public Vector2 origin;
-    public float zoom;                 // The zoom level of the camera.
+    public Vector2 Position { get; set; }           // The camera's position in the game world.
+    public Vector2 Origin;
+    public float Zoom;                 // The zoom level of the camera.
     private Matrix _transformMatrix;    // A transformation matrix used for rendering.
-    public bool moveable;
 
     private float _maxZoom;
 
-    public Camera(bool moveable)
+    public Camera()
     {
         Position = Vector2.Zero;   // Initialize the camera's position at the origin.
-        zoom = 1f;                 // Initialize the camera's zoom level to 1f
+        Zoom = 1f;                 // Initialize the camera's zoom level to 1f
         _maxZoom = 2f;              // Any higher will remove sprites since it would be inside the camera
         SetOriginCenter();
-        this.moveable = moveable;
     }
 
     /// <summary>
@@ -27,7 +25,7 @@ public class Camera
     /// </summary>
     public void SetOriginCenter()
     {
-        origin = new Vector2(GameWorld.Instance.GfxManager.PreferredBackBufferWidth / 2, GameWorld.Instance.GfxManager.PreferredBackBufferHeight / 2);
+        Origin = new Vector2(GameWorld.Instance.GfxManager.PreferredBackBufferWidth / 2, GameWorld.Instance.GfxManager.PreferredBackBufferHeight / 2);
     }
 
     /// <summary>
@@ -98,10 +96,10 @@ public class Camera
     /// <param name="amount"></param>
     public void ChangeZoom(float amount)
     {
-        zoom += amount;
+        Zoom += amount;
 
-        if (zoom < 1f) zoom = 1f; //Cant get under 1 zoom
-        else if (zoom > _maxZoom) zoom = _maxZoom;
+        if (Zoom < 1f) Zoom = 1f; //Cant get under 1 zoom
+        else if (Zoom > _maxZoom) Zoom = _maxZoom;
     }
 
     public Matrix GetMatrix()
@@ -113,12 +111,12 @@ public class Camera
         Matrix translationMatrix = Matrix.CreateTranslation(new Vector3(-Position.X, -Position.Y, 0));
 
         // 2. Scale the view based on the camera's zoom level.
-        Matrix scaleMatrix = Matrix.CreateScale(zoom);
+        Matrix scaleMatrix = Matrix.CreateScale(Zoom);
 
         // 3. Translate the view to center it on the screen.
         // This assumes the camera view is centered within the game window.
         // The following lines center the view using the screen's dimensions.
-        Matrix centerMatrix = Matrix.CreateTranslation(new Vector3(origin.X, origin.Y, 0));
+        Matrix centerMatrix = Matrix.CreateTranslation(new Vector3(Origin.X, Origin.Y, 0));
 
         // Combine the matrices in the correct order to create the final transformation matrix.
         _transformMatrix = translationMatrix * scaleMatrix * centerMatrix;

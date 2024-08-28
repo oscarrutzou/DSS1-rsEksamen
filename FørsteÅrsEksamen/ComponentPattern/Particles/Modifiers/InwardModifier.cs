@@ -27,6 +27,7 @@ namespace DoctorsDungeon.ComponentPattern.Particles.Modifiers
             
             Vector2 temp = targetPos - p.Position;
             Vector2 tempAbs = new Vector2(MathF.Abs(temp.X), MathF.Abs(temp.Y));
+
             if (tempAbs.X < _minDistanceBeforeDelete && tempAbs.Y < _minDistanceBeforeDelete) 
             {
                 p.Age = p.MaxAge;
@@ -35,7 +36,15 @@ namespace DoctorsDungeon.ComponentPattern.Particles.Modifiers
             if (temp != Vector2.Zero)
             {
                 temp.Normalize();
-                p.VelocityZ = new Vector3(temp, 0) * v;
+
+                float z = 0;
+                if (p.VelocityZ != Vector3.Zero)
+                {
+                    Vector3 normalizedVel = Vector3.Normalize(p.VelocityZ);
+                    z = normalizedVel.Z;
+                }
+
+                p.VelocityZ = new Vector3(temp, z) * v;
             }
 
             // Growing it in size (this was for a emitter that made 10.000 per sec)

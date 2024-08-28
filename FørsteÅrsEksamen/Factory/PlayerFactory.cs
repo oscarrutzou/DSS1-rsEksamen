@@ -1,4 +1,5 @@
 ﻿using DoctorsDungeon.ComponentPattern;
+using DoctorsDungeon.ComponentPattern.Effects;
 using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using DoctorsDungeon.ComponentPattern.Weapons;
 using DoctorsDungeon.ComponentPattern.WorldObjects;
