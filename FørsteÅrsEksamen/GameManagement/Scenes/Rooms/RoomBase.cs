@@ -200,10 +200,12 @@ public abstract class RoomBase : Scene
 
         InputHandler.Instance.AddKeyButtonDownCommand(Keys.E, new CustomCmd(_player.UseItem));
 
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, new CustomCmd(_player.ResetDash));
+
         // For debugging
         if (!GameWorld.DebugAndCheats) return;
 
-        InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, new CustomCmd(_player.Attack));
+        //InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, new CustomCmd(_player.Attack));
         InputHandler.Instance.AddKeyButtonDownCommand(Keys.Enter, new CustomCmd(ChangeScene));
         InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DB.Instance.SaveGrid(GridManager.Instance.CurrentGrid); }));
 

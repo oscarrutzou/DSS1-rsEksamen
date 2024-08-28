@@ -161,6 +161,18 @@ public abstract class Player : Character
         TryMoveInBothDirections();
 
         UpdatePositionAndNotify();
+
+        if (CanDash && !Dash)
+        {
+            _dashTimer += GameWorld.DeltaTime;
+        }
+    }
+
+
+    public void ResetDash()
+    {
+        if (_dashTimer < _dashCooldown) return;
+        Dash = true;
     }
 
     public override void Draw(SpriteBatch spriteBatch)
@@ -180,9 +192,19 @@ public abstract class Player : Character
         Direction = velocity;
     }
 
+    public bool CanDash = true;
+    public float DashSpeedMultipler = 100;
+    public bool Dash = false;
+
+    private double _dashTimer, _dashCooldown = 1f;
+
     private void TryMoveInBothDirections()
     {
         velocity *= Speed * (float)GameWorld.DeltaTime;
+        if (CanDash && Dash)
+        {
+            velocity *= DashSpeedMultipler;
+        }
         // Separate the movement into X and Y components
         Vector2 xMovement = new Vector2(velocity.X, 0);
         Vector2 yMovement = new Vector2(0, velocity.Y);
@@ -203,9 +225,12 @@ public abstract class Player : Character
             previousPosition = GameObject.Transform.Position;
             hasMoved = true;
         }
-        //hasMoved = true;
 
-        //GameObject.Transform.Translate(velocity);
+        if (hasMoved && CanDash && Dash)
+        {
+            Dash = false;
+            _dashTimer = 0;
+        }
 
         RotateCharacterOnMove(hasMoved);
     }
