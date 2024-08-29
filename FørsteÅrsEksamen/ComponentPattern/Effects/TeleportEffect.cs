@@ -13,7 +13,7 @@ namespace DoctorsDungeon.ComponentPattern.Effects
         private float _dir;
         private float _startDir;
         private bool _stoppedTeleport;
-        public float SpawnSpeed = 0.5f;
+        public float SpawnSpeed = 2f;
         public bool StartFromTop = false;
         public Action OnStopTeleport;
         private bool _playEffect = false;

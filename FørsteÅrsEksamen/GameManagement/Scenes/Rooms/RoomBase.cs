@@ -200,7 +200,7 @@ public abstract class RoomBase : Scene
 
         InputHandler.Instance.AddKeyButtonDownCommand(Keys.E, new CustomCmd(_player.UseItem));
 
-        InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, new CustomCmd(_player.ResetDash));
+        InputHandler.Instance.AddKeyUpdateCommand(Keys.Space, new CustomCmd(_player.UpdateDash));
 
         // For debugging
         if (!GameWorld.DebugAndCheats) return;

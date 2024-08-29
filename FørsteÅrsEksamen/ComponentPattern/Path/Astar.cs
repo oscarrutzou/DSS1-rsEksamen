@@ -39,14 +39,17 @@ public class Astar
 
     public List<GameObject> FindPath(Point start, Point goal)
     {
-        // Maybe check if the found path is the same as any of the others here.
-        //Point newPoint = GetNewPointIfOcupated();
-        //if (newPoint != new Point(-1, -1))
-        //{
-        //    goal = newPoint;
-        //}
+        // Shouldnt happen but still keep an eye out
+        if (_cells == null || _cells.Count == 0) return null;
 
+        // Check if the found path is the same as any of the others here.
+        Point newPoint = GetNewPointIfOcupated();
+        if (newPoint != new Point(-1, -1))
+        {
+            goal = newPoint;
+        }
         this._start = start;
+
         ResetCells(); // Gets the Cells ready
 
         _open = new HashSet<GameObject>(); // Cells to check

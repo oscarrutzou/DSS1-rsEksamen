@@ -82,8 +82,11 @@ public abstract class Player : Character
     {
         base.Update();
 
-        if (State != CharacterState.Dead)
+        // Checks dash and dashes the direction if it can
+        if (State != CharacterState.Dead && !CheckDash())
+        {
             CheckForMovement();
+        }
 
         Weapon?.MoveWeaponAndAngle();
 
@@ -106,6 +109,8 @@ public abstract class Player : Character
                 ChangeScene();
                 break;
         }
+
+        if (totalMovementInput != Vector2.Zero) _previousTotalMovementInput = totalMovementInput;
 
         totalMovementInput = Vector2.Zero;
     }
@@ -162,19 +167,143 @@ public abstract class Player : Character
 
         UpdatePositionAndNotify();
 
-        if (CanDash && !Dash)
+
+    }
+
+    public bool CanDash = true;
+    public float DashMaxMovePx = 200;
+    public bool Dash = false;
+
+    private double _dashTimer, _dashCooldown = 1f;
+
+    private Vector2 _previousTotalMovementInput;
+
+    // Now just need to make player locked into the dash
+    // it will give health inmum
+    /* Also make the player lerp from the start to end pos
+     * Make the lerp based on how long the distance moved is compared to the maxDistance
+     */
+
+    private bool CheckDash()
+    {
+        if (!CanDash) return false;
+
+        if (!Dash)
         {
             _dashTimer += GameWorld.DeltaTime;
+            return false;
+        }
+
+        Vector2 input;
+        if (totalMovementInput == Vector2.Zero)
+        {
+            // Check previous movement input.
+            if (_previousTotalMovementInput != Vector2.Zero)
+            {
+                input = _previousTotalMovementInput;
+            }
+            else
+            {
+                input = new Vector2(0, 1); // Sets the default direction to right, if none of the buttons have been pressed
+            }
+        }
+        else
+        {
+            // Use total movement input
+            input = totalMovementInput;
+        }
+
+        // If dashed true
+        if (CheckDashDirection(input))
+        {
+            // Resets dash
+            Dash = false;
+            _dashTimer = 0;
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
-
-    public void ResetDash()
+    public void UpdateDash()
     {
-        if (_dashTimer < _dashCooldown) return;
-        Dash = true;
+        Dash = _dashTimer >= _dashCooldown;
     }
 
+    private bool CheckDashDirection(Vector2 inputDirection)
+    {
+        // Separate the movement into X and Y components
+        Vector2 xMovement = new Vector2(inputDirection.X, 0);
+        Vector2 yMovement = new Vector2(0, inputDirection.Y);
+
+        bool hasMoved = false;
+
+        //Try moving along the X axis
+        if (xMovement.X != 0f)
+        {
+            // Update the previous position after a successful move
+            if (TryDashMove(xMovement))
+            {
+                hasMoved = true;
+            }
+        }
+
+        // Try moving along the Y axis
+        if (yMovement.Y != 0f)
+        {
+            // Update the previous position after a successful move
+            if (TryDashMove(yMovement))
+            {
+                hasMoved = true;
+            }
+        }
+
+        RotateCharacterOnMove(hasMoved);
+
+        return hasMoved;
+    }
+    private bool TryDashMove(Vector2 inputDirection)
+    {
+        // Get the CollisionBox
+        Rectangle collisionBox = movementCollider.CollisionBox;
+
+        // Check each corner of the CollisionBox
+        Vector2[] corners = new Vector2[]
+        {
+            new(collisionBox.Left, collisionBox.Top),
+            new(collisionBox.Right, collisionBox.Top),
+            new(collisionBox.Right, collisionBox.Bottom),
+            new(collisionBox.Left, collisionBox.Bottom)
+        };
+
+        float distance = DashMaxMovePx;
+
+        foreach (Vector2 corner in corners)
+        { 
+            // Find max distance for each corner,
+            // the min distance is the final movement
+            float maxCornerDashDistance = FindMaxDistance(corner, inputDirection, DashMaxMovePx);
+            if (maxCornerDashDistance > 0f)
+            {
+                // You cant move in that direction
+                if (distance > maxCornerDashDistance)
+                {
+                    distance = maxCornerDashDistance; // Set the max distance it moves to the smallest calse
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        // If all corners are in valid cells, then move the correct distance
+        TranslateMovement(inputDirection * distance);
+
+        return true;
+    }
     public override void Draw(SpriteBatch spriteBatch)
     {
         base.Draw(spriteBatch);
@@ -192,19 +321,10 @@ public abstract class Player : Character
         Direction = velocity;
     }
 
-    public bool CanDash = true;
-    public float DashSpeedMultipler = 100;
-    public bool Dash = false;
-
-    private double _dashTimer, _dashCooldown = 1f;
-
     private void TryMoveInBothDirections()
     {
         velocity *= Speed * (float)GameWorld.DeltaTime;
-        if (CanDash && Dash)
-        {
-            velocity *= DashSpeedMultipler;
-        }
+
         // Separate the movement into X and Y components
         Vector2 xMovement = new Vector2(velocity.X, 0);
         Vector2 yMovement = new Vector2(0, velocity.Y);
@@ -226,15 +346,8 @@ public abstract class Player : Character
             hasMoved = true;
         }
 
-        if (hasMoved && CanDash && Dash)
-        {
-            Dash = false;
-            _dashTimer = 0;
-        }
-
         RotateCharacterOnMove(hasMoved);
     }
-    
 
     private void UpdatePositionAndNotify()
     {
@@ -248,6 +361,78 @@ public abstract class Player : Character
         CollisionNr = cellUnderPlayer.CollisionNr;
 
         GridManager.Instance.AddVisitedRoomNumbers(cellUnderPlayer.RoomNr);
+    }
+
+    /// <summary>
+    /// A raycast approach
+    /// </summary>
+    /// <param name="direction"></param>
+    /// <param name="maxDistance"></param>
+    /// <returns></returns>
+    private float CheckDistanceToObstacle(Vector2 direction, float maxDistance)
+    {
+        Vector2 currentPosition = GameObject.Transform.Position;
+        Vector2 step = direction * Speed * (float)GameWorld.DeltaTime; 
+        float distance = 0f;
+
+        // First check max distance, then half and make 
+
+        while (distance < maxDistance)
+        {
+            currentPosition += step;
+            distance += step.Length();
+
+            // Check for collision at the new position
+            if (!IsPositionWalkable(currentPosition))
+            {
+                return distance;
+            }
+        }
+
+        return maxDistance;
+    }
+
+
+
+
+    /// <summary>
+    /// Binary search to find the max distance. Only on player dash.
+    /// </summary>
+    /// <param name="direction"></param>
+    /// <param name="maxDistance"></param>
+    /// <param name="minStepDistance"></param>
+    /// <returns></returns>
+    private float FindMaxDistance(Vector2 startPos, Vector2 direction, float maxDistance, float minStepDistance = 10)
+    {
+        float low = 0f;
+        float high = maxDistance;
+        float mid = 0f;
+
+        // Checks if the max Distance is already the max direction
+        Vector2 maxDistancePos = startPos + direction * maxDistance;
+        if (IsPositionWalkable(maxDistancePos)) return maxDistance;
+
+        while (high - low > minStepDistance)
+        {
+            mid = (low + high) / 2;
+            Vector2 testPosition = startPos + direction * mid;
+
+            if (IsPositionWalkable(testPosition))
+            {
+                low = mid; // No collision, try further
+            }
+            else
+            {
+                high = mid; // Collision, try closer
+            }
+        }
+
+        return low;
+    }
+    private bool IsPositionWalkable(Vector2 position)
+    {
+        GameObject gridCell = GridManager.Instance.GetCellAtPos(position);
+        return gridCell != null && gridCell.GetComponent<Cell>().CellWalkableType != CellWalkableType.NotValid;
     }
 
     private bool TryMove(Vector2 movement)
@@ -269,9 +454,7 @@ public abstract class Player : Character
 
         foreach (Vector2 corner in corners)
         {
-            GameObject gridCell = GridManager.Instance.GetCellAtPos(corner);
-
-            if (gridCell == null || gridCell.GetComponent<Cell>().CellWalkableType == CellWalkableType.NotValid)
+            if (!IsPositionWalkable(corner))
             {
                 // If any corner is in an invalid cell, revert the movement on both player and
                 SetMovement(previousPosition);
