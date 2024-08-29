@@ -9,6 +9,7 @@ using DoctorsDungeon.ObserverPattern;
 using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SharpDX.WIC;
 using System;
 using System.Collections.Generic;
 
@@ -27,7 +28,7 @@ public abstract class Player : Character
 
     public Potion ItemInInventory { get; set; }
 
-    private Collider movementCollider;
+    public Collider movementCollider { get; set; }
 
     public WeaponTypes WeaponType; 
     public ClassTypes ClassType;
@@ -83,7 +84,7 @@ public abstract class Player : Character
         base.Update();
 
         // Checks dash and dashes the direction if it can
-        if (State != CharacterState.Dead && !CheckDash())
+        if (State != CharacterState.Dead)
         {
             CheckForMovement();
         }
@@ -97,6 +98,7 @@ public abstract class Player : Character
                 break;
 
             case CharacterState.Moving:
+                if (_isDashing) break;
                 Move(totalMovementInput);
                 break;
 
@@ -113,6 +115,7 @@ public abstract class Player : Character
         if (totalMovementInput != Vector2.Zero) _previousTotalMovementInput = totalMovementInput;
 
         totalMovementInput = Vector2.Zero;
+        Dash = false; // Resets the dash
     }
 
     private void ChangeScene()
@@ -128,6 +131,16 @@ public abstract class Player : Character
 
     private void CheckForMovement()
     {
+        if (CheckDash() || _isDashing) // If has begun dash or in the middle of dash.
+        {
+            SetState(CharacterState.Moving); // Maybe play the move 
+            if (_isDashing)
+            {
+                UpdateIsDashingPosition();
+            }
+            return;
+        }
+
         if (totalMovementInput != Vector2.Zero)
             SetState(CharacterState.Moving);
         else
@@ -166,17 +179,8 @@ public abstract class Player : Character
         TryMoveInBothDirections();
 
         UpdatePositionAndNotify();
-
-
     }
 
-    public bool CanDash = true;
-    public float DashMaxMovePx = 200;
-    public bool Dash = false;
-
-    private double _dashTimer, _dashCooldown = 1f;
-
-    private Vector2 _previousTotalMovementInput;
 
     // Now just need to make player locked into the dash
     // it will give health inmum
@@ -186,11 +190,11 @@ public abstract class Player : Character
 
     private bool CheckDash()
     {
-        if (!CanDash) return false;
+        if (!CanDash || _isDashing) return false;
 
         if (!Dash)
         {
-            _dashTimer += GameWorld.DeltaTime;
+            _dashCooldownTimer += GameWorld.DeltaTime;
             return false;
         }
 
@@ -216,9 +220,8 @@ public abstract class Player : Character
         // If dashed true
         if (CheckDashDirection(input))
         {
-            // Resets dash
-            Dash = false;
-            _dashTimer = 0;
+            _dashTimeToCompleteTimer = 0;
+            _isDashing = true;
             return true;
         }
         else
@@ -226,44 +229,84 @@ public abstract class Player : Character
             return false;
         }
     }
+    public bool CanDash = true;
+    public float DashMaxMovePx = 500;
+    public bool Dash = false;
+    private bool _isDashing;
+    private double _dashCooldownTimer, _dashCooldown = 1f;
+    private double _dashTimeToCompleteTimer, _dashFinalLerpCooldown, _dashTimeToComplete = 0.2f; // The dash time it takes to move to the new position
+
+    private Vector2 _previousTotalMovementInput;
+    private Vector2 _dashMovementInput; // A normalized value
+
+    private Vector2 _finalDashDirection; // So we know which direction and how much we can dash each direction 
+    private Vector2 _dashStartPosition, _finalDashPosition;
+    private void UpdateIsDashingPosition()
+    {
+        //TranslateMovement(inputDirection * distance);
+
+        _dashTimeToCompleteTimer += GameWorld.DeltaTime; // How much
+
+        double normalizedTimeToComplete = _dashTimeToCompleteTimer / _dashFinalLerpCooldown;
+
+        if (normalizedTimeToComplete >= 1f) // We need to stop the lerp a little before, so it dosent get stuck inside stuff
+        {
+            ResetDash();
+            return;
+        }
+
+        // Lerp the current direction with the end position
+        Vector2 lerpDashPosition = Vector2.Lerp(_dashStartPosition, _finalDashPosition, (float)normalizedTimeToComplete);
+        SetMovement(lerpDashPosition);
+        AddRoom();
+    }
+
+    private void ResetDash()
+    {
+        // Resets dash
+        Dash = false;
+        _dashCooldownTimer = 0;
+        _dashTimeToCompleteTimer = 0;
+        _isDashing = false;
+    }
 
     public void UpdateDash()
     {
-        Dash = _dashTimer >= _dashCooldown;
+        Dash = _dashCooldownTimer >= _dashCooldown || _isDashing;
     }
 
     private bool CheckDashDirection(Vector2 inputDirection)
     {
-        // Separate the movement into X and Y components
-        Vector2 xMovement = new Vector2(inputDirection.X, 0);
-        Vector2 yMovement = new Vector2(0, inputDirection.Y);
+        _dashMovementInput = inputDirection;
 
         bool hasMoved = false;
 
-        //Try moving along the X axis
-        if (xMovement.X != 0f)
+        if (TryDashMove(inputDirection))
         {
-            // Update the previous position after a successful move
-            if (TryDashMove(xMovement))
-            {
-                hasMoved = true;
-            }
+            hasMoved = true;
         }
 
-        // Try moving along the Y axis
-        if (yMovement.Y != 0f)
+        if (hasMoved)
         {
-            // Update the previous position after a successful move
-            if (TryDashMove(yMovement))
-            {
-                hasMoved = true;
-            }
+            OnDashMoved();
         }
 
         RotateCharacterOnMove(hasMoved);
 
         return hasMoved;
     }
+
+    private void OnDashMoved()
+    {
+        _dashStartPosition = GameObject.Transform.Position;
+        _finalDashPosition = GameObject.Transform.Position + _finalDashDirection;
+
+        Vector2 positiveDashDirection = new Vector2(Math.Abs(_finalDashDirection.X), Math.Abs(_finalDashDirection.Y));
+
+        float normalizedDifference = positiveDashDirection.Length() / DashMaxMovePx;
+        _dashFinalLerpCooldown = Math.Max(_dashTimeToComplete * normalizedDifference, _dashTimeToComplete / 3); // We dont want the timer to be too fast
+    }
+
     private bool TryDashMove(Vector2 inputDirection)
     {
         // Get the CollisionBox
@@ -284,7 +327,7 @@ public abstract class Player : Character
         { 
             // Find max distance for each corner,
             // the min distance is the final movement
-            float maxCornerDashDistance = FindMaxDistance(corner, inputDirection, DashMaxMovePx);
+            float maxCornerDashDistance = RayCastCheckDistanceToObstacle(corner, inputDirection, DashMaxMovePx, 1);
             if (maxCornerDashDistance > 0f)
             {
                 // You cant move in that direction
@@ -299,11 +342,12 @@ public abstract class Player : Character
             }
         }
 
-        // If all corners are in valid cells, then move the correct distance
-        TranslateMovement(inputDirection * distance);
+        _finalDashDirection = distance * inputDirection;
 
         return true;
     }
+
+
     public override void Draw(SpriteBatch spriteBatch)
     {
         base.Draw(spriteBatch);
@@ -352,7 +396,11 @@ public abstract class Player : Character
     private void UpdatePositionAndNotify()
     {
         SetMovement(GameObject.Transform.Position); // So we set the other gameobjects (Hands, Movement Collider...)
+        AddRoom();
+    }
 
+    private void AddRoom()
+    {
         // Updates the grid position
         GameObject cellGoUnderPlayer = GridManager.Instance.GetCellAtPos(GameObject.Transform.Position);
         if (cellGoUnderPlayer == null) return;
@@ -369,30 +417,38 @@ public abstract class Player : Character
     /// <param name="direction"></param>
     /// <param name="maxDistance"></param>
     /// <returns></returns>
-    private float CheckDistanceToObstacle(Vector2 direction, float maxDistance)
+    private float RayCastCheckDistanceToObstacle(Vector2 startPos, Vector2 direction, float maxDistance, float rayCastStep = 10)
     {
-        Vector2 currentPosition = GameObject.Transform.Position;
-        Vector2 step = direction * Speed * (float)GameWorld.DeltaTime; 
+        Vector2 currentPosition = startPos; 
+        float maxDistanceDirection = maxDistance * direction.Length();
+
         float distance = 0f;
+        Vector2 step = new Vector2(rayCastStep * direction.X, rayCastStep * direction.Y);
 
-        // First check max distance, then half and make 
+        // Try first for the max distance
+        Vector2 maxDistancePos = startPos + direction * maxDistance;
+        if (IsPositionWalkable(maxDistancePos)) return maxDistance;
 
-        while (distance < maxDistance)
+        float furthest = 0;
+
+        // Now make the raycast
+        while (distance < maxDistanceDirection)
         {
             currentPosition += step;
-            distance += step.Length();
+            distance += rayCastStep;
 
             // Check for collision at the new position
-            if (!IsPositionWalkable(currentPosition))
+            if (!IsPositionWalkable(currentPosition)) continue;
+
+            if (distance > furthest)
             {
-                return distance;
+                furthest = distance;
             }
         }
 
-        return maxDistance;
+        // Found nothing
+        return furthest;
     }
-
-
 
 
     /// <summary>
@@ -429,10 +485,21 @@ public abstract class Player : Character
 
         return low;
     }
+
     private bool IsPositionWalkable(Vector2 position)
     {
         GameObject gridCell = GridManager.Instance.GetCellAtPos(position);
-        return gridCell != null && gridCell.GetComponent<Cell>().CellWalkableType != CellWalkableType.NotValid;
+
+        if (gridCell != null)
+        {
+            Cell cell = gridCell.GetComponent<Cell>();
+            if (cell.CellWalkableType != CellWalkableType.NotValid && cell.CollisionNr != -1)
+            {
+                return true;
+            }
+        }
+     
+        return false;
     }
 
     private bool TryMove(Vector2 movement)

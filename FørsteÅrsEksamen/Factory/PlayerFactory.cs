@@ -101,7 +101,7 @@ public static class PlayerFactory
         go.AddComponent<SpriteRenderer>().SetLayerDepth(LayerDepth.Player);
         Collider collider = go.AddComponent<Collider>();
 
-        collider.SetCollisionBox(14, 15, new Vector2(0, -5));
+        collider.SetCollisionBox(12, 13, new Vector2(0, -5));
         collider.DebugColor = Color.Aqua;
 
         return go;

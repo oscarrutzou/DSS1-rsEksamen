@@ -148,11 +148,13 @@ public class GameWorld : Game
             transformMatrix: UiCam.GetMatrix());
 
         CurrentScene.DrawOnScreen(_spriteBatch);
-        DrawDebugShaderStrings();
+        //DrawDebugShaderStrings();
+        _spriteBatch.End();
 
         if (SingleColorEffect)
             _canvas.Draw(_spriteBatch);
 
+        
         base.Draw(gameTime);
     }
 

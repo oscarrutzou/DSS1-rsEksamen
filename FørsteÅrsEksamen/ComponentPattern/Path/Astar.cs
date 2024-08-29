@@ -186,6 +186,7 @@ public class Astar
         if (!shouldChange) return retPoint;
 
         List<GameObject> targetPointNeighbors = GetNeighbors(_thisEnemy.TargetPoint);
+        if (targetPointNeighbors.Count == 0) return retPoint; // Cant find new point
 
         foreach (GameObject neighborGo in targetPointNeighbors)
         {
@@ -203,6 +204,8 @@ public class Astar
 
             if (!cellBeingUsed) availableTargets.Add(neighborGo);
         }
+
+        if (availableTargets.Count == 0) return retPoint;
 
         GameObject closestTarget = null;
         // To select one of the targets, to spread out the enemies. Dosent take into account the classes

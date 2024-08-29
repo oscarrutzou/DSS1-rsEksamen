@@ -320,6 +320,38 @@ public abstract class RoomBase : Scene
         }
         startPos += offset;
         DrawString(spriteBatch, $"PlayerPos {PlayerGo.Transform.Position}", startPos);
+        startPos += offset;
+        DrawString(spriteBatch, $"Player GirdPos: {PlayerGo.Transform.GridPosition}", startPos);
+
+        //foreach (Vector2 retanglePos in PlayerGo.GetComponent<Collider>().CollisionBox
+
+        if (_player.movementCollider != null)
+        {
+            Rectangle collisionBox = _player.movementCollider.CollisionBox;
+            // Check each corner of the CollisionBox
+            Vector2[] corners = new Vector2[]
+            {
+            new(collisionBox.Left, collisionBox.Top),
+            new(collisionBox.Right, collisionBox.Top),
+            new(collisionBox.Right, collisionBox.Bottom),
+            new(collisionBox.Left, collisionBox.Bottom)
+            };
+
+            for (int i = 0; i < corners.Length; i++)
+            {
+                Cell cellUnderCorner = GridManager.Instance.CurrentGrid.GetCellFromPos(corners[i]);
+
+                bool canWalk = false;
+                if (cellUnderCorner != null && cellUnderCorner.CellWalkableType == CellWalkableType.FullValid)
+                {
+                    canWalk = true;
+                }
+
+                startPos += offset;
+                DrawString(spriteBatch, $"PlayerMovement CORNER{i + 1} CAN WALK: {canWalk}", startPos);
+            }
+        }
+
 
         startPos += offset;
         DrawString(spriteBatch, $"Player Room Nr {_player.CollisionNr}", startPos);
@@ -342,8 +374,6 @@ public abstract class RoomBase : Scene
         startPos += offset;
         DrawString(spriteBatch, $"player.velocity {_player.velocity}", startPos);
 
-        startPos += offset;
-        DrawString(spriteBatch, $"Player totalMovementInput: {_player.totalMovementInput.X},{_player.totalMovementInput.Y}", startPos);
     }
 
     protected void DrawString(SpriteBatch spriteBatch, string text, Vector2 position)
