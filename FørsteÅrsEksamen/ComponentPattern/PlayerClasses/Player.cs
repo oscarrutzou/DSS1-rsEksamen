@@ -18,6 +18,7 @@ namespace DoctorsDungeon.ComponentPattern.PlayerClasses;
 // Stefan
 public abstract class Player : Character
 {
+    #region Properties
     public GameObject HandsGo;
     public GameObject MovementColliderGo;
 
@@ -28,7 +29,7 @@ public abstract class Player : Character
 
     public Potion ItemInInventory { get; set; }
 
-    public Collider movementCollider { get; set; }
+    public Collider movementCollider { get; set; } 
 
     public WeaponTypes WeaponType; 
     public ClassTypes ClassType;
@@ -45,13 +46,28 @@ public abstract class Player : Character
         SoundNames.PlayerHit6,
         SoundNames.PlayerHit7,
         SoundNames.PlayerHit8,
-    };  
+    };
+
+    #region Dash
+    public bool CanDash = true;
+    public float DashMaxMovePx = 300;
+    public bool Dash = false;
+    private bool _isDashing;
+    private double _dashCooldownTimer, _dashCooldown = 2f;
+    private double _dashTimeToCompleteTimer, _dashFinalLerpCooldown, _dashTimeToComplete = 0.1f; // The dash time it takes to move to the new position
+
+    private Vector2 _previousTotalMovementInput;
+    private Vector2 _dashMovementInput; // A normalized value
+
+    private Vector2 _finalDashDirection; // So we know which direction and how much we can dash each direction 
+    private Vector2 _dashStartPosition, _finalDashPosition;
+    #endregion
+    #endregion
 
     public Player(GameObject gameObject) : base(gameObject)
     {
         Speed = 150;
     }
-
     public Player(GameObject gameObject, GameObject handsGo, GameObject movementColliderGo) : base(gameObject)
     {
         Speed = 150;
@@ -148,7 +164,6 @@ public abstract class Player : Character
     }
 
     #region Movement
-
     public void AddInput(Vector2 input) // 0, 1 / 0, -1 / 1,0 / -1, 0
     {
         // Ensure the input vector is not a zero vector, will cause Nan/Nan in the vector
@@ -179,178 +194,6 @@ public abstract class Player : Character
         TryMoveInBothDirections();
 
         UpdatePositionAndNotify();
-    }
-
-
-    // Now just need to make player locked into the dash
-    // it will give health inmum
-    /* Also make the player lerp from the start to end pos
-     * Make the lerp based on how long the distance moved is compared to the maxDistance
-     */
-
-    private bool CheckDash()
-    {
-        if (!CanDash || _isDashing) return false;
-
-        if (!Dash)
-        {
-            _dashCooldownTimer += GameWorld.DeltaTime;
-            return false;
-        }
-
-        Vector2 input;
-        if (totalMovementInput == Vector2.Zero)
-        {
-            // Check previous movement input.
-            if (_previousTotalMovementInput != Vector2.Zero)
-            {
-                input = _previousTotalMovementInput;
-            }
-            else
-            {
-                input = new Vector2(0, 1); // Sets the default direction to right, if none of the buttons have been pressed
-            }
-        }
-        else
-        {
-            // Use total movement input
-            input = totalMovementInput;
-        }
-
-        // If dashed true
-        if (CheckDashDirection(input))
-        {
-            _dashTimeToCompleteTimer = 0;
-            _isDashing = true;
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-    public bool CanDash = true;
-    public float DashMaxMovePx = 500;
-    public bool Dash = false;
-    private bool _isDashing;
-    private double _dashCooldownTimer, _dashCooldown = 1f;
-    private double _dashTimeToCompleteTimer, _dashFinalLerpCooldown, _dashTimeToComplete = 0.2f; // The dash time it takes to move to the new position
-
-    private Vector2 _previousTotalMovementInput;
-    private Vector2 _dashMovementInput; // A normalized value
-
-    private Vector2 _finalDashDirection; // So we know which direction and how much we can dash each direction 
-    private Vector2 _dashStartPosition, _finalDashPosition;
-    private void UpdateIsDashingPosition()
-    {
-        //TranslateMovement(inputDirection * distance);
-
-        _dashTimeToCompleteTimer += GameWorld.DeltaTime; // How much
-
-        double normalizedTimeToComplete = _dashTimeToCompleteTimer / _dashFinalLerpCooldown;
-
-        if (normalizedTimeToComplete >= 1f) // We need to stop the lerp a little before, so it dosent get stuck inside stuff
-        {
-            ResetDash();
-            return;
-        }
-
-        // Lerp the current direction with the end position
-        Vector2 lerpDashPosition = Vector2.Lerp(_dashStartPosition, _finalDashPosition, (float)normalizedTimeToComplete);
-        SetMovement(lerpDashPosition);
-        AddRoom();
-    }
-
-    private void ResetDash()
-    {
-        // Resets dash
-        Dash = false;
-        _dashCooldownTimer = 0;
-        _dashTimeToCompleteTimer = 0;
-        _isDashing = false;
-    }
-
-    public void UpdateDash()
-    {
-        Dash = _dashCooldownTimer >= _dashCooldown || _isDashing;
-    }
-
-    private bool CheckDashDirection(Vector2 inputDirection)
-    {
-        _dashMovementInput = inputDirection;
-
-        bool hasMoved = false;
-
-        if (TryDashMove(inputDirection))
-        {
-            hasMoved = true;
-        }
-
-        if (hasMoved)
-        {
-            OnDashMoved();
-        }
-
-        RotateCharacterOnMove(hasMoved);
-
-        return hasMoved;
-    }
-
-    private void OnDashMoved()
-    {
-        _dashStartPosition = GameObject.Transform.Position;
-        _finalDashPosition = GameObject.Transform.Position + _finalDashDirection;
-
-        Vector2 positiveDashDirection = new Vector2(Math.Abs(_finalDashDirection.X), Math.Abs(_finalDashDirection.Y));
-
-        float normalizedDifference = positiveDashDirection.Length() / DashMaxMovePx;
-        _dashFinalLerpCooldown = Math.Max(_dashTimeToComplete * normalizedDifference, _dashTimeToComplete / 3); // We dont want the timer to be too fast
-    }
-
-    private bool TryDashMove(Vector2 inputDirection)
-    {
-        // Get the CollisionBox
-        Rectangle collisionBox = movementCollider.CollisionBox;
-
-        // Check each corner of the CollisionBox
-        Vector2[] corners = new Vector2[]
-        {
-            new(collisionBox.Left, collisionBox.Top),
-            new(collisionBox.Right, collisionBox.Top),
-            new(collisionBox.Right, collisionBox.Bottom),
-            new(collisionBox.Left, collisionBox.Bottom)
-        };
-
-        float distance = DashMaxMovePx;
-
-        foreach (Vector2 corner in corners)
-        { 
-            // Find max distance for each corner,
-            // the min distance is the final movement
-            float maxCornerDashDistance = RayCastCheckDistanceToObstacle(corner, inputDirection, DashMaxMovePx, 1);
-            if (maxCornerDashDistance > 0f)
-            {
-                // You cant move in that direction
-                if (distance > maxCornerDashDistance)
-                {
-                    distance = maxCornerDashDistance; // Set the max distance it moves to the smallest calse
-                }
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        _finalDashDirection = distance * inputDirection;
-
-        return true;
-    }
-
-
-    public override void Draw(SpriteBatch spriteBatch)
-    {
-        base.Draw(spriteBatch);
     }
 
     private void InitializeMovement()
@@ -409,81 +252,6 @@ public abstract class Player : Character
         CollisionNr = cellUnderPlayer.CollisionNr;
 
         GridManager.Instance.AddVisitedRoomNumbers(cellUnderPlayer.RoomNr);
-    }
-
-    /// <summary>
-    /// A raycast approach
-    /// </summary>
-    /// <param name="direction"></param>
-    /// <param name="maxDistance"></param>
-    /// <returns></returns>
-    private float RayCastCheckDistanceToObstacle(Vector2 startPos, Vector2 direction, float maxDistance, float rayCastStep = 10)
-    {
-        Vector2 currentPosition = startPos; 
-        float maxDistanceDirection = maxDistance * direction.Length();
-
-        float distance = 0f;
-        Vector2 step = new Vector2(rayCastStep * direction.X, rayCastStep * direction.Y);
-
-        // Try first for the max distance
-        Vector2 maxDistancePos = startPos + direction * maxDistance;
-        if (IsPositionWalkable(maxDistancePos)) return maxDistance;
-
-        float furthest = 0;
-
-        // Now make the raycast
-        while (distance < maxDistanceDirection)
-        {
-            currentPosition += step;
-            distance += rayCastStep;
-
-            // Check for collision at the new position
-            if (!IsPositionWalkable(currentPosition)) continue;
-
-            if (distance > furthest)
-            {
-                furthest = distance;
-            }
-        }
-
-        // Found nothing
-        return furthest;
-    }
-
-
-    /// <summary>
-    /// Binary search to find the max distance. Only on player dash.
-    /// </summary>
-    /// <param name="direction"></param>
-    /// <param name="maxDistance"></param>
-    /// <param name="minStepDistance"></param>
-    /// <returns></returns>
-    private float FindMaxDistance(Vector2 startPos, Vector2 direction, float maxDistance, float minStepDistance = 10)
-    {
-        float low = 0f;
-        float high = maxDistance;
-        float mid = 0f;
-
-        // Checks if the max Distance is already the max direction
-        Vector2 maxDistancePos = startPos + direction * maxDistance;
-        if (IsPositionWalkable(maxDistancePos)) return maxDistance;
-
-        while (high - low > minStepDistance)
-        {
-            mid = (low + high) / 2;
-            Vector2 testPosition = startPos + direction * mid;
-
-            if (IsPositionWalkable(testPosition))
-            {
-                low = mid; // No collision, try further
-            }
-            else
-            {
-                high = mid; // Collision, try closer
-            }
-        }
-
-        return low;
     }
 
     private bool IsPositionWalkable(Vector2 position)
@@ -558,10 +326,264 @@ public abstract class Player : Character
         GameWorld.Instance.WorldCam.Position = GameObject.Transform.Position; //Sets the new position of the world cam
     }
 
+    
     #endregion Movement
+    
+    #region Dash
+    // Now just need to make player locked into the dash
+    // it will give health inmum
+    /* Also make the player lerp from the start to end pos
+     * Make the lerp based on how long the distance moved is compared to the maxDistance
+     */
 
+    private bool CheckDash()
+    {
+        if (!CanDash || _isDashing) return false;
+
+        if (!Dash)
+        {
+            _dashCooldownTimer += GameWorld.DeltaTime;
+            return false;
+        }
+
+        Vector2 input;
+        if (totalMovementInput == Vector2.Zero)
+        {
+            // Check previous movement input.
+            if (_previousTotalMovementInput != Vector2.Zero)
+            {
+                input = _previousTotalMovementInput;
+            }
+            else
+            {
+                input = new Vector2(0, 1); // Sets the default direction to right, if none of the buttons have been pressed
+            }
+        }
+        else
+        {
+            // Use total movement input
+            input = totalMovementInput;
+        }
+
+        // If dashed true
+        if (CheckDashDirection(input))
+        {
+            _dashTimeToCompleteTimer = 0;
+            _isDashing = true;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    private void UpdateIsDashingPosition()
+    {
+        //TranslateMovement(inputDirection * distance);
+
+        _dashTimeToCompleteTimer += GameWorld.DeltaTime; // How much
+
+        double normalizedTimeToComplete = _dashTimeToCompleteTimer / _dashFinalLerpCooldown;
+
+        if (normalizedTimeToComplete >= 1f) // We need to stop the lerp a little before, so it dosent get stuck inside stuff
+        {
+            ResetDash();
+            return;
+        }
+
+        Health.CanTakeDamage = false;
+        // Lerp the current direction with the end position
+        Vector2 lerpDashPosition = Vector2.Lerp(_dashStartPosition, _finalDashPosition, (float)normalizedTimeToComplete);
+        SetMovement(lerpDashPosition);
+        AddRoom();
+    }
+
+
+    private void ResetDash()
+    {
+        // Resets dash
+        Dash = false;
+        _dashCooldownTimer = 0;
+        _dashTimeToCompleteTimer = 0;
+        _isDashing = false;
+        Health.CanTakeDamage = true;
+    }
+
+    
+
+    public void UpdateDash()
+    {
+        Dash = _dashCooldownTimer >= _dashCooldown || _isDashing;
+    }
+
+    private bool CheckDashDirection(Vector2 inputDirection)
+    {
+        _dashMovementInput = inputDirection;
+
+        bool hasMoved = false;
+
+        float dashDistance = RayCastCheckDistanceToObstacle(movementCollider.CollisionBox, inputDirection, DashMaxMovePx, 1);
+
+        if (dashDistance > 0f) // The collider can move
+        {
+            hasMoved = true;
+            _finalDashDirection = dashDistance * inputDirection;
+            OnDashMoved();
+        }
+
+        RotateCharacterOnMove(hasMoved);
+
+        return hasMoved;
+    }
+
+    private void OnDashMoved()
+    {
+        _dashStartPosition = GameObject.Transform.Position;
+        _finalDashPosition = GameObject.Transform.Position + _finalDashDirection;
+
+        Vector2 positiveDashDirection = new Vector2(Math.Abs(_finalDashDirection.X), Math.Abs(_finalDashDirection.Y));
+
+        float normalizedDifference = positiveDashDirection.Length() / DashMaxMovePx;
+        _dashFinalLerpCooldown = Math.Max(_dashTimeToComplete * normalizedDifference, _dashTimeToComplete / 3); // We dont want the timer to be too fast
+    }
+
+    /// <summary>
+    /// A raycast approach
+    /// </summary>
+    /// <param name="direction"></param>
+    /// <param name="maxDistance"></param>
+    /// <returns></returns>
+    private float RayCastCheckDistanceToObstacle(Vector2 startPos, Vector2 direction, float maxDistance, float rayCastStep = 10)
+    {
+        Vector2 currentPosition = startPos;
+        float maxDistanceDirection = maxDistance * direction.Length();
+
+        float distance = 0f;
+        Vector2 step = new Vector2(rayCastStep * direction.X, rayCastStep * direction.Y);
+
+        // Try first for the max distance
+        Vector2 maxDistancePos = startPos + direction * maxDistance;
+        if (IsPositionWalkable(maxDistancePos)) return maxDistance;
+
+        float furthest = 0;
+
+        // Now make the raycast
+        while (distance < maxDistanceDirection)
+        {
+            currentPosition += step;
+            distance += rayCastStep;
+
+            // Check for collision at the new position
+            if (!IsPositionWalkable(currentPosition)) continue;
+
+            if (distance > furthest)
+            {
+                furthest = distance;
+            }
+        }
+
+        // Found nothing
+        return furthest;
+    }
+
+    private float RayCastCheckDistanceToObstacle(Rectangle rectangle, Vector2 direction, float maxDistance, float rayCastStep = 10)
+    {
+        float maxDistanceDirection = maxDistance * direction.Length();
+
+        Vector2[] corners = new Vector2[]
+        {
+            new(rectangle.Left, rectangle.Top),
+            new(rectangle.Right, rectangle.Top),
+            new(rectangle.Right, rectangle.Bottom),
+            new(rectangle.Left, rectangle.Bottom)
+        };
+
+        float distance = 0f;
+        float furthest = 0f;
+        Vector2 step = new Vector2(rayCastStep * direction.X, rayCastStep * direction.Y);
+
+        // Try first for the max distance
+
+        // Now make the raycast
+        while (distance < maxDistanceDirection)
+        {
+            //currentPosition += step;
+            distance += rayCastStep;
+
+            // Adds the step to the corners too.
+            for (int i = 0; i < corners.Length; i++)
+            {
+                corners[i] += step;
+            }
+
+            bool anyIsNotWalkable = false;
+
+            // Check each corner of the CollisionBox
+            foreach (Vector2 corner in corners)
+            {
+                if (!IsPositionWalkable(corner))
+                {
+                    anyIsNotWalkable = true;
+                    break;
+                }
+            }
+
+            if (anyIsNotWalkable)
+            {
+                continue;
+            }
+
+            // Have checked all corners, can now check if the distance if bigger than the furthest distance.
+            if (distance > furthest)
+            {
+                furthest = distance;
+                
+                //step = new Vector2(MathF.Max(step.X * 0.5f, minRayCastStep), MathF.Max(step.Y * 0.5f, minRayCastStep));
+            }
+        }
+
+        // Found nothing
+        return furthest;
+    }
+
+    /// <summary>
+    /// Binary search to find the max distance. Only on player dash.
+    /// </summary>
+    /// <param name="direction"></param>
+    /// <param name="maxDistance"></param>
+    /// <param name="minStepDistance"></param>
+    /// <returns></returns>
+    private float FindMaxDistance(Vector2 startPos, Vector2 direction, float maxDistance, float minStepDistance = 10)
+    {
+        float low = 0f;
+        float high = maxDistance;
+        float mid = 0f;
+
+        // Checks if the max Distance is already the max direction
+        Vector2 maxDistancePos = startPos + direction * maxDistance;
+        if (IsPositionWalkable(maxDistancePos)) return maxDistance;
+
+        while (high - low > minStepDistance)
+        {
+            mid = (low + high) / 2;
+            Vector2 testPosition = startPos + direction * mid;
+
+            if (IsPositionWalkable(testPosition))
+            {
+                low = mid; // No collision, try further
+            }
+            else
+            {
+                high = mid; // Collision, try closer
+            }
+        }
+
+        return low;
+    }
+    #endregion
+    
     #region Item
-
     public bool CanPickUpItem(Potion item)
     {
         if (ItemInInventory == null)

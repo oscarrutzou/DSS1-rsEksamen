@@ -269,16 +269,24 @@ public abstract class RoomBase : Scene
         DebugDraw(spriteBatch);
     }
 
-    private void DrawQuest(SpriteBatch spriteBatch)
+    /// <summary>
+    /// Needs to set the QuestText variable
+    /// </summary>
+    protected virtual void SetQuestLogText()
     {
         _aliveEnemies = EnemiesInRoom.Where(x => x.State != CharacterState.Dead).ToList();
 
         int dead = EnemiesInRoom.Count - _aliveEnemies.Count;
         int amountToKill = EnemiesInRoom.Count - dead;
 
-        string text = $"Enemies left {amountToKill}/{EnemiesInRoom.Count}";//
+        QuestText = $"Enemies left {amountToKill}/{EnemiesInRoom.Count}";//
+    }
 
-        Vector2 size = GlobalTextures.DefaultFont.MeasureString(text);
+    protected string QuestText;
+    private void DrawQuest(SpriteBatch spriteBatch)
+    {
+        SetQuestLogText();
+        Vector2 size = GlobalTextures.DefaultFont.MeasureString(QuestText);
         Vector2 textPos = GameWorld.Instance.UiCam.TopRight + new Vector2(-260, 55);
 
         Color questUnderColor = Color.White;
@@ -287,7 +295,7 @@ public abstract class RoomBase : Scene
 
         SpriteRenderer.DrawCenteredSprite(spriteBatch, TextureNames.QuestUnder, textPos, questUnderColor, LayerDepth.Default);
 
-        GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, textPos, text, CurrentTextColor);
+        GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, textPos, QuestText, CurrentTextColor);
     }
 
     private void DrawTimer(SpriteBatch spriteBatch, Vector2 timerPos)

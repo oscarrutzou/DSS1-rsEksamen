@@ -30,10 +30,10 @@ public class GameWorld : Game
     public static Color TextColor { get; private set; } = new Color(250, 249, 246);
     public GraphicsDeviceManager GfxManager { get; private set; } 
     public float AvgFPS { get; private set; }
-    public Dictionary<SceneNames, Scene> Scenes { get; private set; }
-    public Scene CurrentScene { get; private set; } 
+    public Dictionary<SceneNames, Scene> Scenes { get; private set; } 
+    public Scene CurrentScene { get; private set; }  
     public Camera WorldCam { get; private set; } // Follows player
-    public Camera UiCam { get; private set; } //Static on the ui
+    public Camera UiCam { get; private set; } //Static on the ui 
     public SceneNames? NextScene { get; private set; } = null;
     public bool ShowBG { get; set; } = true; // If we should show our background
      

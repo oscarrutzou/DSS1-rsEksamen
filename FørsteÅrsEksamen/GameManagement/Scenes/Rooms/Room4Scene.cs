@@ -55,4 +55,11 @@ public class Room4Scene : RoomBase
         // Should be able to show a name or something, and change the user og the bar
         GameWorld.Instance.Instantiate(barGo);
     }
+
+    protected override void SetQuestLogText()
+    {
+        int amountLeft = 0;
+        if (_miniBossEnemy.State != CharacterState.Dead) amountLeft = 1;
+        QuestText = $"Kill the Shaman Garok {amountLeft} / 1";
+    }
 }

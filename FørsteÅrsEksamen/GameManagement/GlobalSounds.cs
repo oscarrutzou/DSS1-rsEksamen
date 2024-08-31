@@ -94,7 +94,7 @@ public static class GlobalSounds
     private static SoundEffectInstance _instanceGameMusic;
 
     private static Random _rnd = new();
-    public static float MusicVolume = 0.0f;
+    public static float MusicVolume = 0.25f;
     public static float SfxVolume = 0.5f;
     private static bool _musicCountDown;
     private static bool _sfxCountDown;
