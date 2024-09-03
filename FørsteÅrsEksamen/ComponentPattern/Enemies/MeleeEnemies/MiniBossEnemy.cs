@@ -204,6 +204,20 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
         private bool _isSpawning;
         private Vector2 _newSpawnPos;
         private float _weaponAngle;
+        protected override void ChangeWeaponAngleToUser()
+        {
+            if (!_isSpawning) return; 
+
+            // Only change the target direction if we are spawning.
+            if (Weapon.LeftSide)
+            {
+                Weapon.WeaponAngleToUser -= MathHelper.PiOver4;
+            }
+            else
+            {
+                Weapon.WeaponAngleToUser += MathHelper.PiOver4;
+            }
+        }
 
         protected override float GetWeaponAngle()
         {
@@ -264,6 +278,11 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
                 _spawnTimer += GameWorld.DeltaTime;
 
                 SpawnerEmitter();
+            }
+
+            if (_isSpawning)
+            {
+                // Target the 
             }
 
             PlayStartLine();

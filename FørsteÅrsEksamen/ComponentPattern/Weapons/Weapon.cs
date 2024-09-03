@@ -55,7 +55,7 @@ public abstract class Weapon : Component
     public Vector2 StartRelativePos = new (0, 60), StartRelativeOffsetPos = new Vector2(0, -20);
 
     public float WeaponAngleToUser { get; set; }
-    protected bool LeftSide;
+    public bool LeftSide { get; private set; }
     protected double TimeBeforeNewDirection { get; set;}
     protected float animRotation, nextAnimRotation;
     public WeaponAnimTypes NextAnim { get; private set; }
@@ -137,7 +137,6 @@ public abstract class Weapon : Component
     {
         if (Attacking) return;
         if (Animations == null || Animations.Count == 0) return;
-
 
         // If the weapon uses cooldown between attacks, and the 
         if (UseAttackCooldown && AttackTimer < AttackCooldown) return;
@@ -283,8 +282,10 @@ public abstract class Weapon : Component
 
     private void AddLeftOverToAngle(bool leftSide, float leftOver, float rotation)
     {
-        WeaponAngleToUser += leftSide ? (leftOver < 0 ? -rotation / divideBy : leftOver / 2) :
-                            (leftOver < 0 ? rotation / divideBy : -leftOver / 2);
+        
+        WeaponAngleToUser += leftSide 
+            ? (leftOver < 0 ? -rotation / divideBy :  leftOver / 2) 
+            : (leftOver < 0 ?  rotation / divideBy : -leftOver / 2);
     }
 
 

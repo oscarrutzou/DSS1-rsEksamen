@@ -31,6 +31,8 @@ public enum TextureNames
     WoodDagger,
     BoneDagger,
 
+    BoneMagicStaff,
+
     WoodArrow,
 
     HealthPotionFull,
@@ -60,7 +62,7 @@ public static class GlobalTextures
     public static SpriteFont DefaultFont { get; private set; }
     public static SpriteFont BigFont { get; private set; }
 
-    public static Effect SingleColorEffect, GaussianBlurEffect, HighlightsEffect, VignetteEffect, ChromaticAberrationEffect;
+    public static Effect SingleColorEffect, GaussianBlurEffect, HighlightsEffect, VignetteEffect, ChromaticAberrationEffect, BlurEffect;
     public static Effect TeleportEffect;
     public static void LoadContent()
     {
@@ -69,6 +71,7 @@ public static class GlobalTextures
         TeleportEffect = content.Load<Effect>("Shaders\\Teleport");
         SingleColorEffect = content.Load<Effect>("Shaders\\SingleColor");
         GaussianBlurEffect = content.Load<Effect>("Shaders\\GaussianBlur");
+        BlurEffect = content.Load<Effect>("Shaders\\Blur");
         HighlightsEffect = content.Load<Effect>("Shaders\\Highlights");
         VignetteEffect = content.Load<Effect>("Shaders\\Vignette");
         ChromaticAberrationEffect = content.Load<Effect>("Shaders\\ChromaticAberration");
@@ -103,6 +106,7 @@ public static class GlobalTextures
             {TextureNames.BoneSword, content.Load<Texture2D>("World\\Weapons\\Melee Weapons\\BoneSword") },
             {TextureNames.WoodDagger, content.Load<Texture2D>("World\\Weapons\\Melee Weapons\\WoodDagger") },
             {TextureNames.BoneDagger, content.Load<Texture2D>("World\\Weapons\\Melee Weapons\\BoneDagger") },
+            {TextureNames.BoneMagicStaff, content.Load<Texture2D>("World\\Weapons\\Melee Weapons\\BoneMagicStaff") },
 
             {TextureNames.WoodArrow, content.Load<Texture2D>("Test\\WoodArrow") },
             {TextureNames.HealthPotionFull, content.Load<Texture2D>("World\\Objects\\Potions\\RedPotion1") },

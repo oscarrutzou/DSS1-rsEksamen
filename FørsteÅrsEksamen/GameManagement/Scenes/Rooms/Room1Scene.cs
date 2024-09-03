@@ -1,4 +1,6 @@
 ﻿using DoctorsDungeon.ComponentPattern;
+using DoctorsDungeon.ComponentPattern.Particles.Origins;
+using DoctorsDungeon.ComponentPattern.Path;
 using DoctorsDungeon.ComponentPattern.WorldObjects;
 using DoctorsDungeon.Factory;
 using DoctorsDungeon.LiteDB;
@@ -46,6 +48,4 @@ public class Room1Scene : RoomBase
             { new Point(13, 5), TraningDummyFactory.Create()}
         };
     }
-
-
 }
