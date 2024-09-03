@@ -1,18 +1,14 @@
 ﻿using DoctorsDungeon.CommandPattern;
 using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.GUI;
 using DoctorsDungeon.GameManagement;
 using DoctorsDungeon.GameManagement.Scenes;
 using DoctorsDungeon.GameManagement.Scenes.Menus;
 using DoctorsDungeon.GameManagement.Scenes.Rooms;
 using DoctorsDungeon.GameManagement.Scenes.TestScenes;
-using DoctorsDungeon.Other;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace DoctorsDungeon;
@@ -32,7 +28,7 @@ public class GameWorld : Game
     public float AvgFPS { get; private set; }
     public Dictionary<SceneNames, Scene> Scenes { get; private set; } 
     public Scene CurrentScene { get; private set; }  
-    public Camera WorldCam { get; private set; } // Follows player
+    public Camera WorldCam { get; private set; } // Follows player 
     public Camera UiCam { get; private set; } //Static on the ui 
     public SceneNames? NextScene { get; private set; } = null;
     public bool ShowBG { get; set; } = true; // If we should show our background
@@ -62,7 +58,7 @@ public class GameWorld : Game
         GfxManager = new GraphicsDeviceManager(this);
         Content.RootDirectory = "A-Content";
         IsMouseVisible = false;
-        Window.Title = "Doctor's Dungeon";
+        Window.Title = "Shaman’s Sanctum";
     }
 
     protected override void Initialize()
@@ -76,7 +72,7 @@ public class GameWorld : Game
         // Put some of this into threads to load faster in a loading menu, insted of running it here.
         GlobalTextures.LoadContent();
         GlobalSounds.LoadContent();
-        GlobalAnimations.LoadContent();
+        GlobalAnimations.LoadContent(); 
 
         Fullscreen(); // Need to be before the camera
         //SetResolutionSize(800, 800); 
@@ -85,7 +81,6 @@ public class GameWorld : Game
         
         WorldCam = new Camera(); // Camera that follows the player
         UiCam = new Camera();    // Camera that is static
-
 
         GenerateScenes(); // Makes a instance of all the scene we need
 

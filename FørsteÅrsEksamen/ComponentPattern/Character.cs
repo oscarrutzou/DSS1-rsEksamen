@@ -40,13 +40,18 @@ public abstract class Character : Component
 {
     #region Properties
 
-    public static Vector2 SmallSpriteOffset = new(0, -32); // Move the animation up a bit so it looks like it walks correctly.
-    public static Vector2 LargeSpriteOffSet = new(0, -32); // Move the animation up more since its a 64x64 insted of 32x32 canvans, for the Run and Death.
+    public static Vector2 NormalSpriteOffset { get; private set; } = new(0, -32); // Move the animation up a bit so it looks like it walks correctly.
+    /// <summary>
+    /// Can be changed if a custom sprite offset is needed. Otherwise it uses NormalSpriteOffset
+    /// </summary>
+    protected Vector2 SpriteOffset;
     
     public GameObject WeaponGo, HandLeft, HandRight;
     public Vector2 Direction { get; protected set; } 
     public CharacterState State { get; protected set; } = CharacterState.Moving; // We use the method SetState, to we can change the animations and other variables.
     public int CollisionNr { get; set; }
+    public bool CanAttack { get; set; } = true;
+
     protected bool IsEnemy;
     public SpriteRenderer SpriteRenderer { get; protected set; }
     protected Animator Animator;
@@ -122,9 +127,46 @@ public abstract class Character : Component
             Weapon.MoveWeaponAndAngle();
         }
 
+        // If there isnt a custom offset
+        if (SpriteOffset == Vector2.Zero)
+        {
+            SpriteOffset = NormalSpriteOffset;
+        }
+
         MakeEmitters();
     }
 
+    protected abstract float GetWeaponAngle();
+
+    public virtual void MoveWeaponPosAndAngle()
+    {
+        Vector2 userPos = GameObject.Transform.Position;
+
+        if (Weapon.Attacking)
+        {
+            // Lock the offset
+            WeaponGo.Transform.Position = userPos + Weapon.LastOffSetPos;
+            return;
+        }
+
+        Weapon.WeaponAngleToUser = GetWeaponAngle();
+
+        // Adjust the angle to be in the range of 0 to 2π
+        if (Weapon.WeaponAngleToUser < 0)
+        {
+            Weapon.WeaponAngleToUser += 2 * MathHelper.Pi;
+        }
+
+        Weapon.LastOffSetPos = BaseMath.Rotate(Weapon.StartRelativePos, Weapon.WeaponAngleToUser - MathHelper.PiOver2) + Weapon.StartRelativeOffsetPos;
+        WeaponGo.Transform.Position = userPos + Weapon.LastOffSetPos;
+
+        Weapon.SetAngleToCorrectSide(); // Also sets the private variables
+
+        if (IsEnemy && !CanAttack) return;
+
+        Weapon.StartAnimationAngle = Weapon.WeaponAngleToUser;
+        WeaponGo.Transform.Rotation = Weapon.StartAnimationAngle;
+    }
 
     private void SetActionInHealth()
     {
@@ -171,34 +213,27 @@ public abstract class Character : Component
             case CharacterState.Idle:
                 Animator.PlayAnimation(CharacterStateAnimations[State]);
                 SpriteRenderer.SetOriginOffset(new Vector2(16, 16));
-
-                SpriteRenderer.DrawPosOffSet = SmallSpriteOffset;
                 break;
 
             case CharacterState.Moving:
                 Animator.PlayAnimation(CharacterStateAnimations[State]);
-
                 SpriteRenderer.SetOriginOffset(new Vector2(32, 48));
-                SpriteRenderer.DrawPosOffSet = LargeSpriteOffSet;
                 break;
 
             case CharacterState.Attacking:
                 Animator.PlayAnimation(CharacterStateAnimations[CharacterState.Idle]); // Just uses the Idle since we have no attacking animation
                 SpriteRenderer.SetOriginOffset(new Vector2(16, 16));
-
-                SpriteRenderer.DrawPosOffSet = SmallSpriteOffset;
                 break;
 
             case CharacterState.Dead:
                 Animator.PlayAnimation(CharacterStateAnimations[State]);
-
                 SpriteRenderer.SetOriginOffset(new Vector2(32, 48));
-
-
-                SpriteRenderer.DrawPosOffSet = LargeSpriteOffSet;
                 Animator.StopCurrentAnimationAtLastSprite();
                 break;
         }
+
+        SpriteRenderer.DrawPosOffSet = SpriteOffset;
+
     }
 
     /// <summary>

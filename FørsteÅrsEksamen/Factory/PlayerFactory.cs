@@ -10,7 +10,7 @@ namespace DoctorsDungeon.Factory;
 
 public enum ClassTypes
 {
-    Rogue,
+    Assassin,
     Warrior,
     Mage,
 }
@@ -18,9 +18,11 @@ public enum ClassTypes
 // Stefan
 public static class PlayerFactory
 {
+    private static Vector2 _playerScale = new Vector2(4, 4);
     public static GameObject Create(ClassTypes playerClass, WeaponTypes weaponType)
     {
-        GameObject playerGo = new GameObject();
+        GameObject playerGo = new GameObject();        
+        playerGo.Transform.Scale = _playerScale;
 
         playerGo.Type = GameObjectTypes.Player;
 
@@ -46,6 +48,8 @@ public static class PlayerFactory
 
         //Weapon
         GameObject weaponGo = WeaponFactory.Create(weaponType);
+        weaponGo.Transform.Scale = _playerScale;
+
         Weapon weapon = weaponGo.GetComponent<Weapon>();
         weapon.PlayerUser = player;
         weapon.UseAttackCooldown = false;
@@ -75,8 +79,8 @@ public static class PlayerFactory
                 playerGo.AddComponent<Warrior>();
                 break;
 
-            case ClassTypes.Rogue:
-                playerGo.AddComponent<Archer>();
+            case ClassTypes.Assassin:
+                playerGo.AddComponent<Assassin>();
                 break;
 
             case ClassTypes.Mage:

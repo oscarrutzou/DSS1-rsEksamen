@@ -39,7 +39,7 @@ public class WeaponTestScene : Scene
     #region Make
     private void MakePlayer()
     {
-        _playerGo = PlayerFactory.Create(ClassTypes.Rogue, WeaponTypes.Sword);
+        _playerGo = PlayerFactory.Create(ClassTypes.Assassin, WeaponTypes.Sword);
         _player = _playerGo.GetComponent<Player>();
         _weapon = _player.WeaponGo.GetComponent<MeleeWeapon>();
 
@@ -194,7 +194,7 @@ public class WeaponTestScene : Scene
 
     private void SetCommands()
     {
-        //InputHandler.Instance.AddMouseButtonDownCommand(MouseCmdState.Right, new CustomCmd(player.Attack));
+        InputHandler.Instance.AddMouseButtonDownCommand(MouseCmdState.Right, new CustomCmd(_player.Attack));
         InputHandler.Instance.AddKeyButtonDownCommand(Keys.V, new CustomCmd(_emitter.PlayEmitter));
         InputHandler.Instance.AddKeyButtonDownCommand(Keys.B, new CustomCmd(_emitter.StopEmitter));
 

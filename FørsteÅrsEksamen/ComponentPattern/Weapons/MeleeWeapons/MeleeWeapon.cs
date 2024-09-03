@@ -135,7 +135,7 @@ public abstract class MeleeWeapon : Weapon
         AttackedTotalElapsedTime = 0f;
     }
 
-    protected override void SetAttackDirection()
+    public override void SetAttackDirection()
     {
         ResetAttackTimers();
 
@@ -248,6 +248,7 @@ public abstract class MeleeWeapon : Weapon
     /// <param name="amountOfColliders"></param>
     protected void SetStartColliders(Vector2 origin, int width, int height, int heightFromOriginToHandle, int amountOfColliders)
     {
+        WeaponColliders.Clear();
         SpriteRenderer.SetOriginOffset(origin);
         AddWeaponColliders(width, height, heightFromOriginToHandle, amountOfColliders);
     }

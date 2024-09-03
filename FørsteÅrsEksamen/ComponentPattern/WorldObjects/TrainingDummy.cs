@@ -54,8 +54,7 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
         {
             _spriteRenderer.SetLayerDepth(LayerDepth.EnemyUnder);
             _animator.PlayAnimation(AnimNames.SkeletonMageIdle);
-            _spriteRenderer.DrawPosOffSet = Character.SmallSpriteOffset;
-
+            _spriteRenderer.DrawPosOffSet = Character.NormalSpriteOffset;
         }
 
         private void MakeEmitters()

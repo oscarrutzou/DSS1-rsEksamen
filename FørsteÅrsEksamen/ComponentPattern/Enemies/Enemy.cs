@@ -1,4 +1,5 @@
-﻿using DoctorsDungeon.ComponentPattern.Path;
+﻿using DoctorsDungeon.CommandPattern;
+using DoctorsDungeon.ComponentPattern.Path;
 using DoctorsDungeon.ComponentPattern.PlayerClasses;
 using DoctorsDungeon.GameManagement;
 using DoctorsDungeon.Other;
@@ -36,7 +37,6 @@ public abstract class Enemy : Character
     public int CellPlayerMoveBeforeNewTarget = 3;       
 
     public bool HasBeenAwoken;
-    public bool CanAttack = true;
     protected bool TargetPlayer;
     protected int SearchDistancePx = 1000;
     protected int MinimumRandomMoveDistance = 2;
@@ -150,6 +150,17 @@ public abstract class Enemy : Character
         _randomOffsetSeed = (float)_rnd.NextDouble();
     }
     public bool CanMove = true;
+
+    protected override float GetWeaponAngle()
+    {
+        // !CanAttack return 0f
+        if (!CanAttack) return 0;
+
+        Vector2 relativePos = Player.GameObject.Transform.Position - GameObject.Transform.Position;
+        return (float)Math.Atan2(relativePos.Y, relativePos.X);
+    }
+
+
     public override void Update()
     {
         base.Update();

@@ -25,7 +25,7 @@ public class CharacterSelectorMenu : MenuScene
     private List<ClassTypes> _classTypesThatAreDone = new()
     {
         ClassTypes.Warrior,
-        ClassTypes.Rogue,
+        ClassTypes.Assassin,
     };
 
     private int _spaceBetween = 30;
@@ -196,7 +196,7 @@ public class CharacterSelectorMenu : MenuScene
     {
         base.DrawOnScreen(spriteBatch);
 
-        string currentText = $"Currency: {SaveData.Currency}g";
+        string currentText = $"Currency: {SaveData.Currency} Gold";
         Vector2 size = GlobalTextures.DefaultFont.MeasureString(currentText);
         Vector2 pos;
 

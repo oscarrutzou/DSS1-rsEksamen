@@ -77,7 +77,16 @@ public abstract class Player : Character
 
     public override void Awake()
     {
+        //NormalSpriteOffset = new(0, -70);
+
         base.Awake();
+
+        //Collider.SetCollisionBox(15, 23, new Vector2(0, 40));
+
+        //Weapon.StartPosOffset = new(40, 40);
+        //Weapon.StartRelativeOffsetPos = new(0, -40);
+        //Weapon.StartRelativePos = new(0, 80);
+
 
         CharacterHitHurt = _playerHit;
 
@@ -161,6 +170,12 @@ public abstract class Player : Character
             SetState(CharacterState.Moving);
         else
             SetState(CharacterState.Idle);
+    }
+
+    protected override float GetWeaponAngle()
+    {
+        Vector2 mouseInUI = InputHandler.Instance.MouseOnUI;
+        return (float)Math.Atan2(mouseInUI.Y, mouseInUI.X);
     }
 
     #region Movement

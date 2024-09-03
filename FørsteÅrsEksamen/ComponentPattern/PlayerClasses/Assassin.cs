@@ -3,9 +3,9 @@
 namespace DoctorsDungeon.ComponentPattern.PlayerClasses;
 
 // Stefan
-public class Archer : Player
+public class Assassin : Player
 {
-    public Archer(GameObject gameObject) : base(gameObject)
+    public Assassin(GameObject gameObject) : base(gameObject)
     {
         Speed = 425;
     }

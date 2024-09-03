@@ -50,7 +50,7 @@ public class MainMenu : MenuScene
         }
         else
         {
-            DrawMenuText(spriteBatch, "Doctor's Dungeon", TextPos);
+            DrawMenuText(spriteBatch, "Shaman's Sanctum", TextPos);
         }
     }
 }

@@ -95,18 +95,26 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
 
         public MiniBossEnemy(GameObject gameObject) : base(gameObject)
         {
-            CanAttack = false;
+            //CanAttack = false;
         }  
 
         public void SetRoom(RoomBase roomBase) => this._roomBase = roomBase;
 
         public override void Awake()
         {
+            SpriteOffset = new(0, -70);
+
             base.Awake();
+
+            Collider.SetCollisionBox(15, 23, new Vector2(0, 40));
+
+            Weapon.StartPosOffset = new(40, 40);
+            Weapon.StartRelativeOffsetPos = new(0, -40);
+            Weapon.StartRelativePos = new(0, 80);
 
             Health.SetHealth(400);
             Health.CanTakeDamage = false;
-            Speed = 400;
+            Speed = 400; // 400
 
             CharacterDeath = _orcBossDeath;
             Health.OnDamageTaken += () => { _lastHitTimer = 0; };
@@ -156,7 +164,7 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
             Health.OnZeroHealth += () => { GameWorld.Instance.SingleColorEffect = false; }; // Together with a sound effect
             Health.OnZeroHealth += KillAllSpawnedEnemies; // So the player get an incentive to kill the boss fast
         }
-
+         
         private void KillAllSpawnedEnemies()
         {
             foreach (Enemy enemy in _spawnedEnemies)
@@ -206,6 +214,8 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
         {
             base.Update();
 
+            //CanMove = false;
+
             if (!HasBeenAwoken || Health.IsDead) return;
 
             TransitionShowHide();
@@ -223,7 +233,7 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
 
             PlayStartLine();
             
-            SpawnEnemy();
+            //SpawnEnemy();
         }
 
         private void PlayStartLine()

@@ -35,7 +35,7 @@ public abstract class Weapon : Component
     public Enemy EnemyUser { get; set; }
     protected Character User { get; private set; } // So avoid making the check if its a player or enemy
     public SpriteRenderer SpriteRenderer { get; set; }
-    protected float StartAnimationAngle { get; set; }
+    public float StartAnimationAngle { get; set; }
     protected double AttackedTotalElapsedTime { get; set; }
     public static float EnemyWeakness = 2.5f; // What to divide with, to make enemie attacks weaker.
     public bool Attacking { get; protected set; }
@@ -50,14 +50,19 @@ public abstract class Weapon : Component
         //SoundNames.WoodHitMetal,
     };
 
-    protected Vector2 StartPosOffset = new(40, 20);
-    private Vector2 lastOffSetPos, startRelativePos = new(0, 60), startRelativeOffsetPos = new Vector2(0, -20);
-    private float _weaponAngleToUser { get; set; }
+    public Vector2 LastOffSetPos;
+    public Vector2 StartPosOffset = new(40, 20);
+    public Vector2 StartRelativePos = new (0, 60), StartRelativeOffsetPos = new Vector2(0, -20);
+
+    public float WeaponAngleToUser { get; set; }
     protected bool LeftSide;
     protected double TimeBeforeNewDirection { get; set;}
     protected float animRotation, nextAnimRotation;
     public WeaponAnimTypes NextAnim { get; private set; }
     protected bool FinnishedAttack;
+    /// <summary>
+    /// The angle we can use for our animation, so we can lerp proberly.
+    /// </summary>
     private float untouchedAngle;
     private int divideBy = 4;
     protected float FinalLerp { get; set; }
@@ -67,6 +72,8 @@ public abstract class Weapon : Component
     public bool UseAttackCooldown = true;
 
     private SoundEffectInstance _currentHitSound, _currentAttackSound;
+    private float _hitMaxSound = 0.4f;
+    private float _attackMaxSound = 0.8f;
     #endregion
 
     protected Weapon(GameObject gameObject) : base(gameObject)
@@ -183,8 +190,7 @@ public abstract class Weapon : Component
     protected virtual void EnemyWeaponSprite()
     { }
 
-    protected virtual void SetAttackDirection()
-    { }
+    public virtual void SetAttackDirection() { }
 
     private void UpdateSound()
     {
@@ -193,8 +199,7 @@ public abstract class Weapon : Component
         GlobalSounds.ChangeSoundVolumeDistance(GameObject.Transform.Position, 50, 250, _attackMaxSound, _currentHitSound);
     }
 
-    private float _hitMaxSound = 0.4f;
-    private float _attackMaxSound = 0.8f;
+
     protected void PlayAttackSound()
     {
         if (AttackSoundNames == null || AttackSoundNames.Length == 0) return;
@@ -209,50 +214,18 @@ public abstract class Weapon : Component
         _currentHitSound = GlobalSounds.PlayRandomizedSound(AttackHitSoundNames, 3, _hitMaxSound, true);
     }
 
+
     public void MoveWeaponAndAngle()
     {
-        Vector2 userPos;
-        if (EnemyUser != null)
-            userPos = EnemyUser.GameObject.Transform.Position;
-        else
-            userPos = PlayerUser.GameObject.Transform.Position;
-
-        if (Attacking)
-        {
-            // Lock the offset
-            GameObject.Transform.Position = userPos + lastOffSetPos;
-            return;
-        }
-
-        if (EnemyUser != null && EnemyUser.CanAttack)
-            _weaponAngleToUser = GetAngleToMouseEnemy(userPos);
-        else if (PlayerUser != null)
-            _weaponAngleToUser = GetAngleToMousePlayer();
-        else // If the weapon shouldnt rotate to the player
-            _weaponAngleToUser = 0f;
-        
-        // Adjust the angle to be in the range of 0 to 2π
-        if (_weaponAngleToUser < 0)
-        {
-            _weaponAngleToUser += 2 * MathHelper.Pi;
-        }
-
-        lastOffSetPos = BaseMath.Rotate(startRelativePos, _weaponAngleToUser - MathHelper.PiOver2) + startRelativeOffsetPos;
-        GameObject.Transform.Position = userPos + lastOffSetPos;
-
-        SetAngleToCorrectSide();
-        if (EnemyUser != null && !EnemyUser.CanAttack) return;
-
-        StartAnimationAngle = _weaponAngleToUser;
-        GameObject.Transform.Rotation = StartAnimationAngle;
+        User.MoveWeaponPosAndAngle();
     }
 
-    private void SetAngleToCorrectSide()
+    public void SetAngleToCorrectSide()
     {
-        if (_weaponAngleToUser > 0.5 * MathHelper.Pi && _weaponAngleToUser < 1.5 * MathHelper.Pi)
+        if (WeaponAngleToUser > 0.5 * MathHelper.Pi && WeaponAngleToUser < 1.5 * MathHelper.Pi)
         {
-            _weaponAngleToUser += MathHelper.Pi;
-            untouchedAngle = _weaponAngleToUser;
+            WeaponAngleToUser += MathHelper.Pi;
+            untouchedAngle = WeaponAngleToUser;
 
             LeftSide = true;
             SetAngleToFitWithNextAnimation();
@@ -260,7 +233,7 @@ public abstract class Weapon : Component
         }
         else
         {
-            untouchedAngle = _weaponAngleToUser;
+            untouchedAngle = WeaponAngleToUser;
 
             LeftSide = false;
             SetAngleToFitWithNextAnimation();
@@ -276,12 +249,12 @@ public abstract class Weapon : Component
         float leftOver = nextAnimRotation - MathHelper.Pi;
 
         // Resets angle
-        _weaponAngleToUser = untouchedAngle;
+        WeaponAngleToUser = untouchedAngle;
 
         FinalLerp = LeftSide ? -nextAnimRotation : nextAnimRotation;
         AddLeftOverToAngle(LeftSide, leftOver, nextAnimRotation);
 
-        StartAnimationAngle = _weaponAngleToUser;
+        StartAnimationAngle = WeaponAngleToUser;
     }
 
     private void SetAngleToFitWithNextAnimation()
@@ -304,23 +277,10 @@ public abstract class Weapon : Component
 
     private void AddLeftOverToAngle(bool leftSide, float leftOver, float rotation)
     {
-        _weaponAngleToUser += leftSide ? (leftOver < 0 ? -rotation / divideBy : leftOver / 2) :
+        WeaponAngleToUser += leftSide ? (leftOver < 0 ? -rotation / divideBy : leftOver / 2) :
                             (leftOver < 0 ? rotation / divideBy : -leftOver / 2);
     }
 
-    private float GetAngleToMousePlayer()
-    {
-        Vector2 mouseInUI = InputHandler.Instance.MouseOnUI;
-        return (float)Math.Atan2(mouseInUI.Y, mouseInUI.X);
-    }
-
-    private float GetAngleToMouseEnemy(Vector2 userPos)
-    {
-        Player target = EnemyUser.Player;
-
-        Vector2 relativePos = target.GameObject.Transform.Position - userPos;
-        return (float)Math.Atan2(relativePos.Y, relativePos.X);
-    }
 
     public override void Draw(SpriteBatch spriteBatch)
     {

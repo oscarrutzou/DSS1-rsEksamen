@@ -40,7 +40,13 @@ public static class EnemyFactory
 
     public static GameObject Create(EnemyTypes enemyType, WeaponTypes weaponType)
     {
+        return Create(enemyType, weaponType, new Vector2(4, 4));
+    }
+
+    public static GameObject Create(EnemyTypes enemyType, WeaponTypes weaponType, Vector2 scale)
+    {
         GameObject enemyGo = new();
+        enemyGo.Transform.Scale = scale;
         enemyGo.Type = GameObjectTypes.Enemy;
         enemyGo.AddComponent<SpriteRenderer>();
         enemyGo.AddComponent<Animator>();
@@ -52,8 +58,9 @@ public static class EnemyFactory
 
         // Add weapon
         Enemy enemy = enemyGo.GetComponent<Enemy>();
-
+        
         GameObject weaponGo = WeaponFactory.Create(weaponType);
+        weaponGo.Transform.Scale = scale;
         Weapon weapon = weaponGo.GetComponent<Weapon>();
         weapon.EnemyUser = enemy;
         GameWorld.Instance.Instantiate(weaponGo);
