@@ -34,8 +34,8 @@ public abstract class Enemy : Character
     /// <summary>
     /// The frequency of new paths
     /// </summary>
-    public int CellPlayerMoveBeforeNewTarget = 3;       
-
+    public int CellPlayerMoveBeforeNewTarget = 3;
+    public bool CanMove = true;
     public bool HasBeenAwoken;
     protected bool TargetPlayer;
     protected int SearchDistancePx = 1000;
@@ -149,7 +149,6 @@ public abstract class Enemy : Character
     {
         _randomOffsetSeed = (float)_rnd.NextDouble();
     }
-    public bool CanMove = true;
 
     protected override float GetWeaponAngle()
     {

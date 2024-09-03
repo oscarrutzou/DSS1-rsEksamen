@@ -101,6 +101,8 @@ public abstract class Weapon : Component
     
     public override void Start()
     {
+        if (Animations == null || Animations.Count == 0) return;
+
         animRotation = Animations[CurrentAnim].AmountOfRotation;
 
         NextAnim = CurrentAnim;
@@ -134,6 +136,8 @@ public abstract class Weapon : Component
     public void StartAttack()
     {
         if (Attacking) return;
+        if (Animations == null || Animations.Count == 0) return;
+
 
         // If the weapon uses cooldown between attacks, and the 
         if (UseAttackCooldown && AttackTimer < AttackCooldown) return;
@@ -147,15 +151,18 @@ public abstract class Weapon : Component
 
         ChangeWeaponAttacks();
 
-        TimeBeforeNewDirection = Animations[CurrentAnim].TotalTime / 2;
-
         PlayAttackSound();
 
+        //if (Animations == null || Animations.Count == 0) return;
+
+        TimeBeforeNewDirection = Animations[CurrentAnim].TotalTime / 2;
         SetAttackDirection();
     }
 
     private void ChangeWeaponAttacks()
     {
+        if (Animations == null || Animations.Count == 0) return;
+
         if (CurrentAnimRepeats == Animations[CurrentAnim].Repeats) // Change animation
         {
             CurrentAnimRepeats = 0; // Reset variable
@@ -198,7 +205,6 @@ public abstract class Weapon : Component
         GlobalSounds.ChangeSoundVolumeDistance(GameObject.Transform.Position, 50, 250, _hitMaxSound, _currentAttackSound);
         GlobalSounds.ChangeSoundVolumeDistance(GameObject.Transform.Position, 50, 250, _attackMaxSound, _currentHitSound);
     }
-
 
     protected void PlayAttackSound()
     {

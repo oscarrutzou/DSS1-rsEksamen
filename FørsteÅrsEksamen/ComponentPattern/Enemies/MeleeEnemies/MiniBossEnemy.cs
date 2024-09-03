@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using DoctorsDungeon.ComponentPattern.Effects;
 using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
 {
@@ -199,6 +200,40 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
             GameWorld.Instance.Instantiate(go);
         }
 
+
+        private bool _isSpawning;
+        private Vector2 _newSpawnPos;
+        private float _weaponAngle;
+
+        protected override float GetWeaponAngle()
+        {
+            // !CanAttack return 0f
+            //if (!CanAttack) return 0;
+            
+            // Gets the previous angle from the direction check
+            if (!_isSpawning) return _weaponAngle;
+
+            // Get the angle if its spawning
+            Vector2 relativePos = _newSpawnPos - GameObject.Transform.Position;
+            return (float)Math.Atan2(relativePos.Y, relativePos.X);
+        }
+
+        protected override void UpdateDirection()
+        {
+            if (Direction.X >= 0)
+            {
+                DirectionState = AnimationDirectionState.Right;
+                SpriteRenderer.SpriteEffects = SpriteEffects.None;
+                _weaponAngle = 0;
+            }
+            else if (Direction.X < 0)
+            {
+                DirectionState = AnimationDirectionState.Left;
+                SpriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
+                _weaponAngle = MathHelper.Pi;
+            }
+        }
+
         public override void Attack()
         {
             /*
@@ -232,9 +267,11 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
             }
 
             PlayStartLine();
-            
-            //SpawnEnemy();
+
+            SpawnEnemy();
         }
+
+
 
         private void PlayStartLine()
         {
@@ -283,7 +320,8 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
             if (!_hasSetNewSpawnPoint)
             {
                 _newSpawnPoint = PickRandomPointInRoom();
-                _spawnEmitter.Position = GridManager.Instance.CurrentGrid.GetCellGameObjectFromPoint(_newSpawnPoint).Transform.Position + _spawnEmitterPosOffset;
+                _newSpawnPos = GridManager.Instance.CurrentGrid.GetCellGameObjectFromPoint(_newSpawnPoint).Transform.Position;
+                _spawnEmitter.Position = _newSpawnPos + _spawnEmitterPosOffset;
 
                 _emitterCooldown = _startCooldown;
                 _hasSetNewSpawnPoint = true;
@@ -304,6 +342,7 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
                 {
                     _emitterTimer = 0;
                     _spawnEmitter.PlayEmitter();
+                    _isSpawning = true;
                 }
             }
         }
@@ -383,6 +422,7 @@ namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
             }
 
             _hasSetNewSpawnPoint = false;
+            _isSpawning = false;
         }
 
         private void EnemyCanMove()

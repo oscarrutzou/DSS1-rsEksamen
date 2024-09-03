@@ -40,7 +40,7 @@ public class Room4Scene : RoomBase
     private void SpawnMiniBoss()
     {
         Point pos = new(25, 8);
-        GameObject go = EnemyFactory.Create(EnemyTypes.OrcMiniBoss, WeaponTypes.Dagger, new Vector2(6, 6));
+        GameObject go = EnemyFactory.Create(EnemyTypes.OrcMiniBoss, WeaponTypes.MagicStaff, new Vector2(6, 6));
         go.Transform.GridPosition = pos;
         go.Transform.Position = GridManager.Instance.CurrentGrid.Cells[pos].Transform.Position;
 

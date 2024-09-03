@@ -143,7 +143,7 @@ public class ErikTestScene : Scene
 
         if (rangedWeapon != null)
         {
-            rangedWeapon.Shoot();
+            //rangedWeapon.Shoot();
         }
     }
 

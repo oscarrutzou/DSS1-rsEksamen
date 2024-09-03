@@ -32,8 +32,10 @@ namespace DoctorsDungeon.ComponentPattern.GUI
 
             if (SaveData.Player == null) return;
 
-            _playerWeapon = (MeleeWeapon)SaveData.Player.Weapon;
-            
+            if (SaveData.Player.Weapon is MeleeWeapon meleeWeapon)
+                _playerWeapon = meleeWeapon;
+            else return;
+
             if (_playerWeapon == null || !_playerWeapon.Attacking) return;
             
             sizeOfDrawnBar = _playerWeapon.NormalizedFullAttack;

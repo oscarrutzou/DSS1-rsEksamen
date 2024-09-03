@@ -162,7 +162,7 @@ public abstract class Character : Component
 
         Weapon.SetAngleToCorrectSide(); // Also sets the private variables
 
-        if (IsEnemy && !CanAttack) return;
+        //if (IsEnemy && !CanAttack) return;
 
         Weapon.StartAnimationAngle = Weapon.WeaponAngleToUser;
         WeaponGo.Transform.Rotation = Weapon.StartAnimationAngle;

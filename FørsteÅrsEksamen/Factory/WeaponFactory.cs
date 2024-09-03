@@ -27,6 +27,9 @@ public static class WeaponFactory
     {
         WeaponTypes.Sword,
         WeaponTypes.Dagger,
+
+
+        WeaponTypes.MagicStaff,
     };
 
     public static Dictionary<ClassTypes, List<WeaponTypes>> ClassHasWeapons { get; private set; } = new()
@@ -35,10 +38,13 @@ public static class WeaponFactory
             WeaponTypes.Dagger,
             WeaponTypes.Bow,
             WeaponTypes.BowFire,
+
+            WeaponTypes.MagicStaff,
+
         }},
 
         { ClassTypes.Mage, new List<WeaponTypes>(){
-            WeaponTypes.MagicStaff,
+            //WeaponTypes.MagicStaff, // Right now it only lets you add one weapon that are unique. Change that
             WeaponTypes.MagicStaffFire,
         }},
 
@@ -57,7 +63,7 @@ public static class WeaponFactory
         }},
 
         { EnemyTypes.OrcShaman, new List<WeaponTypes>(){
-            //WeaponTypes.MagicStaff,
+            WeaponTypes.MagicStaff,
             //WeaponTypes.MagicStaffFire,
         }},
 
@@ -99,7 +105,7 @@ public static class WeaponFactory
                 break;
 
             case WeaponTypes.MagicStaffFire:
-                weaponGo.AddComponent<MagicStaff>();
+                weaponGo.AddComponent<MagicStaffFire>();
                 break;
 
             case WeaponTypes.Bow:
@@ -107,7 +113,7 @@ public static class WeaponFactory
                 break;
 
             case WeaponTypes.BowFire:
-                weaponGo.AddComponent<MagicStaff>();
+                weaponGo.AddComponent<BowFire>();
                 break;
         }
     }

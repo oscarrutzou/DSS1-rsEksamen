@@ -156,6 +156,7 @@ public abstract class MeleeWeapon : Weapon
 
     public void CheckCollisionAndDmg()
     {
+        // Could use a mesh, that just contains the different types that it can hit, and go though each of those lists
         if (!CanDealDamage) return;
 
         GameObjectTypes type;
