@@ -43,10 +43,7 @@ public class GameWorld : Game
 
 
     #region Shader Params
-    public float HighlightsEffect_Threshold = 0.465f; // 0.25f shows a lot
-    public float GaussianBlurEffect_BlurAmount = 5f;
-    public float VignetteInner = 0.54f;
-    public float VignetteOuter = 0.77f;
+
 
     public bool SingleColorEffect = false;
     public double GameWorldSpeed = 1.0f;
@@ -96,7 +93,7 @@ public class GameWorld : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
-        SetShaderParams();
+        _canvas.SetShaderParams();
 
         // Need to be changed if we change the screen size
         //UIRenderTarget = new RenderTarget2D(GraphicsDevice, DisplayWidth, DisplayHeight);
@@ -158,40 +155,7 @@ public class GameWorld : Game
         _spriteBatch.End();
     }
 
-    private void SetShaderParams()
-    {
-        // The single black and white color shader
-        GlobalTextures.SingleColorEffect.Parameters["singleColor"].SetValue(TextColor.ToVector4());
-        GlobalTextures.SingleColorEffect.Parameters["threshold"].SetValue(0.23f);
 
-        // A soggy solution to bloom. Its the gaussian blur that cant use a loop?
-        GlobalTextures.HighlightsEffect.Parameters["threshold"].SetValue(HighlightsEffect_Threshold);
-        GlobalTextures.GaussianBlurEffect.Parameters["blurAmount"].SetValue(GaussianBlurEffect_BlurAmount);
-        GlobalTextures.GaussianBlurEffect.CurrentTechnique = GlobalTextures.GaussianBlurEffect.Techniques["Blur"]; // Basic ; Blur
-
-        // The vignette (the black cornerns)
-        GlobalTextures.VignetteEffect.Parameters["innerRadius"].SetValue(VignetteInner);
-        GlobalTextures.VignetteEffect.Parameters["outerRadius"].SetValue(VignetteOuter);
-
-        // Test blur effect
-        float[] weights = { 0.1061154f, 0.1028506f, 0.1028506f, 0.09364651f, 0.09364651f, 0.0801001f, 0.0801001f, 0.06436224f, 0.06436224f, 0.04858317f, 0.04858317f, 0.03445063f, 0.03445063f, 0.02294906f, 0.02294906f };
-        float[] offsets = { 0, 0.00125f, -0.00125f, 0.002916667f, -0.002916667f, 0.004583334f, -0.004583334f, 0.00625f, -0.00625f, 0.007916667f, -0.007916667f, 0.009583334f, -0.009583334f, 0.01125f, -0.01125f };
-        GlobalTextures.BlurEffect.Parameters["weights"].SetValue(weights);
-        GlobalTextures.BlurEffect.Parameters["offsets"].SetValue(offsets);
-    }
-
-    private void DrawDebugShaderStrings()
-    {
-        Vector2 pos = UiCam.LeftCenter;
-        _spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Thredshold: {HighlightsEffect_Threshold}", pos, Color.White);
-        pos += new Vector2(0, 30);
-        _spriteBatch.DrawString(GlobalTextures.DefaultFont, $"BlurAmount: {GaussianBlurEffect_BlurAmount}", pos, Color.White);
-        pos += new Vector2(0, 30);
-        _spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Vignet Inner: {VignetteInner}", pos, Color.White);
-        pos += new Vector2(0, 30);
-        _spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Vignet Outer: {VignetteOuter}", pos, Color.White);
-        _spriteBatch.End();
-    }
 
     public void SetResolutionSize(int width, int height)
     {

@@ -8,6 +8,11 @@ namespace DoctorsDungeon.GameManagement
 
     public class Canvas
     {
+        public float HighlightsEffect_Threshold = 0.465f; // 0.25f shows a lot
+        public float GaussianBlurEffect_BlurAmount = 5f;
+        public float VignetteInner = 0.54f;
+        public float VignetteOuter = 0.77f;
+
         private RenderTarget2D _baseScreen, _highlights, _blurFirstPass, _blurSecondPass;
         private RenderTarget2D _highlightsUI, _blurFirstPassUI, _blurSecondPassUI;
         private readonly GraphicsDevice _graphicsDevice;
@@ -185,6 +190,40 @@ namespace DoctorsDungeon.GameManagement
             spriteBatch.End();
         }
 
+        public void SetShaderParams()
+        {
+            // The single black and white color shader
+            GlobalTextures.SingleColorEffect.Parameters["singleColor"].SetValue(GameWorld.TextColor.ToVector4());
+            GlobalTextures.SingleColorEffect.Parameters["threshold"].SetValue(0.23f);
+
+            // A soggy solution to bloom. Its the gaussian blur that cant use a loop?
+            GlobalTextures.HighlightsEffect.Parameters["threshold"].SetValue(HighlightsEffect_Threshold);
+            GlobalTextures.GaussianBlurEffect.Parameters["blurAmount"].SetValue(GaussianBlurEffect_BlurAmount);
+            GlobalTextures.GaussianBlurEffect.CurrentTechnique = GlobalTextures.GaussianBlurEffect.Techniques["Blur"]; // Basic ; Blur
+
+            // The vignette (the black cornerns)
+            GlobalTextures.VignetteEffect.Parameters["innerRadius"].SetValue(VignetteInner);
+            GlobalTextures.VignetteEffect.Parameters["outerRadius"].SetValue(VignetteOuter);
+
+            // Test blur effect
+            float[] weights = { 0.1061154f, 0.1028506f, 0.1028506f, 0.09364651f, 0.09364651f, 0.0801001f, 0.0801001f, 0.06436224f, 0.06436224f, 0.04858317f, 0.04858317f, 0.03445063f, 0.03445063f, 0.02294906f, 0.02294906f };
+            float[] offsets = { 0, 0.00125f, -0.00125f, 0.002916667f, -0.002916667f, 0.004583334f, -0.004583334f, 0.00625f, -0.00625f, 0.007916667f, -0.007916667f, 0.009583334f, -0.009583334f, 0.01125f, -0.01125f };
+            GlobalTextures.BlurEffect.Parameters["weights"].SetValue(weights);
+            GlobalTextures.BlurEffect.Parameters["offsets"].SetValue(offsets);
+        }
+
+        public void DrawDebugShaderStrings(SpriteBatch spriteBatch)
+        {
+            Vector2 pos = GameWorld.Instance.UiCam.LeftCenter;
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Thredshold: {HighlightsEffect_Threshold}", pos, Color.White);
+            pos += new Vector2(0, 30);
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"BlurAmount: {GaussianBlurEffect_BlurAmount}", pos, Color.White);
+            pos += new Vector2(0, 30);
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Vignet Inner: {VignetteInner}", pos, Color.White);
+            pos += new Vector2(0, 30);
+            spriteBatch.DrawString(GlobalTextures.DefaultFont, $"Vignet Outer: {VignetteOuter}", pos, Color.White);
+            spriteBatch.End();
+        }
     }
 
     //public class ShaderEffectData
