@@ -35,8 +35,9 @@ float4 MainPS(VertexShaderOutput input) : COLOR
 // Smoothly interpolate the vignette intensity based on distance
     float vig = smoothstep(outerRadius, innerRadius, distance);
 
+    float4 color = float4(1, 1, 1, 1);
 // Apply the vignette effect
-    return tex2D(SpriteTextureSampler, uv) * input.Color * vig;
+    return tex2D(SpriteTextureSampler, uv) * color * vig;
 }
 
 

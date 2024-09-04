@@ -18,25 +18,37 @@ sampler2D TextureSampler = sampler_state
     magfilter = point;
     mipfilter = point;
 };
-
+// Problemet er at hvis den pos er 0, må den ikke blive fx 1
 float4 BlurHorizontal(float4 position : SV_POSITION, float4 color : COLOR0, float2 texCoord : TEXCOORD0) : SV_Target
 {
-    float4 output = float4(0, 0, 0, 1);
-    for (int i = 0; i < 15; i++)
+    float4 output = float4(0, 0, 0, 0);
+    float2 coord;
+    
+    for (int i = 0; i < 7; i++)
     {
-        float2 clampedTexCoord = clamp(texCoord + float2(offsets[i], 0), 0.0, 1.0);
-        output += tex2D(TextureSampler, clampedTexCoord) * weights[i];
+        coord = texCoord + float2(offsets[i], 0);
+        if (coord.x >= 0.0 && coord.x <= 1.0)
+        {
+            float4 sample = float4(tex2D(TextureSampler, coord).rgb * weights[i], 0);
+            output += sample;
+        }
     }
     return output;
 }
 
 float4 BlurVertical(float4 position : SV_POSITION, float4 color : COLOR0, float2 texCoord : TEXCOORD0) : SV_Target
 {
-    float4 output = float4(0, 0, 0, 1);
-    for (int i = 0; i < 15; i++)
+    float4 output = float4(0, 0, 0, 0);
+    float2 coord;
+    for (int i = 0; i < 7; i++)
     {
-        float2 clampedTexCoord = clamp(texCoord + float2(0, offsets[i]), 0.0, 1.0);
-        output += tex2D(TextureSampler, clampedTexCoord) * weights[i];
+        //float2 clampedTexCoord = clamp(texCoord + float2(0, offsets[i]), 0.0, 1.0);
+        coord = texCoord + float2(0, offsets[i]);
+        if (coord.y >= 0.0 && coord.y <= 1.0)
+        {
+            float4 sample = float4(tex2D(TextureSampler, coord).rgb * weights[i], 0);
+            output += sample;
+        }
     }
     return output;
 }
