@@ -41,10 +41,7 @@ public class GameWorld : Game
     private readonly string _menuString = "Menu";
     public bool IsInMenu { get; private set; } = true;
 
-
-    #region Shader Params
-
-
+    #region Shader
     public bool SingleColorEffect = false;
     public double GameWorldSpeed = 1.0f;
     private Canvas _canvas; // The canvas is a render target that handles the shader stuff

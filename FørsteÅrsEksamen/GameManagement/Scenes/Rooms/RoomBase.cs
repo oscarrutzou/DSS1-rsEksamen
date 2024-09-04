@@ -182,23 +182,28 @@ public abstract class RoomBase : Scene
             go.Transform.Position = GridManager.Instance.CurrentGrid.GetCellFromPoint(point).GameObject.Transform.Position;
         }
     }
+    protected MouseCmdState AttackSimpelAttackKey = MouseCmdState.Left;
+    protected Keys UseItem = Keys.E;
+    protected Keys DashKey = Keys.Space;
+    protected Keys TogglePauseMenuKey = Keys.Escape;
+    protected Keys LeftMovementKey = Keys.A, RightMovementKey = Keys.D, UpMovementKey = Keys.W, DownMovementKey = Keys.S;
 
     private void SetCommands()
     {
         _player = PlayerGo.GetComponent<Player>();
         _playerHealth = PlayerGo.GetComponent<Health>();
-        InputHandler.Instance.AddKeyUpdateCommand(Keys.D, new MoveCmd(_player, new Vector2(1, 0)));
-        InputHandler.Instance.AddKeyUpdateCommand(Keys.A, new MoveCmd(_player, new Vector2(-1, 0)));
-        InputHandler.Instance.AddKeyUpdateCommand(Keys.W, new MoveCmd(_player, new Vector2(0, -1)));
-        InputHandler.Instance.AddKeyUpdateCommand(Keys.S, new MoveCmd(_player, new Vector2(0, 1)));
+        InputHandler.Instance.AddKeyUpdateCommand(RightMovementKey, new MoveCmd(_player, new Vector2(1, 0)));
+        InputHandler.Instance.AddKeyUpdateCommand(LeftMovementKey, new MoveCmd(_player, new Vector2(-1, 0)));
+        InputHandler.Instance.AddKeyUpdateCommand(UpMovementKey, new MoveCmd(_player, new Vector2(0, -1)));
+        InputHandler.Instance.AddKeyUpdateCommand(DownMovementKey, new MoveCmd(_player, new Vector2(0, 1)));
 
-        InputHandler.Instance.AddMouseUpdateCommand(MouseCmdState.Left, new CustomCmd(_player.Attack));
+        InputHandler.Instance.AddMouseUpdateCommand(AttackSimpelAttackKey, new CustomCmd(_player.Attack));
 
-        InputHandler.Instance.AddKeyButtonDownCommand(Keys.Escape, new CustomCmd(_pauseMenu.TogglePauseMenu));
+        InputHandler.Instance.AddKeyButtonDownCommand(TogglePauseMenuKey, new CustomCmd(_pauseMenu.TogglePauseMenu));
 
-        InputHandler.Instance.AddKeyButtonDownCommand(Keys.E, new CustomCmd(_player.UseItem));
+        InputHandler.Instance.AddKeyButtonDownCommand(UseItem, new CustomCmd(_player.UseItem));
 
-        InputHandler.Instance.AddKeyUpdateCommand(Keys.Space, new CustomCmd(_player.UpdateDash));
+        InputHandler.Instance.AddKeyUpdateCommand(DashKey, new CustomCmd(_player.UpdateDash));
 
         // For debugging
         if (!GameWorld.DebugAndCheats) return;

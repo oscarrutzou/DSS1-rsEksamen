@@ -61,36 +61,36 @@ public class InputHandler
 
         AddKeyButtonDownCommand(Keys.Tab, new CustomCmd(() => { GameWorld.Instance.SingleColorEffect = !GameWorld.Instance.SingleColorEffect; }));
 
-        AddKeyButtonDownCommand(Keys.Left, new CustomCmd(() => {
-            //GameWorld.Instance.GaussianBlurEffect_BlurAmount += 0.5f;
-            //GlobalTextures.GaussianBlurEffect.Parameters["blurAmount"].SetValue(GameWorld.Instance.GaussianBlurEffect_BlurAmount);
-            GameWorld.Instance.VignetteOuter -= 0.005f;
-            GlobalTextures.VignetteEffect.Parameters["outerRadius"].SetValue(GameWorld.Instance.VignetteOuter);
-        }));
+        //AddKeyButtonDownCommand(Keys.Left, new CustomCmd(() => {
+        //    //GameWorld.Instance.GaussianBlurEffect_BlurAmount += 0.5f;
+        //    //GlobalTextures.GaussianBlurEffect.Parameters["blurAmount"].SetValue(GameWorld.Instance.GaussianBlurEffect_BlurAmount);
+        //    GameWorld.Instance.VignetteOuter -= 0.005f;
+        //    GlobalTextures.VignetteEffect.Parameters["outerRadius"].SetValue(GameWorld.Instance.VignetteOuter);
+        //}));
 
-        AddKeyButtonDownCommand(Keys.Right, new CustomCmd(() => {
-            //GameWorld.Instance.GaussianBlurEffect_BlurAmount -= 0.5f;
-            //GlobalTextures.GaussianBlurEffect.Parameters["blurAmount"].SetValue(GameWorld.Instance.GaussianBlurEffect_BlurAmount);
-            GameWorld.Instance.VignetteOuter += 0.005f;
-            GlobalTextures.VignetteEffect.Parameters["outerRadius"].SetValue(GameWorld.Instance.VignetteOuter);
+        //AddKeyButtonDownCommand(Keys.Right, new CustomCmd(() => {
+        //    //GameWorld.Instance.GaussianBlurEffect_BlurAmount -= 0.5f;
+        //    //GlobalTextures.GaussianBlurEffect.Parameters["blurAmount"].SetValue(GameWorld.Instance.GaussianBlurEffect_BlurAmount);
+        //    GameWorld.Instance.VignetteOuter += 0.005f;
+        //    GlobalTextures.VignetteEffect.Parameters["outerRadius"].SetValue(GameWorld.Instance.VignetteOuter);
 
-        }));
+        //}));
 
-        AddKeyButtonDownCommand(Keys.Up, new CustomCmd(() => {
-            //GameWorld.Instance.HighlightsEffect_Threshold += 0.005f;
-            //GlobalTextures.HighlightsEffect.Parameters["threshold"].SetValue(GameWorld.Instance.HighlightsEffect_Threshold);
-            GameWorld.Instance.VignetteInner += 0.005f;
-            GlobalTextures.VignetteEffect.Parameters["innerRadius"].SetValue(GameWorld.Instance.VignetteInner);
-        }));
+        //AddKeyButtonDownCommand(Keys.Up, new CustomCmd(() => {
+        //    //GameWorld.Instance.HighlightsEffect_Threshold += 0.005f;
+        //    //GlobalTextures.HighlightsEffect.Parameters["threshold"].SetValue(GameWorld.Instance.HighlightsEffect_Threshold);
+        //    GameWorld.Instance.VignetteInner += 0.005f;
+        //    GlobalTextures.VignetteEffect.Parameters["innerRadius"].SetValue(GameWorld.Instance.VignetteInner);
+        //}));
 
-        AddKeyButtonDownCommand(Keys.Down, new CustomCmd(() => {
-            //GameWorld.Instance.HighlightsEffect_Threshold -= 0.005f;
-            //GlobalTextures.HighlightsEffect.Parameters["threshold"].SetValue(GameWorld.Instance.HighlightsEffect_Threshold);
+        //AddKeyButtonDownCommand(Keys.Down, new CustomCmd(() => {
+        //    //GameWorld.Instance.HighlightsEffect_Threshold -= 0.005f;
+        //    //GlobalTextures.HighlightsEffect.Parameters["threshold"].SetValue(GameWorld.Instance.HighlightsEffect_Threshold);
 
 
-            GameWorld.Instance.VignetteInner -= 0.005f;
-            GlobalTextures.VignetteEffect.Parameters["innerRadius"].SetValue(GameWorld.Instance.VignetteInner);
-        }));
+        //    GameWorld.Instance.VignetteInner -= 0.005f;
+        //    GlobalTextures.VignetteEffect.Parameters["innerRadius"].SetValue(GameWorld.Instance.VignetteInner);
+        //}));
         /*
          * float innerRadius = 0.55; 
 float outerRadius = 0.7;         GlobalTextures.VignetteEffect.Parameters["innerRadius"].SetValue(VignetteInner);
@@ -159,45 +159,56 @@ float outerRadius = 0.7;         GlobalTextures.VignetteEffect.Parameters["inner
         _scrollWheelCommands[scrollWheelState].Add(command);
     }
 
-    public void RemoveKeyUpdateCommand(Keys inputKey)
+    public void RemoveKeyUpdateCommand(Keys inputKey, Command commandToDelete = null)
     {
-        if (_keybindsUpdate.ContainsKey(inputKey))
-        {
+        if (!_keybindsUpdate.ContainsKey(inputKey)) return;
+
+        if (commandToDelete != null)
+            _keybindsUpdate[inputKey].Remove(commandToDelete);
+        else
             _keybindsUpdate[inputKey].Clear();
-        }
     }
 
-    public void RemoveKeyButtonDownCommand(Keys inputKey)
+    public void RemoveKeyButtonDownCommand(Keys inputKey, Command commandToDelete = null)
     {
-        if (_keybindsButtonDown.ContainsKey(inputKey))
-        {
+        if (!_keybindsButtonDown.ContainsKey(inputKey)) return;
+
+        if (commandToDelete != null)
+            _keybindsButtonDown[inputKey].Remove(commandToDelete);
+        else
             _keybindsButtonDown[inputKey].Clear();
-        }
     }
 
-    public void RemoveMouseUpdateCommand(MouseCmdState inputButton)
+    public void RemoveMouseUpdateCommand(MouseCmdState inputButton, Command commandToDelete = null)
     {
-        if (_mouseButtonUpdateCommands.ContainsKey(inputButton))
-        {
+        if (!_mouseButtonUpdateCommands.ContainsKey(inputButton)) return;
+
+        if (commandToDelete != null)
+            _mouseButtonUpdateCommands[inputButton].Remove(commandToDelete);
+        else
             _mouseButtonUpdateCommands[inputButton].Clear();
-        }
     }
 
-    public void RemoveMouseButtonDownCommand(MouseCmdState inputButton)
+    public void RemoveMouseButtonDownCommand(MouseCmdState inputButton, Command commandToDelete = null)
     {
-        if (_mouseButtonDownCommands.ContainsKey(inputButton))
-        {
+        if (!_mouseButtonDownCommands.ContainsKey(inputButton)) return;
+
+        if (commandToDelete != null)
+            _mouseButtonDownCommands[inputButton].Remove(commandToDelete);
+        else
             _mouseButtonDownCommands[inputButton].Clear();
-        }
     }
 
-    public void RemoveScrollWheelCommand(ScrollWheelState scrollWheelState)
+    public void RemoveScrollWheelCommand(ScrollWheelState scrollWheelState, Command commandToDelete = null)
     {
-        if (_scrollWheelCommands.ContainsKey(scrollWheelState))
-        {
+        if (!_scrollWheelCommands.ContainsKey(scrollWheelState)) return;
+
+        if (commandToDelete != null)
+            _scrollWheelCommands[scrollWheelState].Remove(commandToDelete);
+        else
             _scrollWheelCommands[scrollWheelState].Clear();
-        }
     }
+
 
     /// <summary>
     /// Base Commands are the ones in the InputHandler, in the SetBaseKeys() method.
@@ -267,7 +278,7 @@ float outerRadius = 0.7;         GlobalTextures.VignetteEffect.Parameters["inner
     {
         foreach (var pressedKey in keyState.GetPressedKeys())
         {
-            if (_keybindsUpdate.TryGetValue(pressedKey, out List<Command> cmds)) // Commands that happen every update
+            if (_keybindsUpdate.TryGetValue(pressedKey, out List<Command> cmds) && cmds.Count > 0) // Commands that happen every update
             {
                 foreach (var cmd in cmds)
                 {
@@ -276,7 +287,7 @@ float outerRadius = 0.7;         GlobalTextures.VignetteEffect.Parameters["inner
             }
             if (!_previousKeyState.IsKeyDown(pressedKey) && keyState.IsKeyDown(pressedKey)) // Commands that only happens once every time the button gets pressed
             {
-                if (_keybindsButtonDown.TryGetValue(pressedKey, out List<Command> cmdsBd))
+                if (_keybindsButtonDown.TryGetValue(pressedKey, out List<Command> cmdsBd) && cmdsBd.Count > 0)
                 {
                     foreach (var cmdBd in cmdsBd)
                     {
@@ -291,7 +302,7 @@ float outerRadius = 0.7;         GlobalTextures.VignetteEffect.Parameters["inner
     {
         // Left mouse button update commands
         if (mouseState.LeftButton == ButtonState.Pressed
-            && _mouseButtonUpdateCommands.TryGetValue(MouseCmdState.Left, out List<Command> cmdsLeft))
+            && _mouseButtonUpdateCommands.TryGetValue(MouseCmdState.Left, out List<Command> cmdsLeft) && cmdsLeft.Count > 0)
         {
             foreach (var cmdLeft in cmdsLeft)
             {
@@ -302,7 +313,7 @@ float outerRadius = 0.7;         GlobalTextures.VignetteEffect.Parameters["inner
         // Left mouse button down commands
         if (_previousMouseState.LeftButton == ButtonState.Released
             && mouseState.LeftButton == ButtonState.Pressed
-            && _mouseButtonDownCommands.TryGetValue(MouseCmdState.Left, out List<Command> cmdsBdLeft))
+            && _mouseButtonDownCommands.TryGetValue(MouseCmdState.Left, out List<Command> cmdsBdLeft) && cmdsBdLeft.Count > 0)
         {
             foreach (var cmdBdLeft in cmdsBdLeft)
             {
@@ -312,7 +323,7 @@ float outerRadius = 0.7;         GlobalTextures.VignetteEffect.Parameters["inner
 
         // Right mouse button update commands
         if (mouseState.RightButton == ButtonState.Pressed
-            && _mouseButtonUpdateCommands.TryGetValue(MouseCmdState.Right, out List<Command> cmdsRight))
+            && _mouseButtonUpdateCommands.TryGetValue(MouseCmdState.Right, out List<Command> cmdsRight) && cmdsRight .Count > 0)
         {
             foreach (var cmdRight in cmdsRight)
             {
@@ -323,7 +334,7 @@ float outerRadius = 0.7;         GlobalTextures.VignetteEffect.Parameters["inner
         // Right mouse button down commands
         if (_previousMouseState.RightButton == ButtonState.Released
             && mouseState.RightButton == ButtonState.Pressed
-            && _mouseButtonDownCommands.TryGetValue(MouseCmdState.Right, out List<Command> cmdsBdRight))
+            && _mouseButtonDownCommands.TryGetValue(MouseCmdState.Right, out List<Command> cmdsBdRight) && cmdsBdRight.Count > 0)
         {
             foreach (var cmdBdRight in cmdsBdRight)
             {
@@ -335,7 +346,7 @@ float outerRadius = 0.7;         GlobalTextures.VignetteEffect.Parameters["inner
         if (_previousMouseState.ScrollWheelValue != mouseState.ScrollWheelValue
             && _scrollWheelCommands.TryGetValue(
                 mouseState.ScrollWheelValue > _previousMouseState.ScrollWheelValue
-                ? ScrollWheelState.Up : ScrollWheelState.Down, out List<Command> cmdsScroll))
+                ? ScrollWheelState.Up : ScrollWheelState.Down, out List<Command> cmdsScroll) && cmdsScroll.Count > 0)
         {
             foreach (var cmdScroll in cmdsScroll)
             {
