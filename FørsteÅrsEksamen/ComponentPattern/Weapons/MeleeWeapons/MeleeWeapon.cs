@@ -89,7 +89,7 @@ public abstract class MeleeWeapon : Weapon
             AttackedTotalElapsedTime = 0f; // Reset totalElapsedTime
             IsRotatingBack = true;
 
-            SetStartAngleToNextAnim(); // Changes the StartAnimationAngle so it rotates to the next animation start, insted of snapping to the place after
+            SetStartAngleToNextAnim();
             // Need to also set the new start point
             _rotateBackStartRotation = GameObject.Transform.Rotation;
 

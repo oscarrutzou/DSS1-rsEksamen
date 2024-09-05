@@ -20,12 +20,11 @@ public class Potion : Component
     private Player _player;
     private Health _health;
     private GameObject _playerGo;
-    private bool _removeFromInventoryNextFrame;
 
     public string Name = "Strong Health Potion";
     private int _healAmount = 100;
 
-    private int _maxAmountOfUses = 1;
+    //private int _maxAmountOfUses = 1;
     public Potion(GameObject gameObject) : base(gameObject)
     { 
     }

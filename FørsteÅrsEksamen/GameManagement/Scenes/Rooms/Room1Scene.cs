@@ -22,7 +22,11 @@ namespace DoctorsDungeon.GameManagement.Scenes.Rooms;
 public class Room1Scene : RoomBase
 {
 
-
+    /*
+     * Could have made this into a class, so its easy to show and hide tutorials in all rooms.
+     * Would need to have a way to either remove quest after it has been completed
+     * Or being able to change into another tutorial text
+     */
     private bool _hasRemovedMoveChecks, _hasRemovedAttackChecks, _hasRemovedDashChecks, _hasRemovedPauseChecks, _hasRemovedPotionChecks;
     private CustomCmd changeToAttackTutorialCmd, changeToDashTutorialCmd, changeToPauseTutorialCmd, completedBaseTutorialCmd, potionTutorialCmd;
 
@@ -32,7 +36,9 @@ public class Room1Scene : RoomBase
     private string _dashTutorialText = "Space to Dash\nGain brief damage immunity";
     private string _pauseTutorialText = "Press ESC to pause\nDoes not pause game";
     private string _potionTutorialText = "Find a red potion\nPress E to use and heal";
-    private string _finnishedTutorialText = "Completed tutorial";
+    private string _finnishedBaseTutorialText = "Completed base tutorial"; 
+    private string _finnishedPotionTutorialText = "Completed full tutorial\nHere is 100 gold"; 
+
 
     private bool _startRemoveTimer;
     private double _tutorialRemoveTimer, _tutorialHowLongOnScreen = 2f;
@@ -50,8 +56,6 @@ public class Room1Scene : RoomBase
 
         base.Initialize();
         AddListenerCommands();
-
-
     }
 
     protected override void SetSpawnPotions()
@@ -76,23 +80,25 @@ public class Room1Scene : RoomBase
 
     private void AddListenerCommands()
     {
+        if (SaveData.HasCompletedFullTutorial) return;
+
         _tutorialText = _moveTutorialText;
 
         changeToAttackTutorialCmd = new(ChangeToAttackTutorial);
-        InputHandler.Instance.AddKeyButtonDownCommand(DownMovementKey, changeToAttackTutorialCmd);
-        InputHandler.Instance.AddKeyButtonDownCommand(UpMovementKey, changeToAttackTutorialCmd);
-        InputHandler.Instance.AddKeyButtonDownCommand(LeftMovementKey, changeToAttackTutorialCmd);
-        InputHandler.Instance.AddKeyButtonDownCommand(RightMovementKey, changeToAttackTutorialCmd);
+        InputHandler.Instance.AddKeyUpdateCommand(DownMovementKey, changeToAttackTutorialCmd);
+        InputHandler.Instance.AddKeyUpdateCommand(UpMovementKey, changeToAttackTutorialCmd);
+        InputHandler.Instance.AddKeyUpdateCommand(LeftMovementKey, changeToAttackTutorialCmd);
+        InputHandler.Instance.AddKeyUpdateCommand(RightMovementKey, changeToAttackTutorialCmd);
 
         // A bool for each check
         changeToDashTutorialCmd = new(ChangeToDashTutorial);
-        InputHandler.Instance.AddMouseButtonDownCommand(AttackSimpelAttackKey, changeToDashTutorialCmd);
+        InputHandler.Instance.AddMouseUpdateCommand(AttackSimpelAttackKey, changeToDashTutorialCmd);
 
         changeToPauseTutorialCmd = new(ChangeToPauseTutorial);
-        InputHandler.Instance.AddKeyButtonDownCommand(DashKey, changeToPauseTutorialCmd);
+        InputHandler.Instance.AddKeyUpdateCommand(DashKey, changeToPauseTutorialCmd);
 
         completedBaseTutorialCmd = new(FinnishStartTutorial);
-        InputHandler.Instance.AddKeyButtonDownCommand(TogglePauseMenuKey, completedBaseTutorialCmd);
+        InputHandler.Instance.AddKeyUpdateCommand(TogglePauseMenuKey, completedBaseTutorialCmd);
 
 
         // We need to have another way to start the potion tutorial, and we use a Action here to do that
@@ -100,7 +106,7 @@ public class Room1Scene : RoomBase
         playerHealth.On50Hp += ChangeTextToHealthReminder;
 
         potionTutorialCmd = new(FinnishedPotionTutorial);
-        InputHandler.Instance.AddKeyButtonDownCommand(UseItem, potionTutorialCmd);
+        InputHandler.Instance.AddKeyUpdateCommand(UseItem, potionTutorialCmd);
 
     }
     private void ChangeToAttackTutorial()
@@ -121,14 +127,14 @@ public class Room1Scene : RoomBase
     private void FinnishStartTutorial()
     {
         if (_tutorialText != _pauseTutorialText) return;
-        _tutorialText = _finnishedTutorialText;
+        _tutorialText = _finnishedBaseTutorialText;
         _startRemoveTimer = true;
     }
 
     // Gets set when player health is low
     private void ChangeTextToHealthReminder()
     {
-        if (_tutorialText == "" || _tutorialText == _finnishedTutorialText)
+        if (_tutorialText == "" || _tutorialText == _finnishedBaseTutorialText)
         {
             _startRemoveTimer = false;
             _tutorialRemoveTimer = 0f;
@@ -138,10 +144,11 @@ public class Room1Scene : RoomBase
     private void FinnishedPotionTutorial()
     {
         if (!Player.HasUsedItem || _tutorialText != _potionTutorialText) return;
-        _tutorialText = _finnishedTutorialText;
+        _tutorialText = _finnishedPotionTutorialText;
+        SaveData.HasCompletedFullTutorial = true;
+        DB.Instance.SaveGame(SaveData.CurrentSaveID);
         _startRemoveTimer = true;
     }
-
 
     public override void Update()
     {
@@ -163,39 +170,39 @@ public class Room1Scene : RoomBase
         if (_hasRemovedMoveChecks || _tutorialText != _dashTutorialText) return;
         
         _hasRemovedMoveChecks = true;
-        InputHandler.Instance.RemoveKeyButtonDownCommand(DownMovementKey, changeToAttackTutorialCmd);
-        InputHandler.Instance.RemoveKeyButtonDownCommand(UpMovementKey, changeToAttackTutorialCmd);
-        InputHandler.Instance.RemoveKeyButtonDownCommand(LeftMovementKey, changeToAttackTutorialCmd);
-        InputHandler.Instance.RemoveKeyButtonDownCommand(RightMovementKey, changeToAttackTutorialCmd);
+        InputHandler.Instance.RemoveKeyUpdateCommand(DownMovementKey, changeToAttackTutorialCmd);
+        InputHandler.Instance.RemoveKeyUpdateCommand(UpMovementKey, changeToAttackTutorialCmd);
+        InputHandler.Instance.RemoveKeyUpdateCommand(LeftMovementKey, changeToAttackTutorialCmd);
+        InputHandler.Instance.RemoveKeyUpdateCommand(RightMovementKey, changeToAttackTutorialCmd);
     }
 
     private void CheckIfShouldDeleteAttackChecks()
     {
         if (_hasRemovedAttackChecks || _tutorialText != _dashTutorialText) return;
         _hasRemovedAttackChecks = true;
-        InputHandler.Instance.RemoveMouseButtonDownCommand(AttackSimpelAttackKey, changeToDashTutorialCmd);
+        InputHandler.Instance.RemoveMouseUpdateCommand(AttackSimpelAttackKey, changeToDashTutorialCmd);
     }
 
     private void CheckIfShouldDeleteDashChecks()
     {
         if (_hasRemovedDashChecks || _tutorialText != _pauseTutorialText) return;
         _hasRemovedDashChecks = true;
-        InputHandler.Instance.RemoveKeyButtonDownCommand(DashKey, changeToPauseTutorialCmd);
+        InputHandler.Instance.RemoveKeyUpdateCommand(DashKey, changeToPauseTutorialCmd);
     }
 
     private void CheckIfShouldDeletePauseChecks()
     {
-        if (_hasRemovedPauseChecks || _tutorialText != _finnishedTutorialText) return;
+        if (_hasRemovedPauseChecks || _tutorialText != _finnishedBaseTutorialText) return;
         _hasRemovedPauseChecks = true;
-        InputHandler.Instance.RemoveKeyButtonDownCommand(TogglePauseMenuKey, completedBaseTutorialCmd);
+        InputHandler.Instance.RemoveKeyUpdateCommand(TogglePauseMenuKey, completedBaseTutorialCmd);
     }
 
     // Remove potion check
     private void CheckIfShouldDeletePotionChecks()
     {
-        if (_hasRemovedPotionChecks || _tutorialText != _finnishedTutorialText) return;
+        if (_hasRemovedPotionChecks || _tutorialText != _finnishedBaseTutorialText) return;
         _hasRemovedPotionChecks = true;
-        InputHandler.Instance.RemoveKeyButtonDownCommand(UseItem, potionTutorialCmd);
+        InputHandler.Instance.RemoveKeyUpdateCommand(UseItem, potionTutorialCmd);
     }
     #endregion
 
@@ -204,7 +211,7 @@ public class Room1Scene : RoomBase
     {
         base.DrawOnScreen(spriteBatch);
 
-        if (string.IsNullOrEmpty(_tutorialText)) return;
+        if (string.IsNullOrEmpty(_tutorialText) || SaveData.HasCompletedFullTutorial) return;
 
         if (_startRemoveTimer)
         {

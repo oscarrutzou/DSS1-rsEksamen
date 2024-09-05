@@ -39,7 +39,7 @@ public class SaveFileData
     public List<ClassTypes> Unlocked_Classes { get; set; }
     public List<WeaponTypes> Unlocked_Weapons { get; set; }
     public RunData RunData { get; set; }
-
+    public bool HasCompletedFullTutorial { get; set; }
     public SaveFileData()
     {
         Last_Login = DateTime.Now;

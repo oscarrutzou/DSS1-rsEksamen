@@ -226,6 +226,7 @@ public class DB
             savedData.Currency = SaveData.Currency;
             savedData.Unlocked_Classes = SaveData.UnlockedClasses;
             savedData.Unlocked_Weapons = SaveData.UnlockedWeapons;
+            savedData.HasCompletedFullTutorial = SaveData.HasCompletedFullTutorial;
             savedData.Last_Login = DateTime.Now;
 
             if (savedData.RunData != null && SaveData.Player != null) // Make sure the scene has been initalized
