@@ -125,6 +125,8 @@ namespace DoctorsDungeon.ComponentPattern.WorldObjects
         private void CheckDmgLeft()
         {
             float normalizedHealth = (float)CurrentHealth / (float)MaxHealth;
+
+            // Need to change it to not just turn into null but should unsubscribe on each of the places.
             if (normalizedHealth <= 0.75f)
             {
                 On75Hp?.Invoke();

@@ -12,12 +12,30 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using DoctorsDungeon.CommandPattern.Commands;
+using System.Timers;
+using System;
+using DoctorsDungeon.ComponentPattern.PlayerClasses;
 
 namespace DoctorsDungeon.GameManagement.Scenes.Rooms;
 
 // Oscar
 public class Room1Scene : RoomBase
 {
+
+
+    private bool _hasRemovedMoveChecks, _hasRemovedAttackChecks, _hasRemovedDashChecks, _hasRemovedPauseChecks, _hasRemovedPotionChecks;
+    private CustomCmd changeToAttackTutorialCmd, changeToDashTutorialCmd, changeToPauseTutorialCmd, completedBaseTutorialCmd, potionTutorialCmd;
+
+    private string _tutorialText;
+    private string _moveTutorialText = "To move: W A S D";
+    private string _attackTutorialText = "Left click to attack";
+    private string _dashTutorialText = "Space to Dash\nGain brief damage immunity";
+    private string _pauseTutorialText = "Press ESC to pause\nDoes not pause game";
+    private string _potionTutorialText = "Find a red potion\nPress E to use and heal";
+    private string _finnishedTutorialText = "Completed tutorial";
+
+    private bool _startRemoveTimer;
+    private double _tutorialRemoveTimer, _tutorialHowLongOnScreen = 2f;
 
     public override void Initialize()
     {
@@ -32,7 +50,8 @@ public class Room1Scene : RoomBase
 
         base.Initialize();
         AddListenerCommands();
-        _textPos = GameWorld.Instance.UiCam.LeftCenter + new Vector2(30, -40);
+
+
     }
 
     protected override void SetSpawnPotions()
@@ -54,19 +73,6 @@ public class Room1Scene : RoomBase
             { new Point(13, 5), TraningDummyFactory.Create()}
         };
     }
-    private bool _hasRemovedMoveChecks, _hasRemovedAttackChecks, _hasRemovedDashChecks, _hasRemovedPauseChecks;
-    private CustomCmd changeToAttackTutorialCmd, changeToDashTutorialCmd, changeToPauseTutorialCmd, completedTutorialCmd;
-
-    private string _tutorialText;
-    private string _moveTutorialText = "To move: W\n" +
-                                   "        A S D";
-    private string _attackTutorialText = "Left click to attack";
-    private string _dashTutorialText = "Space to Dash\nGain brief damage immunity";
-    private string _pauseTutorialText = "Press ESC to show pause menu \nDoes not pause game";
-    private string _finnishedTutorialText = "Completed tutorial";
-    private Vector2 _textPos;
-    // ADd a listener to the keys
-    // If command is used, change the tutorial to the other strings its missing.
 
     private void AddListenerCommands()
     {
@@ -85,17 +91,23 @@ public class Room1Scene : RoomBase
         changeToPauseTutorialCmd = new(ChangeToPauseTutorial);
         InputHandler.Instance.AddKeyButtonDownCommand(DashKey, changeToPauseTutorialCmd);
 
-        completedTutorialCmd = new(FinnishStartTutorial);
-        InputHandler.Instance.AddKeyButtonDownCommand(TogglePauseMenuKey, completedTutorialCmd);
-    }
+        completedBaseTutorialCmd = new(FinnishStartTutorial);
+        InputHandler.Instance.AddKeyButtonDownCommand(TogglePauseMenuKey, completedBaseTutorialCmd);
 
-    // wait a bit? 
+
+        // We need to have another way to start the potion tutorial, and we use a Action here to do that
+        Health playerHealth = PlayerGo.GetComponent<Health>();
+        playerHealth.On50Hp += ChangeTextToHealthReminder;
+
+        potionTutorialCmd = new(FinnishedPotionTutorial);
+        InputHandler.Instance.AddKeyButtonDownCommand(UseItem, potionTutorialCmd);
+
+    }
     private void ChangeToAttackTutorial()
     {
         if (_tutorialText != _moveTutorialText) return;
         _tutorialText = _attackTutorialText;
     }
-
     private void ChangeToDashTutorial()
     {
         if (_tutorialText != _attackTutorialText) return;
@@ -106,12 +118,30 @@ public class Room1Scene : RoomBase
         if (_tutorialText != _dashTutorialText) return;
         _tutorialText = _pauseTutorialText;
     }
-
     private void FinnishStartTutorial()
     {
         if (_tutorialText != _pauseTutorialText) return;
         _tutorialText = _finnishedTutorialText;
+        _startRemoveTimer = true;
     }
+
+    // Gets set when player health is low
+    private void ChangeTextToHealthReminder()
+    {
+        if (_tutorialText == "" || _tutorialText == _finnishedTutorialText)
+        {
+            _startRemoveTimer = false;
+            _tutorialRemoveTimer = 0f;
+            _tutorialText = _potionTutorialText;
+        }
+    }
+    private void FinnishedPotionTutorial()
+    {
+        if (!Player.HasUsedItem || _tutorialText != _potionTutorialText) return;
+        _tutorialText = _finnishedTutorialText;
+        _startRemoveTimer = true;
+    }
+
 
     public override void Update()
     {
@@ -121,8 +151,13 @@ public class Room1Scene : RoomBase
         CheckIfShouldDeleteAttackChecks();
         CheckIfShouldDeleteDashChecks();
         CheckIfShouldDeletePauseChecks();
-    }
+        CheckIfShouldDeletePotionChecks();
 
+        if (_startRemoveTimer)
+            _tutorialRemoveTimer += GameWorld.DeltaTime;
+    }
+    
+    #region Remove Commands
     private void CheckIfShouldDeleteMoveChecks()
     {
         if (_hasRemovedMoveChecks || _tutorialText != _dashTutorialText) return;
@@ -137,7 +172,6 @@ public class Room1Scene : RoomBase
     private void CheckIfShouldDeleteAttackChecks()
     {
         if (_hasRemovedAttackChecks || _tutorialText != _dashTutorialText) return;
-
         _hasRemovedAttackChecks = true;
         InputHandler.Instance.RemoveMouseButtonDownCommand(AttackSimpelAttackKey, changeToDashTutorialCmd);
     }
@@ -145,20 +179,25 @@ public class Room1Scene : RoomBase
     private void CheckIfShouldDeleteDashChecks()
     {
         if (_hasRemovedDashChecks || _tutorialText != _pauseTutorialText) return;
-
         _hasRemovedDashChecks = true;
         InputHandler.Instance.RemoveKeyButtonDownCommand(DashKey, changeToPauseTutorialCmd);
     }
 
-
     private void CheckIfShouldDeletePauseChecks()
     {
         if (_hasRemovedPauseChecks || _tutorialText != _finnishedTutorialText) return;
-
         _hasRemovedPauseChecks = true;
-        InputHandler.Instance.RemoveKeyButtonDownCommand(TogglePauseMenuKey, completedTutorialCmd);
+        InputHandler.Instance.RemoveKeyButtonDownCommand(TogglePauseMenuKey, completedBaseTutorialCmd);
     }
 
+    // Remove potion check
+    private void CheckIfShouldDeletePotionChecks()
+    {
+        if (_hasRemovedPotionChecks || _tutorialText != _finnishedTutorialText) return;
+        _hasRemovedPotionChecks = true;
+        InputHandler.Instance.RemoveKeyButtonDownCommand(UseItem, potionTutorialCmd);
+    }
+    #endregion
 
     // First WASD
     public override void DrawOnScreen(SpriteBatch spriteBatch)
@@ -167,6 +206,17 @@ public class Room1Scene : RoomBase
 
         if (string.IsNullOrEmpty(_tutorialText)) return;
 
-        spriteBatch.DrawString(GlobalTextures.DefaultFont, _tutorialText, _textPos, CurrentTextColor);
+        if (_startRemoveTimer)
+        {
+            double normalizedTime = _tutorialRemoveTimer / _tutorialHowLongOnScreen;
+            if (normalizedTime >= 1) return; // Dont draw if the timer is not 
+        }
+
+        Vector2 size = GlobalTextures.DefaultFont.MeasureString(_tutorialText);
+        Vector2 textPos = GameWorld.Instance.UiCam.TopRight + new Vector2(-260, 205);
+
+        SpriteRenderer.DrawCenteredSprite(spriteBatch, TextureNames.QuestUnder, textPos, BaseMath.TransitionColor(Color.White), LayerDepth.Default);
+
+        GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, textPos, _tutorialText, CurrentTextColor);
     }
 }

@@ -20,10 +20,12 @@ public class Potion : Component
     private Player _player;
     private Health _health;
     private GameObject _playerGo;
+    private bool _removeFromInventoryNextFrame;
 
     public string Name = "Strong Health Potion";
     private int _healAmount = 100;
 
+    private int _maxAmountOfUses = 1;
     public Potion(GameObject gameObject) : base(gameObject)
     { 
     }
@@ -64,7 +66,11 @@ public class Potion : Component
     public void Use()
     {
         if (_health.IsDead || !_health.AddHealth(_healAmount)) return; // Already full health
+        // Destroy next frame
+        //_removeFromInventoryNextFrame = true;
         _player.ItemInInventory = null;
+        _player.HasUsedItem = true;
         GameWorld.Instance.Destroy(GameObject);
     }
+
 }

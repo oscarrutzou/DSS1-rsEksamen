@@ -34,7 +34,7 @@ public abstract class RoomBase : Scene
 
     public Point PlayerSpawnPos, EndPointSpawnPos;
     protected GameObject PlayerGo;
-    private Player _player;
+    protected Player Player;
     private Health _playerHealth;
 
     protected List<Point> EnemySpawnPoints = new();
@@ -45,19 +45,24 @@ public abstract class RoomBase : Scene
     private SpriteRenderer _transferDoorSpriteRenderer;
     public List<Enemy> EnemiesInRoom { get; set; } = new();
     private List<Enemy> _aliveEnemies;
-
     private Spawner _spawner;
+    
+    protected string QuestText;
+
+    protected MouseCmdState AttackSimpelAttackKey = MouseCmdState.Left;
+    protected Keys UseItem = Keys.E;
+    protected Keys DashKey = Keys.Space;
+    protected Keys TogglePauseMenuKey = Keys.Escape;
+    protected Keys LeftMovementKey = Keys.A, RightMovementKey = Keys.D, UpMovementKey = Keys.W, DownMovementKey = Keys.S;
 
     private List<GameObject> _cells = new(); // For debug
     private Vector2 _startLeftPos;
+    private GameObject hourGlassIcon, inventoryIcon;
 
-    //private string startFinalText; // Used to set the start size of text for the hour glass,
-    // so it dosent move when the timer counts down.
     #endregion Properties
 
     public override void Initialize()
     {
-
         SetSpawnPotions();
 
         // There needs to have been set some stuff before this base.Initialize (Look at Room1 for reference)
@@ -90,7 +95,6 @@ public abstract class RoomBase : Scene
 
     #region Initialize Methods
 
-    private GameObject hourGlassIcon, inventoryIcon;
     private void SetStartTimeLeft()
     {
         _startLeftPos = GameWorld.Instance.UiCam.TopLeft + new Vector2(80, 130);
@@ -182,28 +186,23 @@ public abstract class RoomBase : Scene
             go.Transform.Position = GridManager.Instance.CurrentGrid.GetCellFromPoint(point).GameObject.Transform.Position;
         }
     }
-    protected MouseCmdState AttackSimpelAttackKey = MouseCmdState.Left;
-    protected Keys UseItem = Keys.E;
-    protected Keys DashKey = Keys.Space;
-    protected Keys TogglePauseMenuKey = Keys.Escape;
-    protected Keys LeftMovementKey = Keys.A, RightMovementKey = Keys.D, UpMovementKey = Keys.W, DownMovementKey = Keys.S;
 
     private void SetCommands()
     {
-        _player = PlayerGo.GetComponent<Player>();
+        Player = PlayerGo.GetComponent<Player>();
         _playerHealth = PlayerGo.GetComponent<Health>();
-        InputHandler.Instance.AddKeyUpdateCommand(RightMovementKey, new MoveCmd(_player, new Vector2(1, 0)));
-        InputHandler.Instance.AddKeyUpdateCommand(LeftMovementKey, new MoveCmd(_player, new Vector2(-1, 0)));
-        InputHandler.Instance.AddKeyUpdateCommand(UpMovementKey, new MoveCmd(_player, new Vector2(0, -1)));
-        InputHandler.Instance.AddKeyUpdateCommand(DownMovementKey, new MoveCmd(_player, new Vector2(0, 1)));
+        InputHandler.Instance.AddKeyUpdateCommand(RightMovementKey, new MoveCmd(Player, new Vector2(1, 0)));
+        InputHandler.Instance.AddKeyUpdateCommand(LeftMovementKey, new MoveCmd(Player, new Vector2(-1, 0)));
+        InputHandler.Instance.AddKeyUpdateCommand(UpMovementKey, new MoveCmd(Player, new Vector2(0, -1)));
+        InputHandler.Instance.AddKeyUpdateCommand(DownMovementKey, new MoveCmd(Player, new Vector2(0, 1)));
 
-        InputHandler.Instance.AddMouseUpdateCommand(AttackSimpelAttackKey, new CustomCmd(_player.Attack));
+        InputHandler.Instance.AddMouseUpdateCommand(AttackSimpelAttackKey, new CustomCmd(Player.Attack));
 
         InputHandler.Instance.AddKeyButtonDownCommand(TogglePauseMenuKey, new CustomCmd(_pauseMenu.TogglePauseMenu));
 
-        InputHandler.Instance.AddKeyButtonDownCommand(UseItem, new CustomCmd(_player.UseItem));
+        InputHandler.Instance.AddKeyButtonDownCommand(UseItem, new CustomCmd(Player.UseItem));
 
-        InputHandler.Instance.AddKeyUpdateCommand(DashKey, new CustomCmd(_player.UpdateDash));
+        InputHandler.Instance.AddKeyUpdateCommand(DashKey, new CustomCmd(Player.UpdateDash));
 
         // For debugging
         if (!GameWorld.DebugAndCheats) return;
@@ -232,7 +231,7 @@ public abstract class RoomBase : Scene
             SaveData.Time_Left = 0;
             SaveData.LostByTime = true;
             // Makes the blood spray up, could make it positive or negative depending of the direction
-            _playerHealth.TakeDamage(1000, _player.GameObject.Transform.Position + new Vector2(30, -30)); // Kills the player
+            _playerHealth.TakeDamage(1000, Player.GameObject.Transform.Position + new Vector2(30, -30)); // Kills the player
         }
 
         // Check if enemies has been killed
@@ -285,19 +284,13 @@ public abstract class RoomBase : Scene
         QuestText = $"Enemies left {amountToKill}/{EnemiesInRoom.Count}";//
     }
 
-    protected string QuestText;
     private void DrawQuest(SpriteBatch spriteBatch)
     {
         SetQuestLogText();
         Vector2 size = GlobalTextures.DefaultFont.MeasureString(QuestText);
         Vector2 textPos = GameWorld.Instance.UiCam.TopRight + new Vector2(-260, 55);
 
-        Color questUnderColor = Color.White;
-        if (IsChangingScene)
-            questUnderColor = Color.Lerp(Color.White, Color.Transparent, (float)NormalizedTransitionProgress);
-
-        SpriteRenderer.DrawCenteredSprite(spriteBatch, TextureNames.QuestUnder, textPos, questUnderColor, LayerDepth.Default);
-
+        SpriteRenderer.DrawCenteredSprite(spriteBatch, TextureNames.QuestUnder, textPos, BaseMath.TransitionColor(Color.White), LayerDepth.Default);
         GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, textPos, QuestText, CurrentTextColor);
     }
 
@@ -336,9 +329,9 @@ public abstract class RoomBase : Scene
 
         //foreach (Vector2 retanglePos in PlayerGo.GetComponent<Collider>().CollisionBox
 
-        if (_player.movementCollider != null)
+        if (Player.movementCollider != null)
         {
-            Rectangle collisionBox = _player.movementCollider.CollisionBox;
+            Rectangle collisionBox = Player.movementCollider.CollisionBox;
             // Check each corner of the CollisionBox
             Vector2[] corners = new Vector2[]
             {
@@ -365,7 +358,7 @@ public abstract class RoomBase : Scene
 
 
         startPos += offset;
-        DrawString(spriteBatch, $"Player Room Nr {_player.CollisionNr}", startPos);
+        DrawString(spriteBatch, $"Player Room Nr {Player.CollisionNr}", startPos);
 
         startPos += offset;
         DrawString(spriteBatch, $"Cell GameObjects in scene {_cells.Count}", startPos);
@@ -383,7 +376,7 @@ public abstract class RoomBase : Scene
         DrawString(spriteBatch, $"Grid Room Nr {GridManager.Instance.RoomNrIndex}", startPos);
 
         startPos += offset;
-        DrawString(spriteBatch, $"player.velocity {_player.velocity}", startPos);
+        DrawString(spriteBatch, $"player.velocity {Player.velocity}", startPos);
 
     }
 

@@ -28,12 +28,12 @@ public abstract class Player : Character
     protected List<IObserver> observers = new();
 
     public Potion ItemInInventory { get; set; }
+    public bool HasUsedItem;
 
     public Collider movementCollider { get; set; } 
 
     public WeaponTypes WeaponType; 
     public ClassTypes ClassType;
-
     private double _onDeadTimer;
     private readonly double _timeTillSceneChange = 3f;
     private static SoundNames[] _playerHit = new SoundNames[]
@@ -108,6 +108,7 @@ public abstract class Player : Character
     {
         base.Update();
 
+        HasUsedItem = false;
         // Checks dash and dashes the direction if it can
         if (State != CharacterState.Dead)
         {

@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Timers;
 
 namespace DoctorsDungeon;
 
@@ -20,7 +21,7 @@ public class GameWorld : Game
     #region Properties
     public static GameWorld Instance;
 
-    public static bool DebugAndCheats = true;
+    public static bool DebugAndCheats = false;
     public static double DeltaTime { get; private set; }
     public static bool IsPaused = false;
     public static Color BackGroundColor { get; private set; } = new Color(20, 20, 18, 255);
@@ -63,6 +64,7 @@ public class GameWorld : Game
         // Frametime not limited to 16.66 Hz / 60 FPS, and will drop if the mouse is outside the bounds
         IsFixedTimeStep = false;
         GfxManager.SynchronizeWithVerticalRetrace = true;
+        //TargetElapsedTime = TimeSpan.FromSeconds(1d / 220d); //60
 
         // Put some of this into threads to load faster in a loading menu, insted of running it here.
         GlobalTextures.LoadContent();
@@ -312,13 +314,25 @@ public class GameWorld : Game
         CurrentScene = Scenes[NextScene.Value]; // Changes to new scene
         CurrentScene.Initialize(); // Starts the new scene
 
-        // Set color of all scene objects
+        // Set
+        //
+        // of all scene objects
 
         NextScene = null;
     }
 
 
     #endregion Scene
+
+    //public static Timer GetTimer(float amountPerSecond, ElapsedEventHandler onElapsed)
+    //{
+    //    Timer timer = new();
+    //    // Should use the and be updated when the GameSpeed changes
+    //    // Could use a observer pattern with the Gameworld...
+    //    timer.Interval = 1000f / amountPerSecond;
+    //    timer.Elapsed += onElapsed;
+    //    return timer;
+    //}
 }
 
 
