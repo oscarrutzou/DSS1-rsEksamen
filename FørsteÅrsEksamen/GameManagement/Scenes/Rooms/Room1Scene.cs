@@ -37,24 +37,27 @@ public class Room1Scene : RoomBase
     private string _pauseTutorialText = "Press ESC to pause\nDoes not pause game";
     private string _potionTutorialText = "Find a red potion\nPress E to use and heal";
     private string _finnishedBaseTutorialText = "Completed base tutorial"; 
-    private string _finnishedPotionTutorialText = "Completed full tutorial\nHere is 100 gold"; 
+    private string _finnishedPotionTutorialText = "Here is 100 gold\nFor completing tutorial"; 
+    private bool _startRemoveTimer { get; set; }
+    private double _tutorialRemoveTimer, _tutorialHowLongOnScreen = 5f;
+    private bool _hasCompletedTutorialBefore;
 
-
-    private bool _startRemoveTimer;
-    private double _tutorialRemoveTimer, _tutorialHowLongOnScreen = 2f;
 
     public override void Initialize()
     {
         GridName = "Level1";
         GridWidth = 40;
         GridHeight = 28;
-
+        
         SaveData.Level_Reached = 1;
 
         BackGroundTexture = TextureNames.Level1BG;
         ForeGroundTexture = TextureNames.Level1FG;
 
         base.Initialize();
+
+        _hasCompletedTutorialBefore = SaveData.HasCompletedFullTutorial;
+        ResetTimer();
         AddListenerCommands();
     }
 
@@ -80,7 +83,7 @@ public class Room1Scene : RoomBase
 
     private void AddListenerCommands()
     {
-        if (SaveData.HasCompletedFullTutorial) return;
+        if (_hasCompletedTutorialBefore) return;
 
         _tutorialText = _moveTutorialText;
 
@@ -106,7 +109,7 @@ public class Room1Scene : RoomBase
         playerHealth.On50Hp += ChangeTextToHealthReminder;
 
         potionTutorialCmd = new(FinnishedPotionTutorial);
-        InputHandler.Instance.AddKeyUpdateCommand(UseItem, potionTutorialCmd);
+        InputHandler.Instance.AddKeyButtonDownCommand(UseItem, potionTutorialCmd);
 
     }
     private void ChangeToAttackTutorial()
@@ -136,20 +139,24 @@ public class Room1Scene : RoomBase
     {
         if (_tutorialText == "" || _tutorialText == _finnishedBaseTutorialText)
         {
-            _startRemoveTimer = false;
-            _tutorialRemoveTimer = 0f;
+            ResetTimer();
             _tutorialText = _potionTutorialText;
         }
     }
+
     private void FinnishedPotionTutorial()
     {
         if (!Player.HasUsedItem || _tutorialText != _potionTutorialText) return;
         _tutorialText = _finnishedPotionTutorialText;
         SaveData.HasCompletedFullTutorial = true;
-        DB.Instance.SaveGame(SaveData.CurrentSaveID);
+        DB.Instance.AddCurrency(100);
         _startRemoveTimer = true;
     }
-
+    private void ResetTimer()
+    {
+        _startRemoveTimer = false;
+        _tutorialRemoveTimer = 0f;
+    }
     public override void Update()
     {
         base.Update();
@@ -163,7 +170,26 @@ public class Room1Scene : RoomBase
         if (_startRemoveTimer)
             _tutorialRemoveTimer += GameWorld.DeltaTime;
     }
-    
+    public override void DrawOnScreen(SpriteBatch spriteBatch)
+    {
+        base.DrawOnScreen(spriteBatch);
+
+        if (string.IsNullOrEmpty(_tutorialText) || _hasCompletedTutorialBefore) return;
+
+        if (_startRemoveTimer)
+        {
+            double normalizedTime = _tutorialRemoveTimer / _tutorialHowLongOnScreen;
+            if (normalizedTime >= 1) return; // Dont draw if the timer is not 
+        }
+
+        Vector2 size = GlobalTextures.DefaultFont.MeasureString(_tutorialText);
+        Vector2 textPos = GameWorld.Instance.UiCam.TopRight + new Vector2(-260, 205);
+
+        SpriteRenderer.DrawCenteredSprite(spriteBatch, TextureNames.QuestUnder, textPos, BaseMath.TransitionColor(Color.White), LayerDepth.Default);
+
+        GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, textPos, _tutorialText, CurrentTextColor);
+    }
+
     #region Remove Commands
     private void CheckIfShouldDeleteMoveChecks()
     {
@@ -200,30 +226,9 @@ public class Room1Scene : RoomBase
     // Remove potion check
     private void CheckIfShouldDeletePotionChecks()
     {
-        if (_hasRemovedPotionChecks || _tutorialText != _finnishedBaseTutorialText) return;
+        if (_hasRemovedPotionChecks || _tutorialText != _finnishedPotionTutorialText) return;
         _hasRemovedPotionChecks = true;
-        InputHandler.Instance.RemoveKeyUpdateCommand(UseItem, potionTutorialCmd);
+        InputHandler.Instance.RemoveKeyButtonDownCommand(UseItem, potionTutorialCmd);
     }
     #endregion
-
-    // First WASD
-    public override void DrawOnScreen(SpriteBatch spriteBatch)
-    {
-        base.DrawOnScreen(spriteBatch);
-
-        if (string.IsNullOrEmpty(_tutorialText) || SaveData.HasCompletedFullTutorial) return;
-
-        if (_startRemoveTimer)
-        {
-            double normalizedTime = _tutorialRemoveTimer / _tutorialHowLongOnScreen;
-            if (normalizedTime >= 1) return; // Dont draw if the timer is not 
-        }
-
-        Vector2 size = GlobalTextures.DefaultFont.MeasureString(_tutorialText);
-        Vector2 textPos = GameWorld.Instance.UiCam.TopRight + new Vector2(-260, 205);
-
-        SpriteRenderer.DrawCenteredSprite(spriteBatch, TextureNames.QuestUnder, textPos, BaseMath.TransitionColor(Color.White), LayerDepth.Default);
-
-        GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, textPos, _tutorialText, CurrentTextColor);
-    }
 }

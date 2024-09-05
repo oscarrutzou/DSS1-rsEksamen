@@ -44,6 +44,7 @@ public static class SaveData
         UnlockedWeapons = new();
         UnlockedClasses = new();
         Player = null;
+        HasCompletedFullTutorial = false;
     }
 
     public static void ResetPlayer()

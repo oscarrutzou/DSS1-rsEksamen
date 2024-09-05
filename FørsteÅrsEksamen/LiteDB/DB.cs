@@ -201,11 +201,12 @@ public class DB
         SaveData.Currency = savedData.Currency;
         SaveData.UnlockedWeapons = savedData.Unlocked_Weapons;
         SaveData.UnlockedClasses = savedData.Unlocked_Classes;
+        SaveData.HasCompletedFullTutorial = savedData.HasCompletedFullTutorial;
 
         return savedData;
     }
 
-    public SaveFileData SaveGame(int currentSaveID)
+    public SaveFileData SaveGame(int currentSaveID, bool saveRun = true)
     {
         using var db = new LiteDatabase(DataBasePath);
 
@@ -229,10 +230,10 @@ public class DB
             savedData.HasCompletedFullTutorial = SaveData.HasCompletedFullTutorial;
             savedData.Last_Login = DateTime.Now;
 
-            if (savedData.RunData != null && SaveData.Player != null) // Make sure the scene has been initalized
+            if (saveRun && savedData.RunData != null && SaveData.Player != null) // Make sure the scene has been initalized
             {
                 // Update rundata
-                savedData = UpdateRun(savedData);
+                UpdateRun(ref savedData);
             }
 
             saveCollection.Update(savedData);
@@ -241,7 +242,17 @@ public class DB
         return savedData;
     }
 
-    private SaveFileData UpdateRun(SaveFileData savedData)
+    public SaveFileData SaveGameCurrencyTutorial(int currentSaveID)
+    {
+        using var db = new LiteDatabase(DataBasePath);
+        ILiteCollection<SaveFileData> saveCollection = db.GetCollection<SaveFileData>();
+        SaveFileData savedData = saveCollection.FindById(currentSaveID);
+        if (savedData == null) return null;
+
+
+        return savedData;
+    }
+    private void UpdateRun(ref SaveFileData savedData)
     {
         savedData.RunData.Room_Reached = SaveData.Level_Reached;
         savedData.RunData.Time_Left = SaveData.Time_Left;
@@ -252,7 +263,6 @@ public class DB
         Health playerHealth = SaveData.Player.GameObject.GetComponent<Health>();
         savedData.RunData.PlayerData.Health = playerHealth.CurrentHealth;
         savedData.RunData.PlayerData.Potion_Name = potionName;
-        return savedData;
     }
 
     private SaveFileData GetNewSaveData(int currentSaveID)
@@ -263,6 +273,7 @@ public class DB
             Currency = SaveData.Currency,
             Unlocked_Classes = SaveData.UnlockedClasses,
             Unlocked_Weapons = SaveData.UnlockedWeapons,
+            HasCompletedFullTutorial = SaveData.HasCompletedFullTutorial,
         };
     }
 
@@ -330,7 +341,7 @@ public class DB
 
             #endregion Load Player
 
-            savedData = UpdateRun(savedData);
+            UpdateRun(ref savedData);
 
             saveCollection.Update(savedData);
         }
@@ -411,7 +422,7 @@ public class DB
     {
         SaveData.Currency += amount;
 
-        SaveGame(SaveData.CurrentSaveID);
+        SaveGame(SaveData.CurrentSaveID, false);
     }
 
     /// <summary>
