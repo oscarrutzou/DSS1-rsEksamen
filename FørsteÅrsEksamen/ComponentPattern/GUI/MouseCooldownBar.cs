@@ -1,10 +1,10 @@
-﻿using DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons;
-using DoctorsDungeon.GameManagement;
-using DoctorsDungeon.LiteDB;
+﻿using ShamansDungeon.ComponentPattern.Weapons.MeleeWeapons;
+using ShamansDungeon.GameManagement;
+using ShamansDungeon.LiteDB;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace DoctorsDungeon.ComponentPattern.GUI
+namespace ShamansDungeon.ComponentPattern.GUI
 {
     public class MouseCooldownBar : ScalableBar
     {

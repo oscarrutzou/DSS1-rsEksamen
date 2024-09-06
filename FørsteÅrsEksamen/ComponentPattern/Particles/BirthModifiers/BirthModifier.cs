@@ -1,6 +1,6 @@
 ﻿
 
-namespace DoctorsDungeon.ComponentPattern.Particles.BirthModifiers
+namespace ShamansDungeon.ComponentPattern.Particles.BirthModifiers
 {
     public abstract class BirthModifier
     {

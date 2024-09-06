@@ -1,11 +1,11 @@
-﻿using DoctorsDungeon.CommandPattern;
-using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.WorldObjects;
-using DoctorsDungeon.GameManagement;
-using DoctorsDungeon.GameManagement.Scenes;
-using DoctorsDungeon.GameManagement.Scenes.Menus;
-using DoctorsDungeon.GameManagement.Scenes.Rooms;
-using DoctorsDungeon.GameManagement.Scenes.TestScenes;
+﻿using ShamansDungeon.CommandPattern;
+using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.WorldObjects;
+using ShamansDungeon.GameManagement;
+using ShamansDungeon.GameManagement.Scenes;
+using ShamansDungeon.GameManagement.Scenes.Menus;
+using ShamansDungeon.GameManagement.Scenes.Rooms;
+using ShamansDungeon.GameManagement.Scenes.TestScenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
 
-namespace DoctorsDungeon;
+namespace ShamansDungeon;
 
 // Alle
 public class GameWorld : Game
@@ -136,11 +136,10 @@ public class GameWorld : Game
         // Draw the effects on the screen.
         _canvas.Draw(_spriteBatch);
 
-        DrawScreen();
+        //DrawScreen();
         
         base.Draw(gameTime);
     }
-    //public RenderTarget2D UIRenderTarget;
 
     public void DrawScreen()
     {
@@ -153,8 +152,6 @@ public class GameWorld : Game
         //DrawDebugShaderStrings();
         _spriteBatch.End();
     }
-
-
 
     public void SetResolutionSize(int width, int height)
     {

@@ -1,7 +1,7 @@
-﻿using DoctorsDungeon.Other;
+﻿using ShamansDungeon.Other;
 using Microsoft.Xna.Framework;
 
-namespace DoctorsDungeon.ComponentPattern.Particles.Modifiers
+namespace ShamansDungeon.ComponentPattern.Particles.Modifiers
 {
     public class GravityModifier : Modifier
     {

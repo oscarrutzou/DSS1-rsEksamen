@@ -1,8 +1,8 @@
-﻿using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons;
+﻿using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.Weapons.RangedWeapons;
 using Microsoft.Xna.Framework;
 
-namespace DoctorsDungeon.Factory;
+namespace ShamansDungeon.Factory;
 
 public static class ProjectileFactory
 {

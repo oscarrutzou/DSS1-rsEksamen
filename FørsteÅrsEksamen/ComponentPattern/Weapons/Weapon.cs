@@ -1,8 +1,8 @@
-﻿using DoctorsDungeon.CommandPattern;
-using DoctorsDungeon.ComponentPattern.Enemies;
-using DoctorsDungeon.ComponentPattern.PlayerClasses;
-using DoctorsDungeon.GameManagement;
-using DoctorsDungeon.Other;
+﻿using ShamansDungeon.CommandPattern;
+using ShamansDungeon.ComponentPattern.Enemies;
+using ShamansDungeon.ComponentPattern.PlayerClasses;
+using ShamansDungeon.GameManagement;
+using ShamansDungeon.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,7 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace DoctorsDungeon.ComponentPattern.Weapons;
+namespace ShamansDungeon.ComponentPattern.Weapons;
 
 /// <summary>
 /// A class used to generate a collider that moves a rotation around its startPos

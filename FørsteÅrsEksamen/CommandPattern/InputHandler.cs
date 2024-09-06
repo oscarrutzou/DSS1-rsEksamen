@@ -1,14 +1,14 @@
-﻿using DoctorsDungeon.CommandPattern.Commands;
-using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.Path;
-using DoctorsDungeon.GameManagement;
-using DoctorsDungeon.LiteDB;
+﻿using ShamansDungeon.CommandPattern.Commands;
+using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.Path;
+using ShamansDungeon.GameManagement;
+using ShamansDungeon.LiteDB;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DoctorsDungeon.CommandPattern;
+namespace ShamansDungeon.CommandPattern;
 
 public enum ScrollWheelState
 {

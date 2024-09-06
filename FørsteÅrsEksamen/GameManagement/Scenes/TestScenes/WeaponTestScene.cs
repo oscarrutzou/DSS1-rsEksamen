@@ -1,22 +1,22 @@
-﻿using DoctorsDungeon.CommandPattern;
-using DoctorsDungeon.CommandPattern.Commands;
-using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.Particles;
-using DoctorsDungeon.ComponentPattern.Particles.BirthModifiers;
-using DoctorsDungeon.ComponentPattern.Particles.Modifiers;
-using DoctorsDungeon.ComponentPattern.Particles.Origins;
-using DoctorsDungeon.ComponentPattern.PlayerClasses;
-using DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons;
-using DoctorsDungeon.ComponentPattern.WorldObjects;
-using DoctorsDungeon.Factory;
-using DoctorsDungeon.Factory.Gui;
-using DoctorsDungeon.GameManagement.Scenes.Menus;
+﻿using ShamansDungeon.CommandPattern;
+using ShamansDungeon.CommandPattern.Commands;
+using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.Particles;
+using ShamansDungeon.ComponentPattern.Particles.BirthModifiers;
+using ShamansDungeon.ComponentPattern.Particles.Modifiers;
+using ShamansDungeon.ComponentPattern.Particles.Origins;
+using ShamansDungeon.ComponentPattern.PlayerClasses;
+using ShamansDungeon.ComponentPattern.Weapons.MeleeWeapons;
+using ShamansDungeon.ComponentPattern.WorldObjects;
+using ShamansDungeon.Factory;
+using ShamansDungeon.Factory.Gui;
+using ShamansDungeon.GameManagement.Scenes.Menus;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 
-namespace DoctorsDungeon.GameManagement.Scenes.TestScenes;
+namespace ShamansDungeon.GameManagement.Scenes.TestScenes;
 
 public class WeaponTestScene : Scene
 {

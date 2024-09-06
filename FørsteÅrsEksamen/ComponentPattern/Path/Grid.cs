@@ -1,9 +1,9 @@
-﻿using DoctorsDungeon.Factory;
+﻿using ShamansDungeon.Factory;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 
-namespace DoctorsDungeon.ComponentPattern.Path;
+namespace ShamansDungeon.ComponentPattern.Path;
 
 // Oscar
 public class Grid : Component

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 
 
-namespace DoctorsDungeon.ComponentPattern.Particles
+namespace ShamansDungeon.ComponentPattern.Particles
 {
     public interface IParticle
     {

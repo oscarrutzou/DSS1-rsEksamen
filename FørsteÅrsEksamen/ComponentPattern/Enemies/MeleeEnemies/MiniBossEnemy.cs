@@ -1,23 +1,23 @@
-﻿using DoctorsDungeon.ComponentPattern.Particles.BirthModifiers;
-using DoctorsDungeon.ComponentPattern.Particles.Modifiers;
-using DoctorsDungeon.ComponentPattern.Particles.Origins;
-using DoctorsDungeon.ComponentPattern.Particles;
-using DoctorsDungeon.ComponentPattern.Path;
-using DoctorsDungeon.ComponentPattern.PlayerClasses;
-using DoctorsDungeon.ComponentPattern.WorldObjects;
-using DoctorsDungeon.Factory;
-using DoctorsDungeon.GameManagement;
-using DoctorsDungeon.GameManagement.Scenes.Menus;
-using DoctorsDungeon.GameManagement.Scenes.Rooms;
-using DoctorsDungeon.Other;
+﻿using ShamansDungeon.ComponentPattern.Particles.BirthModifiers;
+using ShamansDungeon.ComponentPattern.Particles.Modifiers;
+using ShamansDungeon.ComponentPattern.Particles.Origins;
+using ShamansDungeon.ComponentPattern.Particles;
+using ShamansDungeon.ComponentPattern.Path;
+using ShamansDungeon.ComponentPattern.PlayerClasses;
+using ShamansDungeon.ComponentPattern.WorldObjects;
+using ShamansDungeon.Factory;
+using ShamansDungeon.GameManagement;
+using ShamansDungeon.GameManagement.Scenes.Menus;
+using ShamansDungeon.GameManagement.Scenes.Rooms;
+using ShamansDungeon.Other;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using DoctorsDungeon.ComponentPattern.Effects;
+using ShamansDungeon.ComponentPattern.Effects;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
+namespace ShamansDungeon.ComponentPattern.Enemies.MeleeEnemies
 {
     /*
      * Tribal Conjurer Lokar: 

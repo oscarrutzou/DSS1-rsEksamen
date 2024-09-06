@@ -1,4 +1,4 @@
-﻿namespace DoctorsDungeon.CommandPattern;
+﻿namespace ShamansDungeon.CommandPattern;
 
 // Oscar
 public abstract class Command

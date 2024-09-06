@@ -1,13 +1,13 @@
-﻿using DoctorsDungeon.ComponentPattern.Particles.BirthModifiers;
-using DoctorsDungeon.ComponentPattern.Particles.Modifiers;
-using DoctorsDungeon.ComponentPattern.Particles.Origins;
-using DoctorsDungeon.ComponentPattern.Particles;
-using DoctorsDungeon.GameManagement;
-using DoctorsDungeon.LiteDB;
+﻿using ShamansDungeon.ComponentPattern.Particles.BirthModifiers;
+using ShamansDungeon.ComponentPattern.Particles.Modifiers;
+using ShamansDungeon.ComponentPattern.Particles.Origins;
+using ShamansDungeon.ComponentPattern.Particles;
+using ShamansDungeon.GameManagement;
+using ShamansDungeon.LiteDB;
 using Microsoft.Xna.Framework;
-using DoctorsDungeon.GameManagement.Scenes.Menus;
+using ShamansDungeon.GameManagement.Scenes.Menus;
 
-namespace DoctorsDungeon.ComponentPattern.WorldObjects;
+namespace ShamansDungeon.ComponentPattern.WorldObjects;
 
 // Oscar
 public class TransferDoor : Component

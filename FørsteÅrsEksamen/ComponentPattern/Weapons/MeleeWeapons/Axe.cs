@@ -1,4 +1,4 @@
-﻿namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons;
+﻿namespace ShamansDungeon.ComponentPattern.Weapons.MeleeWeapons;
 
 // Erik
 public class Axe : MeleeWeapon

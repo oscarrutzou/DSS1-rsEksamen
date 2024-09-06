@@ -1,15 +1,15 @@
-﻿using DoctorsDungeon.ComponentPattern.Particles.Origins;
-using DoctorsDungeon.ComponentPattern.Particles;
-using DoctorsDungeon.GameManagement;
+﻿using ShamansDungeon.ComponentPattern.Particles.Origins;
+using ShamansDungeon.ComponentPattern.Particles;
+using ShamansDungeon.GameManagement;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
-using DoctorsDungeon.ComponentPattern.GUI;
+using ShamansDungeon.ComponentPattern.GUI;
 using System;
 using System.Diagnostics;
-using DoctorsDungeon.Other;
+using ShamansDungeon.Other;
 
-namespace DoctorsDungeon.ComponentPattern.WorldObjects
+namespace ShamansDungeon.ComponentPattern.WorldObjects
 {
 
     public class TrainingDummy : Component

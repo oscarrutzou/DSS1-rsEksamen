@@ -1,12 +1,12 @@
 ﻿
 
-using DoctorsDungeon.ComponentPattern.Particles.BirthModifiers;
-using DoctorsDungeon.ComponentPattern.Particles.Modifiers;
-using DoctorsDungeon.ComponentPattern.Particles.Origins;
-using DoctorsDungeon.GameManagement;
+using ShamansDungeon.ComponentPattern.Particles.BirthModifiers;
+using ShamansDungeon.ComponentPattern.Particles.Modifiers;
+using ShamansDungeon.ComponentPattern.Particles.Origins;
+using ShamansDungeon.GameManagement;
 using Microsoft.Xna.Framework;
 
-namespace DoctorsDungeon.ComponentPattern.Particles
+namespace ShamansDungeon.ComponentPattern.Particles
 {
     public static class EmitterFactory
     {

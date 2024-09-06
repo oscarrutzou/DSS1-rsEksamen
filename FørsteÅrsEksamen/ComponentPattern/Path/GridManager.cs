@@ -1,10 +1,10 @@
-﻿using DoctorsDungeon.CommandPattern;
-using DoctorsDungeon.ComponentPattern.GUI;
-using DoctorsDungeon.LiteDB;
+﻿using ShamansDungeon.CommandPattern;
+using ShamansDungeon.ComponentPattern.GUI;
+using ShamansDungeon.LiteDB;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
-namespace DoctorsDungeon.ComponentPattern.Path;
+namespace ShamansDungeon.ComponentPattern.Path;
 
 public enum DrawMapSelecter
 {

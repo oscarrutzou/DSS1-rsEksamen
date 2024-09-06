@@ -1,5 +1,5 @@
-﻿using DoctorsDungeon.ComponentPattern.PlayerClasses;
-using DoctorsDungeon.ComponentPattern.Weapons;
+﻿using ShamansDungeon.ComponentPattern.PlayerClasses;
+using ShamansDungeon.ComponentPattern.Weapons;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DoctorsDungeon.ComponentPattern.WorldObjects
+namespace ShamansDungeon.ComponentPattern.WorldObjects
 {
     public class Health : Component
     {

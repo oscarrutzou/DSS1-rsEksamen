@@ -1,8 +1,8 @@
-﻿using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.WorldObjects;
+﻿using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.WorldObjects;
 using Microsoft.Xna.Framework;
 
-namespace DoctorsDungeon.Factory
+namespace ShamansDungeon.Factory
 {
     public static class TraningDummyFactory
     {

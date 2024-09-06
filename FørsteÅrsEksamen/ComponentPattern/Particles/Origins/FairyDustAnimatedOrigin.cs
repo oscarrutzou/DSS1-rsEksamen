@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace DoctorsDungeon.ComponentPattern.Particles.Origins
+namespace ShamansDungeon.ComponentPattern.Particles.Origins
 {
     public class FairyDustAnimatedOrigin : Origin
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace DoctorsDungeon.GameManagement;
+namespace ShamansDungeon.GameManagement;
 
 // Oscar
 public class Camera

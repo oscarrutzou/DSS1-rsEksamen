@@ -1,11 +1,11 @@
-﻿using DoctorsDungeon.LiteDB;
+﻿using ShamansDungeon.LiteDB;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using System;
 using System.Collections.Generic;
 
-namespace DoctorsDungeon.GameManagement;
+namespace ShamansDungeon.GameManagement;
 
 public enum SoundNames
 {

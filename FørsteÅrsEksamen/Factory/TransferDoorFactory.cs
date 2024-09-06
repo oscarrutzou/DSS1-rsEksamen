@@ -1,8 +1,8 @@
-﻿using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.WorldObjects;
-using DoctorsDungeon.GameManagement;
+﻿using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.WorldObjects;
+using ShamansDungeon.GameManagement;
 
-namespace DoctorsDungeon.Factory;
+namespace ShamansDungeon.Factory;
 
 public static class TransferDoorFactory
 {

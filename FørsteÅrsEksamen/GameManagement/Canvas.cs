@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 
 
-namespace DoctorsDungeon.GameManagement
+namespace ShamansDungeon.GameManagement
 {
 
     public class Canvas
@@ -164,16 +164,16 @@ namespace DoctorsDungeon.GameManagement
             // Clear the screen
             _graphicsDevice.Clear(Color.Transparent);
 
-            if (GameWorld.Instance.SingleColorEffect)
-                DrawBaseScreen(spriteBatch, GlobalTextures.SingleColorEffect); // Need to make this effect also contain vignette
-            else
-                DrawBaseScreen(spriteBatch, GlobalTextures.VignetteEffect);
+            //if (GameWorld.Instance.SingleColorEffect)
+            //    DrawBaseScreen(spriteBatch, GlobalTextures.SingleColorEffect); // Need to make this effect also contain vignette
+            //else
+            //    DrawBaseScreen(spriteBatch, GlobalTextures.VignetteEffect);
 
 
-            // Draw the rest of the effects (All are going to be having chromatic aberration on them 
-            spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.Additive, effect: GameWorld.Instance.SingleColorEffect ? null : GlobalTextures.ChromaticAberrationEffect);
+            // Draw the rest of the effects (All are going to be having chromatic aberration on them , effect: GameWorld.Instance.SingleColorEffect ? null : GlobalTextures.ChromaticAberrationEffect
+            spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.Additive);
 
-            //spriteBatch.Draw(_baseScreen, Vector2.Zero, Color.White);
+            spriteBatch.Draw(_baseScreen, Vector2.Zero, Color.White);
             spriteBatch.Draw(_blurSecondPass, Vector2.Zero, Color.White);
             spriteBatch.End();
 

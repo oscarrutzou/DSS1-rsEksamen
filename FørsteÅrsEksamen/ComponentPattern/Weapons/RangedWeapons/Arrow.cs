@@ -1,4 +1,4 @@
-﻿namespace DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons;
+﻿namespace ShamansDungeon.ComponentPattern.Weapons.RangedWeapons;
 
 // Erik
 public class Arrow : Projectile

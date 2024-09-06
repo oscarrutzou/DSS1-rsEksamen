@@ -1,7 +1,7 @@
-﻿using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.Factory;
+﻿using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.Factory;
 
-namespace DoctorsDungeon.ObjectPoolPattern;
+namespace ShamansDungeon.ObjectPoolPattern;
 
 // Stefan
 public class ProjectilePool : ObjectPool

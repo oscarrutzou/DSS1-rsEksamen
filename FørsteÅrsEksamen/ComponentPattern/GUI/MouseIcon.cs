@@ -1,5 +1,5 @@
-﻿using DoctorsDungeon.CommandPattern;
-using DoctorsDungeon.GameManagement.Scenes.Menus;
+﻿using ShamansDungeon.CommandPattern;
+using ShamansDungeon.GameManagement.Scenes.Menus;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DoctorsDungeon.ComponentPattern.GUI
+namespace ShamansDungeon.ComponentPattern.GUI
 {
     public class MouseIcon : Component
     {

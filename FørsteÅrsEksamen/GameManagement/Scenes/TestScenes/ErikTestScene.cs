@@ -1,19 +1,19 @@
-﻿using DoctorsDungeon.CommandPattern;
-using DoctorsDungeon.CommandPattern.Commands;
-using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.Path;
-using DoctorsDungeon.ComponentPattern.PlayerClasses;
-using DoctorsDungeon.ComponentPattern.Weapons;
-using DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons;
-using DoctorsDungeon.Factory;
-using DoctorsDungeon.LiteDB;
-using DoctorsDungeon.Other;
+﻿using ShamansDungeon.CommandPattern;
+using ShamansDungeon.CommandPattern.Commands;
+using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.Path;
+using ShamansDungeon.ComponentPattern.PlayerClasses;
+using ShamansDungeon.ComponentPattern.Weapons;
+using ShamansDungeon.ComponentPattern.Weapons.RangedWeapons;
+using ShamansDungeon.Factory;
+using ShamansDungeon.LiteDB;
+using ShamansDungeon.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
-namespace DoctorsDungeon.GameManagement.Scenes.TestScenes;
+namespace ShamansDungeon.GameManagement.Scenes.TestScenes;
 
 public class ErikTestScene : Scene
 {

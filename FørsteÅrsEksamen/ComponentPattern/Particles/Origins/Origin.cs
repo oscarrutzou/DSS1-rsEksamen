@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DoctorsDungeon.ComponentPattern.Particles.Origins
+namespace ShamansDungeon.ComponentPattern.Particles.Origins
 {
     public abstract class Origin
     {

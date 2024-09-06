@@ -1,8 +1,8 @@
-﻿using DoctorsDungeon.CommandPattern;
-using DoctorsDungeon.ComponentPattern.Path;
-using DoctorsDungeon.ComponentPattern.PlayerClasses;
-using DoctorsDungeon.GameManagement;
-using DoctorsDungeon.Other;
+﻿using ShamansDungeon.CommandPattern;
+using ShamansDungeon.ComponentPattern.Path;
+using ShamansDungeon.ComponentPattern.PlayerClasses;
+using ShamansDungeon.GameManagement;
+using ShamansDungeon.Other;
 using LiteDB;
 using Microsoft.Xna.Framework;
 using System;
@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using System.Linq;
 
-namespace DoctorsDungeon.ComponentPattern.Enemies;
+namespace ShamansDungeon.ComponentPattern.Enemies;
 
 //Asser, Oscar
 public abstract class Enemy : Character

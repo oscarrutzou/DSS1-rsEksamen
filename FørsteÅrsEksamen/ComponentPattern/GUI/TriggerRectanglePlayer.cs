@@ -1,5 +1,5 @@
-﻿using DoctorsDungeon.ComponentPattern.Path;
-using DoctorsDungeon.LiteDB;
+﻿using ShamansDungeon.ComponentPattern.Path;
+using ShamansDungeon.LiteDB;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DoctorsDungeon.ComponentPattern.GUI
+namespace ShamansDungeon.ComponentPattern.GUI
 {
     public class TriggerRectanglePlayer : Component
     {

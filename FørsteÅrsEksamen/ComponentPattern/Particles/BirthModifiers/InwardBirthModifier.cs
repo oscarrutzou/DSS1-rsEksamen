@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace DoctorsDungeon.ComponentPattern.Particles.BirthModifiers
+namespace ShamansDungeon.ComponentPattern.Particles.BirthModifiers
 {
     public class InwardBirthModifier : BirthModifier
     {

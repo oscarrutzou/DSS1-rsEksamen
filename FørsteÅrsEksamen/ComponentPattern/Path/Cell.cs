@@ -1,10 +1,10 @@
-﻿using DoctorsDungeon.CommandPattern;
-using DoctorsDungeon.ComponentPattern.GUI;
-using DoctorsDungeon.GameManagement;
+﻿using ShamansDungeon.CommandPattern;
+using ShamansDungeon.ComponentPattern.GUI;
+using ShamansDungeon.GameManagement;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace DoctorsDungeon.ComponentPattern.Path;
+namespace ShamansDungeon.ComponentPattern.Path;
 
 public enum CellWalkableType
 {

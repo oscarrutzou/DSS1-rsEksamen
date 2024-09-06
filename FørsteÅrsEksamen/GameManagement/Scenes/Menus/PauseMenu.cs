@@ -1,9 +1,9 @@
-﻿using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.GUI;
-using DoctorsDungeon.Factory.Gui;
+﻿using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.GUI;
+using ShamansDungeon.Factory.Gui;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace DoctorsDungeon.GameManagement.Scenes.Menus;
+namespace ShamansDungeon.GameManagement.Scenes.Menus;
 
 // Stefan
 public class PauseMenu : MenuScene

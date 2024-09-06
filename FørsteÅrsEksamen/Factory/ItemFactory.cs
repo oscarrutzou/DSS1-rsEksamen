@@ -1,9 +1,9 @@
-﻿using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.WorldObjects;
-using DoctorsDungeon.GameManagement;
+﻿using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.WorldObjects;
+using ShamansDungeon.GameManagement;
 using System.Numerics;
 
-namespace DoctorsDungeon.Factory;
+namespace ShamansDungeon.Factory;
 
 //Asser
 public static class ItemFactory

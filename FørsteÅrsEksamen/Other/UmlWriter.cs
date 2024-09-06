@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace DoctorsDungeon.Other;
+namespace ShamansDungeon.Other;
 
 // Bare en måde at kunne få vores kode hen til vores design klasse diagram
 internal static class UmlWriter

@@ -1,10 +1,10 @@
-﻿using DoctorsDungeon.GameManagement;
-using DoctorsDungeon.GameManagement.Scenes;
+﻿using ShamansDungeon.GameManagement;
+using ShamansDungeon.GameManagement.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
-namespace DoctorsDungeon.Other;
+namespace ShamansDungeon.Other;
 
 // Oscar
 public static class BaseMath

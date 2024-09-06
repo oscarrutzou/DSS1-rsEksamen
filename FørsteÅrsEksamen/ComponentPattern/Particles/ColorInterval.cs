@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 
-namespace DoctorsDungeon.ComponentPattern.Particles
+namespace ShamansDungeon.ComponentPattern.Particles
 {
     public class ColorInterval
     {

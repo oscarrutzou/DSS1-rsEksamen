@@ -1,8 +1,8 @@
-﻿using DoctorsDungeon.ComponentPattern;
+﻿using ShamansDungeon.ComponentPattern;
 using System;
 using System.Collections.Generic;
 
-namespace DoctorsDungeon.ObjectPoolPattern;
+namespace ShamansDungeon.ObjectPoolPattern;
 
 // Stefan
 public abstract class ObjectPool

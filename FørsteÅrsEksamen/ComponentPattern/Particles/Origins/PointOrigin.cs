@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace DoctorsDungeon.ComponentPattern.Particles.Origins
+namespace ShamansDungeon.ComponentPattern.Particles.Origins
 {
     public class PointOrigin : Origin
     {

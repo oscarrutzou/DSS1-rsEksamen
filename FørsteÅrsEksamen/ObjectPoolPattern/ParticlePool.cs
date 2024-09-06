@@ -1,9 +1,9 @@
-﻿using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.Particles;
+﻿using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.Particles;
 using Microsoft.Xna.Framework;
 using System;
 
-namespace DoctorsDungeon.ObjectPoolPattern
+namespace ShamansDungeon.ObjectPoolPattern
 {
     public class ParticlePool : ObjectPool
     {

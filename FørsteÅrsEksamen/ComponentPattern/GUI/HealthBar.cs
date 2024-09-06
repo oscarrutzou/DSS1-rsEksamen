@@ -1,8 +1,8 @@
-﻿using DoctorsDungeon.ComponentPattern.Enemies;
-using DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies;
-using DoctorsDungeon.ComponentPattern.WorldObjects;
-using DoctorsDungeon.GameManagement;
-using DoctorsDungeon.Other;
+﻿using ShamansDungeon.ComponentPattern.Enemies;
+using ShamansDungeon.ComponentPattern.Enemies.MeleeEnemies;
+using ShamansDungeon.ComponentPattern.WorldObjects;
+using ShamansDungeon.GameManagement;
+using ShamansDungeon.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DoctorsDungeon.ComponentPattern.GUI
+namespace ShamansDungeon.ComponentPattern.GUI
 {
     public class HealthBar : ScalableBar
     {

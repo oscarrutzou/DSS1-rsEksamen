@@ -1,9 +1,9 @@
-﻿using DoctorsDungeon.ComponentPattern;
+﻿using ShamansDungeon.ComponentPattern;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.IO;
 
-namespace DoctorsDungeon.GameManagement;
+namespace ShamansDungeon.GameManagement;
 
 public enum AnimNames
 {

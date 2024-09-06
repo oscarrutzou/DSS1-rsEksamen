@@ -1,6 +1,6 @@
-﻿using DoctorsDungeon.GameManagement;
-using DoctorsDungeon.LiteDB;
-using DoctorsDungeon.Other;
+﻿using ShamansDungeon.GameManagement;
+using ShamansDungeon.LiteDB;
+using ShamansDungeon.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SharpDX.Direct2D1.Effects;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DoctorsDungeon.ComponentPattern.GUI
+namespace ShamansDungeon.ComponentPattern.GUI
 {
     public class HourGlassIcon : Component
     {

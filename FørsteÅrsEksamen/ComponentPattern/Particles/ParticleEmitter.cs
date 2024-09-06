@@ -1,19 +1,19 @@
-﻿using DoctorsDungeon.ComponentPattern.Particles;
-using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon;
-using DoctorsDungeon.ComponentPattern.Particles.BirthModifiers;
-using DoctorsDungeon.ComponentPattern.Particles.Modifiers;
-using DoctorsDungeon.ComponentPattern.Particles.Origins;
-using DoctorsDungeon.ComponentPattern.PlayerClasses;
-using DoctorsDungeon.ComponentPattern.WorldObjects;
-using DoctorsDungeon.GameManagement;
-using DoctorsDungeon.ObjectPoolPattern;
-using DoctorsDungeon.Other;
+﻿using ShamansDungeon.ComponentPattern.Particles;
+using ShamansDungeon.ComponentPattern;
+using ShamansDungeon;
+using ShamansDungeon.ComponentPattern.Particles.BirthModifiers;
+using ShamansDungeon.ComponentPattern.Particles.Modifiers;
+using ShamansDungeon.ComponentPattern.Particles.Origins;
+using ShamansDungeon.ComponentPattern.PlayerClasses;
+using ShamansDungeon.ComponentPattern.WorldObjects;
+using ShamansDungeon.GameManagement;
+using ShamansDungeon.ObjectPoolPattern;
+using ShamansDungeon.Other;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 
-namespace DoctorsDungeon.ComponentPattern.Particles;
+namespace ShamansDungeon.ComponentPattern.Particles;
 
 public class ParticleEmitter : Emitter
 {

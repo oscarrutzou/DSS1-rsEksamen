@@ -1,10 +1,10 @@
-﻿using DoctorsDungeon.CommandPattern;
-using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ObserverPattern;
+﻿using ShamansDungeon.CommandPattern;
+using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ObserverPattern;
 using System;
 using System.Collections.Generic;
 
-namespace DoctorsDungeon.GameManagement.Scenes;
+namespace ShamansDungeon.GameManagement.Scenes;
 
 // Oscar
 public class SceneData : ILayerDepthObserver

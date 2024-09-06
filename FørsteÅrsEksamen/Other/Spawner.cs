@@ -1,11 +1,11 @@
-﻿using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.Enemies;
-using DoctorsDungeon.ComponentPattern.Path;
-using DoctorsDungeon.Factory;
+﻿using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.Enemies;
+using ShamansDungeon.ComponentPattern.Path;
+using ShamansDungeon.Factory;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
-namespace DoctorsDungeon.Other;
+namespace ShamansDungeon.Other;
 
 // Erik
 public class Spawner : Component

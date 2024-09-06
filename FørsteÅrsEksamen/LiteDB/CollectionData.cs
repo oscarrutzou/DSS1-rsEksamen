@@ -1,10 +1,10 @@
-﻿using DoctorsDungeon.ComponentPattern.Path;
-using DoctorsDungeon.Factory;
+﻿using ShamansDungeon.ComponentPattern.Path;
+using ShamansDungeon.Factory;
 using LiteDB;
 using System;
 using System.Collections.Generic;
 
-namespace DoctorsDungeon.LiteDB;
+namespace ShamansDungeon.LiteDB;
 
 // Oscar
 public class GridData

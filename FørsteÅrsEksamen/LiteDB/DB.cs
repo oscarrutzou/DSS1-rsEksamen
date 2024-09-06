@@ -1,10 +1,10 @@
-﻿using DoctorsDungeon.CommandPattern;
-using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.Path;
-using DoctorsDungeon.ComponentPattern.PlayerClasses;
-using DoctorsDungeon.ComponentPattern.WorldObjects;
-using DoctorsDungeon.Factory;
-using DoctorsDungeon.GameManagement.Scenes;
+﻿using ShamansDungeon.CommandPattern;
+using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.Path;
+using ShamansDungeon.ComponentPattern.PlayerClasses;
+using ShamansDungeon.ComponentPattern.WorldObjects;
+using ShamansDungeon.Factory;
+using ShamansDungeon.GameManagement.Scenes;
 using LiteDB;
 using Microsoft.Xna.Framework;
 using System;
@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace DoctorsDungeon.LiteDB;
+namespace ShamansDungeon.LiteDB;
 
 // Oscar
 public class DB
@@ -233,7 +233,7 @@ public class DB
             if (saveRun && savedData.RunData != null && SaveData.Player != null) // Make sure the scene has been initalized
             {
                 // Update rundata
-                UpdateRun(ref savedData);
+                savedData = UpdateRun(savedData);
             }
 
             saveCollection.Update(savedData);
@@ -242,17 +242,7 @@ public class DB
         return savedData;
     }
 
-    public SaveFileData SaveGameCurrencyTutorial(int currentSaveID)
-    {
-        using var db = new LiteDatabase(DataBasePath);
-        ILiteCollection<SaveFileData> saveCollection = db.GetCollection<SaveFileData>();
-        SaveFileData savedData = saveCollection.FindById(currentSaveID);
-        if (savedData == null) return null;
-
-
-        return savedData;
-    }
-    private void UpdateRun(ref SaveFileData savedData)
+    private SaveFileData UpdateRun(SaveFileData savedData)
     {
         savedData.RunData.Room_Reached = SaveData.Level_Reached;
         savedData.RunData.Time_Left = SaveData.Time_Left;
@@ -263,6 +253,7 @@ public class DB
         Health playerHealth = SaveData.Player.GameObject.GetComponent<Health>();
         savedData.RunData.PlayerData.Health = playerHealth.CurrentHealth;
         savedData.RunData.PlayerData.Potion_Name = potionName;
+        return savedData;
     }
 
     private SaveFileData GetNewSaveData(int currentSaveID)
@@ -341,7 +332,7 @@ public class DB
 
             #endregion Load Player
 
-            UpdateRun(ref savedData);
+            savedData = UpdateRun(savedData);
 
             saveCollection.Update(savedData);
         }

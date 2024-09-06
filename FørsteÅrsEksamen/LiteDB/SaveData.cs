@@ -1,21 +1,21 @@
-﻿using DoctorsDungeon.ComponentPattern.PlayerClasses;
-using DoctorsDungeon.Factory;
+﻿using ShamansDungeon.ComponentPattern.PlayerClasses;
+using ShamansDungeon.Factory;
 using System.Collections.Generic;
 
-namespace DoctorsDungeon.LiteDB;
+namespace ShamansDungeon.LiteDB;
 
 // Oscar
 public static class SaveData
 {
     private const int _startCurrency = 100; // Normal 100
-    private static double _startTimeLeft = 150f; // Normal 120f
+    private static double _startTimeLeft = 180f; //
 
     private const int _cheatMultiplier = 100;
 
     public static int CurrentSaveID = 1; //Gets set by player and determins loaded data
     public const int MaxSaveID = 3;
     public static int Currency;
-    public static bool HasCompletedFullTutorial;
+    public static bool HasCompletedFullTutorial; 
     // Save what classes and weapons are unlocked
     public static List<WeaponTypes> UnlockedWeapons { get; set; } = new();
 

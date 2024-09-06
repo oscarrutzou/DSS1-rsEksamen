@@ -1,11 +1,11 @@
-﻿using DoctorsDungeon.CommandPattern;
-using DoctorsDungeon.ComponentPattern.Enemies;
-using DoctorsDungeon.GameManagement;
-using DoctorsDungeon.Other;
+﻿using ShamansDungeon.CommandPattern;
+using ShamansDungeon.ComponentPattern.Enemies;
+using ShamansDungeon.GameManagement;
+using ShamansDungeon.Other;
 using Microsoft.Xna.Framework;
 using System;
 
-namespace DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons;
+namespace ShamansDungeon.ComponentPattern.Weapons.RangedWeapons;
 
 // Erik
 public class Projectile : Component

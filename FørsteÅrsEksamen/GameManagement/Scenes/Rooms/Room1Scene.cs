@@ -1,22 +1,22 @@
-﻿using DoctorsDungeon.CommandPattern;
-using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.GUI;
-using DoctorsDungeon.ComponentPattern.Particles.Origins;
-using DoctorsDungeon.ComponentPattern.Path;
-using DoctorsDungeon.ComponentPattern.WorldObjects;
-using DoctorsDungeon.Factory;
-using DoctorsDungeon.Factory.Gui;
-using DoctorsDungeon.LiteDB;
-using DoctorsDungeon.Other;
+﻿using ShamansDungeon.CommandPattern;
+using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.GUI;
+using ShamansDungeon.ComponentPattern.Particles.Origins;
+using ShamansDungeon.ComponentPattern.Path;
+using ShamansDungeon.ComponentPattern.WorldObjects;
+using ShamansDungeon.Factory;
+using ShamansDungeon.Factory.Gui;
+using ShamansDungeon.LiteDB;
+using ShamansDungeon.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
-using DoctorsDungeon.CommandPattern.Commands;
+using ShamansDungeon.CommandPattern.Commands;
 using System.Timers;
 using System;
-using DoctorsDungeon.ComponentPattern.PlayerClasses;
+using ShamansDungeon.ComponentPattern.PlayerClasses;
 
-namespace DoctorsDungeon.GameManagement.Scenes.Rooms;
+namespace ShamansDungeon.GameManagement.Scenes.Rooms;
 
 // Oscar
 public class Room1Scene : RoomBase

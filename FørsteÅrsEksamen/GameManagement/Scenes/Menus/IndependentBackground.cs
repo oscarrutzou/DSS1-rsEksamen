@@ -1,10 +1,10 @@
-﻿using DoctorsDungeon.CommandPattern;
-using DoctorsDungeon.ComponentPattern.Particles.BirthModifiers;
-using DoctorsDungeon.ComponentPattern.Particles.Modifiers;
-using DoctorsDungeon.ComponentPattern.Particles.Origins;
-using DoctorsDungeon.ComponentPattern.Particles;
-using DoctorsDungeon.ComponentPattern.WorldObjects;
-using DoctorsDungeon.ComponentPattern;
+﻿using ShamansDungeon.CommandPattern;
+using ShamansDungeon.ComponentPattern.Particles.BirthModifiers;
+using ShamansDungeon.ComponentPattern.Particles.Modifiers;
+using ShamansDungeon.ComponentPattern.Particles.Origins;
+using ShamansDungeon.ComponentPattern.Particles;
+using ShamansDungeon.ComponentPattern.WorldObjects;
+using ShamansDungeon.ComponentPattern;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -12,14 +12,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
-using DoctorsDungeon.Factory.Gui;
+using ShamansDungeon.Factory.Gui;
 
-namespace DoctorsDungeon.GameManagement.Scenes.Menus
+namespace ShamansDungeon.GameManagement.Scenes.Menus
 {
     public static class IndependentBackground
     {
         public static ParticleEmitter BackgroundEmitter { get; set; }
-        public static Color[] menuColors = new Color[] { Color.DarkCyan, Color.DarkGray, Color.Gray, Color.Transparent };
+        public static Color[] MenuColors = new Color[] { Color.DarkCyan, Color.DarkGray, Color.Gray, Color.Transparent };
         public static Color[] RoomColors = new Color[] { Color.DarkRed, Color.DarkGray, Color.Gray, Color.Transparent };
         // We dont need a factory to do this, since its only this place we are going to use this background.
         private static ColorInterval _menuColorInterval;
@@ -35,10 +35,10 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
             BackgroundEmitter = go.GetComponent<ParticleEmitter>();
             BackgroundEmitter.LayerName = LayerDepth.WorldBackground;
 
-            BackgroundEmitter.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel4x4));
+            BackgroundEmitter.AddBirthModifier(new TextureBirthModifier(TextureNames.Pixel));
 
-            BackgroundEmitter.AddModifier(new ColorRangeModifier(menuColors));
-            BackgroundEmitter.AddModifier(new ScaleModifier(0.5f, 2));
+            BackgroundEmitter.AddModifier(new ColorRangeModifier(MenuColors));
+            BackgroundEmitter.AddModifier(new ScaleModifier(2.5f, 4));
             BackgroundEmitter.AddModifier(new InwardModifier(10));
 
             int buffer = 300; // A buffer around the center, so when the player runs, there are already some particles
@@ -49,7 +49,7 @@ namespace DoctorsDungeon.GameManagement.Scenes.Menus
             go.Awake();
             go.Start();
 
-            _menuColorInterval = new ColorInterval(menuColors);
+            _menuColorInterval = new ColorInterval(MenuColors);
             _roomColorInterval = new ColorInterval(RoomColors);
 
             BackgroundEmitter.PlayEmitter();

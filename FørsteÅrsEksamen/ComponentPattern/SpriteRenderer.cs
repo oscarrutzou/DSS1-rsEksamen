@@ -1,15 +1,15 @@
-﻿using DoctorsDungeon.ComponentPattern.GUI;
-using DoctorsDungeon.ComponentPattern.PlayerClasses;
-using DoctorsDungeon.GameManagement;
-using DoctorsDungeon.ObserverPattern;
-using DoctorsDungeon.Other;
+﻿using ShamansDungeon.ComponentPattern.GUI;
+using ShamansDungeon.ComponentPattern.PlayerClasses;
+using ShamansDungeon.GameManagement;
+using ShamansDungeon.ObserverPattern;
+using ShamansDungeon.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SharpDX.Direct3D9;
 using System;
 using System.Collections.Generic;
 
-namespace DoctorsDungeon.ComponentPattern;
+namespace ShamansDungeon.ComponentPattern;
 
 // Remember with GUI text it dosen't use these layerdepth to draw the text and just uses 1.
 public enum LayerDepth

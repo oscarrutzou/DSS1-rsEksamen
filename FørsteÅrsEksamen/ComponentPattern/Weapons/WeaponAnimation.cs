@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DoctorsDungeon.ComponentPattern.Weapons;
+namespace ShamansDungeon.ComponentPattern.Weapons;
 
 public enum WeaponAnimTypes
 {

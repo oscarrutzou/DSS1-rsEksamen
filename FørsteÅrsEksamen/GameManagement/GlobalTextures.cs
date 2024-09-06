@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
-namespace DoctorsDungeon.GameManagement;
+namespace ShamansDungeon.GameManagement;
 
 public enum TextureNames
 {

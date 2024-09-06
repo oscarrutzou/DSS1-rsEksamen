@@ -1,12 +1,12 @@
-﻿using DoctorsDungeon.CommandPattern;
-using DoctorsDungeon.GameManagement.Scenes;
+﻿using ShamansDungeon.CommandPattern;
+using ShamansDungeon.GameManagement.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DoctorsDungeon.ComponentPattern.GUI;
+namespace ShamansDungeon.ComponentPattern.GUI;
 
 // Oscar
 public static class GuiMethods

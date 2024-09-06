@@ -1,4 +1,4 @@
-﻿using DoctorsDungeon.ComponentPattern.Particles.BirthModifiers;
+﻿using ShamansDungeon.ComponentPattern.Particles.BirthModifiers;
 using Microsoft.Xna.Framework;
 using SharpDX.X3DAudio;
 using System;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DoctorsDungeon.ComponentPattern.Particles.Modifiers
+namespace ShamansDungeon.ComponentPattern.Particles.Modifiers
 {
     public class InwardModifier : Modifier
     {

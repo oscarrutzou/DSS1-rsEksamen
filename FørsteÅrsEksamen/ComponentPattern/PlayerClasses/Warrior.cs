@@ -1,6 +1,6 @@
-﻿using DoctorsDungeon.GameManagement;
+﻿using ShamansDungeon.GameManagement;
 
-namespace DoctorsDungeon.ComponentPattern.PlayerClasses;
+namespace ShamansDungeon.ComponentPattern.PlayerClasses;
 
 // Stefan
 public class Warrior : Player

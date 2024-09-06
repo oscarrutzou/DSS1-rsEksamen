@@ -1,7 +1,7 @@
-﻿using DoctorsDungeon.LiteDB;
+﻿using ShamansDungeon.LiteDB;
 using Microsoft.Xna.Framework;
 
-namespace DoctorsDungeon.GameManagement.Scenes.Rooms;
+namespace ShamansDungeon.GameManagement.Scenes.Rooms;
 
 // Oscar
 public class Room3Scene : RoomBase

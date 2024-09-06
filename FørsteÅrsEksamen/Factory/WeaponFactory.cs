@@ -1,12 +1,12 @@
-﻿using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons;
-using DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons;
+﻿using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.Weapons.MeleeWeapons;
+using ShamansDungeon.ComponentPattern.Weapons.RangedWeapons;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DoctorsDungeon.Factory;
+namespace ShamansDungeon.Factory;
 
 public enum WeaponTypes
 {

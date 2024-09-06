@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 
-namespace DoctorsDungeon.ComponentPattern.Particles.BirthModifiers
+namespace ShamansDungeon.ComponentPattern.Particles.BirthModifiers
 {
     public class AlphaBirthModifier : BirthModifier
     {

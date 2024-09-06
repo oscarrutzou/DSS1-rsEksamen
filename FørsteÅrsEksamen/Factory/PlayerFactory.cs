@@ -1,12 +1,12 @@
-﻿using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.Effects;
-using DoctorsDungeon.ComponentPattern.PlayerClasses;
-using DoctorsDungeon.ComponentPattern.Weapons;
-using DoctorsDungeon.ComponentPattern.WorldObjects;
-using DoctorsDungeon.LiteDB;
+﻿using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.Effects;
+using ShamansDungeon.ComponentPattern.PlayerClasses;
+using ShamansDungeon.ComponentPattern.Weapons;
+using ShamansDungeon.ComponentPattern.WorldObjects;
+using ShamansDungeon.LiteDB;
 using Microsoft.Xna.Framework;
 
-namespace DoctorsDungeon.Factory;
+namespace ShamansDungeon.Factory;
 
 public enum ClassTypes
 {

@@ -1,9 +1,9 @@
-﻿using DoctorsDungeon.CommandPattern;
-using DoctorsDungeon.Factory;
+﻿using ShamansDungeon.CommandPattern;
+using ShamansDungeon.Factory;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons;
+namespace ShamansDungeon.ComponentPattern.Weapons.RangedWeapons;
 
 // Erik
 public abstract class RangedWeapon : Weapon

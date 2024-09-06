@@ -1,11 +1,11 @@
-﻿using DoctorsDungeon.GameManagement.Scenes;
+﻿using ShamansDungeon.GameManagement.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DoctorsDungeon.ComponentPattern;
+namespace ShamansDungeon.ComponentPattern;
 
 /// <summary>
 /// <para>Uses the type to make different lists in the SceneData.</para>

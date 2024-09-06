@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace DoctorsDungeon.GameManagement.Scenes.TestScenes;
+namespace ShamansDungeon.GameManagement.Scenes.TestScenes;
 
 public class AsserTestScene : Scene
 {

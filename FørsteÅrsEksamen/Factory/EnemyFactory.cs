@@ -1,15 +1,15 @@
-﻿using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.Effects;
-using DoctorsDungeon.ComponentPattern.Enemies;
-using DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies;
-using DoctorsDungeon.ComponentPattern.Enemies.RangedEnemies;
-using DoctorsDungeon.ComponentPattern.Weapons;
-using DoctorsDungeon.ComponentPattern.WorldObjects;
+﻿using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.Effects;
+using ShamansDungeon.ComponentPattern.Enemies;
+using ShamansDungeon.ComponentPattern.Enemies.MeleeEnemies;
+using ShamansDungeon.ComponentPattern.Enemies.RangedEnemies;
+using ShamansDungeon.ComponentPattern.Weapons;
+using ShamansDungeon.ComponentPattern.WorldObjects;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 
-namespace DoctorsDungeon.Factory;
+namespace ShamansDungeon.Factory;
 
 public enum EnemyTypes
 {

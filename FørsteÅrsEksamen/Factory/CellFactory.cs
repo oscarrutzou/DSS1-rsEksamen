@@ -1,9 +1,9 @@
-﻿using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.Path;
-using DoctorsDungeon.GameManagement;
+﻿using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.Path;
+using ShamansDungeon.GameManagement;
 using Microsoft.Xna.Framework;
 
-namespace DoctorsDungeon.Factory;
+namespace ShamansDungeon.Factory;
 
 // Oscar
 public static class CellFactory

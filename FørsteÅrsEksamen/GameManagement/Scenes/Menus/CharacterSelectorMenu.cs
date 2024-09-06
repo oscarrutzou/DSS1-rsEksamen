@@ -1,18 +1,18 @@
-﻿using DoctorsDungeon.CommandPattern;
-using DoctorsDungeon.CommandPattern.Commands;
-using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.GUI;
-using DoctorsDungeon.Factory;
-using DoctorsDungeon.Factory.Gui;
-using DoctorsDungeon.LiteDB;
-using DoctorsDungeon.Other;
+﻿using ShamansDungeon.CommandPattern;
+using ShamansDungeon.CommandPattern.Commands;
+using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.GUI;
+using ShamansDungeon.Factory;
+using ShamansDungeon.Factory.Gui;
+using ShamansDungeon.LiteDB;
+using ShamansDungeon.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DoctorsDungeon.GameManagement.Scenes.Menus;
+namespace ShamansDungeon.GameManagement.Scenes.Menus;
 
 // Oscar
 public class CharacterSelectorMenu : MenuScene

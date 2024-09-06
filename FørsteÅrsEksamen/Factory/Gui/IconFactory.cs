@@ -1,9 +1,9 @@
-﻿using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.GUI;
-using DoctorsDungeon.GameManagement;
+﻿using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.GUI;
+using ShamansDungeon.GameManagement;
 using Microsoft.Xna.Framework;
 
-namespace DoctorsDungeon.Factory.Gui
+namespace ShamansDungeon.Factory.Gui
 {
     public static class IconFactory
     {

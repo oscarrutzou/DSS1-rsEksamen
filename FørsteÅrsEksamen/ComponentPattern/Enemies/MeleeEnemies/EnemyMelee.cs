@@ -1,4 +1,4 @@
-﻿namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies;
+﻿namespace ShamansDungeon.ComponentPattern.Enemies.MeleeEnemies;
 
 //Asser
 

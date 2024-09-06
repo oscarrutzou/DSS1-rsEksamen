@@ -1,4 +1,4 @@
-﻿namespace DoctorsDungeon.ComponentPattern.Enemies.RangedEnemies;
+﻿namespace ShamansDungeon.ComponentPattern.Enemies.RangedEnemies;
 
 //Asser
 

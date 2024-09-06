@@ -1,4 +1,4 @@
-﻿namespace DoctorsDungeon.ObserverPattern;
+﻿namespace ShamansDungeon.ObserverPattern;
 
 // Oscar
 public interface IObserver

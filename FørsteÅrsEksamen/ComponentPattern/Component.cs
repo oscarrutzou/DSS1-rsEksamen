@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
-namespace DoctorsDungeon.ComponentPattern;
+namespace ShamansDungeon.ComponentPattern;
 
 // Oscar
 public abstract class Component : ICloneable

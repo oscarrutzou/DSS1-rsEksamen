@@ -4,21 +4,21 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using DoctorsDungeon.CommandPattern.Commands;
-using DoctorsDungeon.CommandPattern;
-using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.Enemies;
-using DoctorsDungeon.ComponentPattern.Path;
-using DoctorsDungeon.ComponentPattern.PlayerClasses;
-using DoctorsDungeon.ComponentPattern.WorldObjects;
-using DoctorsDungeon.Factory;
-using DoctorsDungeon.GameManagement.Scenes.Menus;
-using DoctorsDungeon.LiteDB;
-using DoctorsDungeon.Other;
-using DoctorsDungeon.Factory.Gui;
-using DoctorsDungeon.ComponentPattern.GUI;
+using ShamansDungeon.CommandPattern.Commands;
+using ShamansDungeon.CommandPattern;
+using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.Enemies;
+using ShamansDungeon.ComponentPattern.Path;
+using ShamansDungeon.ComponentPattern.PlayerClasses;
+using ShamansDungeon.ComponentPattern.WorldObjects;
+using ShamansDungeon.Factory;
+using ShamansDungeon.GameManagement.Scenes.Menus;
+using ShamansDungeon.LiteDB;
+using ShamansDungeon.Other;
+using ShamansDungeon.Factory.Gui;
+using ShamansDungeon.ComponentPattern.GUI;
 
-namespace DoctorsDungeon.GameManagement.Scenes.Rooms;
+namespace ShamansDungeon.GameManagement.Scenes.Rooms;
 
 // Oscar
 public abstract class RoomBase : Scene
@@ -155,8 +155,6 @@ public abstract class RoomBase : Scene
         GameObject go = ScalableBarFactory.CreateHealthBar(PlayerGo, true);
         GameWorld.Instance.Instantiate(go);
     }
-
-
     private void SpawnEndPos()
     {
         GameObject endDoor = TransferDoorFactory.Create();

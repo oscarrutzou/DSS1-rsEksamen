@@ -1,10 +1,10 @@
-﻿using DoctorsDungeon.ComponentPattern.Particles.Origins;
-using DoctorsDungeon.GameManagement;
-using DoctorsDungeon.Other;
+﻿using ShamansDungeon.ComponentPattern.Particles.Origins;
+using ShamansDungeon.GameManagement;
+using ShamansDungeon.Other;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
-namespace DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons;
+namespace ShamansDungeon.ComponentPattern.Weapons.RangedWeapons;
 
 public class MagicStaff : RangedWeapon
 {

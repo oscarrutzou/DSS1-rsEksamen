@@ -1,19 +1,19 @@
-﻿using DoctorsDungeon.CommandPattern;
-using DoctorsDungeon.ComponentPattern.Path;
-using DoctorsDungeon.ComponentPattern.Weapons;
-using DoctorsDungeon.ComponentPattern.WorldObjects;
-using DoctorsDungeon.Factory;
-using DoctorsDungeon.GameManagement;
-using DoctorsDungeon.LiteDB;
-using DoctorsDungeon.ObserverPattern;
-using DoctorsDungeon.Other;
+﻿using ShamansDungeon.CommandPattern;
+using ShamansDungeon.ComponentPattern.Path;
+using ShamansDungeon.ComponentPattern.Weapons;
+using ShamansDungeon.ComponentPattern.WorldObjects;
+using ShamansDungeon.Factory;
+using ShamansDungeon.GameManagement;
+using ShamansDungeon.LiteDB;
+using ShamansDungeon.ObserverPattern;
+using ShamansDungeon.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SharpDX.WIC;
 using System;
 using System.Collections.Generic;
 
-namespace DoctorsDungeon.ComponentPattern.PlayerClasses;
+namespace ShamansDungeon.ComponentPattern.PlayerClasses;
 
 // Stefan
 public abstract class Player : Character

@@ -1,9 +1,9 @@
-﻿using DoctorsDungeon.GameManagement;
+﻿using ShamansDungeon.GameManagement;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 
-namespace DoctorsDungeon.ComponentPattern;
+namespace ShamansDungeon.ComponentPattern;
 
 // Oscar
 public class Animator : Component

@@ -1,9 +1,9 @@
-﻿using DoctorsDungeon.GameManagement;
-using DoctorsDungeon.Other;
+﻿using ShamansDungeon.GameManagement;
+using ShamansDungeon.Other;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
-namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons;
+namespace ShamansDungeon.ComponentPattern.Weapons.MeleeWeapons;
 
 public class Dagger : MeleeWeapon
 {

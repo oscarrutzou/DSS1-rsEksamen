@@ -1,10 +1,10 @@
-﻿using DoctorsDungeon.ComponentPattern.Enemies;
+﻿using ShamansDungeon.ComponentPattern.Enemies;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DoctorsDungeon.ComponentPattern.Path;
+namespace ShamansDungeon.ComponentPattern.Path;
 
 // Asser, Oscar
 public class Astar

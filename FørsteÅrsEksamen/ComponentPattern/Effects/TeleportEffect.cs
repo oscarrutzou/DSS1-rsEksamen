@@ -1,11 +1,11 @@
-﻿using DoctorsDungeon.GameManagement;
+﻿using ShamansDungeon.GameManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DoctorsDungeon.ComponentPattern.Effects
+namespace ShamansDungeon.ComponentPattern.Effects
 {
     public class TeleportEffect : Component
     {

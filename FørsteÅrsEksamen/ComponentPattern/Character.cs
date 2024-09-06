@@ -1,25 +1,25 @@
-﻿using DoctorsDungeon.CommandPattern;
-using DoctorsDungeon.ComponentPattern.Particles.BirthModifiers;
-using DoctorsDungeon.ComponentPattern.Particles.Modifiers;
-using DoctorsDungeon.ComponentPattern.Particles.Origins;
-using DoctorsDungeon.ComponentPattern.Particles;
-using DoctorsDungeon.ComponentPattern.PlayerClasses;
-using DoctorsDungeon.ComponentPattern.Weapons;
-using DoctorsDungeon.ComponentPattern.WorldObjects;
-using DoctorsDungeon.GameManagement;
+﻿using ShamansDungeon.CommandPattern;
+using ShamansDungeon.ComponentPattern.Particles.BirthModifiers;
+using ShamansDungeon.ComponentPattern.Particles.Modifiers;
+using ShamansDungeon.ComponentPattern.Particles.Origins;
+using ShamansDungeon.ComponentPattern.Particles;
+using ShamansDungeon.ComponentPattern.PlayerClasses;
+using ShamansDungeon.ComponentPattern.Weapons;
+using ShamansDungeon.ComponentPattern.WorldObjects;
+using ShamansDungeon.GameManagement;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using static System.Net.Mime.MediaTypeNames;
 using SharpDX.X3DAudio;
-using DoctorsDungeon.ComponentPattern.Path;
-using DoctorsDungeon.Other;
+using ShamansDungeon.ComponentPattern.Path;
+using ShamansDungeon.Other;
 using System;
-using DoctorsDungeon.ComponentPattern.Enemies;
-using DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons;
+using ShamansDungeon.ComponentPattern.Enemies;
+using ShamansDungeon.ComponentPattern.Weapons.MeleeWeapons;
 using Microsoft.Xna.Framework.Audio;
 
-namespace DoctorsDungeon.ComponentPattern;
+namespace ShamansDungeon.ComponentPattern;
 
 public enum AnimationDirectionState
 {

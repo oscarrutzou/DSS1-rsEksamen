@@ -1,9 +1,9 @@
-﻿using DoctorsDungeon.GameManagement;
+﻿using ShamansDungeon.GameManagement;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
-namespace DoctorsDungeon.ComponentPattern.Particles
+namespace ShamansDungeon.ComponentPattern.Particles
 {
     public class Particle : Component, IParticle
     {

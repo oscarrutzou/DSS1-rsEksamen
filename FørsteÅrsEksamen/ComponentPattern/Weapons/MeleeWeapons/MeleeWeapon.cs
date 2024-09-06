@@ -1,16 +1,16 @@
-﻿using DoctorsDungeon.CommandPattern;
-using DoctorsDungeon.ComponentPattern.PlayerClasses;
-using DoctorsDungeon.ComponentPattern.WorldObjects;
-using DoctorsDungeon.GameManagement;
-using DoctorsDungeon.GameManagement.Scenes;
-using DoctorsDungeon.Other;
+﻿using ShamansDungeon.CommandPattern;
+using ShamansDungeon.ComponentPattern.PlayerClasses;
+using ShamansDungeon.ComponentPattern.WorldObjects;
+using ShamansDungeon.GameManagement;
+using ShamansDungeon.GameManagement.Scenes;
+using ShamansDungeon.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
-namespace DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons;
+namespace ShamansDungeon.ComponentPattern.Weapons.MeleeWeapons;
 
 public class HitDamagePackage
 {

@@ -1,12 +1,12 @@
-﻿using DoctorsDungeon.CommandPattern;
-using DoctorsDungeon.GameManagement;
-using DoctorsDungeon.Other;
+﻿using ShamansDungeon.CommandPattern;
+using ShamansDungeon.GameManagement;
+using ShamansDungeon.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 
-namespace DoctorsDungeon.ComponentPattern.GUI;
+namespace ShamansDungeon.ComponentPattern.GUI;
 
 // Stefan
 public class Button : Component

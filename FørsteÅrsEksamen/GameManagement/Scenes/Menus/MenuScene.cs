@@ -1,11 +1,11 @@
-﻿using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.GUI;
-using DoctorsDungeon.LiteDB;
+﻿using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.GUI;
+using ShamansDungeon.LiteDB;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
-namespace DoctorsDungeon.GameManagement.Scenes.Menus;
+namespace ShamansDungeon.GameManagement.Scenes.Menus;
 
 // Oscar
 public abstract class MenuScene : Scene

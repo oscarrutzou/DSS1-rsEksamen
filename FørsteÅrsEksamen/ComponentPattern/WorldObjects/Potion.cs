@@ -1,8 +1,8 @@
-﻿using DoctorsDungeon.ComponentPattern.PlayerClasses;
+﻿using ShamansDungeon.ComponentPattern.PlayerClasses;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace DoctorsDungeon.ComponentPattern.WorldObjects;
+namespace ShamansDungeon.ComponentPattern.WorldObjects;
 
 // Potions could be like a buff. 
 /*

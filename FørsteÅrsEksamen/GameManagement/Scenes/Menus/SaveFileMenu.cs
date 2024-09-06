@@ -1,11 +1,11 @@
-﻿using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.GUI;
-using DoctorsDungeon.Factory.Gui;
-using DoctorsDungeon.LiteDB;
+﻿using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.GUI;
+using ShamansDungeon.Factory.Gui;
+using ShamansDungeon.LiteDB;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
-namespace DoctorsDungeon.GameManagement.Scenes.Menus;
+namespace ShamansDungeon.GameManagement.Scenes.Menus;
 
 // Erik
 public class SaveFileMenu : MenuScene

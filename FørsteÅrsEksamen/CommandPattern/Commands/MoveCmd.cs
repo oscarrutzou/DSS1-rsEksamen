@@ -1,7 +1,7 @@
-﻿using DoctorsDungeon.ComponentPattern.PlayerClasses;
+﻿using ShamansDungeon.ComponentPattern.PlayerClasses;
 using Microsoft.Xna.Framework;
 
-namespace DoctorsDungeon.CommandPattern.Commands;
+namespace ShamansDungeon.CommandPattern.Commands;
 
 // Oscar
 public class MoveCmd : Command

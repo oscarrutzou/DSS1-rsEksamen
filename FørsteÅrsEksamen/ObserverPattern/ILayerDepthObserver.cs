@@ -1,11 +1,11 @@
-﻿using DoctorsDungeon.ComponentPattern;
+﻿using ShamansDungeon.ComponentPattern;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DoctorsDungeon.ObserverPattern
+namespace ShamansDungeon.ObserverPattern
 {
     public interface ILayerDepthObserver
     {

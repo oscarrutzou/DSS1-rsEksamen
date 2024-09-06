@@ -1,8 +1,8 @@
-﻿using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.GUI;
-using DoctorsDungeon.GameManagement.Scenes;
+﻿using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.GUI;
+using ShamansDungeon.GameManagement.Scenes;
 
-namespace DoctorsDungeon.CommandPattern.Commands;
+namespace ShamansDungeon.CommandPattern.Commands;
 
 // Oscar
 public class CheckButtonCmd : Command

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DoctorsDungeon.CommandPattern.Commands;
+namespace ShamansDungeon.CommandPattern.Commands;
 
 // Oscar
 

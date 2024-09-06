@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DoctorsDungeon.ComponentPattern.Particles.BirthModifiers
+namespace ShamansDungeon.ComponentPattern.Particles.BirthModifiers
 {
     public class ScaleBirthModifier : BirthModifier
     {

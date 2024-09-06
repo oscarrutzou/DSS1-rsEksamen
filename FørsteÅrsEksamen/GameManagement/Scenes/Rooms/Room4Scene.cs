@@ -1,12 +1,12 @@
-﻿using DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies;
-using DoctorsDungeon.ComponentPattern.Path;
-using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.Factory.Gui;
-using DoctorsDungeon.Factory;
-using DoctorsDungeon.LiteDB;
+﻿using ShamansDungeon.ComponentPattern.Enemies.MeleeEnemies;
+using ShamansDungeon.ComponentPattern.Path;
+using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.Factory.Gui;
+using ShamansDungeon.Factory;
+using ShamansDungeon.LiteDB;
 using Microsoft.Xna.Framework;
 
-namespace DoctorsDungeon.GameManagement.Scenes.Rooms;
+namespace ShamansDungeon.GameManagement.Scenes.Rooms;
 
 // Oscar
 public class Room4Scene : RoomBase

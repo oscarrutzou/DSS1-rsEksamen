@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DoctorsDungeon.ComponentPattern.Particles.Modifiers
+namespace ShamansDungeon.ComponentPattern.Particles.Modifiers
 {
     public class ScaleModifier : Modifier
     {

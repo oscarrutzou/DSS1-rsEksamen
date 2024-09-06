@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FørsteÅrsEksamen\DoctorsDungeon.csproj" />
+    <ProjectReference Include="..\FørsteÅrsEksamen\ShamansDungeon.csproj" />
   </ItemGroup>
 
   <ItemGroup>

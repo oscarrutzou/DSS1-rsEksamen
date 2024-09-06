@@ -1,7 +1,7 @@
 ﻿//using FørsteÅrsEksamen.ComponentPattern.Characters;
-using DoctorsDungeon.GameManagement;
+using ShamansDungeon.GameManagement;
 
-namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies;
+namespace ShamansDungeon.ComponentPattern.Enemies.MeleeEnemies;
 
 //Asser
 

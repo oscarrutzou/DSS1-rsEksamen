@@ -1,9 +1,9 @@
-﻿using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.GUI;
-using DoctorsDungeon.GameManagement;
+﻿using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.GUI;
+using ShamansDungeon.GameManagement;
 using System;
 
-namespace DoctorsDungeon.Factory.Gui;
+namespace ShamansDungeon.Factory.Gui;
 
 // Stefan
 public static class ButtonFactory

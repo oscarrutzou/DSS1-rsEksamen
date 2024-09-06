@@ -1,15 +1,15 @@
-﻿using DoctorsDungeon.CommandPattern;
-using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.Particles;
-using DoctorsDungeon.ComponentPattern.Path;
-using DoctorsDungeon.GameManagement.Scenes.Menus;
-using DoctorsDungeon.Other;
+﻿using ShamansDungeon.CommandPattern;
+using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.Particles;
+using ShamansDungeon.ComponentPattern.Path;
+using ShamansDungeon.GameManagement.Scenes.Menus;
+using ShamansDungeon.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
-namespace DoctorsDungeon.GameManagement.Scenes;
+namespace ShamansDungeon.GameManagement.Scenes;
 
 public enum SceneNames
 {
