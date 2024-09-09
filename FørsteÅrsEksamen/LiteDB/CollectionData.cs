@@ -3,6 +3,7 @@ using ShamansDungeon.Factory;
 using LiteDB;
 using System;
 using System.Collections.Generic;
+using ShamansDungeon.ComponentPattern.WorldObjects.PickUps;
 
 namespace ShamansDungeon.LiteDB;
 
@@ -56,7 +57,12 @@ public class RunData
 public class PlayerData
 {
     public int Health { get; set; }
-    public string Potion_Name { get; set; }
+    // Armor
+    // Multipliers
+    public float SpeedMultiplier { get; set; }
+    public float DamageMultiplier { get; set; }
+    //public string Potion_Name { get; set; }
+    public PotionTypes? PotionType { get; set; }
     public ClassTypes Class_Type { get; set; }
     public WeaponTypes Weapon_Type { get; set; }
 }

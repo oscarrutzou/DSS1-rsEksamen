@@ -35,7 +35,10 @@ public enum TextureNames
 
     WoodArrow,
 
-    HealthPotionFull,
+    RedBigPotionHalfFull,
+    RedSmallHalfPotion,
+    BlueSmallHalfPotion,
+    GreenSmallHalfPotion,
     DoorClosed,
 
     // UI
@@ -44,11 +47,14 @@ public enum TextureNames
     WideBtn,
     DeleteSaveBtn,
     QuestUnder,
+    BaseTutorial,
     PlayerHealthOver,
     BossHealthOver,
     BackpackIcon,
     MouseCooldownBar,
     MouseCursorDefault,
+    MouseItemInfo,
+    MosueBackpackText,
 }
 
 // Oscar
@@ -109,7 +115,12 @@ public static class GlobalTextures
             {TextureNames.BoneMagicStaff, content.Load<Texture2D>("World\\Weapons\\Melee Weapons\\BoneMagicStaff") },
 
             {TextureNames.WoodArrow, content.Load<Texture2D>("Test\\WoodArrow") },
-            {TextureNames.HealthPotionFull, content.Load<Texture2D>("World\\Objects\\Potions\\RedPotion1") },
+
+            {TextureNames.RedBigPotionHalfFull, content.Load<Texture2D>("World\\Objects\\Potions\\RedPotion2") },
+            {TextureNames.RedSmallHalfPotion, content.Load<Texture2D>("World\\Objects\\Potions\\LittleRedPotion1") },
+            {TextureNames.BlueSmallHalfPotion, content.Load<Texture2D>("World\\Objects\\Potions\\LittleBluePotion1") },
+            {TextureNames.GreenSmallHalfPotion, content.Load<Texture2D>("World\\Objects\\Potions\\LittleGreenPotion1") },
+
             {TextureNames.DoorClosed, content.Load<Texture2D>("World\\Objects\\DoorClosed") },
 
             {TextureNames.ShortBtn, content.Load<Texture2D>("UI\\ShortButton") },
@@ -122,6 +133,9 @@ public static class GlobalTextures
             {TextureNames.MouseCursorDefault, content.Load<Texture2D>("UI\\Icons\\MouseCursor") },
             {TextureNames.BossHealthOver, content.Load<Texture2D>("UI\\BossHealthBarOver") },
             {TextureNames.MouseCooldownBar, content.Load<Texture2D>("UI\\MouseCooldownBar") },
+            {TextureNames.MouseItemInfo, content.Load<Texture2D>("UI\\ItemText") },
+            {TextureNames.MosueBackpackText, content.Load<Texture2D>("UI\\BackpackText") },
+            {TextureNames.BaseTutorial, content.Load<Texture2D>("UI\\Tutorial") },
 
         };
 

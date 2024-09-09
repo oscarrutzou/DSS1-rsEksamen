@@ -157,8 +157,14 @@ public abstract class MeleeWeapon : Weapon
     public void CheckCollisionAndDmg()
     {
         // Could use a mesh, that just contains the different types that it can hit, and go though each of those lists
+
         if (!CanDealDamage) return;
 
+        CheckCollisionCharacters();
+    }
+
+    private void CheckCollisionCharacters()
+    {
         GameObjectTypes type;
         if (EnemyUser != null)
             type = GameObjectTypes.Player;
@@ -168,7 +174,7 @@ public abstract class MeleeWeapon : Weapon
         foreach (GameObject otherGo in SceneData.Instance.GameObjectLists[type])
         {
             if (!otherGo.IsEnabled || _hitGameObjects.ContainsKey(otherGo)) continue;
-            
+
             Collider otherCollider = otherGo.GetComponent<Collider>();
 
             if (otherCollider == null) continue;
@@ -184,6 +190,11 @@ public abstract class MeleeWeapon : Weapon
                 }
             }
         }
+    }
+
+    private void CheckCollisionBreakableItems()
+    {
+
     }
 
     private void ResetHittedGameObjects()
@@ -212,7 +223,7 @@ public abstract class MeleeWeapon : Weapon
         }
 
         // Float so we can divide with enemy weakness
-        float damage = Animations[CurrentAnim].Damage;
+        float damage = Animations[CurrentAnim].Damage * User.DamageMultiplier;
         if (EnemyUser != null)
             damage /= EnemyWeakness;
 

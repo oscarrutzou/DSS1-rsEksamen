@@ -89,6 +89,12 @@ namespace ShamansDungeon.ComponentPattern.Effects
             }
         }
 
+        public void StartEffect()
+        {
+            PlayEffect = true;
+            GlobalSounds.PlaySound(SoundNames.Teleport, 1, 1f, true, -0.2f, 0.2f);
+        }
+
         public void StopEffect()
         {
             _dir = _startDir;

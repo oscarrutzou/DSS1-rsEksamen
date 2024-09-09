@@ -73,7 +73,7 @@ public class OscarTestScene : Scene
 
     private void MakeItem()
     {
-        GameObject itemGo = ItemFactory.Create(_playerGo);
+        GameObject itemGo = ItemFactory.CreatePotion(_playerGo, ComponentPattern.WorldObjects.PickUps.PotionTypes.SmallHealth);
         GameWorld.Instance.Instantiate(itemGo);
 
         itemGo.Transform.Position = GridManager.Instance.CurrentGrid.Cells[new Point(3, 3)].Transform.Position;

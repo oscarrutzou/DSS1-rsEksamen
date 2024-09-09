@@ -5,8 +5,20 @@ using ShamansDungeon.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using ShamansDungeon.GameManagement.Scenes;
+using System.Collections.Generic;
 
 namespace ShamansDungeon.ComponentPattern;
+
+public enum ColliderLayer
+{
+    Default,
+    Player,
+    Weapon,
+    Enemy,
+    Gui,
+    BackPackIcon,
+}
 
 // Oscar
 public class Collider : Component
@@ -51,7 +63,6 @@ public class Collider : Component
                 pos.X -= width / 2;
                 pos.Y -= height / 2;
             }
-
             return new Rectangle
                 (
                     (int)(pos.X - _positionOffset.X),
@@ -61,7 +72,21 @@ public class Collider : Component
                 );
         }
     }
-
+    public Vector2 LeftTopPosRectangle
+    {
+        get
+        {
+            Vector2 pos = GameObject.Transform.Position;
+            if (CenterCollisionBox)
+            {
+                pos.X -= CollisionBox.Width / 2;
+                pos.Y -= CollisionBox.Height / 2;
+            }
+            return pos;
+        }
+    }
+    public ColliderLayer ColliderLayer { get; private set; }
+    public List<ColliderLayer> LayersToCollideWith { get; private set; } 
     public Collider(GameObject gameObject) : base(gameObject)
     {
     }
@@ -71,6 +96,17 @@ public class Collider : Component
         _animator = GameObject.GetComponent<Animator>();
         _spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
         _texture = GlobalTextures.Textures[TextureNames.Pixel];
+    }
+    public void SetColliderLayer(ColliderLayer layer)
+    {
+        ColliderLayer = layer;
+        SceneData.Instance.ColliderMeshLists[layer].Add(GameObject);
+    }
+    public void SetColliderLayer(ColliderLayer layer, List<ColliderLayer> layersToCollideWith)
+    {
+        ColliderLayer = layer;
+        SceneData.Instance.ColliderMeshLists[layer].Add(GameObject);
+        LayersToCollideWith = layersToCollideWith;
     }
 
     public override void Draw(SpriteBatch spriteBatch)
@@ -109,8 +145,6 @@ public class Collider : Component
         StartCollisionHeight = 0;
         StartCollisionWidth = 0;
     }
-
-   
 
     public static Vector2 RotatePoint(Vector2 point, Vector2 pivot, float angle)
     {

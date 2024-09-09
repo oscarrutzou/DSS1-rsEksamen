@@ -9,8 +9,7 @@ namespace ShamansDungeon.Factory.Gui
     {
         public static GameObject CreateCursorIcon()
         {
-            GameObject iconGo = new()
-            {
+            GameObject iconGo = new(){
                 Type = GameObjectTypes.Gui
             };
             iconGo.Transform.Scale = new Vector2(3, 3);
@@ -24,6 +23,14 @@ namespace ShamansDungeon.Factory.Gui
             MouseIcon mouseIcon = iconGo.AddComponent<MouseIcon>();
             mouseIcon.SetMouseCooldownBar(cooldownBar);
 
+            GameObject itemText = new() { 
+                Type = GameObjectTypes.Gui
+            };
+            itemText.AddComponent<SpriteRenderer>();
+            itemText.AddComponent<MouseItemText>();
+            itemText.AddComponent<Collider>();
+            mouseIcon.SetMouseItemText(itemText);
+
             return iconGo;
         }
 
@@ -31,19 +38,24 @@ namespace ShamansDungeon.Factory.Gui
 
         public static GameObject CreateBackpackIcon()
         {
-            GameObject iconGo = new();
-            iconGo.Type = GameObjectTypes.Gui;
+            GameObject iconGo = new()
+            {
+                Type = GameObjectTypes.Gui
+            };
 
             iconGo.AddComponent<SpriteRenderer>();
             iconGo.AddComponent<BackpackIcon>();
+            iconGo.AddComponent<Collider>();
 
             return iconGo;
         }
 
         public static GameObject CreateHourGlassIcon()
         {
-            GameObject iconGo = new();
-            iconGo.Type = GameObjectTypes.Gui;
+            GameObject iconGo = new()
+            {
+                Type = GameObjectTypes.Gui
+            };
 
             iconGo.AddComponent<Animator>();
             iconGo.AddComponent<SpriteRenderer>();

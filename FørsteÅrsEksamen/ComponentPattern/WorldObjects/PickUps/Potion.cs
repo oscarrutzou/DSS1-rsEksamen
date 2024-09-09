@@ -1,8 +1,9 @@
 ﻿using ShamansDungeon.ComponentPattern.PlayerClasses;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ShamansDungeon.GameManagement;
 
-namespace ShamansDungeon.ComponentPattern.WorldObjects;
+namespace ShamansDungeon.ComponentPattern.WorldObjects.PickUps;
 
 // Potions could be like a buff. 
 /*
@@ -13,20 +14,38 @@ namespace ShamansDungeon.ComponentPattern.WorldObjects;
  */
 
 // Asser
-public class Potion : Component
+public enum PotionTypes
 {
-    private SpriteRenderer _spriteRenderer;
+    SmallHealth,
+    BigHealth,
+    SmallDmgBoost,
+    SmallSpeedBoost,
+}
+
+public abstract class Potion : Component
+{
+    public PotionTypes PotionType;
+    public float AmountToAdd { get; protected set; }
+    protected string PotionText;
+    // Will get shown over the mouse
+    public string FullPotionText
+    {
+        get
+        {
+            return $"{PotionText}\nAmount of uses = {MaxAmountOfUses}";
+        }
+    }
+    public int MaxAmountOfUses { get; protected set; } = 1;
+    
+    protected SpriteRenderer SpriteRenderer;
+    protected Player Player;
+    
     private Collider _collider, _playerCollider;
-    private Player _player;
-    private Health _health;
+    
     private GameObject _playerGo;
 
-    public string Name = "Strong Health Potion";
-    private int _healAmount = 100;
-
-    //private int _maxAmountOfUses = 1;
     public Potion(GameObject gameObject) : base(gameObject)
-    { 
+    {
     }
 
     public Potion(GameObject gameObject, GameObject player) : base(gameObject)
@@ -39,10 +58,13 @@ public class Potion : Component
         base.Awake();
         _collider = GameObject.GetComponent<Collider>();
         _collider.SetCollisionBox(10, 15);
-        _spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
+
+        SpriteRenderer = GameObject.GetComponent<SpriteRenderer>();
+        SpriteRenderer.SetLayerDepth(LayerDepth.EnemyUnder);
         _playerCollider = _playerGo.GetComponent<Collider>();
-        _player = _playerGo.GetComponent<Player>();
-        _health = _playerGo.GetComponent<Health>();
+        Player = _playerGo.GetComponent<Player>();
+
+        SwitchBetweenSimilarPotions();
     }
 
     public override void Update()
@@ -55,20 +77,22 @@ public class Potion : Component
         // Skal kun fjerne item ved player position, ikke alle items.
         if (collider.CollisionBox.Intersects(_playerCollider.CollisionBox))
         {
-            if (_player.CanPickUpItem(this))
+            if (Player.CanPickUpItem(this))
             {
                 GameObject.IsEnabled = false;
+                GlobalSounds.PlaySound(SoundNames.PickUp, 1, 1f);
             }
         }
     }
 
-    public void Use()
+    public abstract void SwitchBetweenSimilarPotions();
+
+    public virtual void Use()
     {
-        if (_health.IsDead || !_health.AddHealth(_healAmount)) return; // Already full health
-        // Destroy next frame
-        //_removeFromInventoryNextFrame = true;
-        _player.ItemInInventory = null;
-        _player.HasUsedItem = true;
+        GlobalSounds.PlaySound(SoundNames.DrinkingPotion, 1);
+
+        Player.ItemInInventory = null;
+        Player.HasUsedItem = true;
         GameWorld.Instance.Destroy(GameObject);
     }
 

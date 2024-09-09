@@ -58,8 +58,8 @@ public class Room4Scene : RoomBase
 
     protected override void SetQuestLogText()
     {
-        int amountLeft = 0;
-        if (_miniBossEnemy.State != CharacterState.Dead) amountLeft = 1;
-        QuestText = $"Kill the Shaman Garok {amountLeft} / 1";
+        int haveKilledBoss = 1;
+        if (_miniBossEnemy.State != CharacterState.Dead) haveKilledBoss = 0;
+        QuestText = $"Kill the Shaman Garok {haveKilledBoss} / 1";
     }
 }

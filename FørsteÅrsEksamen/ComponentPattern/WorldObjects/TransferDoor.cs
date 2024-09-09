@@ -81,6 +81,7 @@ public class TransferDoor : Component
 
             if (_timer >= _timeTillActivation)
             {
+                GlobalSounds.PlaySound(SoundNames.Teleport, 1, 0.8f, true);
                 DB.Instance.CheckChangeDungeonScene();
                 _timer = 0f;
             }

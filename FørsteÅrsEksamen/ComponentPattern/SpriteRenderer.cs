@@ -31,6 +31,9 @@ public enum LayerDepth
     Button,
     Text,
     CollisionDebug,
+
+    UIBackGroundNearCursor,
+    UITextNearCursor,
     Cursor,
     Size, // So we just can take LayerDepth.
 }
@@ -62,7 +65,7 @@ public class SpriteRenderer : Component, ILayerDepthSubject
     public Texture2D Sprite { get; set; }
     public TextOnSprite TextOnSprite { get; set; }
     public Color Color { get; set; } = Color.White;
-    public Color StartColor { get; set; }
+    public Color StartColor { get; set; } = Color.Transparent; // Change it so it sets it with the normal color when changing scene. 
     public Vector2 Origin { get; set; }
     public Vector2 OriginOffSet { get; set; }
     public Vector2 DrawPosOffSet { get; set; }
@@ -124,8 +127,6 @@ public class SpriteRenderer : Component, ILayerDepthSubject
     public override void Start()
     {
         _animator = GameObject.GetComponent<Animator>();
-
-        StartColor = Color;
     }
 
     // Maybe do something with the Y of the GameObject transform, and maybe each SpriteRendere have a list

@@ -61,7 +61,23 @@ public abstract class Character : Component
 
     protected Dictionary<CharacterState, AnimNames> CharacterStateAnimations = new();
     protected AnimationDirectionState DirectionState = AnimationDirectionState.Right;
-    protected int Speed { get; set; }
+
+    private int normalSpeed;
+    public int Speed 
+    {
+        get
+        {
+            return (int)(normalSpeed * SpeedMultiplier);
+        }
+        set
+        {
+            normalSpeed = value;
+        }
+    }
+
+    public float SpeedMultiplier = 1;
+    public float DamageMultiplier = 1;
+    
     protected Grid Grid;
 
     protected SoundNames[] CharacterHitHurt { get; set; }
@@ -277,7 +293,6 @@ public abstract class Character : Component
 
         // Remove hands
         SpriteRenderer.Color = Color.LightPink;
-        SpriteRenderer.StartColor = SpriteRenderer.Color;
 
         Health.OnZeroHealth -= OnDie;
     }

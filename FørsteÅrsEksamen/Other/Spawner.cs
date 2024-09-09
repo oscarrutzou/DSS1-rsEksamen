@@ -1,4 +1,5 @@
 ﻿using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.WorldObjects.PickUps;
 using ShamansDungeon.ComponentPattern.Enemies;
 using ShamansDungeon.ComponentPattern.Path;
 using ShamansDungeon.Factory;
@@ -53,7 +54,7 @@ public class Spawner : Component
     {
         for (int i = 0; i < spawnLocations.Count; i++)
         {
-            GameObject potionGo = ItemFactory.Create(playerGo);
+            GameObject potionGo = ItemFactory.CreatePotion(playerGo, PotionTypes.SmallDmgBoost);
             potionGo.Transform.Position = GridManager.Instance.CurrentGrid.PosFromGridPos(spawnLocations[i]);
             GameWorld.Instance.Instantiate(potionGo);
         }

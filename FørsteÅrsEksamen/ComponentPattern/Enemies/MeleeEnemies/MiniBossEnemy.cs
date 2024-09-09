@@ -215,7 +215,7 @@ namespace ShamansDungeon.ComponentPattern.Enemies.MeleeEnemies
             }
             else
             {
-                Weapon.WeaponAngleToUser += MathHelper.PiOver4;
+                Weapon.WeaponAngleToUser += MathHelper.PiOver4; 
             }
         }
 
@@ -430,7 +430,7 @@ namespace ShamansDungeon.ComponentPattern.Enemies.MeleeEnemies
                 enemy.WeaponGo.IsEnabled = false;
 
                 TeleportEffect enemyEffect = enemy.GameObject.GetComponent<TeleportEffect>();
-                enemyEffect.PlayEffect = true;
+                enemyEffect.StartEffect();
                 enemyEffect.OnStopTeleport += EnemyCanMove;
             }
 

@@ -8,7 +8,6 @@ namespace ShamansDungeon.ComponentPattern.GUI
 {
     public class MouseCooldownBar : ScalableBar
     {
-        private MeleeWeapon _playerWeapon;
         public MouseCooldownBar(GameObject gameObject) : base(gameObject)
         {
         }
@@ -18,11 +17,10 @@ namespace ShamansDungeon.ComponentPattern.GUI
             base.Awake();
 
             DrawBarColor = GameWorld.TextColor;
-            SpriteRenderer.SetSprite(TextureNames.MouseCooldownBar);
+            SpriteRenderer.SetSprite(TextureNames.MouseCooldownBar); 
             Collider.SetCollisionBox(5, 20);
             sizeOfDrawnBar = 1f;
             FillWidth = false;
-
         }
 
         public override void Update()
@@ -32,13 +30,11 @@ namespace ShamansDungeon.ComponentPattern.GUI
 
             if (SaveData.Player == null) return;
 
-            if (SaveData.Player.Weapon is MeleeWeapon meleeWeapon)
-                _playerWeapon = meleeWeapon;
-            else return;
+            double normalizedDash = SaveData.Player.DashCooldownTimer / SaveData.Player.DashCooldown;
+            if (normalizedDash >= 1) return;
 
-            if (_playerWeapon == null || !_playerWeapon.Attacking) return;
-            
-            sizeOfDrawnBar = _playerWeapon.NormalizedFullAttack;
+            sizeOfDrawnBar = (float)normalizedDash;
+
             SpriteRenderer.ShouldDrawSprite = true;
         }
 

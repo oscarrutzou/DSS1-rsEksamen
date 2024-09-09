@@ -17,6 +17,7 @@ public class SceneData : ILayerDepthObserver
     /// Every GameObject will be in these lists. There is a default type if its not important where the GameObject is placed
     /// </summary>
     public Dictionary<GameObjectTypes, List<GameObject>> GameObjectLists { get; set; }
+    public Dictionary<ColliderLayer, List<GameObject>> ColliderMeshLists { get; set; }
     private SortedList<float, List<SpriteRenderer>> _sortedGameObjects = new SortedList<float, List<SpriteRenderer>>();
 
     /// <summary>
@@ -25,11 +26,16 @@ public class SceneData : ILayerDepthObserver
     /// </summary>
     public void GenereateGameObjectDicionary()
     {
-        GameObjectLists = new Dictionary<GameObjectTypes, List<GameObject>>();
-
+        GameObjectLists = new();
         foreach (GameObjectTypes type in Enum.GetValues(typeof(GameObjectTypes)))
         {
             GameObjectLists.Add(type, new List<GameObject>());
+        }
+
+        ColliderMeshLists = new();
+        foreach (ColliderLayer type in Enum.GetValues(typeof(ColliderLayer)))
+        {
+            ColliderMeshLists.Add(type, new List<GameObject>());
         }
     }
 
@@ -43,6 +49,10 @@ public class SceneData : ILayerDepthObserver
             list.Clear();
         }
 
+        foreach (List<GameObject> list in ColliderMeshLists.Values)
+        {
+            list.Clear();
+        }
         _sortedGameObjects.Clear();
     }
 

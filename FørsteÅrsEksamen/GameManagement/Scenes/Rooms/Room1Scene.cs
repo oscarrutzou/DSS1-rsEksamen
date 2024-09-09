@@ -38,6 +38,8 @@ public class Room1Scene : RoomBase
     private string _potionTutorialText = "Find a red potion\nPress E to use and heal";
     private string _finnishedBaseTutorialText = "Completed base tutorial"; 
     private string _finnishedPotionTutorialText = "Here is 100 gold\nFor completing tutorial"; 
+    // Hover mouse over potions to check effects
+
     private bool _startRemoveTimer { get; set; }
     private double _tutorialRemoveTimer, _tutorialHowLongOnScreen = 5f;
     private bool _hasCompletedTutorialBefore;
@@ -75,10 +77,10 @@ public class Room1Scene : RoomBase
         new Point(7, 4),
         new Point(29, 9),};
 
-        MiscGameObjectsInRoom = new()
-        {
-            { new Point(13, 5), TraningDummyFactory.Create()}
-        };
+        //MiscGameObjectsInRoom = new()
+        //{
+        //    { new Point(13, 5), TraningDummyFactory.Create()}
+        //};
     }
 
     private void AddListenerCommands()
@@ -151,6 +153,8 @@ public class Room1Scene : RoomBase
         SaveData.HasCompletedFullTutorial = true;
         DB.Instance.AddCurrency(100);
         _startRemoveTimer = true;
+
+        GlobalSounds.PlaySound(SoundNames.Reward, 1, 0.8f, true, 0.1f, 0.2f);
     }
     private void ResetTimer()
     {
@@ -185,7 +189,7 @@ public class Room1Scene : RoomBase
         Vector2 size = GlobalTextures.DefaultFont.MeasureString(_tutorialText);
         Vector2 textPos = GameWorld.Instance.UiCam.TopRight + new Vector2(-260, 205);
 
-        SpriteRenderer.DrawCenteredSprite(spriteBatch, TextureNames.QuestUnder, textPos, BaseMath.TransitionColor(Color.White), LayerDepth.Default);
+        SpriteRenderer.DrawCenteredSprite(spriteBatch, TextureNames.BaseTutorial, textPos, BaseMath.TransitionColor(Color.White), LayerDepth.Default);
 
         GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, textPos, _tutorialText, CurrentTextColor);
     }

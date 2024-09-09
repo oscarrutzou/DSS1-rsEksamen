@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Graphics;
 using SharpDX.WIC;
 using System;
 using System.Collections.Generic;
+using ShamansDungeon.ComponentPattern.WorldObjects.PickUps;
 
 namespace ShamansDungeon.ComponentPattern.PlayerClasses;
 
@@ -51,9 +52,10 @@ public abstract class Player : Character
     #region Dash
     public bool CanDash = true;
     public float DashMaxMovePx = 300;
-    public bool Dash = false;
-    private bool _isDashing;
-    private double _dashCooldownTimer, _dashCooldown = 2f;
+    public bool DashInput = false;
+    public bool IsDashing { get; protected set; }
+    public double DashCooldownTimer { get; protected set; }
+    public double DashCooldown { get; protected set; } = 2f; 
     private double _dashTimeToCompleteTimer, _dashFinalLerpCooldown, _dashTimeToComplete = 0.1f; // The dash time it takes to move to the new position
 
     private Vector2 _previousTotalMovementInput;
@@ -87,6 +89,7 @@ public abstract class Player : Character
         //Weapon.StartRelativeOffsetPos = new(0, -40);
         //Weapon.StartRelativePos = new(0, 80);
 
+        DashCooldownTimer = DashCooldown;
 
         CharacterHitHurt = _playerHit;
 
@@ -124,7 +127,7 @@ public abstract class Player : Character
                 break;
 
             case CharacterState.Moving:
-                if (_isDashing) break;
+                if (IsDashing) break;
                 Move(totalMovementInput);
                 break;
 
@@ -141,12 +144,19 @@ public abstract class Player : Character
         if (totalMovementInput != Vector2.Zero) _previousTotalMovementInput = totalMovementInput;
 
         totalMovementInput = Vector2.Zero;
-        Dash = false; // Resets the dash
+        DashInput = false; // Resets the dash
     }
 
+    private bool _hasPlayedDeathSound;
     private void ChangeScene()
     {
         _onDeadTimer += GameWorld.DeltaTime;
+        if (!_hasPlayedDeathSound)
+        {
+            _hasPlayedDeathSound = true;
+            GlobalSounds.PlaySound(SoundNames.ArcadeGameOver, 1, 1f);
+        }
+
         if (_onDeadTimer >= _timeTillSceneChange)
         {
             _onDeadTimer = 0;
@@ -157,10 +167,10 @@ public abstract class Player : Character
 
     private void CheckForMovement()
     {
-        if (CheckDash() || _isDashing) // If has begun dash or in the middle of dash.
+        if (CheckDash() || IsDashing) // If has begun dash or in the middle of dash.
         {
             SetState(CharacterState.Moving); // Maybe play the move 
-            if (_isDashing)
+            if (IsDashing)
             {
                 UpdateIsDashingPosition();
             }
@@ -354,11 +364,14 @@ public abstract class Player : Character
 
     private bool CheckDash()
     {
-        if (!CanDash || _isDashing) return false;
+        if (!CanDash || IsDashing) return false;
 
-        if (!Dash)
+        if (!DashInput)
         {
-            _dashCooldownTimer += GameWorld.DeltaTime;
+            if (DashCooldownTimer <= DashCooldown)
+            {
+                DashCooldownTimer += GameWorld.DeltaTime;
+            }
             return false;
         }
 
@@ -385,7 +398,7 @@ public abstract class Player : Character
         if (CheckDashDirection(input))
         {
             _dashTimeToCompleteTimer = 0;
-            _isDashing = true;
+            IsDashing = true;
             return true;
         }
         else
@@ -419,10 +432,10 @@ public abstract class Player : Character
     private void ResetDash()
     {
         // Resets dash
-        Dash = false;
-        _dashCooldownTimer = 0;
+        DashInput = false;
+        DashCooldownTimer = 0;
         _dashTimeToCompleteTimer = 0;
-        _isDashing = false;
+        IsDashing = false;
         Health.CanTakeDamage = true;
     }
 
@@ -430,7 +443,7 @@ public abstract class Player : Character
 
     public void UpdateDash()
     {
-        Dash = _dashCooldownTimer >= _dashCooldown || _isDashing;
+        DashInput = DashCooldownTimer >= DashCooldown || IsDashing;
     }
 
     private bool CheckDashDirection(Vector2 inputDirection)

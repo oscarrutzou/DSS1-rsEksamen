@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using System;
 using System.Collections.Generic;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace ShamansDungeon.GameManagement;
 
@@ -12,6 +13,12 @@ public enum SoundNames
     // UI -----------------------------------
     ButtonHover,
     ButtonClicked,
+    ArcadeGameOver,
+    DrinkingPotion,
+    LowHealthHeartbeat,
+    PickUp,
+    Reward,
+    Teleport,
 
     // Weapon  ------------------------------
     //SwipeFast1,
@@ -120,6 +127,13 @@ public static class GlobalSounds
             {SoundNames.ButtonHover, content.Load<SoundEffect>("Sound\\Gui\\HoverButton") },
             {SoundNames.ButtonClicked, content.Load<SoundEffect>("Sound\\Gui\\PressedButton2") },
 
+
+            {SoundNames.ArcadeGameOver, content.Load<SoundEffect>("Sound\\Other\\ArcadeGameOver") },
+            {SoundNames.DrinkingPotion, content.Load<SoundEffect>("Sound\\Other\\DrinkingPotion") },
+            {SoundNames.LowHealthHeartbeat, content.Load<SoundEffect>("Sound\\Other\\LowHealthHeartbeat") },
+            {SoundNames.Reward, content.Load<SoundEffect>("Sound\\Other\\Reward") },
+            {SoundNames.PickUp, content.Load<SoundEffect>("Sound\\Other\\PickUp") },
+            {SoundNames.Teleport, content.Load<SoundEffect>("Sound\\Other\\Teleport") },
 
             //{SoundNames.SwipeFast1, content.Load<SoundEffect>("Sound\\Attack\\Slash_Attack_Light_1") },
             //{SoundNames.SwipeFast2, content.Load<SoundEffect>("Sound\\Attack\\Slash_Attack_Light_2") },

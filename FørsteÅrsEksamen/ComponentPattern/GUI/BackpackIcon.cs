@@ -19,7 +19,7 @@ namespace ShamansDungeon.ComponentPattern.GUI
         {
         }
         private SpriteRenderer _sr;
-
+        private Collider _collider;
         private Player _player;
         private Texture2D _potionTexture;
 
@@ -27,6 +27,8 @@ namespace ShamansDungeon.ComponentPattern.GUI
         {
             _sr = GameObject.GetComponent<SpriteRenderer>();
             _sr.SetSprite(TextureNames.BackpackIcon);
+            _collider = GameObject.GetComponent<Collider>();
+            _collider.SetColliderLayer(ColliderLayer.BackPackIcon);
 
             _player = SaveData.Player;
         }

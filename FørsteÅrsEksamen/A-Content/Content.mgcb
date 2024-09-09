@@ -375,6 +375,42 @@
 /processorParam:Quality=Best
 /build:Sound/Orc/MiniBoss/Mocking (5).wav
 
+#begin Sound/Other/ArcadeGameOver.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Other/ArcadeGameOver.wav
+
+#begin Sound/Other/DrinkingPotion.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Other/DrinkingPotion.wav
+
+#begin Sound/Other/LowHealthHeartbeat.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Other/LowHealthHeartbeat.wav
+
+#begin Sound/Other/PickUp.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Other/PickUp.wav
+
+#begin Sound/Other/Reward.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Other/Reward.wav
+
+#begin Sound/Other/Teleport.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Other/Teleport.wav
+
 #begin Sound/PlayerHurt/Hit (1).wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -542,6 +578,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Test/WoodArrow.png
+
+#begin UI/BackpackText.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:UI/BackpackText.png
 
 #begin UI/BossHealthBarOver.png
 /importer:TextureImporter
@@ -735,6 +783,18 @@
 /processorParam:TextureFormat=Color
 /build:UI/Icons/MouseCursor.png
 
+#begin UI/ItemText.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:UI/ItemText.png
+
 #begin UI/LongButton.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -794,6 +854,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:UI/ShortButton.png
+
+#begin UI/Tutorial.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:UI/Tutorial.png
 
 #begin UI/WideButton.png
 /importer:TextureImporter
@@ -3134,6 +3206,42 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:World/Objects/DoorClosed.png
+
+#begin World/Objects/Potions/LittleBluePotion1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/Objects/Potions/LittleBluePotion1.png
+
+#begin World/Objects/Potions/LittleGreenPotion1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/Objects/Potions/LittleGreenPotion1.png
+
+#begin World/Objects/Potions/LittleRedPotion1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/Objects/Potions/LittleRedPotion1.png
 
 #begin World/Objects/Potions/RedPotion1.png
 /importer:TextureImporter

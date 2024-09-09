@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using ShamansDungeon.ComponentPattern.WorldObjects.PickUps;
 
 namespace ShamansDungeon.LiteDB;
 
@@ -247,12 +248,15 @@ public class DB
         savedData.RunData.Room_Reached = SaveData.Level_Reached;
         savedData.RunData.Time_Left = SaveData.Time_Left;
 
-        // Update player
-        string potionName = SaveData.Player.ItemInInventory == null ? string.Empty : SaveData.Player.ItemInInventory.Name;
-
         Health playerHealth = SaveData.Player.GameObject.GetComponent<Health>();
         savedData.RunData.PlayerData.Health = playerHealth.CurrentHealth;
-        savedData.RunData.PlayerData.Potion_Name = potionName;
+        savedData.RunData.PlayerData.DamageMultiplier = SaveData.Player.DamageMultiplier;
+        savedData.RunData.PlayerData.SpeedMultiplier = SaveData.Player.SpeedMultiplier;
+
+        // Update player
+        if (SaveData.Player.ItemInInventory != null)
+            savedData.RunData.PlayerData.PotionType = SaveData.Player.ItemInInventory.PotionType;
+
         return savedData;
     }
 
@@ -293,6 +297,8 @@ public class DB
                 Health = playerHealth.CurrentHealth,
                 Class_Type = SaveData.SelectedClass,
                 Weapon_Type = SaveData.SelectedWeapon,
+                DamageMultiplier = player.DamageMultiplier,
+                SpeedMultiplier = player.SpeedMultiplier,
             };
 
             RunData runData = new()
@@ -314,18 +320,21 @@ public class DB
             PlayerData loadPlayerData = savedData.RunData.PlayerData;
             playerGo = PlayerFactory.Create(loadPlayerData.Class_Type, loadPlayerData.Weapon_Type);
             Player player = playerGo.GetComponent<Player>();
+            player.SpeedMultiplier = loadPlayerData.SpeedMultiplier;
+            player.DamageMultiplier = loadPlayerData.DamageMultiplier;
+
             Health playerHealth = playerGo.GetComponent<Health>();
 
             playerHealth.CurrentHealth = loadPlayerData.Health;
 
-            if (loadPlayerData.Potion_Name != null)
+            if (loadPlayerData.PotionType != null)
             {
-                GameObject potionGo = ItemFactory.Create(playerGo);
+                GameObject potionGo = ItemFactory.CreatePotion(playerGo, (PotionTypes)loadPlayerData.PotionType); // Need to convert it, so it knows its not null
                 potionGo.IsEnabled = false;
                 GameWorld.Instance.Instantiate(potionGo); // So the potion gets loaded with its awake and instantiate
 
                 player.ItemInInventory = potionGo.GetComponent<Potion>();
-                player.ItemInInventory.Name = loadPlayerData.Potion_Name;
+                player.ItemInInventory.PotionType = (PotionTypes)loadPlayerData.PotionType;
             }
 
             SaveData.Player = player;

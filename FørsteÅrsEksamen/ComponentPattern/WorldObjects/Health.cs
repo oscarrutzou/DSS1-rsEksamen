@@ -150,7 +150,7 @@ namespace ShamansDungeon.ComponentPattern.WorldObjects
         {
             if (IsDead) return;
 
-            _spriteRenderer.Color = _spriteRenderer.StartColor;
+            _spriteRenderer.Color = Color.White;
             OnResetColor?.Invoke();
         }
 
