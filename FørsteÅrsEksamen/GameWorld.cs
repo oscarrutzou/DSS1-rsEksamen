@@ -21,7 +21,7 @@ public class GameWorld : Game
     #region Properties
     public static GameWorld Instance;
 
-    public static bool DebugAndCheats = true;
+    public static bool DebugAndCheats = false;
     public static double DeltaTime { get; private set; }
     public static bool IsPaused = false;
     public static Color BackGroundColor { get; private set; } = new Color(20, 20, 18, 255);
@@ -69,10 +69,10 @@ public class GameWorld : Game
         // Put some of this into threads to load faster in a loading menu, insted of running it here.
         GlobalTextures.LoadContent();
         GlobalSounds.LoadContent();
-        GlobalAnimations.LoadContent(); 
+        GlobalAnimations.LoadContent();
 
-        Fullscreen(); // Need to be before the camera
-        //SetResolutionSize(800, 800); 
+        //Fullscreen(); // Need to be before the camera
+        SetResolutionSize(800, 800); 
 
         SceneData.Instance.GenereateGameObjectDicionary();
         

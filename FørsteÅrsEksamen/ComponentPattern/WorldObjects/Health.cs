@@ -22,6 +22,12 @@ namespace ShamansDungeon.ComponentPattern.WorldObjects
         /// Gets set in Start of Health component
         /// </summary>
         public int CurrentHealth { get; set; } = -1;
+        public float NormalizedHealth 
+        { get
+            {
+                return (float)CurrentHealth / (float)MaxHealth;
+            }
+        }
         public bool CanTakeDamage = true;
         public Action OnDamageTaken { get; set; }
         public Action OnZeroHealth { get; set; }
@@ -124,7 +130,7 @@ namespace ShamansDungeon.ComponentPattern.WorldObjects
 
         private void CheckDmgLeft()
         {
-            float normalizedHealth = (float)CurrentHealth / (float)MaxHealth;
+            float normalizedHealth = NormalizedHealth;
 
             // Need to change it to not just turn into null but should unsubscribe on each of the places.
             if (normalizedHealth <= 0.75f)

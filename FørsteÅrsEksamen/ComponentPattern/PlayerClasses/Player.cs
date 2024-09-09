@@ -48,6 +48,7 @@ public abstract class Player : Character
         SoundNames.PlayerHit7,
         SoundNames.PlayerHit8,
     };
+    private bool _hasPlayedDeathSound;
 
     #region Dash
     public bool CanDash = true;
@@ -116,6 +117,7 @@ public abstract class Player : Character
         if (State != CharacterState.Dead)
         {
             CheckForMovement();
+            PlayHeartBeatIfLow();
         }
 
         Weapon?.MoveWeaponAndAngle();
@@ -146,8 +148,12 @@ public abstract class Player : Character
         totalMovementInput = Vector2.Zero;
         DashInput = false; // Resets the dash
     }
-
-    private bool _hasPlayedDeathSound;
+    private void PlayHeartBeatIfLow()
+    {
+        if (Health.NormalizedHealth > 0.25f) return; 
+     
+        GlobalSounds.PlaySound(SoundNames.LowHealthHeartbeat, 1, 0.5f, true, -0.4f, 0.2f);
+    }
     private void ChangeScene()
     {
         _onDeadTimer += GameWorld.DeltaTime;
