@@ -97,10 +97,12 @@ public abstract class Weapon : Component
             User = PlayerUser;
             PlayerWeaponSprite();
         }
+        MakeHoldHand();
     }
-    
+
     public override void Start()
     {
+
         if (Animations == null || Animations.Count == 0) return;
 
         animRotation = Animations[CurrentAnim].AmountOfRotation;
@@ -109,6 +111,21 @@ public abstract class Weapon : Component
 
         nextAnimRotation = Animations[NextAnim].AmountOfRotation;
     }
+
+    private void MakeHoldHand()
+    {
+        GameObject go = new();
+        go.Transform.Position = GameObject.Transform.Position;
+        go.Transform.Scale = User.GameObject.Transform.Scale;
+
+        _holdHandSr = go.AddComponent<SpriteRenderer>();
+        _holdHandSr.SetLayerDepth(SpriteRenderer.LayerDepth, 0.001f);
+        _holdHandSr.SetSprite(TextureNames.HumanHandRight);
+        _holdHand = go;
+        GameWorld.Instance.Instantiate(go);
+    }
+    private GameObject _holdHand;
+    private SpriteRenderer _holdHandSr;
 
     public override void Update()
     {
@@ -131,6 +148,7 @@ public abstract class Weapon : Component
             offSet = -offSet;
 
         SpriteRenderer.SetLayerDepth(User.SpriteRenderer.LayerDepth, offSet);
+        _holdHandSr.SetLayerDepth(SpriteRenderer.LayerDepth, 0.0001f);
     }
 
     public void StartAttack()
@@ -234,7 +252,7 @@ public abstract class Weapon : Component
 
             LeftSide = true;
             SetAngleToFitWithNextAnimation();
-            SpriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
+            SetSpriteEffects(SpriteEffects.FlipHorizontally);
         }
         else
         {
@@ -242,9 +260,35 @@ public abstract class Weapon : Component
 
             LeftSide = false;
             SetAngleToFitWithNextAnimation();
-
-            SpriteRenderer.SpriteEffects = SpriteEffects.None;
+            SetSpriteEffects(SpriteEffects.None);
         }
+    }
+
+    public void SetSpriteEffects(SpriteEffects newSpriteEffect)
+    {
+        SpriteRenderer.SpriteEffects = newSpriteEffect;
+        _holdHandSr.SpriteEffects = newSpriteEffect;
+    }
+    public void SetPosition(Vector2 newPos)
+    {
+        GameObject.Transform.Position = newPos;
+        _holdHand.Transform.Position = newPos;
+    }
+    public void SetRotation(float newRot)
+    {
+        GameObject.Transform.Rotation = newRot;
+        _holdHand.Transform.Rotation = newRot;
+    }
+    public void ShowHideWeapon(bool show)
+    {
+        SpriteRenderer.ShouldDrawSprite = show;
+        _holdHandSr.ShouldDrawSprite = show;
+    }
+
+    public void RemoveGameObject()
+    {
+        GameWorld.Instance.Destroy(GameObject);
+        GameWorld.Instance.Destroy(_holdHand);
     }
 
     protected void SetStartAngleToNextAnim()
@@ -268,13 +312,9 @@ public abstract class Weapon : Component
         float curRot;
 
         if (FinnishedAttack)
-        {
             curRot = nextAnimRotation;
-        }
         else
-        {
             curRot = animRotation;
-        }
 
         float leftOver = curRot - MathHelper.Pi;
 
@@ -283,12 +323,10 @@ public abstract class Weapon : Component
 
     private void AddLeftOverToAngle(bool leftSide, float leftOver, float rotation)
     {
-        
         WeaponAngleToUser += leftSide 
             ? (leftOver < 0 ? -rotation / divideBy :  leftOver / 2) 
             : (leftOver < 0 ?  rotation / divideBy : -leftOver / 2);
     }
-
 
     public override void Draw(SpriteBatch spriteBatch)
     {

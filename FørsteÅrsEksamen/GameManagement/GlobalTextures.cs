@@ -26,6 +26,9 @@ public enum TextureNames
     TestLevelBG,
     TestLevelFG,
 
+    HumanHandRight,
+    HumanHandLeft,
+    
     WoodSword,
     BoneSword,
     WoodDagger,
@@ -111,6 +114,8 @@ public static class GlobalTextures
             {TextureNames.TestLevelBG, content.Load<Texture2D>("World\\Levels\\Test1UnderPlayer") },
             {TextureNames.TestLevelFG, content.Load<Texture2D>("World\\Levels\\Test1OverPlayer") },
 
+            {TextureNames.HumanHandRight, content.Load<Texture2D>("World\\Classes\\HandRight") },
+            {TextureNames.HumanHandLeft, content.Load<Texture2D>("World\\Classes\\HandLeft") },
             {TextureNames.WoodSword, content.Load<Texture2D>("World\\Weapons\\Melee Weapons\\WoodSword") },
             {TextureNames.BoneSword, content.Load<Texture2D>("World\\Weapons\\Melee Weapons\\BoneSword") },
             {TextureNames.WoodDagger, content.Load<Texture2D>("World\\Weapons\\Melee Weapons\\WoodDagger") },

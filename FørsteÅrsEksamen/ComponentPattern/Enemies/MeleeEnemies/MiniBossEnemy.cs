@@ -152,20 +152,19 @@ namespace ShamansDungeon.ComponentPattern.Enemies.MeleeEnemies
                 
                 _showHideTransition = true;
                 SpriteRenderer.ShouldDrawSprite = false;
-                if (Weapon != null)
-                    Weapon.SpriteRenderer.ShouldDrawSprite = false;
+                Weapon?.ShowHideWeapon(SpriteRenderer.ShouldDrawSprite);
+
             };
 
             Health.OnZeroHealth += () => {
                 _showHideTransition = false;
                 SpriteRenderer.ShouldDrawSprite = true;
-                if (Weapon != null)
-                    Weapon.SpriteRenderer.ShouldDrawSprite = true;
+                Weapon?.ShowHideWeapon(SpriteRenderer.ShouldDrawSprite);
             };
             Health.OnZeroHealth += () => { GameWorld.Instance.SingleColorEffect = false; }; // Together with a sound effect
             Health.OnZeroHealth += KillAllSpawnedEnemies; // So the player get an incentive to kill the boss fast
         }
-         
+        
         private void KillAllSpawnedEnemies()
         {
             foreach (Enemy enemy in _spawnedEnemies)
@@ -379,8 +378,7 @@ namespace ShamansDungeon.ComponentPattern.Enemies.MeleeEnemies
                 _showHideTransitionTimer = 0;
 
                 SpriteRenderer.ShouldDrawSprite = !SpriteRenderer.ShouldDrawSprite;
-                if (Weapon != null)
-                    Weapon.SpriteRenderer.ShouldDrawSprite = !Weapon.SpriteRenderer.ShouldDrawSprite;
+                Weapon?.ShowHideWeapon(SpriteRenderer.ShouldDrawSprite);
             }
         }
 

@@ -68,10 +68,12 @@ public abstract class MeleeWeapon : Weapon
         if (Animations[CurrentAnim].SelectedAttackType == WeaponAnimAttackTypes.TwoWaySlash)
         {
             AttackAnimTwoSlash();
-        }else if (Animations[CurrentAnim].SelectedAttackType == WeaponAnimAttackTypes.OneWaySlash)
-        {
-            AttackAnimOneSlash();
-        }else if (Animations[CurrentAnim].SelectedAttackType == WeaponAnimAttackTypes.Stab)
+        }
+        //else if (Animations[CurrentAnim].SelectedAttackType == WeaponAnimAttackTypes.OneWaySlash)
+        //{
+        //    AttackAnimOneSlash();
+        //}
+        else if (Animations[CurrentAnim].SelectedAttackType == WeaponAnimAttackTypes.Stab)
         {
             AttackAnimStab();
         }
@@ -95,11 +97,12 @@ public abstract class MeleeWeapon : Weapon
             // Need to also set the new start point
             _rotateBackStartRotation = GameObject.Transform.Rotation;
 
+
             // Makes the weapon flip when rotating back
             if (SpriteRenderer.SpriteEffects == SpriteEffects.FlipHorizontally)
-                SpriteRenderer.SpriteEffects = SpriteEffects.None;
+                SetSpriteEffects(SpriteEffects.None);
             else if (SpriteRenderer.SpriteEffects == SpriteEffects.None)
-                SpriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
+                SetSpriteEffects(SpriteEffects.FlipHorizontally);
         }
 
         float normalizedAttackingTime = (float)AttackedTotalElapsedTime / (float)TimeBeforeNewDirection;
@@ -111,13 +114,14 @@ public abstract class MeleeWeapon : Weapon
         {
             finalLerp += FinalLerp; // The first rotation
             // Down attack
-            GameObject.Transform.Rotation = MathHelper.Lerp(StartAnimationAngle, finalLerp, adjustedEasedTime);
+            SetRotation(MathHelper.Lerp(StartAnimationAngle, finalLerp, adjustedEasedTime));
+
         }
         else
         {
             // Second rotation to rotate to the start of the next rotation
             //Up attack
-            GameObject.Transform.Rotation = MathHelper.Lerp(_rotateBackStartRotation, StartAnimationAngle, adjustedEasedTime);
+            SetRotation(MathHelper.Lerp(_rotateBackStartRotation, StartAnimationAngle, adjustedEasedTime));
         }
 
         // Reset
@@ -130,58 +134,6 @@ public abstract class MeleeWeapon : Weapon
         }
     }
 
-    private void AttackAnimOneSlash()
-    {
-        _fullAttackTimer += (float)GameWorld.DeltaTime;
-        NormalizedFullAttack = _fullAttackTimer / Animations[CurrentAnim].TotalTime;
-
-        // First rotate current angle to start angle of the anim, before attacking
-        if (!IsRotatingBack && AttackedTotalElapsedTime >= TimeBeforeNewDirection)
-        {
-            PlayAttackSound();
-
-            AttackedTotalElapsedTime = 0f; // Reset totalElapsedTime
-            IsRotatingBack = true;
-
-            SetStartAngleToNextAnim();
-            // Need to also set the new start point
-            _rotateBackStartRotation = GameObject.Transform.Rotation;
-            CanDealDamage = false;
-
-            if (SpriteRenderer.SpriteEffects == SpriteEffects.FlipHorizontally)
-                SpriteRenderer.SpriteEffects = SpriteEffects.None;
-            else if (SpriteRenderer.SpriteEffects == SpriteEffects.None)
-                SpriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
-        }
-
-        float normalizedAttackingTime = (float)AttackedTotalElapsedTime / (float)TimeBeforeNewDirection;
-        float easedTime = Animations[CurrentAnim].AnimationMethod(normalizedAttackingTime); // maybe switch between them.
-        float adjustedEasedTime = easedTime * (normalizedAttackingTime);
-        float finalLerp = StartAnimationAngle;
-
-        if (!IsRotatingBack)
-        {
-            finalLerp += FinalLerp; // The first rotation
-            // Down attack
-            GameObject.Transform.Rotation = MathHelper.Lerp(StartAnimationAngle, finalLerp, adjustedEasedTime);
-        }
-        else
-        {
-            // Second rotation to rotate to the start of the next rotation
-            //Up attack
-            GameObject.Transform.Rotation = MathHelper.Lerp(_rotateBackStartRotation, StartAnimationAngle, adjustedEasedTime);
-        }
-
-        // Reset
-        if (NormalizedFullAttack >= 1f)
-        {
-            IsRotatingBack = false;
-            Attacking = false;
-            FinnishedAttack = true;
-            CanDealDamage = true;
-            ResetAttackTimers();
-        }
-    }
 
     private void ResetAttackTimers()
     {

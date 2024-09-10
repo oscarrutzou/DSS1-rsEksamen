@@ -19,6 +19,8 @@ public enum SoundNames
     PickUp,
     Reward,
     Teleport,
+    WinGame,
+    LostGame,
 
     // Weapon  ------------------------------
     //SwipeFast1,
@@ -134,6 +136,8 @@ public static class GlobalSounds
             {SoundNames.Reward, content.Load<SoundEffect>("Sound\\Other\\Reward") },
             {SoundNames.PickUp, content.Load<SoundEffect>("Sound\\Other\\PickUp") },
             {SoundNames.Teleport, content.Load<SoundEffect>("Sound\\Other\\Teleport") },
+            {SoundNames.WinGame, content.Load<SoundEffect>("Sound\\Other\\WinGame") },
+            {SoundNames.LostGame, content.Load<SoundEffect>("Sound\\Other\\LostGame") },
 
             //{SoundNames.SwipeFast1, content.Load<SoundEffect>("Sound\\Attack\\Slash_Attack_Light_1") },
             //{SoundNames.SwipeFast2, content.Load<SoundEffect>("Sound\\Attack\\Slash_Attack_Light_2") },

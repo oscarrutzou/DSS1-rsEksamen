@@ -304,9 +304,18 @@ public abstract class Enemy : Character
             SpriteRenderer.SetLayerDepth(LayerDepth.EnemyUnder, offSet);
         else
             SpriteRenderer.SetLayerDepth(LayerDepth.EnemyOver, offSet);
+
+        if (EmptyHandSr != null)
+        {
+            EmptyHandSr.SetLayerDepth(SpriteRenderer.LayerDepth, 0.001f);
+        }
+        if (droppedPotionSr != null)
+        {
+            droppedPotionSr.SetLayerDepth(SpriteRenderer.LayerDepth, 0.001f);
+        }
     }
 
-
+    SpriteRenderer droppedPotionSr;
     private void SpawnPotionOnDeath()
     {
         if (_hasSpawnedDeathPotion) return;
@@ -315,8 +324,11 @@ public abstract class Enemy : Character
         GameObject droppedPotionGo = ItemFactory.CreatePotionWithRandomType(Player.GameObject, _potionDropList);
 
         droppedPotionGo.Transform.Position = GridManager.Instance.CurrentGrid.PosFromGridPos(GameObject.Transform.GridPosition);
+        droppedPotionSr = droppedPotionGo.GetComponent<SpriteRenderer>();
+
         GameWorld.Instance.Instantiate(droppedPotionGo);
     }
+
 
     #region PathFinding
     public void SetPath()
@@ -381,6 +393,7 @@ public abstract class Enemy : Character
         Direction = BaseMath.SafeNormalize(_nextTarget - position);
 
         GameObject.Transform.Translate(Direction * Speed * (float)GameWorld.DeltaTime);
+        SetCharacterPos(GameObject.Transform.Position); // Sets the hand pos
         RotateCharacterOnMove(true);
 
         Weapon.MoveWeaponAndAngle();

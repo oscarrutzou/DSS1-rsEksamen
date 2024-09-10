@@ -387,6 +387,12 @@
 /processorParam:Quality=Best
 /build:Sound/Other/DrinkingPotion.wav
 
+#begin Sound/Other/LostGame.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Other/LostGame.wav
+
 #begin Sound/Other/LowHealthHeartbeat.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -410,6 +416,12 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sound/Other/Teleport.wav
+
+#begin Sound/Other/WinGame.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/Other/WinGame.mp3
 
 #begin Sound/PlayerHurt/Hit (1).wav
 /importer:WavImporter
@@ -950,6 +962,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:World/Backgrounds/Space Background2.png
+
+#begin World/Classes/HandLeft.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/Classes/HandLeft.png
+
+#begin World/Classes/HandRight.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/Classes/HandRight.png
 
 #begin World/Classes/Knight/Death/tile000.png
 /importer:TextureImporter

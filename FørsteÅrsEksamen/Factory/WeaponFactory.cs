@@ -81,8 +81,6 @@ public static class WeaponFactory
 
         return weaponGo;
     }
-
-
     private static void AddClassComponent(GameObject weaponGo, WeaponTypes type)
     {
         switch (type)

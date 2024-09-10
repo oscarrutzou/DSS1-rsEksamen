@@ -80,15 +80,7 @@ public abstract class Player : Character
 
     public override void Awake()
     {
-        //NormalSpriteOffset = new(0, -70);
-
         base.Awake();
-
-        //Collider.SetCollisionBox(15, 23, new Vector2(0, 40));
-
-        //Weapon.StartPosOffset = new(40, 40);
-        //Weapon.StartRelativeOffsetPos = new(0, -40);
-        //Weapon.StartRelativePos = new(0, 80);
 
         DashCooldownTimer = DashCooldown;
 
@@ -106,6 +98,8 @@ public abstract class Player : Character
     {
         SpriteRenderer.SetLayerDepth(LayerDepth.Player);
         SetState(CharacterState.Idle);
+        if (EmptyHandSr == null) return;
+        EmptyHandSr.SetLayerDepth(SpriteRenderer.LayerDepth, 0.001f);
     }
 
     public override void Update()
@@ -278,10 +272,12 @@ public abstract class Player : Character
     {
         // Updates the grid position
         GameObject cellGoUnderPlayer = GridManager.Instance.GetCellAtPos(GameObject.Transform.Position);
+        
         if (cellGoUnderPlayer == null) return;
         GameObject.Transform.GridPosition = cellGoUnderPlayer.Transform.GridPosition;
         Cell cellUnderPlayer = cellGoUnderPlayer.GetComponent<Cell>();
         CollisionNr = cellUnderPlayer.CollisionNr;
+
 
         GridManager.Instance.AddVisitedRoomNumbers(cellUnderPlayer.RoomNr);
     }
@@ -340,6 +336,7 @@ public abstract class Player : Character
     protected void TranslateMovement(Vector2 movement)
     {
         GameObject.Transform.Translate(movement);
+        SetCharacterPos(GameObject.Transform.Position); // Sets the hand pos
         MovementColliderGo.Transform.Position = GameObject.Transform.Position;
         HandsGo.Transform.Position = GameObject.Transform.Position;
         Weapon.MoveWeaponAndAngle();
@@ -351,7 +348,7 @@ public abstract class Player : Character
     /// <param name="position"></param>
     protected void SetMovement(Vector2 position)
     {
-        GameObject.Transform.Position = position;
+        SetCharacterPos(position); // Sets the hand pos
         MovementColliderGo.Transform.Position = GameObject.Transform.Position;
         HandsGo.Transform.Position = GameObject.Transform.Position;
         Weapon.MoveWeaponAndAngle();

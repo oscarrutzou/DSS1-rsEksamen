@@ -3,6 +3,7 @@ using ShamansDungeon.ComponentPattern.GUI;
 using ShamansDungeon.Factory.Gui;
 using ShamansDungeon.LiteDB;
 using Microsoft.Xna.Framework.Graphics;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ShamansDungeon.GameManagement.Scenes.Menus;
 
@@ -22,6 +23,8 @@ public class EndMenu : MenuScene
 
         GameObject quitBtn = ButtonFactory.Create("Quit", true, GameWorld.Instance.Exit);
         FirstMenuObjects.Add(quitBtn);
+
+        SetMenuText();
     }
     private void SetMainMenu()
     {
@@ -51,6 +54,20 @@ public class EndMenu : MenuScene
 
         ShowHideGameObjects(SecondMenuObjects, false);
     }
+    private string _menuText;
+    private void SetMenuText()
+    {
+        if (SaveData.HasWon)
+        {
+            GlobalSounds.PlaySound(SoundNames.WinGame, 1, 1);
+            _menuText = "You Won!";
+            return;
+        }
+        else if (SaveData.LostByTime) _menuText = "Time Ran Out";
+        else _menuText = "Try Again";
+
+        GlobalSounds.PlaySound(SoundNames.LostGame, 1, 1);
+    }
 
     public override void DrawOnScreen(SpriteBatch spriteBatch)
     {
@@ -62,12 +79,7 @@ public class EndMenu : MenuScene
         }
         else
         {
-            string text;
-            if (SaveData.HasWon) text = "You Won!";
-            else if (SaveData.LostByTime) text = "Time Ran Out";
-            else text = "Try Again";
-
-            DrawMenuText(spriteBatch, text, TextPos);
+            DrawMenuText(spriteBatch, _menuText, TextPos);
         }
     }
 }

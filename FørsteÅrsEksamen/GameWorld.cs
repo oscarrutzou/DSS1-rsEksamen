@@ -82,7 +82,7 @@ public class GameWorld : Game
 
         GenerateScenes(); // Makes a instance of all the scene we need
 
-        CurrentScene = Scenes[SceneNames.WeaponTestScene];
+        CurrentScene = Scenes[SceneNames.MainMenu];
         CurrentScene.Initialize(); // Starts the main menu 
          
         IndependentBackground.SpawnBG(); // The background that dont get deleted

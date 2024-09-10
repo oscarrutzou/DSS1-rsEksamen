@@ -46,7 +46,7 @@ public abstract class Character : Component
     /// </summary>
     protected Vector2 SpriteOffset;
     
-    public GameObject WeaponGo, HandLeft, HandRight;
+    public GameObject WeaponGo;
     public Vector2 Direction { get; protected set; } 
     public CharacterState State { get; protected set; } = CharacterState.Moving; // We use the method SetState, to we can change the animations and other variables.
     public int CollisionNr { get; set; }
@@ -148,9 +148,23 @@ public abstract class Character : Component
         {
             SpriteOffset = NormalSpriteOffset;
         }
-
+        //MakeEmptyHand();
         MakeEmitters();
     }
+    private void MakeEmptyHand()
+    {
+        GameObject go = new();
+        go.Transform.Position = GameObject.Transform.Position;
+
+        EmptyHandSr = go.AddComponent<SpriteRenderer>();
+        EmptyHandSr.SetLayerDepth(SpriteRenderer.LayerDepth, 0.001f);
+        EmptyHandSr.SetSprite(TextureNames.HumanHandLeft);
+        EmptyHandGo = go;
+        GameWorld.Instance.Instantiate(go);
+    }
+    protected GameObject EmptyHandGo;
+    protected SpriteRenderer EmptyHandSr;
+
 
     protected abstract float GetWeaponAngle();
 
@@ -161,7 +175,7 @@ public abstract class Character : Component
         if (Weapon.Attacking)
         {
             // Lock the offset
-            WeaponGo.Transform.Position = userPos + Weapon.LastOffSetPos;
+            Weapon.SetPosition(userPos + Weapon.LastOffSetPos);
             return;
         }
 
@@ -174,7 +188,7 @@ public abstract class Character : Component
         }
 
         Weapon.LastOffSetPos = BaseMath.Rotate(Weapon.StartRelativePos, Weapon.WeaponAngleToUser - MathHelper.PiOver2) + Weapon.StartRelativeOffsetPos;
-        WeaponGo.Transform.Position = userPos + Weapon.LastOffSetPos;
+        Weapon.SetPosition(userPos + Weapon.LastOffSetPos);
 
         Weapon.SetAngleToCorrectSide(); // Also sets the private variables
 
@@ -182,7 +196,7 @@ public abstract class Character : Component
         ChangeWeaponAngleToUser();
 
         Weapon.StartAnimationAngle = Weapon.WeaponAngleToUser;
-        WeaponGo.Transform.Rotation = Weapon.StartAnimationAngle;
+        Weapon.SetRotation(Weapon.StartAnimationAngle);
     }
 
     protected virtual void ChangeWeaponAngleToUser() { }
@@ -205,10 +219,33 @@ public abstract class Character : Component
         if (Grid == null) return null;
 
         GameObject currentCellGo = Grid.GetCellGameObjectFromPoint(GameObject.Transform.GridPosition);
-        GameObject.Transform.Position = currentCellGo.Transform.Position;
+        SetCharacterPos(currentCellGo.Transform.Position);
         Cell cell = currentCellGo.GetComponent<Cell>();
         CollisionNr = cell.CollisionNr;
         return cell;
+    }
+    protected Vector2 EmptyHandOffset = new Vector2(-25, 5);
+
+    public void SetCharacterPos(Vector2 newPos)
+    {
+        GameObject.Transform.Position = newPos;
+        if (EmptyHandGo == null) return;
+
+        EmptyHandGo.Transform.Position = newPos + EmptyHandOffset;
+    }
+
+    public void SetSpriteEffects(SpriteEffects newSpriteEffect)
+    {
+        SpriteRenderer.SpriteEffects = newSpriteEffect;
+        if (EmptyHandSr == null) return;
+        EmptyHandSr.SpriteEffects = newSpriteEffect;
+    }
+
+    public void SetRotation(float newRot)
+    {
+        GameObject.Transform.Rotation = newRot;
+        if (EmptyHandGo == null) return;
+        EmptyHandGo.Transform.Rotation = newRot * 3;
     }
 
     // This is not a abstract method since we only need to set it in the Player and Enemy class, and not in its subclasses
@@ -251,7 +288,6 @@ public abstract class Character : Component
         }
 
         SpriteRenderer.DrawPosOffSet = SpriteOffset;
-
     }
 
     /// <summary>
@@ -262,12 +298,12 @@ public abstract class Character : Component
         if (Direction.X >= 0)
         {
             DirectionState = AnimationDirectionState.Right;
-            SpriteRenderer.SpriteEffects = SpriteEffects.None;
+            SetSpriteEffects(SpriteEffects.None);
         }
         else if (Direction.X < 0)
         {
             DirectionState = AnimationDirectionState.Left;
-            SpriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
+            SetSpriteEffects(SpriteEffects.FlipHorizontally);
         }
     }
 
@@ -288,8 +324,14 @@ public abstract class Character : Component
             _characterDeath = GlobalSounds.PlayRandomizedSound(CharacterDeath, 2, 1.0f, true);
         }
 
-        GameWorld.Instance.Destroy(WeaponGo);
+        Weapon.RemoveGameObject();
         Weapon = null;
+        // Remove hands
+        if (EmptyHandGo != null)
+        {
+            GameWorld.Instance.Destroy(EmptyHandGo);
+            EmptyHandSr = null;
+        }
 
         // Remove hands
         SpriteRenderer.Color = Color.LightPink;
@@ -381,6 +423,8 @@ public abstract class Character : Component
                 _walkRotationTimer = 0f;
             }
         }
+
+        SetRotation(GameObject.Transform.Rotation);
     }
 
     private void MakeEmitters()
