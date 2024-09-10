@@ -135,6 +135,7 @@ public class MouseItemText : Component
         Vector2 startTextCorner;
         if (_showBackpackText)
         {
+            if (SaveData.Player.ItemInInventory == null) return;
             text = SaveData.Player.ItemInInventory.FullPotionText;
             startTextCorner = _col.LeftTopPosRectangle + _backpackTextOffset;
         }

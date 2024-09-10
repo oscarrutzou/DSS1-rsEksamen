@@ -8,11 +8,13 @@ public class Warrior : Player
     public Warrior(GameObject gameObject) : base(gameObject)
     {
         Speed = 350;
+        Name = "Ironclad";
     }
 
     public override void Awake()
     {
         base.Awake();
+        StatsScreen = GlobalTextures.Textures[TextureNames.PlayerStatsKnight];
 
         Health.SetHealth(200);
 

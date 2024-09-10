@@ -48,6 +48,8 @@ public enum TextureNames
     DeleteSaveBtn,
     QuestUnder,
     BaseTutorial,
+    PlayerStatsKnight,
+    PlayerStatsAssassin,
     PlayerHealthOver,
     BossHealthOver,
     BackpackIcon,
@@ -136,6 +138,8 @@ public static class GlobalTextures
             {TextureNames.MouseItemInfo, content.Load<Texture2D>("UI\\ItemText") },
             {TextureNames.MosueBackpackText, content.Load<Texture2D>("UI\\BackpackText") },
             {TextureNames.BaseTutorial, content.Load<Texture2D>("UI\\Tutorial") },
+            {TextureNames.PlayerStatsKnight, content.Load<Texture2D>("UI\\PlayerStatsKnight") },
+            {TextureNames.PlayerStatsAssassin, content.Load<Texture2D>("UI\\PlayerStatsAssassin") },
 
         };
 

@@ -29,6 +29,7 @@ public class SpeedBoostPotion : Potion
     {
         // The amount
         Player.SpeedMultiplier += AmountToAdd;
+        Player.SpeedMultiplier = (float)Math.Round(Player.SpeedMultiplier, 2);
         base.Use();
     }
 }

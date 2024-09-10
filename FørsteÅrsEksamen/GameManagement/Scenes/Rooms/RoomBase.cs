@@ -53,11 +53,13 @@ public abstract class RoomBase : Scene
     protected Keys UseItem = Keys.E;
     protected Keys DashKey = Keys.Space;
     protected Keys TogglePauseMenuKey = Keys.Escape;
+    protected Keys ToggleStatsMenuKey = Keys.Tab;
     protected Keys LeftMovementKey = Keys.A, RightMovementKey = Keys.D, UpMovementKey = Keys.W, DownMovementKey = Keys.S;
 
     private List<GameObject> _cells = new(); // For debug
     private Vector2 _startLeftPos;
     private GameObject hourGlassIcon, inventoryIcon;
+    private bool _showStats;
 
     #endregion Properties
 
@@ -197,6 +199,7 @@ public abstract class RoomBase : Scene
         InputHandler.Instance.AddMouseUpdateCommand(AttackSimpelAttackKey, new CustomCmd(Player.Attack));
 
         InputHandler.Instance.AddKeyButtonDownCommand(TogglePauseMenuKey, new CustomCmd(_pauseMenu.TogglePauseMenu));
+        InputHandler.Instance.AddKeyButtonDownCommand(ToggleStatsMenuKey, new CustomCmd(ToggleStatsMenu));
 
         InputHandler.Instance.AddKeyButtonDownCommand(UseItem, new CustomCmd(Player.UseItem));
 
@@ -211,7 +214,10 @@ public abstract class RoomBase : Scene
 
         //InputHandler.Instance.AddKeyButtonDownCommand(Keys.Q, new CustomCmd(() => { player.GameObject.GetComponent<Health>().TakeDamage(rnd.Next(500000000, 500000000)); }));
     }
-
+    private void ToggleStatsMenu()
+    {
+        _showStats = !_showStats;
+    }
     private void ChangeScene()
     {
         int newRoomNr = SaveData.Level_Reached + 1;
@@ -265,8 +271,10 @@ public abstract class RoomBase : Scene
 
         DrawQuest(spriteBatch);
 
+        DrawPlayerStats(spriteBatch);   
+
         if (!InputHandler.Instance.DebugMode) return;
-        DebugDraw(spriteBatch);
+        DrawDebug(spriteBatch);
     }
 
     /// <summary>
@@ -303,7 +311,23 @@ public abstract class RoomBase : Scene
         spriteBatch.DrawString(GlobalTextures.DefaultFont, finalText, center, CurrentTextColor);
     }
 
-    private void DebugDraw(SpriteBatch spriteBatch)
+    private void DrawPlayerStats(SpriteBatch spriteBatch)
+    {
+        if (!_showStats || Player == null) return;
+
+        Vector2 startPos = GameWorld.Instance.UiCam.TopLeft + new Vector2(40, 200);
+        string introText = $"Name: {Player.Name}\n\nClass: {Player.ClassType}";
+        string bodyText = $"Speed: {Player.SpeedMultiplier}x\n\nDamage: {Player.DamageMultiplier}x";
+        float layer = SpriteRenderer.GetLayerDepth(LayerDepth.Text);
+
+        spriteBatch.Draw(Player.StatsScreen, startPos, null, BaseMath.TransitionColor(Color.White), 0f, Vector2.Zero, 4, SpriteEffects.None, SpriteRenderer.GetLayerDepth(LayerDepth.UI));
+        
+        spriteBatch.DrawString(GlobalTextures.DefaultFont, introText, startPos + new Vector2(110, 30), CurrentTextColor, 0f, Vector2.Zero, 1f, SpriteEffects.None, layer);
+
+        spriteBatch.DrawString(GlobalTextures.DefaultFont, bodyText, startPos + new Vector2(20, 120), CurrentTextColor, 0f, Vector2.Zero, 1f, SpriteEffects.None, layer);
+    }
+
+    private void DrawDebug(SpriteBatch spriteBatch)
     {
         Vector2 startPos = GameWorld.Instance.UiCam.LeftCenter;
         

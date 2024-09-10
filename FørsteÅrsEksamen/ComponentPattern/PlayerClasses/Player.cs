@@ -22,7 +22,7 @@ public abstract class Player : Character
     #region Properties
     public GameObject HandsGo;
     public GameObject MovementColliderGo;
-
+    public Texture2D StatsScreen { get; protected set; }
     public Vector2 totalMovementInput, previousPosition;
     public Vector2 velocity { get; set; }
 

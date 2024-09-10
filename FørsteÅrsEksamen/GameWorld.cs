@@ -71,8 +71,8 @@ public class GameWorld : Game
         GlobalSounds.LoadContent();
         GlobalAnimations.LoadContent();
 
-        //Fullscreen(); // Need to be before the camera
-        SetResolutionSize(800, 800); 
+        Fullscreen(); // Need to be before the camera
+        //SetResolutionSize(800, 800); 
 
         SceneData.Instance.GenereateGameObjectDicionary();
         
@@ -93,9 +93,6 @@ public class GameWorld : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         _canvas.SetShaderParams();
-
-        // Need to be changed if we change the screen size
-        //UIRenderTarget = new RenderTarget2D(GraphicsDevice, DisplayWidth, DisplayHeight);
     }
 
     protected override void Update(GameTime gameTime)

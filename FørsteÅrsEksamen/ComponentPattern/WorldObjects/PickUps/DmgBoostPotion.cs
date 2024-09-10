@@ -33,6 +33,7 @@ public class DmgBoostPotion : Potion
     public override void Use()
     {
         Player.DamageMultiplier += AmountToAdd;
+        Player.DamageMultiplier = (float)Math.Round(Player.DamageMultiplier, 2);
         // The amount
         base.Use();
     }

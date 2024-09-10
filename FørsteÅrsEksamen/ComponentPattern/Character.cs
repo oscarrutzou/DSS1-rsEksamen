@@ -39,7 +39,7 @@ public enum CharacterState
 public abstract class Character : Component
 {
     #region Properties
-
+    public string Name { get; set; } = "";
     public static Vector2 NormalSpriteOffset { get; private set; } = new(0, -32); // Move the animation up a bit so it looks like it walks correctly.
     /// <summary>
     /// Can be changed if a custom sprite offset is needed. Otherwise it uses NormalSpriteOffset
