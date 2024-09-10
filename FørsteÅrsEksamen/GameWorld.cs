@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
+using ShamansDungeon.LiteDB;
 
 namespace ShamansDungeon;
 
@@ -21,7 +22,7 @@ public class GameWorld : Game
     #region Properties
     public static GameWorld Instance;
 
-    public static bool DebugAndCheats = false;
+    public static bool DebugAndCheats = true;
     public static double DeltaTime { get; private set; }
     public static bool IsPaused { get; set; } = false;
     public static Color BackGroundColor { get; private set; } = new Color(20, 20, 18, 255);
@@ -73,7 +74,7 @@ public class GameWorld : Game
 
         Fullscreen(); // Need to be before the camera
         //SetResolutionSize(800, 800); 
-
+        
         SceneData.Instance.GenereateGameObjectDicionary();
         
         WorldCam = new Camera(); // Camera that follows the player
@@ -81,7 +82,7 @@ public class GameWorld : Game
 
         GenerateScenes(); // Makes a instance of all the scene we need
 
-        CurrentScene = Scenes[SceneNames.MainMenu];
+        CurrentScene = Scenes[SceneNames.WeaponTestScene];
         CurrentScene.Initialize(); // Starts the main menu 
          
         IndependentBackground.SpawnBG(); // The background that dont get deleted
@@ -296,6 +297,7 @@ public class GameWorld : Game
             CurrentScene.StartSceneChange();
         }
 
+        //SaveData.SetBaseValues();
         CurrentScene.OnSceneChange(); // Removes commands and more
 
         // Wait for current scene to turn down alpha on objects

@@ -39,7 +39,7 @@ public class WeaponTestScene : Scene
     #region Make
     private void MakePlayer()
     {
-        _playerGo = PlayerFactory.Create(ClassTypes.Assassin, WeaponTypes.Sword);
+        _playerGo = PlayerFactory.Create(ClassTypes.Warrior, WeaponTypes.Axe);
         _player = _playerGo.GetComponent<Player>();
         _weapon = _player.WeaponGo.GetComponent<MeleeWeapon>();
 

@@ -1,13 +1,25 @@
 ﻿using ShamansDungeon.ComponentPattern;
 using ShamansDungeon.ComponentPattern.WorldObjects.PickUps;
 using ShamansDungeon.GameManagement;
+using System.Collections.Generic;
+using System;
 using System.Numerics;
+using ShamansDungeon.ComponentPattern.PlayerClasses;
 
 namespace ShamansDungeon.Factory;
 
 //Asser
 public static class ItemFactory
 {
+    private static readonly Random _random = new();
+
+    public static GameObject CreatePotionWithRandomType(GameObject playerGo, List<PotionTypes> spawnableTypes)
+    {
+        PotionTypes randomType = spawnableTypes[_random.Next(0, spawnableTypes.Count)];
+
+        return CreatePotion(playerGo, randomType);
+    }
+
     public static GameObject CreatePotion(GameObject playerGo, PotionTypes type)
     {
         GameObject itemGo = new GameObject();

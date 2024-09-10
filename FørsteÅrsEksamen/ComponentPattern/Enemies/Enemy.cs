@@ -9,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using ShamansDungeon.ComponentPattern.WorldObjects.PickUps;
+using ShamansDungeon.Factory;
 
 namespace ShamansDungeon.ComponentPattern.Enemies;
 
@@ -76,6 +78,15 @@ public abstract class Enemy : Character
         SoundNames.OrcDeath8,
         SoundNames.OrcDeath9,
     };
+
+    private static readonly List<PotionTypes> _potionDropList = new()
+    {
+        PotionTypes.SmallHealth,
+        PotionTypes.SmallDmgBoost,
+        PotionTypes.SmallSpeedBoost,
+    };
+    private bool _hasSpawnedDeathPotion;
+    private float _ptcChangeToDropPotion = 0.5f;
     #endregion Properties
 
     public Enemy(GameObject gameObject) : base(gameObject)
@@ -96,6 +107,8 @@ public abstract class Enemy : Character
         CharacterHitHurt = _enemyHit;
         MaxAmountCharacterHitSoundsPlaying = 5;
         CharacterDeath = _orcDeath;
+        
+        Health.OnZeroHealth += SpawnPotionOnDeath;
 
         if (WeaponGo != null)
         {
@@ -291,6 +304,18 @@ public abstract class Enemy : Character
             SpriteRenderer.SetLayerDepth(LayerDepth.EnemyUnder, offSet);
         else
             SpriteRenderer.SetLayerDepth(LayerDepth.EnemyOver, offSet);
+    }
+
+
+    private void SpawnPotionOnDeath()
+    {
+        if (_hasSpawnedDeathPotion) return;
+        if (_rnd.NextDouble() < _ptcChangeToDropPotion) return;
+        _hasSpawnedDeathPotion = true;
+        GameObject droppedPotionGo = ItemFactory.CreatePotionWithRandomType(Player.GameObject, _potionDropList);
+
+        droppedPotionGo.Transform.Position = GridManager.Instance.CurrentGrid.PosFromGridPos(GameObject.Transform.GridPosition);
+        GameWorld.Instance.Instantiate(droppedPotionGo);
     }
 
     #region PathFinding

@@ -15,7 +15,8 @@ public static class SaveData
     public static int CurrentSaveID = 1; //Gets set by player and determins loaded data
     public const int MaxSaveID = 3;
     public static int Currency;
-    public static bool HasCompletedFullTutorial; 
+    public static bool HasCompletedFullTutorial;
+    public static int TutorialReached;
     // Save what classes and weapons are unlocked
     public static List<WeaponTypes> UnlockedWeapons { get; set; } = new();
 
@@ -45,6 +46,7 @@ public static class SaveData
         UnlockedClasses = new();
         Player = null;
         HasCompletedFullTutorial = false;
+        TutorialReached = 0;
     }
 
     public static void ResetPlayer()

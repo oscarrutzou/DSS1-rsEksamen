@@ -137,12 +137,12 @@ public class MouseItemText : Component
         {
             if (SaveData.Player.ItemInInventory == null) return;
             text = SaveData.Player.ItemInInventory.FullPotionText;
-            startTextCorner = _col.LeftTopPosRectangle + _backpackTextOffset;
+            startTextCorner = _col.LeftTopCollisionPosition + _backpackTextOffset;
         }
         else
         {
             text = _itemOnHover.FullPotionText;
-            startTextCorner = _col.LeftTopPosRectangle + _textOffset;
+            startTextCorner = _col.LeftTopCollisionPosition + _textOffset;
         }
 
         spriteBatch.DrawString(GlobalTextures.DefaultFont, text, startTextCorner, BaseMath.TransitionColor(GameWorld.TextColor), 0, Vector2.Zero, 0.8f, SpriteEffects.None, SpriteRenderer.GetLayerDepth(LayerDepth.UITextNearCursor));

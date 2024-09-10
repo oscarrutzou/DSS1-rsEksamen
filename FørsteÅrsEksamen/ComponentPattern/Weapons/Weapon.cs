@@ -242,6 +242,7 @@ public abstract class Weapon : Component
 
             LeftSide = false;
             SetAngleToFitWithNextAnimation();
+
             SpriteRenderer.SpriteEffects = SpriteEffects.None;
         }
     }

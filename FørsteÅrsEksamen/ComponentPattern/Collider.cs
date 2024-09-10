@@ -72,7 +72,7 @@ public class Collider : Component
                 );
         }
     }
-    public Vector2 LeftTopPosRectangle
+    public Vector2 LeftTopCollisionPosition
     {
         get
         {
@@ -91,7 +91,7 @@ public class Collider : Component
     {
     }
 
-    public override void Start()
+    public override void Awake()
     {
         _animator = GameObject.GetComponent<Animator>();
         _spriteRenderer = GameObject.GetComponent<SpriteRenderer>();

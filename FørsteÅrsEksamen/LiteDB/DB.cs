@@ -203,7 +203,7 @@ public class DB
         SaveData.UnlockedWeapons = savedData.Unlocked_Weapons;
         SaveData.UnlockedClasses = savedData.Unlocked_Classes;
         SaveData.HasCompletedFullTutorial = savedData.HasCompletedFullTutorial;
-
+        SaveData.TutorialReached = savedData.TutorialReached;
         return savedData;
     }
 
@@ -229,6 +229,7 @@ public class DB
             savedData.Unlocked_Classes = SaveData.UnlockedClasses;
             savedData.Unlocked_Weapons = SaveData.UnlockedWeapons;
             savedData.HasCompletedFullTutorial = SaveData.HasCompletedFullTutorial;
+            savedData.TutorialReached = SaveData.TutorialReached;
             savedData.Last_Login = DateTime.Now;
 
             if (saveRun && savedData.RunData != null && SaveData.Player != null) // Make sure the scene has been initalized
@@ -242,6 +243,7 @@ public class DB
 
         return savedData;
     }
+
 
     private SaveFileData UpdateRun(SaveFileData savedData)
     {
@@ -269,6 +271,7 @@ public class DB
             Unlocked_Classes = SaveData.UnlockedClasses,
             Unlocked_Weapons = SaveData.UnlockedWeapons,
             HasCompletedFullTutorial = SaveData.HasCompletedFullTutorial,
+            TutorialReached = SaveData.TutorialReached,
         };
     }
 

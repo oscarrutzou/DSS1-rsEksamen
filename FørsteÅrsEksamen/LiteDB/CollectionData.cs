@@ -41,6 +41,7 @@ public class SaveFileData
     public List<WeaponTypes> Unlocked_Weapons { get; set; }
     public RunData RunData { get; set; }
     public bool HasCompletedFullTutorial { get; set; }
+    public int TutorialReached {  get; set; }
     public SaveFileData()
     {
         Last_Login = DateTime.Now;

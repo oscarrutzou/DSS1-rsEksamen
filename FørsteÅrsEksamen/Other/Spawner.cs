@@ -50,11 +50,20 @@ public class Spawner : Component
         return enemies;
     }
 
-    public void SpawnPotions(List<Point> spawnLocations, GameObject playerGo)
+    public void SpawnPotions(List<Point> spawnLocations, GameObject playerGo, List<PotionTypes> randomTypes = null)
     {
         for (int i = 0; i < spawnLocations.Count; i++)
         {
-            GameObject potionGo = ItemFactory.CreatePotion(playerGo, PotionTypes.SmallDmgBoost);
+            GameObject potionGo;
+            if (randomTypes == null)
+            {
+                potionGo = ItemFactory.CreatePotion(playerGo, PotionTypes.BigHealth);
+            }
+            else
+            {
+                potionGo = ItemFactory.CreatePotionWithRandomType(playerGo, randomTypes);
+            }
+
             potionGo.Transform.Position = GridManager.Instance.CurrentGrid.PosFromGridPos(spawnLocations[i]);
             GameWorld.Instance.Instantiate(potionGo);
         }

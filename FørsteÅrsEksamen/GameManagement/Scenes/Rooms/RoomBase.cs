@@ -17,6 +17,7 @@ using ShamansDungeon.LiteDB;
 using ShamansDungeon.Other;
 using ShamansDungeon.Factory.Gui;
 using ShamansDungeon.ComponentPattern.GUI;
+using ShamansDungeon.ComponentPattern.WorldObjects.PickUps;
 
 namespace ShamansDungeon.GameManagement.Scenes.Rooms;
 
@@ -45,22 +46,21 @@ public abstract class RoomBase : Scene
     private SpriteRenderer _transferDoorSpriteRenderer;
     public List<Enemy> EnemiesInRoom { get; set; } = new();
     private List<Enemy> _aliveEnemies;
-    private Spawner _spawner;
+    protected Spawner RoomSpawner;
     
     protected string QuestText;
 
-    protected MouseCmdState AttackSimpelAttackKey = MouseCmdState.Left;
-    protected Keys UseItem = Keys.E;
-    protected Keys DashKey = Keys.Space;
-    protected Keys TogglePauseMenuKey = Keys.Escape;
-    protected Keys ToggleStatsMenuKey = Keys.Tab;
-    protected Keys LeftMovementKey = Keys.A, RightMovementKey = Keys.D, UpMovementKey = Keys.W, DownMovementKey = Keys.S;
+    public static MouseCmdState AttackSimpelAttackKey = MouseCmdState.Left;
+    public static Keys UseItem = Keys.E;
+    public static Keys DashKey = Keys.Space;
+    public static Keys TogglePauseMenuKey = Keys.Escape;
+    public static Keys ToggleStatsMenuKey = Keys.Tab;
+    public static Keys LeftMovementKey = Keys.A, RightMovementKey = Keys.D, UpMovementKey = Keys.W, DownMovementKey = Keys.S;
 
     private List<GameObject> _cells = new(); // For debug
     private Vector2 _startLeftPos;
     private GameObject hourGlassIcon, inventoryIcon;
     private bool _showStats;
-
     #endregion Properties
 
     public override void Initialize()
@@ -82,7 +82,7 @@ public abstract class RoomBase : Scene
         SpawnAndLoadPlayer();
 
         SpawnEndPos();
-
+        SpawnTutorialBox();
         SpawnHealthBar();
         SpawnEnemies();
         SpawnPotions();
@@ -96,7 +96,17 @@ public abstract class RoomBase : Scene
     }
 
     #region Initialize Methods
-
+    private void SpawnTutorialBox()
+    {
+        GameObject go = new()
+        {
+            Type = GameObjectTypes.Gui,
+        };
+        go.AddComponent<SpriteRenderer>();
+        go.AddComponent<Collider>();
+        go.AddComponent<TutorialBox>();
+        GameWorld.Instance.Instantiate(go);
+    }
     private void SetStartTimeLeft()
     {
         _startLeftPos = GameWorld.Instance.UiCam.TopLeft + new Vector2(80, 130);
@@ -169,14 +179,20 @@ public abstract class RoomBase : Scene
     private void SpawnEnemies()
     {
         GameObject spawnerGo = new();
-        _spawner = spawnerGo.AddComponent<Spawner>();
-        EnemiesInRoom = _spawner.SpawnEnemies(EnemySpawnPoints, PlayerGo);
+        RoomSpawner = spawnerGo.AddComponent<Spawner>();
+        EnemiesInRoom = RoomSpawner.SpawnEnemies(EnemySpawnPoints, PlayerGo);
     }
 
     private void SpawnPotions()
     {
-        _spawner.SpawnPotions(PotionSpawnPoints, PlayerGo);
+        RoomSpawner.SpawnPotions(PotionSpawnPoints, PlayerGo, _spawnablePotionTypes);
     }
+
+    private static List<PotionTypes> _spawnablePotionTypes = new()
+    {
+        PotionTypes.BigHealth,
+        PotionTypes.SmallHealth,
+    };
 
     private void CenterMiscItems()
     {
@@ -199,7 +215,7 @@ public abstract class RoomBase : Scene
         InputHandler.Instance.AddMouseUpdateCommand(AttackSimpelAttackKey, new CustomCmd(Player.Attack));
 
         InputHandler.Instance.AddKeyButtonDownCommand(TogglePauseMenuKey, new CustomCmd(_pauseMenu.TogglePauseMenu));
-        InputHandler.Instance.AddKeyButtonDownCommand(ToggleStatsMenuKey, new CustomCmd(ToggleStatsMenu));
+        InputHandler.Instance.AddKeyUpdateCommand(ToggleStatsMenuKey, new CustomCmd(ToggleStatsMenu));
 
         InputHandler.Instance.AddKeyButtonDownCommand(UseItem, new CustomCmd(Player.UseItem));
 
@@ -216,7 +232,7 @@ public abstract class RoomBase : Scene
     }
     private void ToggleStatsMenu()
     {
-        _showStats = !_showStats;
+        _showStats = true;
     }
 
     private void ChangeScene()
@@ -326,6 +342,8 @@ public abstract class RoomBase : Scene
         spriteBatch.DrawString(GlobalTextures.DefaultFont, introText, startPos + new Vector2(110, 30), CurrentTextColor, 0f, Vector2.Zero, 1f, SpriteEffects.None, layer);
 
         spriteBatch.DrawString(GlobalTextures.DefaultFont, bodyText, startPos + new Vector2(20, 120), CurrentTextColor, 0f, Vector2.Zero, 1f, SpriteEffects.None, layer);
+
+        _showStats = false;
     }
 
     private void DrawDebug(SpriteBatch spriteBatch)

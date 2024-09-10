@@ -31,7 +31,7 @@ public class HealthPotion: Potion
         switch (PotionType)
         {
             case PotionTypes.SmallHealth:
-                SpriteRenderer.SetSprite(TextureNames.RedBigPotionHalfFull);
+                SpriteRenderer.SetSprite(TextureNames.RedSmallHalfPotion);
                 AmountToAdd = 50;
                 break;
             case PotionTypes.BigHealth:

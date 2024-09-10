@@ -35,7 +35,6 @@ public class Sword : MeleeWeapon
 
         MinimumTimeBetweenHits = 0.3f;
 
-
         base.Start();
     }
 

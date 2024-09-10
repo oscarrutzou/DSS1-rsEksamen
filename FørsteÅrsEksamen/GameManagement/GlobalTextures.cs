@@ -30,7 +30,8 @@ public enum TextureNames
     BoneSword,
     WoodDagger,
     BoneDagger,
-
+    WoodAxe,
+    BoneAxe,
     BoneMagicStaff,
 
     WoodArrow,
@@ -114,6 +115,8 @@ public static class GlobalTextures
             {TextureNames.BoneSword, content.Load<Texture2D>("World\\Weapons\\Melee Weapons\\BoneSword") },
             {TextureNames.WoodDagger, content.Load<Texture2D>("World\\Weapons\\Melee Weapons\\WoodDagger") },
             {TextureNames.BoneDagger, content.Load<Texture2D>("World\\Weapons\\Melee Weapons\\BoneDagger") },
+            {TextureNames.BoneAxe, content.Load<Texture2D>("World\\Weapons\\Melee Weapons\\BoneAxe") },
+            {TextureNames.WoodAxe, content.Load<Texture2D>("World\\Weapons\\Melee Weapons\\WoodAxe") },
             {TextureNames.BoneMagicStaff, content.Load<Texture2D>("World\\Weapons\\Melee Weapons\\BoneMagicStaff") },
 
             {TextureNames.WoodArrow, content.Load<Texture2D>("Test\\WoodArrow") },

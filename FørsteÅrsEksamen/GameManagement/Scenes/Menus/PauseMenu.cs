@@ -2,6 +2,7 @@
 using ShamansDungeon.ComponentPattern.GUI;
 using ShamansDungeon.Factory.Gui;
 using Microsoft.Xna.Framework.Graphics;
+using ShamansDungeon.LiteDB;
 
 namespace ShamansDungeon.GameManagement.Scenes.Menus;
 
@@ -30,8 +31,7 @@ public class PauseMenu : MenuScene
         GameObject settingsBtn = ButtonFactory.Create("Settings", true, ShowHideSecondMenu);
         FirstMenuObjects.Add(settingsBtn);
 
-        GameObject mainMenu = ButtonFactory.Create("Main Menu", true,
-            () => { GameWorld.Instance.ChangeScene(SceneNames.MainMenu); });
+        GameObject mainMenu = ButtonFactory.Create("Main Menu", true, ChangeToMainMenu);
         FirstMenuObjects.Add(mainMenu);
 
         GameObject quitBtn = ButtonFactory.Create("Quit", true, GameWorld.Instance.Exit);
@@ -57,7 +57,11 @@ public class PauseMenu : MenuScene
 
         ShowHideGameObjects(SecondMenuObjects, false);
     }
-
+    private void ChangeToMainMenu()
+    {
+        SaveData.SetBaseValues();
+        GameWorld.Instance.ChangeScene(SceneNames.MainMenu);
+    }
     public void TogglePauseMenu()
     {
         _isMenuVisible = !_isMenuVisible;

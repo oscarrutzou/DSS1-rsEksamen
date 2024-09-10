@@ -27,9 +27,8 @@ public static class WeaponFactory
     {
         WeaponTypes.Sword,
         WeaponTypes.Dagger,
-
-
-        WeaponTypes.MagicStaff,
+        WeaponTypes.Axe,
+        //WeaponTypes.MagicStaff,
     };
 
     public static Dictionary<ClassTypes, List<WeaponTypes>> ClassHasWeapons { get; private set; } = new()
@@ -39,7 +38,7 @@ public static class WeaponFactory
             WeaponTypes.Bow,
             WeaponTypes.BowFire,
 
-            WeaponTypes.MagicStaff,
+            //WeaponTypes.MagicStaff,
 
         }},
 

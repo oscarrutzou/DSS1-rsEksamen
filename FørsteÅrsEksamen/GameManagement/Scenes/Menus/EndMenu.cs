@@ -11,21 +11,29 @@ public class EndMenu : MenuScene
 {
     protected override void InitFirstMenu()
     {
-        GameObject startBtn = ButtonFactory.Create("New Run", true,
-                        () => { GameWorld.Instance.ChangeScene(SceneNames.CharacterSelectorMenu); });
+        GameObject startBtn = ButtonFactory.Create("New Run", true, SetCharacterSelectorMenu);
         FirstMenuObjects.Add(startBtn);
 
         GameObject settingsBtn = ButtonFactory.Create("Settings", true, ShowHideSecondMenu);
         FirstMenuObjects.Add(settingsBtn);
 
-        GameObject mainMenuBtn = ButtonFactory.Create("Main Menu", true,
-                () => { GameWorld.Instance.ChangeScene(SceneNames.MainMenu); });
+        GameObject mainMenuBtn = ButtonFactory.Create("Main Menu", true, SetMainMenu);
         FirstMenuObjects.Add(mainMenuBtn);
 
         GameObject quitBtn = ButtonFactory.Create("Quit", true, GameWorld.Instance.Exit);
         FirstMenuObjects.Add(quitBtn);
     }
-
+    private void SetMainMenu()
+    {
+        SaveData.SetBaseValues();
+        GameWorld.Instance.ChangeScene(SceneNames.MainMenu);
+    }
+    private void SetCharacterSelectorMenu()
+    {
+        SaveData.SetBaseValues(); 
+        DB.Instance.LoadGame(); // Already have deleted run save
+        GameWorld.Instance.ChangeScene(SceneNames.CharacterSelectorMenu);
+    }
     protected override void InitSecondMenu()
     {
         GameObject musicVolGo = ButtonFactory.Create("", true, ChangeMusic, TextureNames.LongButton);
