@@ -61,6 +61,7 @@ public class PauseMenu : MenuScene
     public void TogglePauseMenu()
     {
         _isMenuVisible = !_isMenuVisible;
+        GameWorld.IsPaused = _isMenuVisible;
         if (_isMenuVisible)
         {
             ShowMenu();

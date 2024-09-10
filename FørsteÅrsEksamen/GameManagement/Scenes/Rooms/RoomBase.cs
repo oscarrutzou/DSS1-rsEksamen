@@ -69,7 +69,7 @@ public abstract class RoomBase : Scene
 
         // There needs to have been set some stuff before this base.Initialize (Look at Room1 for reference)
         PlayerGo = null; //Remove this from normal Scene and make another scene that sets all up.
-
+        _showStats = false;
         _pauseMenu = new PauseMenu();
         _pauseMenu.Initialize();
         OnFirstCleanUp = _pauseMenu.AfterFirstCleanUp; // We need to couple the pausemenu to the current RoomScene Action.
@@ -218,6 +218,7 @@ public abstract class RoomBase : Scene
     {
         _showStats = !_showStats;
     }
+
     private void ChangeScene()
     {
         int newRoomNr = SaveData.Level_Reached + 1;

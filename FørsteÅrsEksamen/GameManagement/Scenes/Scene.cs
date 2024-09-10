@@ -63,10 +63,10 @@ public abstract class Scene
             OnFirstCleanUp = null;
         }
 
-        if (GameWorld.IsPaused) return;
-
         foreach (GameObjectTypes type in SceneData.Instance.GameObjectLists.Keys)
         {
+            if (type != GameObjectTypes.Gui && GameWorld.IsPaused) continue;
+
             foreach (GameObject gameObject in SceneData.Instance.GameObjectLists[type])
             {
                 gameObject.Update();

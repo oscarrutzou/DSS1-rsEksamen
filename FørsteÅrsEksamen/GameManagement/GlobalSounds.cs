@@ -95,10 +95,10 @@ public static class GlobalSounds
     public static bool PlayMenuMusic { get; set; } = true;
 
     private static SoundEffect _menuMusic;
-    private static SoundEffect _gameMusic;
+    //private static SoundEffect _gameMusic;
 
     private static SoundEffectInstance _instanceMenuMusic;
-    private static SoundEffectInstance _instanceGameMusic;
+    //private static SoundEffectInstance _instanceGameMusic;
 
     private static Random _rnd = new();
     public static float MusicVolume = 0.25f;
@@ -119,7 +119,7 @@ public static class GlobalSounds
 
         // Loads music
         _menuMusic = content.Load<SoundEffect>("Sound\\Music\\MenuTrack");
-        _gameMusic = content.Load<SoundEffect>("Sound\\Music\\GameTrack");
+        //_gameMusic = content.Load<SoundEffect>("Sound\\Music\\GameTrack");
 
         // Loads SFX's
         Sounds = new Dictionary<SoundNames, SoundEffect>
@@ -208,27 +208,27 @@ public static class GlobalSounds
     private static float _musicVolumeMakeSmallerBy = 0.3f;
     public static void MusicUpdate()
     {
-        if (_instanceGameMusic == null || _instanceMenuMusic == null)
+        if (_instanceMenuMusic == null) // _instanceGameMusic == null || 
         {
             _instanceMenuMusic = _menuMusic.CreateInstance();
-            _instanceGameMusic = _gameMusic.CreateInstance();
+            //_instanceGameMusic = _gameMusic.CreateInstance();
         }
 
         // Make sure the volume is lower that the SFX's, since the SFX are more impactfull.
         _instanceMenuMusic.Volume = MusicVolume * _musicVolumeMakeSmallerBy;
-        _instanceGameMusic.Volume = MusicVolume * _musicVolumeMakeSmallerBy;
+        //_instanceGameMusic.Volume = MusicVolume * _musicVolumeMakeSmallerBy;
 
         //Check if the music should be playing
-        if (PlayMenuMusic)
-            _instanceGameMusic.Stop(); // Stops it once and does nothing if its already stopped
-        else
+        if (!PlayMenuMusic)
             _instanceMenuMusic.Stop(); // Stops it once and does nothing if its already stopped
+            //_instanceGameMusic.Stop(); // Stops it once and does nothing if its already stopped
+        
 
         if (_instanceMenuMusic.State == SoundState.Stopped && PlayMenuMusic)
             _instanceMenuMusic.Play(); // Play only plays it once and does nothing if it already plays
 
-        if (_instanceGameMusic.State == SoundState.Stopped && !PlayMenuMusic)
-            _instanceGameMusic.Play();// Play only plays it once and does nothing if it already plays
+        //if (_instanceGameMusic.State == SoundState.Stopped && !PlayMenuMusic)
+        //    _instanceGameMusic.Play();// Play only plays it once and does nothing if it already plays
     }
 
     /// <summary>

@@ -23,7 +23,7 @@ public class GameWorld : Game
 
     public static bool DebugAndCheats = false;
     public static double DeltaTime { get; private set; }
-    public static bool IsPaused = false;
+    public static bool IsPaused { get; set; } = false;
     public static Color BackGroundColor { get; private set; } = new Color(20, 20, 18, 255);
     public static Color TextColor { get; private set; } = new Color(250, 249, 246);
     public GraphicsDeviceManager GfxManager { get; private set; } 
@@ -307,6 +307,7 @@ public class GameWorld : Game
         CurrentScene = Scenes[NextScene.Value]; // Changes to new scene
         CurrentScene.Initialize(); // Starts the new scene
 
+        IsPaused = false;
         // Set
         //
         // of all scene objects

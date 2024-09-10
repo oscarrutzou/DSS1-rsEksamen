@@ -2,11 +2,6 @@
 using ShamansDungeon.GameManagement.Scenes.Menus;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ShamansDungeon.ComponentPattern.GUI
 {
@@ -50,14 +45,16 @@ namespace ShamansDungeon.ComponentPattern.GUI
             if (IndependentBackground.BackgroundEmitter != null)
                 IndependentBackground.BackgroundEmitter.FollowPoint = InputHandler.Instance.MouseInWorld;
 
-            _mouseCooldownBarGo?.Update();
             _mouseItemTextGo?.Update();
+            if (GameWorld.IsPaused) return;
+            _mouseCooldownBarGo?.Update();
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            _mouseCooldownBarGo?.Draw(spriteBatch);
             _mouseItemTextGo?.Draw(spriteBatch);
+            if (GameWorld.IsPaused) return;
+            _mouseCooldownBarGo?.Draw(spriteBatch);
         }
     }
 }
