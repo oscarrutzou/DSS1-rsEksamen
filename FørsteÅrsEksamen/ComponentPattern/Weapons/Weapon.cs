@@ -1,171 +1,299 @@
-﻿using DoctorsDungeon.CommandPattern;
-using DoctorsDungeon.ComponentPattern.Enemies;
-using DoctorsDungeon.ComponentPattern.PlayerClasses;
-using DoctorsDungeon.GameManagement;
-using DoctorsDungeon.Other;
+﻿using ShamansDungeon.CommandPattern;
+using ShamansDungeon.ComponentPattern.Enemies;
+using ShamansDungeon.ComponentPattern.PlayerClasses;
+using ShamansDungeon.GameManagement;
+using ShamansDungeon.Other;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
+using System.Windows.Forms;
 
-namespace DoctorsDungeon.ComponentPattern.Weapons
+namespace ShamansDungeon.ComponentPattern.Weapons;
+
+/// <summary>
+/// A class used to generate a collider that moves a rotation around its startPos
+/// </summary>
+public class CollisionRectangle
 {
-    /// <summary>
-    /// A class used to generate a collider that moves a rotation around its startPos
-    /// </summary>
-    public class CollisionRectangle
+    public Rectangle Rectangle;
+    public Vector2 StartRelativePos;
+}
+
+// Only happen on attack. Also add hands. Remove it from the player and use 2 hands.
+// The hands should be given and made before making the weapon, as a part of which hands we should use.
+// Use the clenched hand for the one for the weapon and relaxed hand for the other.
+// A really nice to have to so make a trail behind the weapon when it swings:D Would be fun to make
+public abstract class Weapon : Component
+{
+    #region Properties
+    public Dictionary<WeaponAnimTypes, WeaponAnimation> Animations;
+    public WeaponAnimTypes CurrentAnim;
+    protected int CurrentAnimRepeats;
+    public Player PlayerUser { get; set; }
+    public Enemy EnemyUser { get; set; }
+    protected Character User { get; private set; } // So avoid making the check if its a player or enemy
+    public SpriteRenderer SpriteRenderer { get; set; }
+    public float StartAnimationAngle { get; set; }
+    protected double AttackedTotalElapsedTime { get; set; }
+    public static float EnemyWeakness = 2.5f; // What to divide with, to make enemie attacks weaker.
+    public bool Attacking { get; protected set; }
+
+    // A lot of this data is being copied on many different weapons, even though it has the same data.
+    // Could use a GlobalPool or something that contains data, that are the same and wont be changed on each object
+    protected SoundNames[] AttackSoundNames { get; set;}
+    protected SoundNames[] AttackHitSoundNames { get; set; } = new SoundNames[]
     {
-        public Rectangle Rectangle;
-        public Vector2 StartRelativePos;
+        SoundNames.WoodHitFlesh,
+        SoundNames.WoodHitLeather,
+        //SoundNames.WoodHitMetal,
+    };
+
+    public Vector2 LastOffSetPos;
+    public Vector2 StartPosOffset = new(40, 20);
+    public Vector2 StartRelativePos = new (0, 60), StartRelativeOffsetPos = new Vector2(0, -20);
+
+    public float WeaponAngleToUser { get; set; }
+    public bool LeftSide { get; private set; }
+    protected double TimeBeforeNewDirection { get; set;}
+    protected float animRotation, nextAnimRotation;
+    public WeaponAnimTypes NextAnim { get; private set; }
+    protected bool FinnishedAttack;
+    /// <summary>
+    /// The angle we can use for our animation, so we can lerp proberly.
+    /// </summary>
+    private float untouchedAngle;
+    private int divideBy = 4;
+    protected float FinalLerp { get; set; }
+
+    protected double AttackTimer { get; set; }
+    protected double AttackCooldown = 2.0;
+    public bool UseAttackCooldown = true;
+
+    private SoundEffectInstance _currentHitSound, _currentAttackSound;
+    private float _hitMaxSound = 0.4f;
+    private float _attackMaxSound = 0.8f;
+    #endregion
+
+    protected Weapon(GameObject gameObject) : base(gameObject)
+    {
     }
 
-    // Erik
-
-    // Notes for what to add or change to the Weapon.
-    // Only happen on attack. Also add hands. Remove it from the player and use 2 hands.
-    // The hands should be given and made before making the weapon, as a part of which hands we should use.
-    // Use the clenched hand for the one for the weapon and relaxed hand for the other.
-    // A really nice to have to so make a trail behind the weapon when it swings:D Would be fun to make
-    public abstract class Weapon : Component
+    public override void Awake()
     {
-        public int Damage = 10;
-        public Player PlayerUser { get; set; }
-        public Enemy EnemyUser { get; set; }
+        AttackTimer = AttackCooldown;
 
-        protected float AttackSpeed;
+        SpriteRenderer = GameObject.GetComponent<SpriteRenderer>();
+        SpriteRenderer.IsCentered = false;
 
-        protected SpriteRenderer spriteRenderer;
-        // Melee weapon
-
-        protected float StartAnimationAngle { get; set; }
-
-        //protected bool EnemyWeapon;
-        protected bool Attacking;
-
-        protected SoundNames[] AttackSoundNames;
-        protected bool PlayingSound;
-
-        protected Vector2 StartPosOffset = new(40, 20);
-
-        protected Weapon(GameObject gameObject) : base(gameObject)
+        if (EnemyUser != null)
         {
+            User = EnemyUser;
+            EnemyWeaponSprite();
+        }
+        else
+        {
+            User = PlayerUser;
+            PlayerWeaponSprite();
+        }
+    }
+    
+    public override void Start()
+    {
+        if (Animations == null || Animations.Count == 0) return;
+
+        animRotation = Animations[CurrentAnim].AmountOfRotation;
+
+        NextAnim = CurrentAnim;
+
+        nextAnimRotation = Animations[NextAnim].AmountOfRotation;
+    }
+
+    public override void Update()
+    {
+        // Check layer
+        CheckLayerDepth();
+
+        // Update normal timer
+        if (UseAttackCooldown && AttackTimer < AttackCooldown)
+            AttackTimer += GameWorld.DeltaTime;
+
+        UpdateSound();
+    }
+
+    private void CheckLayerDepth()
+    {
+        // Offset for layerdepth, so the enemies are not figting for which is shown.
+        float offSet = GameObject.Transform.Position.Y / 10_000_000f; // IMPORTANT, THIS CAN CHANGE WHAT LAYER ITS DRAWN ON
+
+        if (GameObject.Transform.Position.Y < User.GameObject.Transform.Position.Y)
+            offSet = -offSet;
+
+        SpriteRenderer.SetLayerDepth(User.SpriteRenderer.LayerDepth, offSet);
+    }
+
+    public void StartAttack()
+    {
+        if (Attacking) return;
+        if (Animations == null || Animations.Count == 0) return;
+
+        // If the weapon uses cooldown between attacks, and the 
+        if (UseAttackCooldown && AttackTimer < AttackCooldown) return;
+
+        AttackTimer = 0;
+
+        MoveWeaponAndAngle();
+        
+        Attacking = true;
+        FinnishedAttack = false;
+
+        ChangeWeaponAttacks();
+
+        PlayAttackSound();
+
+        //if (Animations == null || Animations.Count == 0) return;
+
+        TimeBeforeNewDirection = Animations[CurrentAnim].TotalTime / 2;
+        SetAttackDirection();
+    }
+
+    private void ChangeWeaponAttacks()
+    {
+        if (Animations == null || Animations.Count == 0) return;
+
+        if (CurrentAnimRepeats == Animations[CurrentAnim].Repeats) // Change animation
+        {
+            CurrentAnimRepeats = 0; // Reset variable
+            CurrentAnim = Animations[CurrentAnim].NextAnimation;
         }
 
-        public override void Awake()
-        {
-            spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
-            spriteRenderer.SetLayerDepth(LayerDepth.PlayerWeapon); // Should not matter?
-            spriteRenderer.IsCentered = false;
+        animRotation = Animations[CurrentAnim].AmountOfRotation;
 
-            if (EnemyUser != null)
-            {
-                EnemyWeaponSprite();
-            }
-            else
-            {
-                PlayerWeaponSprite();
-            }
+        CurrentAnimRepeats++;
+
+        // The animations to make sure that animation can lerp to the next starting angle.
+        if (CurrentAnimRepeats == Animations[CurrentAnim].Repeats) 
+        {
+            NextAnim = Animations[CurrentAnim].NextAnimation;
+        }
+        else // The Animation is the same 
+        {
+            NextAnim = CurrentAnim;
         }
 
-        public void StartAttack()
+        nextAnimRotation = Animations[NextAnim].AmountOfRotation;
+
+        if (UseAttackCooldown)
         {
-            if (Attacking) return;
+            AttackCooldown = Animations[NextAnim].TotalTime;
+        }
+    }
 
-            Attacking = true;
+    protected virtual void PlayerWeaponSprite()
+    { }
 
-            SetAttackDirection();
+    protected virtual void EnemyWeaponSprite()
+    { }
+
+    public virtual void SetAttackDirection() { }
+
+    private void UpdateSound()
+    {
+        // Update normal attack sound
+        GlobalSounds.ChangeSoundVolumeDistance(GameObject.Transform.Position, 50, 250, _hitMaxSound, _currentAttackSound);
+        GlobalSounds.ChangeSoundVolumeDistance(GameObject.Transform.Position, 50, 250, _attackMaxSound, _currentHitSound);
+    }
+
+    protected void PlayAttackSound()
+    {
+        if (AttackSoundNames == null || AttackSoundNames.Length == 0) return;
+
+        _currentAttackSound = GlobalSounds.PlayRandomizedSound(AttackSoundNames, 5, _attackMaxSound, true);
+    }
+
+    protected void PlayHitSound()
+    {
+        if (AttackHitSoundNames == null ||AttackHitSoundNames.Length == 0) return;
+
+        _currentHitSound = GlobalSounds.PlayRandomizedSound(AttackHitSoundNames, 3, _hitMaxSound, true);
+    }
+
+
+    public void MoveWeaponAndAngle()
+    {
+        User.MoveWeaponPosAndAngle();
+    }
+
+    public void SetAngleToCorrectSide()
+    {
+        if (WeaponAngleToUser > 0.5 * MathHelper.Pi && WeaponAngleToUser < 1.5 * MathHelper.Pi)
+        {
+            WeaponAngleToUser += MathHelper.Pi;
+            untouchedAngle = WeaponAngleToUser;
+
+            LeftSide = true;
+            SetAngleToFitWithNextAnimation();
+            SpriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
+        }
+        else
+        {
+            untouchedAngle = WeaponAngleToUser;
+
+            LeftSide = false;
+            SetAngleToFitWithNextAnimation();
+            SpriteRenderer.SpriteEffects = SpriteEffects.None;
+        }
+    }
+
+    protected void SetStartAngleToNextAnim()
+    {
+        // If the rotation is the same dont do anything
+        if (nextAnimRotation == animRotation) return;
+
+        float leftOver = nextAnimRotation - MathHelper.Pi;
+
+        // Resets angle
+        WeaponAngleToUser = untouchedAngle;
+
+        FinalLerp = LeftSide ? -nextAnimRotation : nextAnimRotation;
+        AddLeftOverToAngle(LeftSide, leftOver, nextAnimRotation);
+
+        StartAnimationAngle = WeaponAngleToUser;
+    }
+
+    private void SetAngleToFitWithNextAnimation()
+    {
+        float curRot;
+
+        if (FinnishedAttack)
+        {
+            curRot = nextAnimRotation;
+        }
+        else
+        {
+            curRot = animRotation;
         }
 
-        protected virtual void PlayerWeaponSprite()
-        { }
+        float leftOver = curRot - MathHelper.Pi;
 
-        protected virtual void EnemyWeaponSprite()
-        { }
+        AddLeftOverToAngle(LeftSide, leftOver, curRot);
+    }
 
-        protected virtual void SetAttackDirection()
-        { }
+    private void AddLeftOverToAngle(bool leftSide, float leftOver, float rotation)
+    {
+        
+        WeaponAngleToUser += leftSide 
+            ? (leftOver < 0 ? -rotation / divideBy :  leftOver / 2) 
+            : (leftOver < 0 ?  rotation / divideBy : -leftOver / 2);
+    }
 
-        protected void PlayAttackSound()
-        {
-            if (PlayingSound || AttackSoundNames == null || AttackSoundNames.Length == 0) return;
 
-            GlobalSounds.PlayRandomizedSound(AttackSoundNames, 1, 1f, true);
-            PlayingSound = true;
-        }
-
-        private Vector2 lastOffSetPos, startRelativePos = new(0, 60), startRelativeOffsetPos = new Vector2(0, -20);
-        public float angle; // Public for test
-        protected bool LeftSide;
-        public void MoveWeapon()
-        {
-            Vector2 userPos;
-            if (EnemyUser != null)
-                userPos = EnemyUser.GameObject.Transform.Position;
-            else
-                userPos = PlayerUser.GameObject.Transform.Position;
-
-            if (Attacking)
-            {
-                // Lock the offset
-                GameObject.Transform.Position = userPos + lastOffSetPos;
-                return;
-            }
-
-            if (EnemyUser != null)
-                angle = GetAngleToMouseEnemy(userPos);
-            else
-                angle = GetAngleToMousePlayer();
-
-            // Can use lerp from the wanted move point, so its not as fast
-
-            // Adjust the angle to be in the range of 0 to 2π
-            if (angle < 0)
-            {
-                angle += 2 * MathHelper.Pi;
-            }
-
-            lastOffSetPos = BaseMath.Rotate(startRelativePos, angle - MathHelper.PiOver2) + startRelativeOffsetPos;
-            GameObject.Transform.Position = userPos + lastOffSetPos;
-
-            // Set the StartAnimationAngle based on the adjusted angle
-            if (angle > 0.5 * MathHelper.Pi && angle < 1.5 * MathHelper.Pi)
-            {
-                spriteRenderer.SpriteEffects = SpriteEffects.FlipHorizontally;
-                StartAnimationAngle = angle + MathHelper.Pi;
-
-                LeftSide = true;
-            }
-            else
-            {
-                StartAnimationAngle = angle;
-                LeftSide = false;
-                spriteRenderer.SpriteEffects = SpriteEffects.None;
-            }
-
-            GameObject.Transform.Rotation = StartAnimationAngle;
-        }
-
-        private float GetAngleToMousePlayer()
-        {
-            Vector2 mouseInUI = InputHandler.Instance.MouseOnUI;
-            return (float)Math.Atan2(mouseInUI.Y, mouseInUI.X);
-        }
-
-        private float GetAngleToMouseEnemy(Vector2 userPos)
-        {
-            Player target = EnemyUser.Player;
-
-            Vector2 relativePos = target.GameObject.Transform.Position - userPos;
-            return (float)Math.Atan2(relativePos.Y, relativePos.X);
-        }
-
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-            if (!InputHandler.Instance.DebugMode) return;
-            Vector2 center = GameObject.Transform.Position - new Vector2(5, 5);
-            spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], center, null, Color.Red, GameObject.Transform.Rotation, Vector2.Zero, 10, SpriteEffects.None, 1);
-            spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], center, null, Color.Pink, GameObject.Transform.Rotation, Vector2.Zero, 10, SpriteEffects.None, 1);
-        }
+    public override void Draw(SpriteBatch spriteBatch)
+    {
+        if (!InputHandler.Instance.DebugMode) return;
+        Vector2 center = GameObject.Transform.Position - new Vector2(5, 5);
+        spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], center, null, Color.Red, GameObject.Transform.Rotation, Vector2.Zero, 10, SpriteEffects.None, 1);
+        spriteBatch.Draw(GlobalTextures.Textures[TextureNames.Pixel], center, null, Color.Pink, GameObject.Transform.Rotation, Vector2.Zero, 10, SpriteEffects.None, 1);
     }
 }

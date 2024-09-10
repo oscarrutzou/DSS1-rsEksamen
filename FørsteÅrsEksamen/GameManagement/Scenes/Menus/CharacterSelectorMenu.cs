@@ -1,230 +1,215 @@
-﻿using DoctorsDungeon.CommandPattern;
-using DoctorsDungeon.CommandPattern.Commands;
-using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.GUI;
-using DoctorsDungeon.Factory;
-using DoctorsDungeon.Factory.Gui;
-using DoctorsDungeon.LiteDB;
+﻿using ShamansDungeon.CommandPattern;
+using ShamansDungeon.CommandPattern.Commands;
+using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.GUI;
+using ShamansDungeon.Factory;
+using ShamansDungeon.Factory.Gui;
+using ShamansDungeon.LiteDB;
+using ShamansDungeon.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DoctorsDungeon.GameManagement.Scenes.Menus
+namespace ShamansDungeon.GameManagement.Scenes.Menus;
+
+// Oscar
+public class CharacterSelectorMenu : MenuScene
 {
-    // Oscar
-    public class CharacterSelectorMenu : MenuScene
+    private Dictionary<ClassTypes, List<GameObject>> _classWeaponButton;
+    private Dictionary<ClassTypes, Button> _classButtons;
+    private Dictionary<WeaponTypes, Button> _weaponButtons;
+
+    // Lists of what classes and weapons are done and the user can play as.
+    private List<ClassTypes> _classTypesThatAreDone = new()
     {
-        private Dictionary<ClassTypes, List<GameObject>> classWeaponButton;
-        private Dictionary<ClassTypes, Button> classButtons;
-        private Dictionary<WeaponTypes, Button> weaponButtons;
+        ClassTypes.Warrior,
+        ClassTypes.Assassin,
+    };
 
-        // Lists of what classes and weapons are done and the user can play as.
-        private List<ClassTypes> classTypesThatAreDone = new()
+    private int _spaceBetween = 30;
+
+    public override void Initialize()
+    {
+
+        _classWeaponButton = new();
+        _classButtons = new();
+        _weaponButtons = new();
+
+        InputHandler.Instance.AddKeyButtonDownCommand(Keys.Escape, new CustomCmd(Back));
+
+        base.Initialize();
+
+        InitBackButton();
+    }
+
+    private int _costAmount = 50;
+
+    protected override void InitFirstMenu()
+    {
+        foreach (ClassTypes type in _classTypesThatAreDone)
         {
-            ClassTypes.Warrior,
-            ClassTypes.Rogue,
-        };
+            GameObject btnGo = ButtonFactory.Create($"{type} 50g", true, () => { SelectClass(type); }, TextureNames.WideBtn);
+            FirstMenuObjects.Add(btnGo);
 
-        private List<WeaponTypes> weaponTypesThatAreDone = new()
+            Button btn = btnGo.GetComponent<Button>();
+            _classButtons.Add(type, btn);
+
+            // Checks if we have the type of weapon
+            if (!SaveData.UnlockedClasses.Contains(type)) continue;
+
+            btn.Text = $"{type}";
+        }
+    }
+
+    private void SelectClass(ClassTypes type)
+    {
+        // The player dosent own the class
+        if (!SaveData.UnlockedClasses.Contains(type))
         {
-            WeaponTypes.Sword,
-            WeaponTypes.Dagger,
-        };
+            // The player cant buy the class
+            if (!DB.Instance.RemoveCurrency(_costAmount)) return;
 
-        private int spaceBetween = 30;
+            DB.Instance.UnlockClass(type);
 
-        public override void Initialize()
-        {
-            classWeaponButton = new();
-            classButtons = new();
-            weaponButtons = new();
-
-            InputHandler.Instance.AddKeyButtonDownCommand(Keys.Escape, new CustomCmd(Back));
-
-            base.Initialize();
-
-            InitBackButton();
+            _classButtons[type].Text = $"{type}";
         }
 
-        private int costAmount = 50;
+        SaveData.SelectedClass = type;
+        ShowHideClassMenu();
+    }
 
-        protected override void InitFirstMenu()
+    // Base dict or osmething to hold data for each class type to show?
+    // Or maybe show the weapons / with pictures or text.
+    protected override void InitSecondMenu()
+    {
+        foreach (ClassTypes classType in WeaponFactory.ClassHasWeapons.Keys)
         {
-            foreach (ClassTypes type in classTypesThatAreDone)
-            {
-                GameObject btnGo = ButtonFactory.Create($"{type} 50g", true, () => { SelectClass(type); }, TextureNames.LargeBtn);
-                FirstMenuObjects.Add(btnGo);
+            List<GameObject> weaponButtonGameObjects = new();
 
+            foreach (WeaponTypes weaponType in WeaponFactory.ClassHasWeapons[classType])
+            {
+                if (!WeaponFactory.WeaponTypesThatAreDone.Contains(weaponType)) continue; // If we havent made that weapon yet
+
+                GameObject btnGo = ButtonFactory.Create($"{weaponType} 50g", true, () => { SeletectWeapon(weaponType); }, TextureNames.WideBtn);
+
+                weaponButtonGameObjects.Add(btnGo);
+
+                // Adds the btn to the weapon buttons to change the text if the user have bought the weapon
                 Button btn = btnGo.GetComponent<Button>();
-                classButtons.Add(type, btn);
+                _weaponButtons.Add(weaponType, btn);
 
                 // Checks if we have the type of weapon
-                if (!SaveData.UnlockedClasses.Contains(type)) continue;
+                if (!SaveData.UnlockedWeapons.Contains(weaponType)) continue;
 
-                btn.Text = $"{type}";
+                btn.Text = $"{weaponType}";
             }
+
+            _classWeaponButton.Add(classType, weaponButtonGameObjects);
         }
 
-        private void SelectClass(ClassTypes type)
+        foreach (List<GameObject> goList in _classWeaponButton.Values)
         {
-            // The player dosent own the class
-            if (!SaveData.UnlockedClasses.Contains(type))
+            ShowHideGameObjects(goList, false);
+
+            foreach (GameObject gameObject in goList)
             {
-                // The player cant buy the class
-                if (!DB.Instance.RemoveCurrency(costAmount)) return;
-
-                DB.Instance.UnlockClass(type);
-                
-                classButtons[type].Text = $"{type}";
+                GameWorld.Instance.Instantiate(gameObject);
             }
+        }
+    }
 
-            SaveData.SelectedClass = type;
+    public override void AfterFirstCleanUp()
+    {
+        GuiMethods.PlaceGameObjectsHorizontal(FirstMenuObjects, Vector2.Zero, _spaceBetween, true);
+
+        foreach (List<GameObject> goList in _classWeaponButton.Values)
+        {
+            if (goList.Count == 0) continue;
+
+            GuiMethods.PlaceGameObjectsHorizontal(goList, Vector2.Zero, _spaceBetween, true);
+        }
+    }
+
+    private void InitBackButton()
+    {
+        GameObject backBtn = ButtonFactory.Create("Back", true, Back);
+
+        backBtn.Transform.Position = new Vector2(0, 190 + FirstMenuObjects[0].Transform.Position.Y);
+        GameWorld.Instance.Instantiate(backBtn);
+    }
+
+    private void SeletectWeapon(WeaponTypes weapon)
+    {
+        // The player dosent own the weapon
+        if (!SaveData.UnlockedWeapons.Contains(weapon))
+        {
+            // The player cant buy the weapon, return
+            if (!DB.Instance.RemoveCurrency(_costAmount)) return;
+
+            // Unlocked the weapon
+            DB.Instance.UnlockWeapon(weapon);
+        }
+
+        SaveData.SelectedWeapon = weapon;
+
+        NextScene();
+    }
+
+    private void NextScene()
+    {
+        DB.Instance.SaveGame(SaveData.CurrentSaveID);
+
+        // Go into the new scene with a new player.
+        GameWorld.Instance.ChangeDungeonScene(SceneNames.DungeonRoom, 1);
+    }
+
+    private void Back()
+    {
+        if (!FirstMenuObjects[0].IsEnabled)
             ShowHideClassMenu();
-        }
-
-        // Base dict or osmething to hold data for each class type to show?
-        // Or maybe show the weapons / with pictures or text.
-        protected override void InitSecondMenu()
+        else
         {
-            foreach (ClassTypes classType in WeaponFactory.ClassHasWeapons.Keys)
-            {
-                List<GameObject> weaponButtonGameObjects = new();
-
-                foreach (WeaponTypes weaponType in WeaponFactory.ClassHasWeapons[classType])
-                {
-                    if (!weaponTypesThatAreDone.Contains(weaponType)) continue; // If we havent made that weapon yet
-
-                    GameObject btnGo = ButtonFactory.Create($"{weaponType} 50g", true, () => { SeletectWeapon(weaponType); }, TextureNames.LargeBtn);
-
-                    weaponButtonGameObjects.Add(btnGo);
-
-                    // Adds the btn to the weapon buttons to change the text if the user have bought the weapon
-                    Button btn = btnGo.GetComponent<Button>();
-                    weaponButtons.Add(weaponType, btn);
-
-                    // Checks if we have the type of weapon
-                    if (!SaveData.UnlockedWeapons.Contains(weaponType)) continue;
-
-                    btn.Text = $"{weaponType}";
-                }
-
-                classWeaponButton.Add(classType, weaponButtonGameObjects);
-            }
-
-            foreach (List<GameObject> goList in classWeaponButton.Values)
-            {
-                ShowHideGameObjects(goList, false);
-
-                foreach (GameObject gameObject in goList)
-                {
-                    GameWorld.Instance.Instantiate(gameObject);
-                }
-            }
+            GameWorld.Instance.ChangeScene(SceneNames.SaveFileMenu);
         }
+    }
 
-        public override void AfterFirstCleanUp()
+    private void ShowHideClassMenu()
+    {
+        ClassTypes classType = SaveData.SelectedClass;
+        ShowSecondMenu = !ShowSecondMenu;
+
+        if (ShowSecondMenu)
         {
-            GuiMethods.PlaceGameObjectsHorizontal(FirstMenuObjects, Vector2.Zero, spaceBetween, true);
-
-            foreach (List<GameObject> goList in classWeaponButton.Values)
-            {
-                if (goList.Count == 0) continue;
-
-                GuiMethods.PlaceGameObjectsHorizontal(goList, Vector2.Zero, spaceBetween, true);
-            }
+            ShowHideGameObjects(FirstMenuObjects, false);
+            ShowHideGameObjects(_classWeaponButton[classType], true);
         }
-
-        private void InitBackButton()
+        else
         {
-            GameObject backBtn = ButtonFactory.Create("Back", true, Back);
-
-            backBtn.Transform.Position += new Vector2(0, 200 + FirstMenuObjects[0].Transform.Position.Y);
-            GameWorld.Instance.Instantiate(backBtn);
+            ShowHideGameObjects(FirstMenuObjects, true);
+            ShowHideGameObjects(_classWeaponButton[classType], false);
         }
+    }
 
-        private void SeletectWeapon(WeaponTypes weapon)
-        {
-            // The player dosent own the weapon
-            if (!SaveData.UnlockedWeapons.Contains(weapon))
-            {
-                // The player cant buy the weapon, return
-                if (!DB.Instance.RemoveCurrency(costAmount)) return;
+    public override void DrawOnScreen(SpriteBatch spriteBatch)
+    {
+        base.DrawOnScreen(spriteBatch);
 
-                // Unlocked the weapon
-                DB.Instance.UnlockWeapon(weapon);
+        string currentText = $"Currency: {SaveData.Currency} Gold";
+        Vector2 size = GlobalTextures.DefaultFont.MeasureString(currentText);
+        Vector2 pos;
 
-                weaponButtons[weapon].Text = $"{weapon}";
-            }
+        if (!ShowSecondMenu)
+            pos = FirstMenuObjects.Last().Transform.Position + new Vector2(size.X / 2 - 30, -size.Y - 60);
+        else
+            pos = _classWeaponButton[SaveData.SelectedClass].Last().Transform.Position + new Vector2(size.X / 2 - 30, -size.Y - 60);
+        
+        DrawString(spriteBatch, currentText, pos, CurrentTextColor);
+    }
 
-            SaveData.SelectedWeapon = weapon;
-
-            NextScene();
-        }
-
-        private void NextScene()
-        {
-            DB.Instance.SaveGame(SaveData.CurrentSaveID);
-
-            // Go into the new scene with a new player.
-            GameWorld.Instance.ChangeDungeonScene(SceneNames.DungeonRoom, 1);
-            //GameWorld.Instance.ChangeScene(SceneNames.DungeonRoom3);
-        }
-
-        private void Back()
-        {
-            if (!FirstMenuObjects[0].IsEnabled)
-            {
-                ShowHideClassMenu();
-            }
-            else
-            {
-                // Reset variables
-                SaveData.SetBaseValues();
-
-                GameWorld.Instance.ChangeScene(SceneNames.SaveFileMenu);
-            }
-        }
-
-        private void ShowHideClassMenu()
-        {
-            ClassTypes classType = SaveData.SelectedClass;
-            ShowSecondMenu = !ShowSecondMenu;
-
-            if (ShowSecondMenu)
-            {
-                ShowHideGameObjects(FirstMenuObjects, false);
-                ShowHideGameObjects(classWeaponButton[classType], true);
-            }
-            else
-            {
-                ShowHideGameObjects(FirstMenuObjects, true);
-                ShowHideGameObjects(classWeaponButton[classType], false);
-            }
-        }
-
-        public override void DrawOnScreen(SpriteBatch spriteBatch)
-        {
-            base.DrawOnScreen(spriteBatch);
-
-            string currentText = $"Currency: {SaveData.Currency}g";
-            Vector2 size = GlobalTextures.DefaultFont.MeasureString(currentText);
-            Vector2 pos;
-            if (!ShowSecondMenu)
-            {
-                pos = FirstMenuObjects.Last().Transform.Position + new Vector2(size.X / 2 - 30, -size.Y - 60);
-            }
-            else
-            {
-                pos = classWeaponButton[SaveData.SelectedClass].Last().Transform.Position + new Vector2(size.X / 2 - 30, -size.Y - 60);
-            }
-            DrawString(spriteBatch, currentText, pos, new Color(250, 249, 246));
-        }
-
-        protected void DrawString(SpriteBatch spriteBatch, string text, Vector2 position, Color color)
-        {
-            spriteBatch.DrawString(GlobalTextures.DefaultFont, text, position, color, 0f, Vector2.Zero, 1, SpriteEffects.None, 1f);
-        }
+    protected void DrawString(SpriteBatch spriteBatch, string text, Vector2 position, Color color)
+    {
+        spriteBatch.DrawString(GlobalTextures.DefaultFont, text, position, color, 0f, Vector2.Zero, 1, SpriteEffects.None, 1f);
     }
 }

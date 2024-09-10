@@ -1,133 +1,148 @@
-﻿using DoctorsDungeon.GameManagement;
+﻿using ShamansDungeon.GameManagement;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 
-namespace DoctorsDungeon.ComponentPattern
+namespace ShamansDungeon.ComponentPattern;
+
+// Oscar
+public class Animator : Component
 {
-    // Oscar
-    public class Animator : Component
+    #region Properties
+    public Animation CurrentAnimation { get; private set; }
+    public int MaxFrames { get; set; }
+    public int CurrentIndex { get; private set; }
+
+    private SpriteRenderer _spriteRenderer;
+    private Dictionary<AnimNames, Animation> _animations = new Dictionary<AnimNames, Animation>();
+    private bool _isLooping, _hasPlayedAnim;
+    private double _timeElapsed, _frameDuration;
+
+    public Animator(GameObject gameObject) : base(gameObject)
     {
-        #region Properties
+    }
 
-        private SpriteRenderer spriteRenderer;
-        private Dictionary<AnimNames, Animation> animations = new Dictionary<AnimNames, Animation>();
-        public Animation CurrentAnimation { get; private set; }
+    #endregion Properties
 
-        private bool isLooping, hasPlayedAnim;
-        public int CurrentIndex { get; private set; }
-        public int MaxFrames;
-        private float timeElapsed, frameDuration;
+    public override void Awake()
+    {
+        _spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
+        if (_spriteRenderer == null)
+            throw new Exception($"No spriteRenderer on gameObject, and therefore its not possible to Animate");
+    }
 
-        public Animator(GameObject gameObject) : base(gameObject)
+    public override void Update()
+    {
+        if (CurrentAnimation == null) return;
+
+        //if (IsLooping && hasPlayedAnim) return; // Already have played the animation once, so it can stop.
+        _timeElapsed += GameWorld.DeltaTime;
+
+        if (CurrentAnimation.UseSpriteSheet)
         {
+            UpdateSpriteSheet();
         }
-
-        #endregion Properties
-
-        public override void Start()
+        else
         {
-            spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
-            if (spriteRenderer == null)
-                throw new Exception($"No spriteRenderer on gameObject, and therefore its not possible to Animate");
+            UpdateIndividualFrames();
         }
+    }
 
-        public override void Update(GameTime gameTime)
+    private void UpdateIndividualFrames()
+    {
+        if (_timeElapsed > _frameDuration && !_hasPlayedAnim)
         {
-            if (CurrentAnimation == null) return;
+            //Set new frame
+            _timeElapsed = 0;
+            CurrentIndex = (CurrentIndex + 1) % CurrentAnimation.Sprites.Length;
 
-            //if (IsLooping && hasPlayedAnim) return; // Already have played the animation once, so it can stop.
-            timeElapsed += GameWorld.DeltaTime;
-
-            if (CurrentAnimation.UseSpriteSheet)
+            if (CurrentIndex == 0)
             {
-                UpdateSpriteSheet();
-            }
-            else
-            {
-                UpdateIndividualFrames();
-            }
-        }
+                if (!_isLooping) _hasPlayedAnim = true; // Stops looping after playing once
 
-        private void UpdateIndividualFrames()
-        {
-            if (timeElapsed > frameDuration && !hasPlayedAnim)
-            {
-                //Set new frame
-                timeElapsed = 0;
-                CurrentIndex = (CurrentIndex + 1) % CurrentAnimation.Sprites.Length;
-
-                if (CurrentIndex == 0)
-                {
-                    if (!isLooping) hasPlayedAnim = true; // Stops looping after playing once
-
-                    CurrentAnimation.OnAnimationDone?.Invoke();
-                }
-            }
-
-            if (CurrentIndex < 0) CurrentIndex = 0;
-            spriteRenderer.Sprite = CurrentAnimation.Sprites[CurrentIndex];
-        }
-
-        private void UpdateSpriteSheet()
-        {
-            if (timeElapsed > frameDuration && !hasPlayedAnim)
-            {
-                //Set new frame
-                timeElapsed = 0;
-                CurrentIndex = (CurrentIndex + 1) % MaxFrames; //So it turns to 0 when it goes over maxframes
-
-                if (CurrentIndex == 0)
-                {
-                    if (!isLooping) hasPlayedAnim = true; // Stops looping after playing once
-
-                    CurrentAnimation.OnAnimationDone?.Invoke();
-                }
-            }
-
-            spriteRenderer.SourceRectangle.X = CurrentIndex * CurrentAnimation.FrameDimensions; // Only works with animation thats horizontal
-        }
-
-        private void AddAnimation(AnimNames name) => animations.Add(name, GlobalAnimations.Animations[name]);
-
-        /// <summary>
-        /// <para>Updates params based on chosen Animation. Also resets the IsLopping to true</para>
-        /// </summary>
-        /// <param name="animationName"></param>
-        /// <exception cref="Exception"></exception>
-        public void PlayAnimation(AnimNames animationName)
-        {
-            if (!animations.ContainsKey(animationName))
-            {
-                AddAnimation(animationName);
-            }
-
-            if (CurrentAnimation != null) // Reset previous animation
-            {
-                CurrentIndex = 0;
-                CurrentAnimation.OnAnimationDone = null; //Resets its commands
-                spriteRenderer.OriginOffSet = Vector2.Zero;
-            }
-
-            CurrentAnimation = animations[animationName];
-            spriteRenderer.UsingAnimation = true; // This gets set to false if you have played a Animation, then want to use a normal sprite again
-            frameDuration = 1f / CurrentAnimation.FPS; //Sets how long each frame should be
-            isLooping = true; // Resets loop
-
-            if (CurrentAnimation.UseSpriteSheet)
-            {
-                spriteRenderer.SourceRectangle = CurrentAnimation.SourceRectangle; // Use a sourcerectangle to only show the specific part of the animation
-                spriteRenderer.Sprite = CurrentAnimation.Sprites[0]; //Only one animation in the spritesheet
-                MaxFrames = spriteRenderer.Sprite.Width / CurrentAnimation.FrameDimensions; // Only works with animation thats horizontal
+                CurrentAnimation.OnAnimationDone?.Invoke();
             }
         }
 
-        public void StopCurrentAnimationAtLastSprite()
-        {
-            if (CurrentAnimation == null) throw new Exception("Set animation before you can call this method");
+        if (CurrentIndex < 0) CurrentIndex = 0;
+        _spriteRenderer.Sprite = CurrentAnimation.Sprites[CurrentIndex];
+    }
 
-            isLooping = false; // Stop animation from looping
-            CurrentAnimation.OnAnimationDone += () => { CurrentIndex = MaxFrames - 1; }; ; // The action that gets called when the animation is done
+    private void UpdateSpriteSheet()
+    {
+        if (_timeElapsed > _frameDuration && !_hasPlayedAnim)
+        {
+            //Set new frame
+            _timeElapsed = 0;
+            CurrentIndex = (CurrentIndex + 1) % MaxFrames; //So it turns to 0 when it goes over maxframes
+
+            if (CurrentIndex == 0)
+            {
+                if (!_isLooping) _hasPlayedAnim = true; // Stops looping after playing once
+
+                CurrentAnimation.OnAnimationDone?.Invoke();
+            }
         }
+
+        _spriteRenderer.SourceRectangle.X = CurrentIndex * CurrentAnimation.FrameDimensions; // Only works with animation thats horizontal
+    }
+
+    private void AddAnimation(AnimNames name) => _animations.Add(name, GlobalAnimations.Animations[name]);
+
+    /// <summary>
+    /// <para>Updates params based on chosen Animation. Also resets the IsLopping to true</para>
+    /// </summary>
+    /// <param name="animationName"></param>
+    /// <exception cref="Exception"></exception>
+    public void PlayAnimation(AnimNames animationName)
+    {
+        if (!_animations.ContainsKey(animationName))
+        {
+            AddAnimation(animationName);
+        }
+
+        if (CurrentAnimation != null) // Reset previous animation
+        {
+            _timeElapsed = 0;
+            CurrentIndex = 0;
+            CurrentAnimation.OnAnimationDone = null; //Resets its commands
+            _spriteRenderer.OriginOffSet = Vector2.Zero;
+            _spriteRenderer.DrawPosOffSet = Vector2.Zero;
+        }
+
+        CurrentAnimation = _animations[animationName];
+        
+        // Reset spriterenderer
+        _spriteRenderer.UsingAnimation = true; // This gets set to false if you have played a Animation, then want to use a normal sprite again
+
+        //_spriteRenderer.ShouldDrawSprite = true;
+        _spriteRenderer.Rotation = -1;
+
+        _frameDuration = 1f / CurrentAnimation.FPS; //Sets how long each frame should be
+        _isLooping = true; // Resets loop
+        _hasPlayedAnim = false;
+
+        if (CurrentAnimation.UseSpriteSheet)
+        {
+            _spriteRenderer.SourceRectangle = CurrentAnimation.SourceRectangle; // Use a sourcerectangle to only show the specific part of the animation
+            _spriteRenderer.Sprite = CurrentAnimation.Sprites[0]; //Only one animation in the spritesheet
+            MaxFrames = _spriteRenderer.Sprite.Width / CurrentAnimation.FrameDimensions; // Only works with animation thats horizontal
+        }
+        else
+        {
+            _spriteRenderer.Sprite = CurrentAnimation.Sprites[CurrentIndex];
+            MaxFrames = CurrentAnimation.Sprites.Length;
+        }
+    }
+
+    public void StopCurrentAnimationAtLastSprite()
+    {
+        if (CurrentAnimation == null) throw new Exception("Set animation before you can call this method");
+
+        _isLooping = false; // Stop animation from looping
+        CurrentAnimation.OnAnimationDone += () => 
+        { 
+            CurrentIndex = MaxFrames - 1; 
+        }; ; // The action that gets called when the animation is done
     }
 }

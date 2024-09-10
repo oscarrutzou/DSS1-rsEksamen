@@ -1,26 +1,26 @@
-﻿using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.WorldObjects;
-using DoctorsDungeon.GameManagement;
+﻿using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.WorldObjects;
+using ShamansDungeon.GameManagement;
 
-namespace DoctorsDungeon.Factory
+namespace ShamansDungeon.Factory;
+
+public static class TransferDoorFactory
 {
-    public static class TransferDoorFactory
+    // Oscar
+    public static GameObject Create()
     {
-        // Oscar
-        public static GameObject Create()
-        {
-            GameObject go = new();
-            go.Transform.Scale = new(4, 4);
+        GameObject go = new();
 
-            SpriteRenderer sr = go.AddComponent<SpriteRenderer>();
-            sr.SetLayerDepth(LayerDepth.BackgroundDecoration);
-            sr.SetSprite(TextureNames.DoorClosed);
-            sr.IsCentered = false;
+        SpriteRenderer sr = go.AddComponent<SpriteRenderer>();
+        sr.SetLayerDepth(LayerDepth.BackgroundDecoration);
+        sr.SetSprite(TextureNames.DoorClosed);
+        sr.IsCentered = false;
 
-            go.AddComponent<Collider>();
-            go.AddComponent<TransferDoor>();
+        Collider collider = go.AddComponent<Collider>();
+        collider.CenterCollisionBox = false;
 
-            return go;
-        }
+        go.AddComponent<TransferDoor>();
+
+        return go;
     }
 }

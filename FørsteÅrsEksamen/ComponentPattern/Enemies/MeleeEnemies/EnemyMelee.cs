@@ -1,11 +1,15 @@
-﻿namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
-{
-    //Asser
+﻿namespace ShamansDungeon.ComponentPattern.Enemies.MeleeEnemies;
 
-    public abstract class EnemyMelee : Enemy
+//Asser
+
+public abstract class EnemyMelee : Enemy
+{
+    protected EnemyMelee(GameObject gameObject) : base(gameObject)
     {
-        protected EnemyMelee(GameObject gameObject) : base(gameObject)
-        {
-        }
+    }
+
+    public override void Update()
+    {
+        base.Update();
     }
 }

@@ -1,42 +1,54 @@
-﻿using DoctorsDungeon.ComponentPattern.PlayerClasses;
-using DoctorsDungeon.Factory;
+﻿using ShamansDungeon.ComponentPattern.PlayerClasses;
+using ShamansDungeon.Factory;
 using System.Collections.Generic;
 
-namespace DoctorsDungeon.LiteDB
+namespace ShamansDungeon.LiteDB;
+
+// Oscar
+public static class SaveData
 {
-    // Oscar
-    public static class SaveData
+    private const int _startCurrency = 100; // Normal 100
+    private static double _startTimeLeft = 180f; //
+
+    private const int _cheatMultiplier = 100;
+
+    public static int CurrentSaveID = 1; //Gets set by player and determins loaded data
+    public const int MaxSaveID = 3;
+    public static int Currency;
+    public static bool HasCompletedFullTutorial; 
+    // Save what classes and weapons are unlocked
+    public static List<WeaponTypes> UnlockedWeapons { get; set; } = new();
+
+    public static List<ClassTypes> UnlockedClasses { get; set; } = new();
+
+    public static int Level_Reached { get; set; } = 1;
+    public const int MaxRooms = 4;
+    public static double Time_Left { get; set; } = _startTimeLeft;
+    public static bool HasWon { get; set; }
+    public static bool LostByTime;
+
+    public static WeaponTypes SelectedWeapon { get; set; }
+    public static ClassTypes SelectedClass { get; set; }
+    public static Player Player { get; set; }
+
+    public static void SetBaseValues()
     {
-        private const int StartCurrency = 100;
-        private static float StartTimeLeft = 120f;
-
-        public static int CurrentSaveID = 1; //Gets set by player and determins loaded data
-        public const int MaxSaveID = 3;
-        public static int Currency = 100; // Start currency is 100
-
-        // Save what classes and weapons are unlocked
-        public static List<WeaponTypes> UnlockedWeapons { get; set; } = new();
-
-        public static List<ClassTypes> UnlockedClasses { get; set; } = new();
-
-        public static int Level_Reached { get; set; } = 1;
-        public const int MaxRooms = 3;
-        public static float Time_Left { get; set; } = StartTimeLeft;
-        public static bool HasWon { get; set; }
-        public static bool LostByTime;
-
-        public static WeaponTypes SelectedWeapon { get; set; }
-        public static ClassTypes SelectedClass { get; set; }
-        public static Player Player { get; set; }
-
-        public static void SetBaseValues()
+        Currency = _startCurrency;
+        Time_Left = _startTimeLeft;
+        if (GameWorld.DebugAndCheats)
         {
-            Currency = StartCurrency;
-            Time_Left = StartTimeLeft;
-            Level_Reached = 1;
-            UnlockedWeapons = new();
-            UnlockedClasses = new();
-            Player = null;
+            Currency *= _cheatMultiplier;
+            Time_Left *= _cheatMultiplier;
         }
+        Level_Reached = 1;
+        UnlockedWeapons = new();
+        UnlockedClasses = new();
+        Player = null;
+        HasCompletedFullTutorial = false;
+    }
+
+    public static void ResetPlayer()
+    {
+        Player = null;
     }
 }

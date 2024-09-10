@@ -1,23 +1,22 @@
-﻿using DoctorsDungeon.ComponentPattern.PlayerClasses;
+﻿using ShamansDungeon.ComponentPattern.PlayerClasses;
 using Microsoft.Xna.Framework;
 
-namespace DoctorsDungeon.CommandPattern.Commands
+namespace ShamansDungeon.CommandPattern.Commands;
+
+// Oscar
+public class MoveCmd : Command
 {
-    // Oscar
-    public class MoveCmd : ICommand
+    private Player _player;
+    private Vector2 _velocity;
+
+    public MoveCmd(Player player, Vector2 velocity)
     {
-        private Player player;
-        private Vector2 velocity;
+        this._player = player;
+        this._velocity = velocity;
+    }
 
-        public MoveCmd(Player player, Vector2 velocity)
-        {
-            this.player = player;
-            this.velocity = velocity;
-        }
-
-        public void Execute()
-        {
-            player.AddInput(velocity);
-        }
+    public override void Execute()
+    {
+        _player.AddInput(_velocity);
     }
 }

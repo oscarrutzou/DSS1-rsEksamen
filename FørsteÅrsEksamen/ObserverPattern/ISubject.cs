@@ -1,12 +1,11 @@
-﻿namespace DoctorsDungeon.ObserverPattern
+﻿namespace ShamansDungeon.ObserverPattern;
+
+// Oscar
+public interface ISubject
 {
-    // Oscar
-    public interface ISubject
-    {
-        public void Attach(IObserver observer);
+    public void Attach(IObserver observer);
 
-        public void Detach(IObserver observer);
+    public void Detach(IObserver observer);
 
-        public void Notify();
-    }
+    public void Notify();
 }

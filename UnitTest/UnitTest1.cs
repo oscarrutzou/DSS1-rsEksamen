@@ -1,4 +1,4 @@
-using DoctorsDungeon.Other;
+using ShamansDungeon.Other;
 using Microsoft.Xna.Framework;
 
 namespace UnitTest

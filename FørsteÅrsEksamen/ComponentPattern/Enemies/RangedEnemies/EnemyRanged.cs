@@ -1,11 +1,10 @@
-﻿namespace DoctorsDungeon.ComponentPattern.Enemies.RangedEnemies
-{
-    //Asser
+﻿namespace ShamansDungeon.ComponentPattern.Enemies.RangedEnemies;
 
-    public abstract class EnemyRanged : Enemy
+//Asser
+
+public abstract class EnemyRanged : Enemy
+{
+    protected EnemyRanged(GameObject gameObject) : base(gameObject)
     {
-        protected EnemyRanged(GameObject gameObject) : base(gameObject)
-        {
-        }
     }
 }

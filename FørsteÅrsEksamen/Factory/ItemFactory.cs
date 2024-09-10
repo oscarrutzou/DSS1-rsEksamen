@@ -1,24 +1,43 @@
-﻿using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.WorldObjects;
-using DoctorsDungeon.GameManagement;
+﻿using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.WorldObjects.PickUps;
+using ShamansDungeon.GameManagement;
 using System.Numerics;
 
-namespace DoctorsDungeon.Factory
-{
-    //Asser
-    public static class ItemFactory
-    {
-        public static GameObject Create(GameObject playerGo)
-        {
-            GameObject itemGo = new GameObject();
-            itemGo.Transform.Scale = new Vector2(4, 4);
-            SpriteRenderer sr = itemGo.AddComponent<SpriteRenderer>();
-            sr.SetSprite(TextureNames.HealthPotionFull);
-            sr.SetLayerDepth(LayerDepth.WorldBackground);
-            itemGo.AddComponent<Collider>();
-            itemGo.AddComponent<Potion>(playerGo);
+namespace ShamansDungeon.Factory;
 
-            return itemGo;
+//Asser
+public static class ItemFactory
+{
+    public static GameObject CreatePotion(GameObject playerGo, PotionTypes type)
+    {
+        GameObject itemGo = new GameObject();
+        itemGo.Type = GameObjectTypes.Items;
+        SpriteRenderer sr = itemGo.AddComponent<SpriteRenderer>();
+        sr.SetLayerDepth(LayerDepth.WorldBackground);
+        itemGo.AddComponent<Collider>();
+        AddPotionScript(ref itemGo, playerGo, type);
+
+        return itemGo;
+    }
+
+    private static void AddPotionScript(ref GameObject itemGo, GameObject playerGo, PotionTypes type)
+    {
+        Potion potion = null;
+        switch (type)
+        {
+            case PotionTypes.SmallHealth:
+            case PotionTypes.BigHealth:
+                 potion = itemGo.AddComponent<HealthPotion>(playerGo);
+                break;
+            case PotionTypes.SmallDmgBoost:
+                potion = itemGo.AddComponent<DmgBoostPotion>(playerGo);
+                break;
+            case PotionTypes.SmallSpeedBoost:
+                 potion = itemGo.AddComponent<SpeedBoostPotion>(playerGo);
+                break;
         }
+
+        if (potion != null)
+            potion.PotionType = type;
     }
 }

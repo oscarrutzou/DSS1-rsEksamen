@@ -1,129 +1,142 @@
-﻿using DoctorsDungeon.CommandPattern;
-using DoctorsDungeon.ComponentPattern.GUI;
-using DoctorsDungeon.GameManagement;
+﻿using ShamansDungeon.CommandPattern;
+using ShamansDungeon.ComponentPattern.GUI;
+using ShamansDungeon.GameManagement;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace DoctorsDungeon.ComponentPattern.Path
+namespace ShamansDungeon.ComponentPattern.Path;
+
+public enum CellWalkableType
 {
-    public enum CellWalkableType
+    NotValid,
+    FullValid,
+}
+
+// Oscar
+public class Cell : Component
+{
+    public static int Dimension = 16;
+
+    //public static readonly Vector2 ScaleSize = new(4, 4);
+    public static int Scale = 4;
+
+    private SpriteRenderer _spriteRenderer;
+
+    /// <summary>
+    /// Used when selecting which room is active on each grid. Base is -1, so they dont count as a room
+    /// </summary>
+    public int CollisionNr { get; set; } = -1;
+
+    public int RoomNr { get; set; } = -1;
+
+    public bool ShouldDraw { get; set; }
+
+    // For the Astar algortihm
+    public CellWalkableType CellWalkableType;
+
+    public int cost = 1;
+
+    public int G;
+    public int H;
+    public int F => G + H;
+
+    public Color NotDiscoveredColor => GameWorld.BackGroundColor;
+
+    /// <summary>
+    /// Parent is for the Astar, not the GameObject that is attached as "GameObject".
+    /// </summary>
+    public GameObject Parent { get; set; }
+
+    public Cell(GameObject gameObject, Grid grid, Point point) : base(gameObject)
     {
-        NotValid,
-        FullValid,
+        GameObject.Transform.GridPosition = point;
+        GameObject.Transform.Scale = new(Scale, Scale);
+
+        CellWalkableType = CellWalkableType.NotValid;
+
+        // Centers the position of the cell.
+        GameObject.Transform.Position = grid.StartPostion
+            + new Vector2(point.X * Dimension * Scale + Dimension * Scale / 2,
+                          point.Y * Dimension * Scale + Dimension * Scale / 2);
     }
 
-    // Oscar
-    public class Cell : Component
+    public Cell(GameObject gameObject, Grid grid, Point point, CellWalkableType type) : base(gameObject)
     {
-        public static int dimension = 16;
+        GameObject.Transform.GridPosition = point;
+        GameObject.Transform.Scale = new(Scale, Scale);
 
-        //public static readonly Vector2 ScaleSize = new(4, 4);
-        public static int Scale = 4;
+        CellWalkableType = type;
 
-        private SpriteRenderer spriteRenderer;
+        // Centers the position of the cell.
+        GameObject.Transform.Position = grid.StartPostion
+            + new Vector2(point.X * Dimension * Scale + Dimension * Scale / 2,
+                          point.Y * Dimension * Scale + Dimension * Scale / 2);
+    }
 
-        /// <summary>
-        /// Used when selecting which room is active on each grid. Base is -1, so they dont count as a room
-        /// </summary>
-        public int RoomNr { get; set; } = -1;
+    public Cell(GameObject gameObject, Grid grid, Point point, CellWalkableType type, int collisionNr, int roomNr) : base(gameObject)
+    {
+        GameObject.Transform.GridPosition = point;
+        GameObject.Transform.Scale = new(Scale, Scale);
 
-        // For the Astar algortihm
-        public CellWalkableType CellWalkableType;
+        CellWalkableType = type;
+        CollisionNr = collisionNr;
+        RoomNr = roomNr;
 
-        public int cost = 1;
+        // Centers the position of the cell.
+        GameObject.Transform.Position = grid.StartPostion
+            + new Vector2(point.X * Dimension * Scale + Dimension * Scale / 2,
+                          point.Y * Dimension * Scale + Dimension * Scale / 2);
+    }
 
-        public int G;
-        public int H;
-        public int F => G + H;
+    public override void Start()
+    {
+        _spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
+        if (_spriteRenderer == null) throw new System.Exception("Cell need a spriteRenderer");
 
-        /// <summary>
-        /// Parent is for the Astar, not the GameObject that is attached as "GameObject".
-        /// </summary>
-        public GameObject Parent { get; set; }
+        ChangeCellWalkalbeType(CellWalkableType); //Just the same here, so it turns the correct color.
+    }
 
-        public Cell(GameObject gameObject, Grid grid, Point point) : base(gameObject)
+    /// <summary>
+    /// Resets the cell, to make it ready for another path.
+    /// </summary>
+    public void Reset()
+    {
+        Parent = null;
+        G = 0;
+        H = 0;
+    }
+
+    public override void Draw(SpriteBatch spriteBatch)
+    {
+        if (_spriteRenderer == null) return;
+
+        if (!InputHandler.Instance.DebugMode) return;
+        Vector2 offset = new Vector2(10, 0);
+
+        Color roomColor = Color.Yellow;
+        Color collisionNrColor = Color.HotPink;
+        if (RoomNr == CollisionNr)
         {
-            GameObject.Transform.GridPosition = point;
-            GameObject.Transform.Scale = new(Scale, Scale);
+            roomColor = Color.Green;
+            collisionNrColor = Color.Green;
+        }
+        GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, GameObject.Transform.Position - offset, RoomNr.ToString(), roomColor);
+        GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, GameObject.Transform.Position + offset, CollisionNr.ToString(), collisionNrColor);
+    }
 
-            CellWalkableType = CellWalkableType.NotValid;
+    public void ChangeCellWalkalbeType(CellWalkableType cellWalkableType)
+    {
+        if (_spriteRenderer == null) return;
 
-            // Centers the position of the cell.
-            GameObject.Transform.Position = grid.StartPostion
-                + new Vector2(point.X * dimension * Scale + dimension * Scale / 2,
-                              point.Y * dimension * Scale + dimension * Scale / 2);
+        if (GridManager.Instance.CurrentDrawSelected == DrawMapSelecter.DrawBlackedOutRooms) return;
+
+        if (InputHandler.Instance.DebugMode)
+        {
+            //GameObject.IsEnabled = true;
+            if (CollisionNr == -1 && RoomNr == -1) GameObject.IsEnabled = false;
+            else GameObject.IsEnabled = true;
         }
 
-        public Cell(GameObject gameObject, Grid grid, Point point, CellWalkableType type) : base(gameObject)
-        {
-            GameObject.Transform.GridPosition = point;
-            GameObject.Transform.Scale = new(Scale, Scale);
-
-            CellWalkableType = type;
-
-            // Centers the position of the cell.
-            GameObject.Transform.Position = grid.StartPostion
-                + new Vector2(point.X * dimension * Scale + dimension * Scale / 2,
-                              point.Y * dimension * Scale + dimension * Scale / 2);
-        }
-
-        public Cell(GameObject gameObject, Grid grid, Point point, CellWalkableType type, int roomNr) : base(gameObject)
-        {
-            GameObject.Transform.GridPosition = point;
-            GameObject.Transform.Scale = new(Scale, Scale);
-
-            CellWalkableType = type;
-            this.RoomNr = roomNr;
-
-            // Centers the position of the cell.
-            GameObject.Transform.Position = grid.StartPostion
-                + new Vector2(point.X * dimension * Scale + dimension * Scale / 2,
-                              point.Y * dimension * Scale + dimension * Scale / 2);
-        }
-
-        public override void Start()
-        {
-            spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
-            if (spriteRenderer == null) throw new System.Exception("Cell need a spriteRenderer");
-
-            ChangeCellWalkalbeType(CellWalkableType); //Just the same here, so it turns the correct color.
-        }
-
-        /// <summary>
-        /// Resets the cell, to make it ready for another path.
-        /// </summary>
-        public void Reset()
-        {
-            Parent = null;
-            G = 0;
-            H = 0;
-        }
-
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-            if (spriteRenderer == null) return;
-
-            GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, GameObject.Transform.Position, RoomNr.ToString(), Color.HotPink);
-        }
-
-        public void ChangeCellWalkalbeType(CellWalkableType cellWalkableType)
-        {
-            if (spriteRenderer == null) return;
-
-            if (InputHandler.Instance.DebugMode)
-            {
-                if (RoomNr == -1) GameObject.IsEnabled = false;
-                else GameObject.IsEnabled = true;
-            }
-
-            CellWalkableType = cellWalkableType;
-
-            switch (CellWalkableType)
-            {
-                case CellWalkableType.FullValid:
-                    spriteRenderer.Color = Color.DarkOliveGreen;
-                    break;
-            }
-        }
+        CellWalkableType = cellWalkableType;
     }
 }

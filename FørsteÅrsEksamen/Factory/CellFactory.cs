@@ -1,43 +1,42 @@
-﻿using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.Path;
-using DoctorsDungeon.GameManagement;
+﻿using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.Path;
+using ShamansDungeon.GameManagement;
 using Microsoft.Xna.Framework;
 
-namespace DoctorsDungeon.Factory
+namespace ShamansDungeon.Factory;
+
+// Oscar
+public static class CellFactory
 {
-    // Oscar
-    public static class CellFactory
+    public static GameObject Create(Grid grid, Point gridPos)
     {
-        public static GameObject Create(Grid grid, Point gridPos)
+        GameObject cellGo = new()
         {
-            GameObject cellGo = new()
-            {
-                Type = GameObjectTypes.Cell
-            };
+            Type = GameObjectTypes.Cell
+        };
 
-            cellGo.AddComponent<Cell>(grid, gridPos);
+        cellGo.AddComponent<Cell>(grid, gridPos);
 
-            SpriteRenderer sr = cellGo.AddComponent<SpriteRenderer>();
-            sr.SetLayerDepth(LayerDepth.WorldBackground);
-            sr.SetSprite(TextureNames.Cell);
+        SpriteRenderer sr = cellGo.AddComponent<SpriteRenderer>();
+        sr.SetLayerDepth(LayerDepth.Cells);
+        sr.SetSprite(TextureNames.Cell);
 
-            return cellGo;
-        }
+        return cellGo;
+    }
 
-        public static GameObject Create(Grid grid, Point gridPos, CellWalkableType cellType, int roomNr)
+    public static GameObject Create(Grid grid, Point gridPos, CellWalkableType cellType, int collisionNr, int roomNr)
+    {
+        GameObject cellGo = new()
         {
-            GameObject cellGo = new()
-            {
-                Type = GameObjectTypes.Cell
-            };
+            Type = GameObjectTypes.Cell
+        };
 
-            cellGo.AddComponent<Cell>(grid, gridPos, cellType, roomNr);
+        cellGo.AddComponent<Cell>(grid, gridPos, cellType, collisionNr, roomNr);
 
-            SpriteRenderer sr = cellGo.AddComponent<SpriteRenderer>();
-            sr.SetLayerDepth(LayerDepth.WorldBackground);
-            sr.SetSprite(TextureNames.Cell);
+        SpriteRenderer sr = cellGo.AddComponent<SpriteRenderer>();
+        sr.SetLayerDepth(LayerDepth.Cells);
+        sr.SetSprite(TextureNames.Cell);
 
-            return cellGo;
-        }
+        return cellGo;
     }
 }

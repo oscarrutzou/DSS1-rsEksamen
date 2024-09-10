@@ -1,162 +1,271 @@
-﻿using DoctorsDungeon.CommandPattern;
-using DoctorsDungeon.ComponentPattern;
+﻿using ShamansDungeon.CommandPattern;
+using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.Particles;
+using ShamansDungeon.ComponentPattern.Path;
+using ShamansDungeon.GameManagement.Scenes.Menus;
+using ShamansDungeon.Other;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
-namespace DoctorsDungeon.GameManagement.Scenes
+namespace ShamansDungeon.GameManagement.Scenes;
+
+public enum SceneNames
 {
-    public enum SceneNames
+    MainMenu,
+    SaveFileMenu,
+    CharacterSelectorMenu,
+    LoadingScreen,
+    EndMenu,
+
+    DungeonRoom, // BASE, NO SCRIPT HERE
+    DungeonRoom1,
+    DungeonRoom2,
+    DungeonRoom3,
+    DungeonRoom4,
+
+    WeaponTestScene,
+
+    OscarTestScene,
+    StefanTestScene,
+    ErikTestScene,
+    AsserTestScene,
+}
+
+// Oscar
+public abstract class Scene
+{
+    private List<GameObject> _newGameObjects = new List<GameObject>();
+    private List<GameObject> _destroyedGameObjects = new List<GameObject>();
+    protected Action OnFirstCleanUp { get; set; }
+    public bool IsChangingScene { get; set; }
+
+    protected Color CurrentTextColor { get; set; }
+    public double NormalizedTransitionProgress { get; private set; }
+    private double _transitionDuration { get; set; } = 0.3; // Desired duration in seconds
+    private double _transitionTimer;
+
+    public abstract void Initialize();
+
+    /// <summary>
+    /// The base update on the scene handles all the GameObjects and calls Update on them all.
+    /// </summary>
+    public virtual void Update()
     {
-        MainMenu,
-        SaveFileMenu,
-        CharacterSelectorMenu,
-        LoadingScreen,
-        EndMenu,
+        LerpTextColor();
 
-        DungeonRoom, // BASE, NO SCRIPT HERE
-        DungeonRoom1,
-        DungeonRoom2,
-        DungeonRoom3,
+        CleanUp();
 
-        WeaponTestScene,
+        if (OnFirstCleanUp != null)
+        {
+            OnFirstCleanUp.Invoke();
+            OnFirstCleanUp = null;
+        }
 
-        OscarTestScene,
-        StefanTestScene,
-        ErikTestScene,
-        AsserTestScene,
+        if (GameWorld.IsPaused) return;
+
+        foreach (GameObjectTypes type in SceneData.Instance.GameObjectLists.Keys)
+        {
+            foreach (GameObject gameObject in SceneData.Instance.GameObjectLists[type])
+            {
+                gameObject.Update();
+            }
+        }
     }
 
-    // Oscar
-    public abstract class Scene
+    public void Instantiate(GameObject gameObject)
     {
-        private List<GameObject> newGameObjects = new List<GameObject>();
-        private List<GameObject> destroyedGameObjects = new List<GameObject>();
-        protected Action OnFirstCleanUp;
+        _newGameObjects.Add(gameObject);
+    }
 
-        public abstract void Initialize();
+    public void Destroy(GameObject go)
+    {
+        _destroyedGameObjects.Add(go);
+    }
 
-        /// <summary>
-        /// The base update on the scene handles all the GameObjects and calls Update on them all.
-        /// </summary>
-        public virtual void Update(GameTime gameTime)
+    public virtual void OnPlayerChanged()
+    { }
+
+    public void StartSceneChange()
+    {
+        IsChangingScene = true;
+        NormalizedTransitionProgress = 0; // Start with full opacity
+        _transitionTimer = 0;
+    }
+
+    private void LerpGameObjects()
+    {
+        // Maybe a shader offset, that just tweaks the values for the gameobjects? 
+        _transitionTimer += GameWorld.DeltaTime;
+
+        NormalizedTransitionProgress = Math.Clamp(_transitionTimer / _transitionDuration, 0, 1);
+
+        foreach (GameObjectTypes type in SceneData.Instance.GameObjectLists.Keys)
         {
-            CleanUp();
+            // The cells shouldnt be turned transparent, since that allows the player to see whats under them.
+            if (type == GameObjectTypes.Cell) continue;
 
-            if (OnFirstCleanUp != null)
+            foreach (GameObject gameObject in SceneData.Instance.GameObjectLists[type])
             {
-                OnFirstCleanUp();
-                OnFirstCleanUp = null;
+                SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer>();
+                if (sr == null) continue;
+
+                if (sr.StartColor == Color.Transparent)
+                    sr.StartColor = sr.Color;
+
+                sr.Color = Color.Lerp(sr.StartColor, Color.Transparent, (float)NormalizedTransitionProgress);
             }
+        }
+    }
 
-            if (GameWorld.IsPaused) return;
+    
+    private void LerpTextColor()
+    {
+        CurrentTextColor = BaseMath.TransitionColor(GameWorld.TextColor);
+    }
 
-            foreach (GameObjectTypes type in SceneData.GameObjectLists.Keys)
+    public void OnSceneChange()
+    {
+        LerpGameObjects();
+
+        // If the progrss of the lerp has not finnished, we wont change scenes
+        if (NormalizedTransitionProgress != 1) return;
+
+        IsChangingScene = false;
+        
+        OnFirstCleanUp = null;
+
+        InputHandler.Instance.RemoveAllExeptBaseCommands();
+        GridManager.Instance.ResetGridManager();
+
+        ParticleEmitter emitter = IndependentBackground.BackgroundEmitter;
+        if (emitter == null) return;
+
+        emitter.ResetFollowGameObject();
+    }
+
+    /// <summary>
+    /// <para>The method adds the newGameobjects to different lists, and calls the Awake and Start on the Objects, so the objects starts properly.</para>
+    /// <para>It also removes the gameobjects if there are any</para>
+    /// </summary>
+    private void CleanUp()
+    {
+        if (_newGameObjects.Count == 0 && _destroyedGameObjects.Count == 0) return; //Shouldnt run since there is no new changes
+
+        for (int i = 0; i < _newGameObjects.Count; i++)
+        {
+            AddToCategory(_newGameObjects[i]);
+            _newGameObjects[i].Awake();
+            _newGameObjects[i].Start();
+        }
+        for (int i = 0; i < _destroyedGameObjects.Count; i++)
+        {
+            RemoveFromCategory(_destroyedGameObjects[i]);
+        }
+
+        _newGameObjects.Clear();
+        _destroyedGameObjects.Clear();
+    }
+
+    /// <summary>
+    /// Adds the gameObject to the correct list based on the gameobjects type.
+    /// </summary>
+    /// <param name="gameObject"></param>
+    private void AddToCategory(GameObject gameObject)
+    {
+        // We know the Lists gets made and only gets Cleared when changing scene,
+        // so we can assume that the lists are already there.
+        // If something went wrong, the compiler will send a error anyway, so we dont need a extra check, for small projects like these.
+        SceneData.Instance.GameObjectLists[gameObject.Type].Add(gameObject);
+
+        // Checks if the gameobject has any effects on it.
+        SceneData.Instance.AddGameObject(gameObject);
+    }
+
+    /// <summary>
+    /// Removes the gameObject from the respective list that they are in.
+    /// </summary>
+    /// <param name="gameObject"></param>
+    private void RemoveFromCategory(GameObject gameObject)
+    {
+        SceneData.Instance.GameObjectLists[gameObject.Type].Remove(gameObject);
+
+        // Removes the gameobject if its in the list
+        SceneData.Instance.RemoveGameObject(gameObject);
+    }
+
+    /// <summary>
+    /// Draws everything that is not the Gui GameObjectType with the WorldCam.
+    /// </summary>
+    /// <param name="spriteBatch"></param>
+    private Dictionary<Effect, List<GameObject>> effectGroups = new Dictionary<Effect, List<GameObject>>();
+
+    public virtual void DrawInWorld(SpriteBatch spriteBatch)
+    {
+        bool usesSimpleDrawCall = false;
+
+        foreach (var spriteRenderer in SceneData.Instance.GetSortedGameObjects())
+        {
+            if (spriteRenderer.GameObject.ShaderEffect == null)
             {
-                foreach (GameObject gameObject in SceneData.GameObjectLists[type])
+                if (!usesSimpleDrawCall)
                 {
-                    gameObject.Update(gameTime);
+                    spriteBatch.Begin(sortMode: SpriteSortMode.FrontToBack, BlendState.AlphaBlend,
+                        SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise,
+                        transformMatrix: GameWorld.Instance.WorldCam.GetMatrix());
+                    usesSimpleDrawCall = true;
                 }
+                spriteRenderer.GameObject.Draw(spriteBatch);
             }
-        }
-
-        public void Instantiate(GameObject gameObject)
-        {
-            newGameObjects.Add(gameObject);
-        }
-
-        public void Destroy(GameObject go)
-        {
-            destroyedGameObjects.Add(go);
-        }
-
-        public virtual void OnPlayerChanged()
-        { }
-
-        public virtual void OnSceneChange()
-        {
-            OnFirstCleanUp = null; // For extra safety
-            InputHandler.Instance.RemoveAllExeptBaseCommands();
-        }
-
-        /// <summary>
-        /// <para>The method adds the newGameobjects to different lists, and calls the Awake and Start on the Objects, so the objects starts properly.</para>
-        /// <para>It also removes the gameobjects if there are any</para>
-        /// </summary>
-        private void CleanUp()
-        {
-            if (newGameObjects.Count == 0 && destroyedGameObjects.Count == 0) return; //Shouldnt run since there is no new changes
-
-            for (int i = 0; i < newGameObjects.Count; i++)
+            else
             {
-                AddToCategory(newGameObjects[i]);
-                newGameObjects[i].Awake();
-                newGameObjects[i].Start();
-            }
-            for (int i = 0; i < destroyedGameObjects.Count; i++)
-            {
-                RemoveFromCategory(destroyedGameObjects[i]);
-            }
-
-            newGameObjects.Clear();
-            destroyedGameObjects.Clear();
-        }
-
-        /// <summary>
-        /// Adds the gameObject to the correct list based on the gameobjects type.
-        /// </summary>
-        /// <param name="gameObject"></param>
-        private void AddToCategory(GameObject gameObject)
-        {
-            // We know the Lists gets made and only gets Cleared when changing scene,
-            // so we can assume that the lists are already there.
-            // If something went wrong, the compiler will send a error anyway, so we dont need a extra check, for small projects like these.
-            SceneData.GameObjectLists[gameObject.Type].Add(gameObject);
-        }
-
-        /// <summary>
-        /// Removes the gameObject from the respective list that they are in.
-        /// </summary>
-        /// <param name="gameObject"></param>
-        private void RemoveFromCategory(GameObject gameObject)
-        {
-            SceneData.GameObjectLists[gameObject.Type].Remove(gameObject);
-        }
-
-        /// <summary>
-        /// Draws everything that is not the Gui GameObjectType with the WorldCam.
-        /// </summary>
-        /// <param name="spriteBatch"></param>
-        public virtual void DrawInWorld(SpriteBatch spriteBatch)
-        {
-            foreach (GameObjectTypes type in SceneData.GameObjectLists.Keys)
-            {
-                if (type == GameObjectTypes.Gui) continue; //Skip GUI list
-
-                foreach (GameObject gameObject in SceneData.GameObjectLists[type])
+                if (usesSimpleDrawCall)
                 {
-                    gameObject.Draw(spriteBatch);
+                    spriteBatch.End();
+                    usesSimpleDrawCall = false;
                 }
+                spriteBatch.Begin(sortMode: SpriteSortMode.FrontToBack, BlendState.AlphaBlend,
+                    SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise,
+                    transformMatrix: GameWorld.Instance.WorldCam.GetMatrix(), effect: spriteRenderer.GameObject.ShaderEffect);
+                spriteRenderer.GameObject.Draw(spriteBatch);
+                spriteBatch.End();
             }
         }
 
-        /// <summary>
-        /// Draws the Gui GameObjects on the UiCam.
-        /// </summary>
-        /// <param name="spriteBatch"></param>
-        public virtual void DrawOnScreen(SpriteBatch spriteBatch)
-        {
-            // Draw all Gui GameObjects in the active scene.
-            foreach (GameObject gameObject in SceneData.GameObjectLists[GameObjectTypes.Gui])
-            {
-                gameObject.Draw(spriteBatch);
-            }
-        }
+        if (usesSimpleDrawCall) spriteBatch.End();
+    }
 
-        public virtual void DrawSceenColor()
+
+    /// <summary>
+    /// Draws the Gui GameObjects on the UiCam.
+    /// </summary>
+    /// <param name="spriteBatch"></param>
+    public virtual void DrawOnScreen(SpriteBatch spriteBatch)
+    {
+        DrawMouse(spriteBatch);
+
+        // Draw all Gui GameObjects in the active scene.
+        foreach (GameObject gameObject in SceneData.Instance.GameObjectLists[GameObjectTypes.Gui])
         {
-            GameWorld.Instance.GraphicsDevice.Clear(new Color(20, 20, 18, 255));
+            gameObject.Draw(spriteBatch);
         }
+    }
+
+    private void CheckForEffects(SpriteBatch spriteBatch)
+    {
+        spriteBatch.GraphicsDevice.GraphicsDebug.TryDequeueMessage(out _);
+    }
+
+    private void DrawMouse(SpriteBatch spriteBatch)
+    {
+        InputHandler.Instance.MouseGo?.Draw(spriteBatch);
+        spriteBatch.DrawString(GlobalTextures.DefaultFont, $"FPS: {GameWorld.Instance.AvgFPS}", GameWorld.Instance.UiCam.TopLeft, Color.DarkGreen);
+    }
+
+
+    public virtual void DrawSceenColor()
+    {
+        GameWorld.Instance.GraphicsDevice.Clear(GameWorld.BackGroundColor);
     }
 }

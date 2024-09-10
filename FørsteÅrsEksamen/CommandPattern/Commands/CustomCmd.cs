@@ -1,25 +1,24 @@
 ﻿using System;
 
-namespace DoctorsDungeon.CommandPattern.Commands
+namespace ShamansDungeon.CommandPattern.Commands;
+
+// Oscar
+
+// Still use the ICommand since it would take to much time to refactor
+// if we wanted the InputHandler to both take ICommands and Actions.
+// We therefore choose this approch to make a flexible approach -
+// where we -can- use more complex commands, but also this cmd that is essentially a longer Action.
+public class CustomCmd : Command
 {
-    // Oscar
+    private readonly Action _action;
 
-    // Still use the ICommand since it would take to much time to refactor
-    // if we wanted the InputHandler to both take ICommands and Actions.
-    // We therefore choose this approch to make a flexible approach -
-    // where we -can- use more complex commands, but also this cmd that is essentially a longer Action.
-    public class CustomCmd : ICommand
+    public CustomCmd(Action action)
     {
-        private readonly Action action;
+        this._action = action;
+    }
 
-        public CustomCmd(Action action)
-        {
-            this.action = action;
-        }
-
-        public void Execute()
-        {
-            action?.Invoke();
-        }
+    public override void Execute()
+    {
+        _action?.Invoke();
     }
 }

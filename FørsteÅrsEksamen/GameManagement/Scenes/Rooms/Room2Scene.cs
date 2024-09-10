@@ -1,39 +1,38 @@
-﻿using DoctorsDungeon.LiteDB;
+﻿using ShamansDungeon.LiteDB;
 using Microsoft.Xna.Framework;
 
-namespace DoctorsDungeon.GameManagement.Scenes.Rooms
+namespace ShamansDungeon.GameManagement.Scenes.Rooms;
+
+// Oscar
+public class Room2Scene : RoomBase
 {
-    // Oscar
-    public class Room2Scene : RoomBase
+    public override void Initialize()
     {
-        public override void Initialize()
+        GridName = "Level2";
+        GridWidth = 21;
+        GridHeight = 27;
+
+        SaveData.Level_Reached = 2;
+
+        BackGroundTexture = TextureNames.Level2BG;
+        ForeGroundTexture = TextureNames.Level2FG;
+
+        base.Initialize();
+    }
+
+    protected override void SetSpawnPotions()
+    {
+        PlayerSpawnPos = new Point(3, 3);
+        EndPointSpawnPos = new Point(5, 10);
+        EnemySpawnPoints = new()
         {
-            GridName = "Level2";
-            GridWidth = 21;
-            GridHeight = 27;
-
-            SaveData.Level_Reached = 2;
-
-            BackGroundTexture = TextureNames.Level2BG;
-            ForeGroundTexture = TextureNames.Level2FG;
-
-            base.Initialize();
-        }
-
-        protected override void SetSpawnPotions()
+            new Point(17,8),
+            new Point(4,14),
+            new Point(11,18),
+        };
+        PotionSpawnPoints = new()
         {
-            PlayerSpawnPos = new Point(3, 3);
-            EndPointSpawnPos = new Point(5, 10);
-            EnemySpawnPoints = new()
-            {
-                new Point(17,8),
-                new Point(4,14),
-                new Point(11,18),
-            };
-            PotionSpawnPoints = new()
-            {
-                new Point(18,25),
-            };
-        }
+            new Point(18,25),
+        };
     }
 }

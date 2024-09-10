@@ -1,23 +1,22 @@
 ﻿//using FørsteÅrsEksamen.ComponentPattern.Characters;
-using DoctorsDungeon.GameManagement;
+using ShamansDungeon.GameManagement;
 
-namespace DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies
+namespace ShamansDungeon.ComponentPattern.Enemies.MeleeEnemies;
+
+//Asser
+
+public class SkeletonWarrior : EnemyMelee
 {
-    //Asser
-
-    public class SkeletonWarrior : EnemyMelee
+    public SkeletonWarrior(GameObject gameObject) : base(gameObject)
     {
-        public SkeletonWarrior(GameObject gameObject) : base(gameObject)
-        {
-        }
+    }
 
-        public override void Awake()
-        {
-            base.Awake();
+    public override void Awake()
+    {
+        base.Awake();
 
-            CharacterStateAnimations.Add(CharacterState.Idle, AnimNames.OrcBaseIdle);
-            CharacterStateAnimations.Add(CharacterState.Moving, AnimNames.OrcBaseRun);
-            CharacterStateAnimations.Add(CharacterState.Dead, AnimNames.OrcBaseDeath);
-        }
+        CharacterStateAnimations.Add(CharacterState.Idle, AnimNames.OrcBaseIdle);
+        CharacterStateAnimations.Add(CharacterState.Moving, AnimNames.OrcBaseRun);
+        CharacterStateAnimations.Add(CharacterState.Dead, AnimNames.OrcBaseDeath);
     }
 }

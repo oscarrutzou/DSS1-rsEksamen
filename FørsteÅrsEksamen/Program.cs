@@ -1,4 +1,4 @@
-﻿using DoctorsDungeon;
+﻿using ShamansDungeon;
 using System;
 
 public static class Program

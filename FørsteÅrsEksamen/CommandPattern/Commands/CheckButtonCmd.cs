@@ -1,28 +1,42 @@
-﻿using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.GUI;
-using DoctorsDungeon.GameManagement.Scenes;
+﻿using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.GUI;
+using ShamansDungeon.GameManagement.Scenes;
 
-namespace DoctorsDungeon.CommandPattern.Commands
+namespace ShamansDungeon.CommandPattern.Commands;
+
+// Oscar
+public class CheckButtonCmd : Command
 {
-    // Oscar
-    public class CheckButtonCmd : ICommand
+    private const double _clickCooldown = 0.2f; // The delay between button clicks in seconds
+    private static double _timeSinceLastClick = 0;     // The time since the button was last clicked
+
+    public CheckButtonCmd()
     {
-        public void Execute()
+        _timeSinceLastClick = _clickCooldown;
+    }
+
+    public override void Update()
+    {
+        if (_timeSinceLastClick < _clickCooldown)
+            _timeSinceLastClick += GameWorld.DeltaTime;
+    }
+
+    public override void Execute()
+    {
+        if (_timeSinceLastClick < _clickCooldown) return;
+
+        foreach (GameObject gameObject in SceneData.Instance.GameObjectLists[GameObjectTypes.Gui])
         {
-            lock (GameWorld.GameobjectDeleteLock) // Waits for lock
-            {
-                foreach (GameObject gameObject in SceneData.GameObjectLists[GameObjectTypes.Gui])
-                {
-                    if (gameObject.IsEnabled == false) continue;
+            if (gameObject.IsEnabled == false) continue;
 
-                    Button button = gameObject.GetComponent<Button>();
+            Button button = gameObject.GetComponent<Button>();
 
-                    if (button == null || !button.IsMouseOver()) continue;
+            if (button == null || !button.IsMouseOver()) continue;
 
-                    button.OnClickButton();
-                    break;
-                }
-            }
+            button.OnClickButton();
+
+            _timeSinceLastClick = 0;
+            break;
         }
     }
 }

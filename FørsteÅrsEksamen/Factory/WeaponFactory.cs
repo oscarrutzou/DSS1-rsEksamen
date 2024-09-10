@@ -1,107 +1,120 @@
-﻿using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.Weapons.MeleeWeapons;
-using DoctorsDungeon.ComponentPattern.Weapons.RangedWeapons;
+﻿using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.Weapons.MeleeWeapons;
+using ShamansDungeon.ComponentPattern.Weapons.RangedWeapons;
 using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace DoctorsDungeon.Factory
+namespace ShamansDungeon.Factory;
+
+public enum WeaponTypes
 {
-    public enum WeaponTypes
+    Sword,
+    Axe,
+    Dagger,
+    MagicStaff,
+    MagicStaffFire,
+    Bow,
+    BowFire,
+    WoodArrow,
+}
+
+// Erik
+public static class WeaponFactory
+{
+    public static List<WeaponTypes> WeaponTypesThatAreDone { get; private set; } = new()
     {
-        Sword,
-        Axe,
-        Dagger,
-        MagicStaff,
-        MagicStaffFire,
-        Bow,
-        BowFire,
-        WoodArrow,
+        WeaponTypes.Sword,
+        WeaponTypes.Dagger,
+
+
+        WeaponTypes.MagicStaff,
+    };
+
+    public static Dictionary<ClassTypes, List<WeaponTypes>> ClassHasWeapons { get; private set; } = new()
+    {
+        { ClassTypes.Assassin, new List<WeaponTypes>(){
+            WeaponTypes.Dagger,
+            WeaponTypes.Bow,
+            WeaponTypes.BowFire,
+
+            WeaponTypes.MagicStaff,
+
+        }},
+
+        { ClassTypes.Mage, new List<WeaponTypes>(){
+            //WeaponTypes.MagicStaff, // Right now it only lets you add one weapon that are unique. Change that
+            WeaponTypes.MagicStaffFire,
+        }},
+
+        { ClassTypes.Warrior, new List<WeaponTypes>(){
+            WeaponTypes.Sword,
+            WeaponTypes.Axe,
+        }},
+    };
+
+    public static Dictionary<EnemyTypes, List<WeaponTypes>> EnemyHasWeapon { get; private set; } = new()
+    {
+        { EnemyTypes.OrcArcher, new List<WeaponTypes>(){
+            WeaponTypes.Dagger,
+            //WeaponTypes.Bow,
+            //WeaponTypes.BowFire,
+        }},
+
+        { EnemyTypes.OrcShaman, new List<WeaponTypes>(){
+            WeaponTypes.MagicStaff,
+            //WeaponTypes.MagicStaffFire,
+        }},
+
+        { EnemyTypes.OrcWarrior, new List<WeaponTypes>(){
+            WeaponTypes.Sword,
+            //WeaponTypes.Axe,
+        }},
+    };
+
+    public static GameObject Create(WeaponTypes type)
+    {
+        GameObject weaponGo = new();
+        weaponGo.Type = GameObjectTypes.Weapon;
+        weaponGo.AddComponent<SpriteRenderer>();
+        AddClassComponent(weaponGo, type);
+
+        return weaponGo;
     }
 
-    // Erik
-    public static class WeaponFactory
+
+    private static void AddClassComponent(GameObject weaponGo, WeaponTypes type)
     {
-        public static Dictionary<ClassTypes, List<WeaponTypes>> ClassHasWeapons = new()
+        switch (type)
         {
-            { ClassTypes.Rogue, new List<WeaponTypes>(){
-                WeaponTypes.Dagger,
-                WeaponTypes.Bow,
-                WeaponTypes.BowFire,
-            }},
+            case WeaponTypes.Sword:
+                weaponGo.AddComponent<Sword>();
+                break;
 
-            { ClassTypes.Mage, new List<WeaponTypes>(){
-                WeaponTypes.MagicStaff,
-                WeaponTypes.MagicStaffFire,
-            }},
+            case WeaponTypes.Axe:
+                weaponGo.AddComponent<Axe>();
+                break;
 
-            { ClassTypes.Warrior, new List<WeaponTypes>(){
-                WeaponTypes.Sword,
-                WeaponTypes.Axe,
-            }},
-        };
+            case WeaponTypes.Dagger:
+                weaponGo.AddComponent<Dagger>();
+                break;
 
-        public static Dictionary<EnemyTypes, List<WeaponTypes>> EnemyHasWeapon = new()
-        {
-            { EnemyTypes.OrcArcher, new List<WeaponTypes>(){
-                WeaponTypes.Dagger,
-                WeaponTypes.Bow,
-                WeaponTypes.BowFire,
-            }},
+            case WeaponTypes.MagicStaff:
+                weaponGo.AddComponent<MagicStaff>();
+                break;
 
-            { EnemyTypes.OrcShaman, new List<WeaponTypes>(){
-                WeaponTypes.MagicStaff,
-                WeaponTypes.MagicStaffFire,
-            }},
+            case WeaponTypes.MagicStaffFire:
+                weaponGo.AddComponent<MagicStaffFire>();
+                break;
 
-            { EnemyTypes.OrcWarrior, new List<WeaponTypes>(){
-                WeaponTypes.Sword,
-                WeaponTypes.Axe,
-            }},
-        };
+            case WeaponTypes.Bow:
+                weaponGo.AddComponent<Bow>();
+                break;
 
-        public static GameObject Create(WeaponTypes type)
-        {
-            GameObject weaponGo = new();
-            weaponGo.Type = GameObjectTypes.Weapon;
-            weaponGo.Transform.Scale = new Vector2(4, 4);
-            weaponGo.AddComponent<SpriteRenderer>();
-            AddClassComponent(weaponGo, type);
-
-            return weaponGo;
-        }
-
-        private static void AddClassComponent(GameObject weaponGo, WeaponTypes type)
-        {
-            switch (type)
-            {
-                case WeaponTypes.Sword:
-                    weaponGo.AddComponent<Sword>();
-                    break;
-
-                case WeaponTypes.Axe:
-                    weaponGo.AddComponent<Axe>();
-                    break;
-
-                case WeaponTypes.Dagger:
-                    weaponGo.AddComponent<Dagger>();
-                    break;
-
-                case WeaponTypes.MagicStaff:
-                    weaponGo.AddComponent<MagicStaff>();
-                    break;
-
-                case WeaponTypes.MagicStaffFire:
-                    weaponGo.AddComponent<MagicStaff>();
-                    break;
-
-                case WeaponTypes.Bow:
-                    weaponGo.AddComponent<Bow>();
-                    break;
-
-                case WeaponTypes.BowFire:
-                    weaponGo.AddComponent<MagicStaff>();
-                    break;
-            }
+            case WeaponTypes.BowFire:
+                weaponGo.AddComponent<BowFire>();
+                break;
         }
     }
 }

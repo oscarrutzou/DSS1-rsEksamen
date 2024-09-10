@@ -1,103 +1,110 @@
-﻿using DoctorsDungeon.ComponentPattern;
-using DoctorsDungeon.ComponentPattern.Enemies;
-using DoctorsDungeon.ComponentPattern.Enemies.MeleeEnemies;
-using DoctorsDungeon.ComponentPattern.Enemies.RangedEnemies;
-using DoctorsDungeon.ComponentPattern.Weapons;
+﻿using ShamansDungeon.ComponentPattern;
+using ShamansDungeon.ComponentPattern.Effects;
+using ShamansDungeon.ComponentPattern.Enemies;
+using ShamansDungeon.ComponentPattern.Enemies.MeleeEnemies;
+using ShamansDungeon.ComponentPattern.Enemies.RangedEnemies;
+using ShamansDungeon.ComponentPattern.Weapons;
+using ShamansDungeon.ComponentPattern.WorldObjects;
 using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
 
-namespace DoctorsDungeon.Factory
+namespace ShamansDungeon.Factory;
+
+public enum EnemyTypes
 {
-    public enum EnemyTypes
+    OrcWarrior,
+    OrcArcher,
+    OrcShaman,
+    SkeletonWarrior,
+    SkeletonArcher,
+    SkeletonMage,
+    OrcMiniBoss,
+}
+
+// Asser
+public static class EnemyFactory
+{
+    private static readonly Random _random = new();
+
+    public static GameObject CreateWithRandomType(List<EnemyTypes> spawnableTypes)
     {
-        OrcWarrior,
-        OrcArcher,
-        OrcShaman,
-        SkeletonWarrior,
-        SkeletonArcher,
-        SkeletonMage,
+        EnemyTypes randomType = spawnableTypes[_random.Next(0, spawnableTypes.Count)];
+
+        // Need to put them into classes
+        List<WeaponTypes> weaponTypes = WeaponFactory.EnemyHasWeapon[randomType];
+        WeaponTypes randomWeapon = weaponTypes[_random.Next(0, weaponTypes.Count)];
+
+        return Create(randomType, randomWeapon);
     }
 
-    // Asser
-    public static class EnemyFactory
+    public static GameObject Create(EnemyTypes enemyType, WeaponTypes weaponType)
     {
-        private static Random random = new();
-        private static int EnemyDmgDivide = 2; // Should be in weapon 
+        return Create(enemyType, weaponType, new Vector2(4, 4));
+    }
 
-        //public static GameObject CreateWithRandomType()
-        //{
-        //    Array enemyValue = Enum.GetValues(typeof(EnemyTypes));
-        //    int randomClassIndex = random.Next(enemyValue.Length);
-        //    EnemyTypes randomType = (EnemyTypes)enemyValue.GetValue(randomClassIndex);
+    public static GameObject Create(EnemyTypes enemyType, WeaponTypes weaponType, Vector2 scale)
+    {
+        GameObject enemyGo = new();
+        enemyGo.Transform.Scale = scale;
+        enemyGo.Type = GameObjectTypes.Enemy;
+        enemyGo.AddComponent<SpriteRenderer>();
+        enemyGo.AddComponent<Animator>();
+        enemyGo.AddComponent<Collider>();
+        enemyGo.AddComponent<Health>();
+        enemyGo.AddComponent<TeleportEffect>();
 
+        enemyGo = AddEnemyComponent(enemyGo, enemyType);
 
-        //    Array weaponValue = Enum.GetValues(typeof(WeaponTypes));
-        //    int randomWeaponIndex = random.Next(weaponValue.Length);
-        //    WeaponTypes randomWeapon = (WeaponTypes)weaponValue.GetValue(randomWeaponIndex);
+        // Add weapon
+        Enemy enemy = enemyGo.GetComponent<Enemy>();
+        
+        GameObject weaponGo = WeaponFactory.Create(weaponType);
+        weaponGo.Transform.Scale = scale;
+        Weapon weapon = weaponGo.GetComponent<Weapon>();
+        weapon.EnemyUser = enemy;
+        GameWorld.Instance.Instantiate(weaponGo);
 
-        //    // Need to put them into classes
+        enemy.WeaponGo = weaponGo;
 
-        //    return Create(randomType, randomWeapon);
-        //}
+        // Also add hands
 
-        public static GameObject Create(EnemyTypes enemyType, WeaponTypes weaponType)
+        return enemyGo;
+    }
+
+    private static GameObject AddEnemyComponent(GameObject enemyGo, EnemyTypes enemytype)
+    {
+        switch (enemytype)
         {
-            GameObject enemyGo = new GameObject();
-            enemyGo.Type = GameObjectTypes.Enemy;
-            enemyGo.Transform.Scale = new Vector2(4, 4);
-            enemyGo.AddComponent<SpriteRenderer>();
-            enemyGo.AddComponent<Animator>();
-            enemyGo.AddComponent<Collider>();
+            case EnemyTypes.OrcWarrior:
+                enemyGo.AddComponent<OrcWarrior>();
+                break;
 
-            enemyGo = AddEnemyComponent(enemyGo, enemyType);
+            case EnemyTypes.OrcArcher:
+                enemyGo.AddComponent<OrcArcher>();
+                break;
 
-            // Add weapon
-            Enemy enemy = enemyGo.GetComponent<Enemy>();
+            case EnemyTypes.OrcMiniBoss:
+                enemyGo.AddComponent<MiniBossEnemy>();
+                break;
 
-            GameObject weaponGo = WeaponFactory.Create(weaponType);
-            Weapon weapon = weaponGo.GetComponent<Weapon>();
-            weapon.EnemyUser = enemy;
-            weapon.Damage /= EnemyDmgDivide; // Make enemies do less damage /= divide
-            GameWorld.Instance.Instantiate(weaponGo);
+            case EnemyTypes.SkeletonWarrior:
+                enemyGo.AddComponent<SkeletonWarrior>();
+                break;
 
-            enemy.WeaponGo = weaponGo;
-
-            // Also add hands
-
-            return enemyGo;
+            case EnemyTypes.SkeletonArcher:
+                enemyGo.AddComponent<SkeletonArcher>();
+                break;
         }
 
-        private static GameObject AddEnemyComponent(GameObject enemyGo, EnemyTypes enemytype)
-        {
-            switch (enemytype)
-            {
-                case EnemyTypes.OrcWarrior:
-                    enemyGo.AddComponent<OrcWarrior>();
-                    break;
+        return enemyGo;
+    }
 
-                case EnemyTypes.OrcArcher:
-                    enemyGo.AddComponent<OrcArcher>();
-                    break;
-
-                case EnemyTypes.SkeletonWarrior:
-                    enemyGo.AddComponent<SkeletonWarrior>();
-                    break;
-
-                case EnemyTypes.SkeletonArcher:
-                    enemyGo.AddComponent<SkeletonArcher>();
-                    break;
-            }
-
-            return enemyGo;
-        }
-
-        private static GameObject CreateHands()
-        {
-            GameObject go = new();
-            go.Transform.Scale = new(4, 4);
-            go.AddComponent<SpriteRenderer>();
-            go.AddComponent<Animator>();
-            return go;
-        }
+    private static GameObject CreateHands()
+    {
+        GameObject go = new();
+        go.AddComponent<SpriteRenderer>();
+        go.AddComponent<Animator>();
+        return go;
     }
 }
