@@ -207,12 +207,6 @@
 /processorParam:Quality=Best
 /build:Sound/Hit/Hit_Wood_on_wood.wav
 
-#begin Sound/Music/GameTrack.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sound/Music/GameTrack.wav
-
 #begin Sound/Music/MenuTrack.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor

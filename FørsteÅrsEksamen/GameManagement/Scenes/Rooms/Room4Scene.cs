@@ -12,6 +12,7 @@ namespace ShamansDungeon.GameManagement.Scenes.Rooms;
 public class Room4Scene : RoomBase
 {
     private MiniBossEnemy _miniBossEnemy;
+    private static float _enemyWeakness = 0.75f;
 
     public override void Initialize()
     {
@@ -20,6 +21,7 @@ public class Room4Scene : RoomBase
         GridHeight = 15;
 
         SaveData.Level_Reached = 4;
+        EnemyWeakness = _enemyWeakness;
 
         BackGroundTexture = TextureNames.Level4BG;
         ForeGroundTexture = TextureNames.Level4FG;

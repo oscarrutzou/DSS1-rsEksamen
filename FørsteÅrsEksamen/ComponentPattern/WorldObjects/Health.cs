@@ -35,6 +35,11 @@ namespace ShamansDungeon.ComponentPattern.WorldObjects
         public Action On75Hp { get; set; }
         public Action On50Hp { get; set; }
         public Action On25Hp { get; set; }
+        /// <summary>
+        /// Gets called every frame when health is under 50ptc
+        /// </summary>
+        public Action On50orUnder {  get; set; } 
+
         public bool IsDead { get; private set; }
         public Action<int> AmountDamageTaken { get; set; }
         public Action<Vector2> AttackerPositionDamageTaken { get; set; }
@@ -57,6 +62,7 @@ namespace ShamansDungeon.ComponentPattern.WorldObjects
         public override void Update()
         {
             HandleOnDamage();
+            UpdateActionChecks();
         }
 
         public void SetHealth(int maxhealth)
@@ -149,6 +155,14 @@ namespace ShamansDungeon.ComponentPattern.WorldObjects
             {
                 On25Hp?.Invoke();
                 On25Hp = null;
+            }
+        }
+
+        private void UpdateActionChecks()
+        {
+            if (NormalizedHealth <= 0.5f)
+            {
+                On50orUnder?.Invoke();
             }
         }
 

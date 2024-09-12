@@ -40,11 +40,9 @@ namespace ShamansDungeon.ComponentPattern.GUI
                 _potionTexture = null;
                 return;
             }
-            if (_potionTexture == null)
-            {
-                SpriteRenderer potionSr = _player.ItemInInventory.GameObject.GetComponent<SpriteRenderer>();
-                _potionTexture = potionSr.Sprite;
-            }
+            
+            SpriteRenderer potionSr = _player.ItemInInventory.GameObject.GetComponent<SpriteRenderer>();
+            _potionTexture = potionSr.Sprite;
             // Draw the item inside the backpack icon
 
             _sr.DrawSprite(spriteBatch, _potionTexture, new Vector2(0, -10), 0.1f);

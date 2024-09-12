@@ -68,7 +68,7 @@ public static class WeaponFactory
 
         { EnemyTypes.OrcWarrior, new List<WeaponTypes>(){
             WeaponTypes.Sword,
-            //WeaponTypes.Axe,
+            WeaponTypes.Axe,
         }},
     };
 

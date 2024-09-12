@@ -64,9 +64,9 @@ public class EndMenu : MenuScene
             return;
         }
         else if (SaveData.LostByTime) _menuText = "Time Ran Out";
-        else _menuText = "Try Again";
+        else _menuText = "Try Again...";
 
-        GlobalSounds.PlaySound(SoundNames.LostGame, 1, 1);
+        GlobalSounds.PlaySound(SoundNames.LostGame, 1, 0.7f);
     }
 
     public override void DrawOnScreen(SpriteBatch spriteBatch)

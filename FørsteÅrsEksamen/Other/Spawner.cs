@@ -5,6 +5,7 @@ using ShamansDungeon.ComponentPattern.Path;
 using ShamansDungeon.Factory;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using ShamansDungeon.ComponentPattern.Weapons;
 
 namespace ShamansDungeon.Other;
 
@@ -15,7 +16,7 @@ public class Spawner : Component
     {
     }
 
-    public List<Enemy> SpawnEnemies(List<Point> spawnLocations, GameObject playerGo, List<EnemyTypes> randomTypes = null)
+    public List<Enemy> SpawnEnemies(List<Point> spawnLocations, GameObject playerGo, List<EnemyTypes> randomTypes = null, float weakness = 0)
     {
         List<Enemy> enemies = new();
         for (int i = 0; i < spawnLocations.Count; i++)
@@ -36,6 +37,9 @@ public class Spawner : Component
 
             Enemy enemy = enemyGo.GetComponent<Enemy>();
             enemy.SetStartPosition(playerGo, spawnPoint);
+
+            Weapon weapon = enemy.WeaponGo.GetComponent<Weapon>();
+            weapon.EnemyWeakness = weakness;
 
             enemies.Add(enemy);
             GameWorld.Instance.Instantiate(enemyGo);

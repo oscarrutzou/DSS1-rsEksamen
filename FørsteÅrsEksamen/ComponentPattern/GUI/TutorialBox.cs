@@ -36,8 +36,9 @@ namespace ShamansDungeon.ComponentPattern.GUI
             "Find a red potion\nPress E to use and heal",
 
             "Completed base tutorial",                      // Tutorial
-            "Here is 100 gold\nFor completing tutorial",    // Always last two for the tutorial
+            "Here's 100 gold\nSpend them wisely...",    
         };
+        // Always last two for the tutorialSystem.ArgumentException: 'Text contains characters that cannot be resolved by this SpriteFont. Arg_ParamName_Name'
 
         private bool _hasRemovedChecks;
         private CustomCmd completed0Base, completed1Base, completed2Base, completed3Base, completed4Base, potionTutorialCmd;
@@ -55,7 +56,7 @@ namespace ShamansDungeon.ComponentPattern.GUI
             GameObject.Transform.Position = GameWorld.Instance.UiCam.TopRight + new Vector2(-260, 205);
 
             _spriteRenderer = GameObject.GetComponent<SpriteRenderer>();
-            _spriteRenderer.SetSprite(TextureNames.BaseTutorial);
+            _spriteRenderer.SetSprite(TextureNames.QuestUnder);
             
             _col = GameObject.GetComponent<Collider>();
             _textStartPos = _col.LeftTopCollisionPosition;
@@ -94,17 +95,17 @@ namespace ShamansDungeon.ComponentPattern.GUI
             InputHandler.Instance.AddKeyUpdateCommand(RoomBase.ToggleStatsMenuKey, completed4Base);
 
             // We need to have another way to start the potion tutorial, and we use a Action here to do that
-            Health playerHealth = SaveData.Player.GameObject.GetComponent<Health>();
-            playerHealth.On50Hp += ChangeTextToHealthReminder;
+            _playerHealth = SaveData.Player.GameObject.GetComponent<Health>();
+            _playerHealth.On50orUnder += ChangeTextToHealthReminder;
 
             potionTutorialCmd = new(FinnishedPotionTutorial); // Last tutorial
             InputHandler.Instance.AddKeyButtonDownCommand(RoomBase.UseItem, potionTutorialCmd);
 
         }
-        
+        private Health _playerHealth;
         private void NextBaseTutorial(int nextTutorialNmb = -1)
         {
-            if (nextTutorialNmb == -1)
+            if (TutorialNumberReached == MaxAmountOfBaseTutorials && nextTutorialNmb == -1)
             {
                 // The last nmb
                 TutorialNumberReached = TutorialText.Length - 2;
@@ -133,6 +134,7 @@ namespace ShamansDungeon.ComponentPattern.GUI
                 _tutorialText = TutorialText[TutorialNumberReached];
                 SaveTutorial();
                 ResetTimer();
+                _playerHealth.On50orUnder -= ChangeTextToHealthReminder;
             }
         }
 
@@ -144,7 +146,7 @@ namespace ShamansDungeon.ComponentPattern.GUI
 
         private void FinnishedPotionTutorial()
         {
-            if (!SaveData.Player.HasUsedItem || TutorialNumberReached != 5) return;
+            if (SaveData.HasCompletedFullTutorial || !SaveData.Player.HasUsedItem || TutorialNumberReached != 5) return;
             _tutorialText = TutorialText[^1];
             SaveData.HasCompletedFullTutorial = true;
             SaveTutorial();
@@ -213,9 +215,12 @@ namespace ShamansDungeon.ComponentPattern.GUI
                 }
             }
 
-            Vector2 textPos = _textStartPos + new Vector2(40, 20);
+            //Vector2 textPos = _textStartPos + new Vector2(40, 20);
+            Vector2 textPos = _textStartPos + new Vector2(_col.CollisionBox.Width / 2, 30);
 
-            spriteBatch.DrawString(GlobalTextures.DefaultFont, _tutorialText, textPos, BaseMath.TransitionColor(GameWorld.TextColor), 0, Vector2.Zero, 1, SpriteEffects.None, SpriteRenderer.GetLayerDepth(LayerDepth.Text));
+            //spriteBatch.DrawString(GlobalTextures.DefaultFont, _tutorialText, textPos, BaseMath.TransitionColor(GameWorld.TextColor), 0, Vector2.Zero, 1, SpriteEffects.None, SpriteRenderer.GetLayerDepth(LayerDepth.Text));
+
+            GuiMethods.DrawTextCentered(spriteBatch, GlobalTextures.DefaultFont, textPos, _tutorialText, BaseMath.TransitionColor(GameWorld.TextColor));
         }
     }
 }

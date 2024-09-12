@@ -40,7 +40,7 @@ public class WeaponTestScene : Scene
     private void MakePlayer()
     {
         _playerGo = PlayerFactory.Create(ClassTypes.Warrior, WeaponTypes.Axe);
-        _player = _playerGo.GetComponent<Player>();
+        _player = _playerGo.GetComponent<Player>(); 
         _weapon = _player.WeaponGo.GetComponent<MeleeWeapon>();
 
         GameWorld.Instance.WorldCam.Position = _playerGo.Transform.Position;

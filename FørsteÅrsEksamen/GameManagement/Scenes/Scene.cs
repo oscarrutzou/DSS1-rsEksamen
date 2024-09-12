@@ -260,7 +260,7 @@ public abstract class Scene
     private void DrawMouse(SpriteBatch spriteBatch)
     {
         InputHandler.Instance.MouseGo?.Draw(spriteBatch);
-        spriteBatch.DrawString(GlobalTextures.DefaultFont, $"FPS: {GameWorld.Instance.AvgFPS}", GameWorld.Instance.UiCam.TopLeft, Color.DarkGreen);
+        //spriteBatch.DrawString(GlobalTextures.DefaultFont, $"FPS: {GameWorld.Instance.AvgFPS}", GameWorld.Instance.UiCam.TopLeft, Color.DarkGreen);
     }
 
 

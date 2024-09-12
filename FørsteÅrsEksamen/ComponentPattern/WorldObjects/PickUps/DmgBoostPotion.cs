@@ -23,7 +23,7 @@ public class DmgBoostPotion : Potion
         {
             case PotionTypes.SmallDmgBoost:
                 SpriteRenderer.SetSprite(TextureNames.BlueSmallHalfPotion);
-                AmountToAdd = 0.1f; // Should be a percentage number? 
+                AmountToAdd = 0.15f; // Should be a percentage number? 
                 break;
         }
 

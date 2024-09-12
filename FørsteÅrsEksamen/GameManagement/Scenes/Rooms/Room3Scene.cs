@@ -6,6 +6,8 @@ namespace ShamansDungeon.GameManagement.Scenes.Rooms;
 // Oscar
 public class Room3Scene : RoomBase
 {
+    private static float _enemyWeakness = 0.75f;
+
     public override void Initialize()
     {
         GridName = "Level3";
@@ -13,6 +15,7 @@ public class Room3Scene : RoomBase
         GridHeight = 24;
 
         SaveData.Level_Reached = 3;
+        EnemyWeakness = _enemyWeakness;
 
         BackGroundTexture = TextureNames.Level3BG;
         ForeGroundTexture = TextureNames.Level3FG;

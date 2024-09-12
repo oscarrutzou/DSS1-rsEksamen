@@ -37,7 +37,19 @@ public abstract class Weapon : Component
     public SpriteRenderer SpriteRenderer { get; set; }
     public float StartAnimationAngle { get; set; }
     protected double AttackedTotalElapsedTime { get; set; }
-    public static float EnemyWeakness = 2.5f; // What to divide with, to make enemie attacks weaker.
+    private const float _baseEnemyWeakness = 0.3f; // What to time with, to make enemie attacks weaker.
+    private float _enemyWeakness;
+    public float EnemyWeakness {
+        get
+        {
+            if (_enemyWeakness == 0) return _baseEnemyWeakness;
+            return _enemyWeakness;
+        }
+        set
+        {
+            _enemyWeakness = value;
+        }
+    }
     public bool Attacking { get; protected set; }
 
     // A lot of this data is being copied on many different weapons, even though it has the same data.

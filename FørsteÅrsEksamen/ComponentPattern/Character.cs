@@ -442,7 +442,7 @@ public abstract class Character : Component
     private void SetBloodAmountOfParticles(int damage)
     {
         // If this is a enemy, we dont multiple since the other would be a player
-        if (!IsEnemy) damage = (int)(damage * MeleeWeapon.EnemyWeakness);
+        if (!IsEnemy) damage = (int)(damage * 3);
 
         int minAmount = Math.Min((int)(damage * _bloodPrDmg), _maxBloodParticles);
         _bloodCloud.MaxParticlesPerSecond = minAmount;

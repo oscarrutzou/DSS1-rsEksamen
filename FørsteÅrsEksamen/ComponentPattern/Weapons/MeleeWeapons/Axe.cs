@@ -18,8 +18,8 @@ public class Axe : MeleeWeapon
 
     private static Dictionary<WeaponAnimTypes, WeaponAnimation> _swordAnimations = new()
     {
-        { WeaponAnimTypes.Light, new WeaponAnimation(1.0f, MathHelper.Pi, 35, BaseMath.EaseInOutBack, WeaponAnimTypes.Medium, 2)},
-        { WeaponAnimTypes.Medium, new WeaponAnimation(1.5f, MathHelper.Pi + MathHelper.PiOver2, 50, BaseMath.EaseInOutBack, WeaponAnimTypes.Light, 1)},
+        { WeaponAnimTypes.Light, new WeaponAnimation(1.0f, MathHelper.Pi, 40, BaseMath.EaseInOutBack, WeaponAnimTypes.Medium, 2)},
+        { WeaponAnimTypes.Medium, new WeaponAnimation(1.5f, MathHelper.Pi + MathHelper.PiOver2, 60, BaseMath.EaseInOutBack, WeaponAnimTypes.Light, 1)},
     };
 
     public Axe(GameObject gameObject) : base(gameObject)
@@ -41,7 +41,7 @@ public class Axe : MeleeWeapon
     protected override void PlayerWeaponSprite()
     {
         SpriteRenderer.SetSprite(TextureNames.WoodAxe);
-        SetStartColliders(new Vector2(7.5f, 23), 4, 6, 8, 2); // Gets set in each of the weapons insted of here.
+        SetStartColliders(new Vector2(7.5f, 23), 4, 6, 8, 3); // Gets set in each of the weapons insted of here.
     }
 
     protected override void EnemyWeaponSprite()

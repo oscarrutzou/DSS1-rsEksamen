@@ -18,8 +18,8 @@ public class Dagger : MeleeWeapon
 
     private static Dictionary<WeaponAnimTypes, WeaponAnimation> _daggerAnimations = new ()
     {
-        { WeaponAnimTypes.Light, new WeaponAnimation(0.4f, MathHelper.PiOver4* 3, 15, BaseMath.EaseOutQuart, WeaponAnimTypes.Medium, 2)},
-        { WeaponAnimTypes.Medium, new WeaponAnimation(0.7f, MathHelper.PiOver4* 6, 30, BaseMath.EaseInOutQuint, WeaponAnimTypes.Light)},
+        { WeaponAnimTypes.Light, new WeaponAnimation(0.4f, MathHelper.PiOver4* 3, 20, BaseMath.EaseOutQuart, WeaponAnimTypes.Medium, 2)},
+        { WeaponAnimTypes.Medium, new WeaponAnimation(0.7f, MathHelper.PiOver4* 6, 40, BaseMath.EaseInOutQuint, WeaponAnimTypes.Light)},
     };
 
 

@@ -180,8 +180,14 @@ public abstract class RoomBase : Scene
     {
         GameObject spawnerGo = new();
         RoomSpawner = spawnerGo.AddComponent<Spawner>();
-        EnemiesInRoom = RoomSpawner.SpawnEnemies(EnemySpawnPoints, PlayerGo);
+        EnemiesInRoom = RoomSpawner.SpawnEnemies(EnemySpawnPoints, PlayerGo, _spawnAbleTypes, EnemyWeakness);
     }
+    public float EnemyWeakness { get; protected set; } = 0.3f;
+    private static List<EnemyTypes> _spawnAbleTypes = new()
+    {
+        EnemyTypes.OrcArcher,
+        EnemyTypes.OrcWarrior,
+    };
 
     private void SpawnPotions()
     {

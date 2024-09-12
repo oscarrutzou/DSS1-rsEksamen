@@ -27,7 +27,7 @@ namespace ShamansDungeon.ComponentPattern.Enemies.MeleeEnemies
     public class MiniBossEnemy : EnemyMelee
     {
         #region Properties
-
+        
         private double _spawnTimer;
         private double _spawnCooldown = 5.0;
 
@@ -113,7 +113,7 @@ namespace ShamansDungeon.ComponentPattern.Enemies.MeleeEnemies
             Weapon.StartRelativeOffsetPos = new(0, -40);
             Weapon.StartRelativePos = new(0, 80);
 
-            Health.SetHealth(400);
+            Health.SetHealth(500);
             Health.CanTakeDamage = false;
             Speed = 400; // 400
 
@@ -143,17 +143,17 @@ namespace ShamansDungeon.ComponentPattern.Enemies.MeleeEnemies
             Health.On50Hp += () => { 
                 GameWorld.Instance.SingleColorEffect = true;  // Together with a sound effect
                 SetNewRandomPath();
-                RandomMoveCoolDown = 0.5f;
+
+                _showHideTransition = true;
+                SpriteRenderer.ShouldDrawSprite = false;
+                Weapon?.ShowHideWeapon(SpriteRenderer.ShouldDrawSprite);
             };
 
             Health.On25Hp += () => {
                 SetNewRandomPath();
                 Speed = 900;
-                
-                _showHideTransition = true;
-                SpriteRenderer.ShouldDrawSprite = false;
-                Weapon?.ShowHideWeapon(SpriteRenderer.ShouldDrawSprite);
 
+                RandomMoveCoolDown = 0.5f;
             };
 
             Health.OnZeroHealth += () => {
@@ -415,7 +415,7 @@ namespace ShamansDungeon.ComponentPattern.Enemies.MeleeEnemies
             // Amount to spawn
             _points.Add(_newSpawnPoint);
 
-            List<Enemy> newEnemies = _enemySpawner.SpawnEnemies(_points, Player.GameObject, _spawnAbleTypes);
+            List<Enemy> newEnemies = _enemySpawner.SpawnEnemies(_points, Player.GameObject, _spawnAbleTypes, _roomBase.EnemyWeakness);
 
             _roomBase.EnemiesInRoom.AddRange(newEnemies);
 

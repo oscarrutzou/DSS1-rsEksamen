@@ -232,7 +232,7 @@ public abstract class MeleeWeapon : Weapon
         // Float so we can divide with enemy weakness
         float damage = Animations[CurrentAnim].Damage * User.DamageMultiplier;
         if (EnemyUser != null)
-            damage /= EnemyWeakness;
+            damage *= EnemyWeakness;
 
 
         health.TakeDamage((int)damage, User.GameObject.Transform.Position);
