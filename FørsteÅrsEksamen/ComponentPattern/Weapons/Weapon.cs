@@ -281,6 +281,11 @@ public abstract class Weapon : Component
         SpriteRenderer.SpriteEffects = newSpriteEffect;
         _holdHandSr.SpriteEffects = newSpriteEffect;
     }
+    public void SetColor(Color color)
+    {
+        SpriteRenderer.Color = color;
+        _holdHandSr.Color = color;
+    }
     public void SetPosition(Vector2 newPos)
     {
         GameObject.Transform.Position = newPos;

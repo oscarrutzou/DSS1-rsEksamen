@@ -131,7 +131,7 @@ namespace ShamansDungeon.ComponentPattern.WorldObjects
             // To avoid it changing color when hit. It causes characters to dissapear.
             if (GameWorld.Instance.SingleColorEffect) return; 
             _damageTimer = _damageTimerTotal;
-            _spriteRenderer.Color = DamageTakenColor;
+            //_spriteRenderer.Color = DamageTakenColor;
         }
 
         private void CheckDmgLeft()
@@ -170,7 +170,7 @@ namespace ShamansDungeon.ComponentPattern.WorldObjects
         {
             if (IsDead) return;
 
-            _spriteRenderer.Color = Color.White;
+            //_spriteRenderer.Color = Color.White;
             OnResetColor?.Invoke();
         }
 

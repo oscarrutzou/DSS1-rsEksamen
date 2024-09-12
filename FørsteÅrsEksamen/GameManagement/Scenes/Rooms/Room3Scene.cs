@@ -6,7 +6,7 @@ namespace ShamansDungeon.GameManagement.Scenes.Rooms;
 // Oscar
 public class Room3Scene : RoomBase
 {
-    private static float _enemyWeakness = 0.75f;
+    private static float _enemyWeakness = 0.5f;
 
     public override void Initialize()
     {

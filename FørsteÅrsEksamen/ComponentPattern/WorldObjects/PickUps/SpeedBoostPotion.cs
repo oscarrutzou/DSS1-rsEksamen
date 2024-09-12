@@ -19,7 +19,7 @@ public class SpeedBoostPotion : Potion
         {
             case PotionTypes.SmallSpeedBoost:
                 SpriteRenderer.SetSprite(TextureNames.GreenSmallHalfPotion);
-                AmountToAdd = 0.15f; // 10% perm boost
+                AmountToAdd = 0.2f; //  perm boost
                 break;
         }
         PotionText = $"Permanent {AmountToAdd * 100}% speed boost";

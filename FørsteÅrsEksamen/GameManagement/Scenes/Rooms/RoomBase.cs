@@ -251,14 +251,17 @@ public abstract class RoomBase : Scene
 
     public override void Update()
     {
-        SaveData.Time_Left -= GameWorld.DeltaTime;
-
-        if (SaveData.Time_Left <= 0) // Player ran out of Time
+        if (!GameWorld.IsPaused)
         {
-            SaveData.Time_Left = 0;
-            SaveData.LostByTime = true;
-            // Makes the blood spray up, could make it positive or negative depending of the direction
-            _playerHealth.TakeDamage(1000, Player.GameObject.Transform.Position + new Vector2(30, -30)); // Kills the player
+            SaveData.Time_Left -= GameWorld.DeltaTime;
+
+            if (SaveData.Time_Left <= 0) // Player ran out of Time
+            {
+                SaveData.Time_Left = 0;
+                SaveData.LostByTime = true;
+                // Makes the blood spray up, could make it positive or negative depending of the direction
+                _playerHealth.TakeDamage(1000, Player.GameObject.Transform.Position + new Vector2(30, -30)); // Kills the player
+            }
         }
 
         // Check if enemies has been killed

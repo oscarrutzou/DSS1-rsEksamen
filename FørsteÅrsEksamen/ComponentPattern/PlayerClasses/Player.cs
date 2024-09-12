@@ -112,6 +112,8 @@ public abstract class Player : Character
         {
             CheckForMovement();
             PlayHeartBeatIfLow();
+            UpdateDashImmun();
+
         }
 
         Weapon?.MoveWeaponAndAngle();
@@ -423,7 +425,7 @@ public abstract class Player : Character
             ResetDash();
             return;
         }
-
+        StartDashImmuneTimer();
         Health.CanTakeDamage = false;
         // Lerp the current direction with the end position
         Vector2 lerpDashPosition = Vector2.Lerp(_dashStartPosition, _finalDashPosition, (float)normalizedTimeToComplete);
@@ -439,10 +441,37 @@ public abstract class Player : Character
         DashCooldownTimer = 0;
         _dashTimeToCompleteTimer = 0;
         IsDashing = false;
-        Health.CanTakeDamage = true;
     }
 
-    
+    private static float _dashImmunAfterDashCooldown = 0.55f;
+    private float _dashImmunAfterDashTimer;
+    private static Color _dashColor = Color.Turquoise;
+    private void StartDashImmuneTimer()
+    {
+        if (_dashImmunAfterDashTimer != 0) return;
+
+        _dashImmunAfterDashTimer = (float)_dashFinalLerpCooldown + _dashImmunAfterDashCooldown;
+        SetColor(_dashColor);
+    }
+
+    private void UpdateDashImmun()
+    {
+        if (_dashImmunAfterDashTimer <= 0 && Health.CanTakeDamage) return;
+        _dashImmunAfterDashTimer -= (float)GameWorld.DeltaTime;
+        SetColor(_dashColor);
+
+        if (_dashImmunAfterDashTimer > 0) return;
+        Health.CanTakeDamage = true;
+        SetColor(Color.White);
+        _dashImmunAfterDashTimer = 0;
+    }
+
+    private void SetColor(Color color)
+    {
+        SpriteRenderer.Color = color;
+        if (Weapon == null) return;
+        Weapon.SetColor(color);
+    }
 
     public void UpdateDash()
     {
