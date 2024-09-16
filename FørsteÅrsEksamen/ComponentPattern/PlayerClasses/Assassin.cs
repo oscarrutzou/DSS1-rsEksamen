@@ -9,6 +9,7 @@ public class Assassin : Player
     {
         Speed = 425;
         Name = "Whisper";
+        DashCooldown = 1.5f;
     }
 
     public override void Awake()

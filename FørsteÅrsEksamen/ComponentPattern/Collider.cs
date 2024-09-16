@@ -15,6 +15,7 @@ public enum ColliderLayer
     Default,
     Player,
     Weapon,
+    BreakalbeItems,
     Enemy,
     Gui,
     BackPackIcon,

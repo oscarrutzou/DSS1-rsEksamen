@@ -58,6 +58,10 @@ public abstract class Player : Character
     public double DashCooldownTimer { get; protected set; }
     public double DashCooldown { get; protected set; } = 2f; 
     private double _dashTimeToCompleteTimer, _dashFinalLerpCooldown, _dashTimeToComplete = 0.1f; // The dash time it takes to move to the new position
+    protected float DashImmunAfterDashCooldown = 0.55f;
+
+    private float _dashImmunAfterDashTimer;
+    private static Color _dashColor = Color.Turquoise;
 
     private Vector2 _previousTotalMovementInput;
     private Vector2 _dashMovementInput; // A normalized value
@@ -443,14 +447,12 @@ public abstract class Player : Character
         IsDashing = false;
     }
 
-    private static float _dashImmunAfterDashCooldown = 0.55f;
-    private float _dashImmunAfterDashTimer;
-    private static Color _dashColor = Color.Turquoise;
+
     private void StartDashImmuneTimer()
     {
         if (_dashImmunAfterDashTimer != 0) return;
 
-        _dashImmunAfterDashTimer = (float)_dashFinalLerpCooldown + _dashImmunAfterDashCooldown;
+        _dashImmunAfterDashTimer = (float)_dashFinalLerpCooldown + DashImmunAfterDashCooldown;
         SetColor(_dashColor);
     }
 

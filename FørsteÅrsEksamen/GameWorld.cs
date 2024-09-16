@@ -55,7 +55,7 @@ public class GameWorld : Game
         GfxManager = new GraphicsDeviceManager(this);
         Content.RootDirectory = "A-Content";
         IsMouseVisible = false;
-        Window.Title = "Shaman’s Sanctum";
+        Window.Title = "Shaman’s Dungeon";
     }
 
     protected override void Initialize()
@@ -73,8 +73,8 @@ public class GameWorld : Game
         GlobalAnimations.LoadContent();
 
         Fullscreen(); // Need to be before the camera
-        //SetResolutionSize(800, 800); 
-        
+        //SetResolutionSize(1200, 800);
+
         SceneData.Instance.GenereateGameObjectDicionary();
         
         WorldCam = new Camera(); // Camera that follows the player
@@ -83,7 +83,7 @@ public class GameWorld : Game
         GenerateScenes(); // Makes a instance of all the scene we need
 
         CurrentScene = Scenes[SceneNames.MainMenu];
-        CurrentScene.Initialize(); // Starts the main menu 
+        CurrentScene.Initialize(); // Starts the main menu  
           
         IndependentBackground.SpawnBG(); // The background that dont get deleted
 
@@ -272,13 +272,13 @@ public class GameWorld : Game
             }
             else
             {
-                NextScene = SceneNames.MainMenu; // Sends them back to the menu
+                NextScene = SceneNames.EndMenu; // Sends them back to the menu
                 IsInMenu = true;
             }
         }
         else
         {
-            NextScene = SceneNames.MainMenu; // Sends them back to the menu
+            NextScene = SceneNames.EndMenu; // Sends them back to the menu
             IsInMenu = true;
         }
     }

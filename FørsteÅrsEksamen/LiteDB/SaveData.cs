@@ -7,8 +7,8 @@ namespace ShamansDungeon.LiteDB;
 // Oscar
 public static class SaveData
 {
-    private const int _startCurrency = 100; // Normal 100
-    private static double _startTimeLeft = 140f; 
+    private const int _startCurrency = 200; // Normal 100
+    private static double _startTimeLeft = 180f; 
 
     private const int _cheatMultiplier = 100;
 
@@ -46,6 +46,7 @@ public static class SaveData
         Player = null;
         HasCompletedFullTutorial = false;
         TutorialReached = 0;
+        LostByTime = false;
     }
 
     public static void ResetPlayer()

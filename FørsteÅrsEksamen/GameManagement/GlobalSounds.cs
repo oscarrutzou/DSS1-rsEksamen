@@ -22,6 +22,14 @@ public enum SoundNames
     WinGame,
     LostGame,
 
+    VaseHit,
+    VaseBroken,
+
+    WoodItemHit,
+    WoodItemBroken1,
+    WoodItemBroken2,
+    WoodItemBroken3,
+
     // Weapon  ------------------------------
     //SwipeFast1,
     //SwipeFast2,
@@ -154,6 +162,15 @@ public static class GlobalSounds
             {SoundNames.WoodHitFlesh, content.Load<SoundEffect>("Sound\\Hit\\Hit_Wood_on_flesh") },
             {SoundNames.WoodHitLeather, content.Load<SoundEffect>("Sound\\Hit\\Hit_Wood_on_leather") },
             {SoundNames.WoodHitMetal, content.Load<SoundEffect>("Sound\\Hit\\Hit_Wood_on_metal") },
+
+
+            {SoundNames.VaseHit, content.Load<SoundEffect>("Sound\\Hit\\VaseHit") },
+            {SoundNames.VaseBroken, content.Load<SoundEffect>("Sound\\Hit\\VaseBroken") },
+
+            {SoundNames.WoodItemHit, content.Load<SoundEffect>("Sound\\Hit\\WoodHit1") },
+            {SoundNames.WoodItemBroken1, content.Load<SoundEffect>("Sound\\Hit\\WoodBroken1") },
+            {SoundNames.WoodItemBroken2, content.Load<SoundEffect>("Sound\\Hit\\WoodBroken2") },
+            {SoundNames.WoodItemBroken3, content.Load<SoundEffect>("Sound\\Hit\\WoodBroken3") },
 
 
             {SoundNames.OrcHit1, content.Load<SoundEffect>("Sound\\Orc\\Hurt\\Hit (1)") },

@@ -21,6 +21,7 @@ public enum GameObjectTypes
     Projectile,
     Gui,
     Items,
+    BreakableItems,
     Particle,
     Emitter,
     Default, //Not set

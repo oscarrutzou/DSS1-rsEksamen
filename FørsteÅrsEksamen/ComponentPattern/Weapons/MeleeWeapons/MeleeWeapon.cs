@@ -168,6 +168,7 @@ public abstract class MeleeWeapon : Weapon
         if (!CanDealDamage) return;
 
         CheckCollisionCharacters();
+        CheckCollisionBreakableItems();
     }
 
     private void CheckCollisionCharacters()
@@ -201,7 +202,27 @@ public abstract class MeleeWeapon : Weapon
 
     private void CheckCollisionBreakableItems()
     {
+        if (EnemyUser != null) return; // Only player can destroy items
 
+        foreach (GameObject otherGo in SceneData.Instance.GameObjectLists[GameObjectTypes.BreakableItems])
+        {
+            if (!otherGo.IsEnabled || _hitGameObjects.ContainsKey(otherGo)) continue;
+
+            Collider otherCollider = otherGo.GetComponent<Collider>();
+
+            if (otherCollider == null) continue;
+            foreach (CollisionRectangle weaponRectangle in WeaponColliders)
+            {
+                if (_hitGameObjects.ContainsKey(otherGo)) break; // Need to check again here so it dosent attack twice
+
+                if (weaponRectangle.Rectangle.Intersects(otherCollider.CollisionBox))
+                {
+                    _hitGameObjects.Add(otherGo, new(_totalElapsedTime, IsRotatingBack));
+                    DealDamage(otherGo);
+                    break;
+                }
+            }
+        }
     }
 
     private void ResetHittedGameObjects()
@@ -233,7 +254,6 @@ public abstract class MeleeWeapon : Weapon
         float damage = Animations[CurrentAnim].Damage * User.DamageMultiplier;
         if (EnemyUser != null)
             damage *= EnemyWeakness;
-
 
         health.TakeDamage((int)damage, User.GameObject.Transform.Position);
     }

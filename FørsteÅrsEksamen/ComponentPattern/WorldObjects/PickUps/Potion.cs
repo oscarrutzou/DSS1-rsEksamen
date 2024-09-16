@@ -91,9 +91,13 @@ public abstract class Potion : Component
     {
         GlobalSounds.PlaySound(SoundNames.DrinkingPotion, 1);
 
+        DestoryGameObject();
+    }
+
+    public void DestoryGameObject()
+    {
         Player.ItemInInventory = null;
         Player.HasUsedItem = true;
         GameWorld.Instance.Destroy(GameObject);
     }
-
 }

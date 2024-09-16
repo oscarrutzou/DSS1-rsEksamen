@@ -55,12 +55,25 @@ public abstract class RoomBase : Scene
     public static Keys DashKey = Keys.Space;
     public static Keys TogglePauseMenuKey = Keys.Escape;
     public static Keys ToggleStatsMenuKey = Keys.Tab;
+    public static Keys DeleteItem = Keys.T;
     public static Keys LeftMovementKey = Keys.A, RightMovementKey = Keys.D, UpMovementKey = Keys.W, DownMovementKey = Keys.S;
 
     private List<GameObject> _cells = new(); // For debug
     private Vector2 _startLeftPos;
     private GameObject hourGlassIcon, inventoryIcon;
     private bool _showStats;
+
+    public float EnemyWeakness { get; protected set; } = 0.3f;
+    private static List<EnemyTypes> _spawnAbleTypes = new()
+    {
+        EnemyTypes.OrcArcher,
+        EnemyTypes.OrcWarrior,
+    };
+    private static List<PotionTypes> _spawnablePotionTypes = new()
+    {
+        PotionTypes.BigHealth,
+        PotionTypes.SmallHealth,
+    };
     #endregion Properties
 
     public override void Initialize()
@@ -182,23 +195,12 @@ public abstract class RoomBase : Scene
         RoomSpawner = spawnerGo.AddComponent<Spawner>();
         EnemiesInRoom = RoomSpawner.SpawnEnemies(EnemySpawnPoints, PlayerGo, _spawnAbleTypes, EnemyWeakness);
     }
-    public float EnemyWeakness { get; protected set; } = 0.3f;
-    private static List<EnemyTypes> _spawnAbleTypes = new()
-    {
-        EnemyTypes.OrcArcher,
-        EnemyTypes.OrcWarrior,
-    };
+
 
     private void SpawnPotions()
     {
         RoomSpawner.SpawnPotions(PotionSpawnPoints, PlayerGo, _spawnablePotionTypes);
     }
-
-    private static List<PotionTypes> _spawnablePotionTypes = new()
-    {
-        PotionTypes.BigHealth,
-        PotionTypes.SmallHealth,
-    };
 
     private void CenterMiscItems()
     {
@@ -206,9 +208,9 @@ public abstract class RoomBase : Scene
         {
             GameObject go = MiscGameObjectsInRoom[point];
             go.Transform.Position = GridManager.Instance.CurrentGrid.GetCellFromPoint(point).GameObject.Transform.Position;
+            go.Transform.GridPosition = point;
         }
     }
-
     private void SetCommands()
     {
         Player = PlayerGo.GetComponent<Player>();
@@ -224,6 +226,7 @@ public abstract class RoomBase : Scene
         InputHandler.Instance.AddKeyUpdateCommand(ToggleStatsMenuKey, new CustomCmd(ToggleStatsMenu));
 
         InputHandler.Instance.AddKeyButtonDownCommand(UseItem, new CustomCmd(Player.UseItem));
+        InputHandler.Instance.AddKeyButtonDownCommand(DeleteItem, new CustomCmd(DeletePlayerBackpackItem));
 
         InputHandler.Instance.AddKeyUpdateCommand(DashKey, new CustomCmd(Player.UpdateDash));
 
@@ -233,9 +236,15 @@ public abstract class RoomBase : Scene
         //InputHandler.Instance.AddKeyButtonDownCommand(Keys.Space, new CustomCmd(_player.Attack));
         InputHandler.Instance.AddKeyButtonDownCommand(Keys.Enter, new CustomCmd(ChangeScene));
         InputHandler.Instance.AddKeyButtonDownCommand(Keys.O, new CustomCmd(() => { DB.Instance.SaveGrid(GridManager.Instance.CurrentGrid); }));
-
-        //InputHandler.Instance.AddKeyButtonDownCommand(Keys.Q, new CustomCmd(() => { player.GameObject.GetComponent<Health>().TakeDamage(rnd.Next(500000000, 500000000)); }));
     }
+
+    private void DeletePlayerBackpackItem()
+    {
+        if (Player == null || Player.ItemInInventory == null) return;
+
+        Player.ItemInInventory.DestoryGameObject();
+    }
+
     private void ToggleStatsMenu()
     {
         _showStats = true;

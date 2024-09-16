@@ -55,10 +55,10 @@ public class WeaponTestScene : Scene
 
     private void MakeEmitters()
     {
-        //FairyEmitter();
+        FairyEmitter();
 
         //BlodEmitter();
-        SpaceEmitter();
+        //SpaceEmitter();
 
         //DoorEmitter();
         //BossSpawnEmitter();

@@ -10,6 +10,7 @@ public enum AnimNames
     // GUI
     HourGlass,
     HourGlassReset,
+    MainMenuAssassin,
 
     TestWizardRightIndividualFrames,
 
@@ -78,8 +79,9 @@ public static class GlobalAnimations
 
         //Sprite sheets
 
-
         // Load animations for Archer
+        LoadIndividualSprites(AnimNames.MainMenuAssassin, "UI\\MenuAnimations\\Assassin Anim", 5, 4);
+
         LoadIndividualSprites(AnimNames.ArcherIdle, "World\\Classes\\Rogue\\Idle", 5, 4);
         LoadIndividualSprites(AnimNames.ArcherRun, "World\\Classes\\Rogue\\Run", 10, 6);
         LoadIndividualSprites(AnimNames.ArcherDeath, "World\\Classes\\Rogue\\Death", 6, 6);

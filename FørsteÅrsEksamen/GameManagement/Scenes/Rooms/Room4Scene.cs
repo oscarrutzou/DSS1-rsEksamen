@@ -37,6 +37,12 @@ public class Room4Scene : RoomBase
         EndPointSpawnPos = new Point(39, 3);
         EnemySpawnPoints = new();
         PotionSpawnPoints = new() { new Point(19, 4), new Point(34, 13)};
+
+        MiscGameObjectsInRoom = new()
+        {
+            { new Point(6, 6), BreakableItemFactory.Create(BreakableItemType.FatVaseRed)},
+            { new Point(15, 10), BreakableItemFactory.Create(BreakableItemType.Barrel)},
+        };
     }
 
     private void SpawnMiniBoss()

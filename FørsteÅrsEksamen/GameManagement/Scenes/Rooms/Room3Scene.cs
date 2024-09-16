@@ -1,5 +1,6 @@
 ﻿using ShamansDungeon.LiteDB;
 using Microsoft.Xna.Framework;
+using ShamansDungeon.Factory;
 
 namespace ShamansDungeon.GameManagement.Scenes.Rooms;
 
@@ -28,7 +29,7 @@ public class Room3Scene : RoomBase
         PlayerSpawnPos = new Point(12, 3);
         EndPointSpawnPos = new Point(11, 14);
         EnemySpawnPoints = new();
-        PotionSpawnPoints = new();
+
         EnemySpawnPoints = new() {
         new Point(17, 21),
         new Point(6, 21),};
@@ -36,5 +37,13 @@ public class Room3Scene : RoomBase
         PotionSpawnPoints = new() {
         //new Point(11, 11),
         new Point(12, 11),};
+
+        MiscGameObjectsInRoom = new()
+        {
+            { new Point(9, 4), BreakableItemFactory.Create(BreakableItemType.Crate)},
+            { new Point(1, 17), BreakableItemFactory.Create(BreakableItemType.FatVaseBlue)},
+            { new Point(16, 17), BreakableItemFactory.Create(BreakableItemType.Barrel)},
+            { new Point(22, 18), BreakableItemFactory.Create(BreakableItemType.Crate)},
+        };
     }
 }

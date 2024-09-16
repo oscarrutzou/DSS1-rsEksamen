@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using ShamansDungeon.ComponentPattern.WorldObjects.PickUps;
+using System.Linq;
 
 namespace ShamansDungeon.LiteDB;
 
@@ -49,6 +50,49 @@ public class DB
 
     #endregion Start
 
+    public List<HighscoreUserData> UpdateHighScore(HighscoreUserData data)
+    {
+        List<HighscoreUserData> highscores;
+
+        using var db = new LiteDatabase(DataBasePath);
+        ILiteCollection<HighScoreTimerData> scoreData = db.GetCollection<HighScoreTimerData>();
+        HighScoreTimerData saveFileData = scoreData.FindById(_id);
+
+        if (saveFileData == null)
+        {
+            saveFileData = new HighScoreTimerData() { Save_ID = _id, HighScoreList = new List<HighscoreUserData>() };
+            scoreData.Insert(saveFileData);
+        }
+
+        // Update
+        saveFileData.HighScoreList.Add(data);
+        highscores = saveFileData.HighScoreList;
+        scoreData.Update(saveFileData);
+
+        return highscores;
+    }
+
+    public List<HighscoreUserData> GetHighScores()
+    {
+        List<HighscoreUserData> highscores;
+         
+        using var db = new LiteDatabase(DataBasePath);
+        ILiteCollection<HighScoreTimerData> scoreData = db.GetCollection<HighScoreTimerData>();
+        HighScoreTimerData saveFileData = scoreData.FindById(_id);
+
+        if (saveFileData == null)
+        {
+            saveFileData = new HighScoreTimerData() { Save_ID = _id, HighScoreList = new List<HighscoreUserData>() };
+            scoreData.Insert(saveFileData);
+        }
+
+        // Update
+        highscores = saveFileData.HighScoreList;
+        scoreData.Update(saveFileData);
+
+        return highscores;
+    }
+    const int _id = 1;
     #region Grid
 
     public void SaveGrid(Grid grid)

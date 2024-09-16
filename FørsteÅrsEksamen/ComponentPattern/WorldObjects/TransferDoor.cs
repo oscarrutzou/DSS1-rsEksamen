@@ -17,7 +17,7 @@ public class TransferDoor : Component
     private Collider _collider, _playerCollider;
     private Health _playerHealth;
     private double _timer;
-    private readonly double _timeTillActivation = 2f;
+    private readonly double _timeTillActivation = 0.5f;
     public ParticleEmitter emitter;
 
     public TransferDoor(GameObject gameObject) : base(gameObject)

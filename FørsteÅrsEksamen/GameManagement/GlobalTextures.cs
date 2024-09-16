@@ -25,6 +25,26 @@ public enum TextureNames
 
     TestLevelBG,
     TestLevelFG,
+    
+    FatVase1,
+    FatVase2,
+    FatVase3,
+    FatVaseRed,
+    FatVaseBlue,
+
+    LongVase1,
+    LongVase2,
+    LongVase3,
+    LongVaseRed,
+    LongVaseBlue,
+
+    Crate1,
+    Crate2,
+    Crate3,
+
+    Barrel1,
+    Barrel2, 
+    Barrel3,
 
     HumanHandRight,
     HumanHandLeft,
@@ -132,6 +152,46 @@ public static class GlobalTextures
             {TextureNames.GreenSmallHalfPotion, content.Load<Texture2D>("World\\Objects\\Potions\\LittleGreenPotion1") },
 
             {TextureNames.DoorClosed, content.Load<Texture2D>("World\\Objects\\DoorClosed") },
+
+            {TextureNames.FatVase1, content.Load<Texture2D>("World\\Objects\\FatVase\\FatVase1") },
+            {TextureNames.FatVase2, content.Load<Texture2D>("World\\Objects\\FatVase\\FatVase2") },
+            {TextureNames.FatVase3, content.Load<Texture2D>("World\\Objects\\FatVase\\FatVase3") },
+
+            {TextureNames.FatVaseBlue, content.Load<Texture2D>("World\\Objects\\FatVase\\FatVaseBlue") },
+            {TextureNames.FatVaseRed, content.Load<Texture2D>("World\\Objects\\FatVase\\FatVaseRed") },
+
+            {TextureNames.LongVase1, content.Load<Texture2D>("World\\Objects\\LongVase\\LongVase1") },
+            {TextureNames.LongVase2, content.Load<Texture2D>("World\\Objects\\LongVase\\LongVase2") },
+            {TextureNames.LongVase3, content.Load<Texture2D>("World\\Objects\\LongVase\\LongVase3") },
+
+            {TextureNames.LongVaseBlue, content.Load<Texture2D>("World\\Objects\\LongVase\\LongVaseBlue") },
+            {TextureNames.LongVaseRed, content.Load<Texture2D>("World\\Objects\\LongVase\\LongVaseRed") },
+
+            {TextureNames.Crate1, content.Load<Texture2D>("World\\Objects\\Crate\\Create1") },
+            {TextureNames.Crate2, content.Load<Texture2D>("World\\Objects\\Crate\\Create2") },
+            {TextureNames.Crate3, content.Load<Texture2D>("World\\Objects\\Crate\\Create3") },
+
+            {TextureNames.Barrel1, content.Load<Texture2D>("World\\Objects\\Barrel\\Barrel1") },
+            {TextureNames.Barrel2, content.Load<Texture2D>("World\\Objects\\Barrel\\Barrel2") },
+            {TextureNames.Barrel3, content.Load<Texture2D>("World\\Objects\\Barrel\\Barrel3") },
+
+
+            //FatVaseRed,
+            //FatVaseBlue,
+
+            //LongVase1,
+            //LongVase2,
+            //LongVase3,
+            //LongVaseRed,
+            //LongVaseBlue,
+
+            //Create1,
+            //Create2,
+            //Create3,
+
+            //Barrel1,
+            //Barrel2,
+            //Barrel3,
 
             {TextureNames.ShortBtn, content.Load<Texture2D>("UI\\ShortButton") },
             {TextureNames.LongButton, content.Load<Texture2D>("UI\\LongButton") },

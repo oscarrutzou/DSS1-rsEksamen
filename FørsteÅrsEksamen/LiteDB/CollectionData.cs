@@ -30,6 +30,18 @@ public class CellData
     public CellWalkableType Cell_Type { get; set; }
 }
 
+public class HighScoreTimerData
+{
+    [BsonId]
+    public int Save_ID { get; set; }
+    public List<HighscoreUserData> HighScoreList { get; set; }
+}
+public class HighscoreUserData
+{
+    public double TimeLeft { get; set; }
+    public string UserName { get; set; }
+}
+
 public class SaveFileData
 {
     [BsonId]

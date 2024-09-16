@@ -44,6 +44,7 @@ public class Room1Scene : RoomBase
     {
         PlayerSpawnPos = new Point(10, 3);
         EndPointSpawnPos = new Point(33, 2);
+        EnemySpawnPoints = new();
 
         EnemySpawnPoints = new() {
         new Point(10, 21),
@@ -54,10 +55,18 @@ public class Room1Scene : RoomBase
         new Point(7, 4),
         new Point(29, 9),};
 
-        //MiscGameObjectsInRoom = new()
-        //{
-        //    { new Point(13, 5), TraningDummyFactory.Create()}
-        //};
+        MiscGameObjectsInRoom = new()
+        {
+            //{ new Point(13, 5), TraningDummyFactory.Create()},
+            { new Point(16, 5), BreakableItemFactory.Create(BreakableItemType.FatVase)},
+            { new Point(14, 4), BreakableItemFactory.Create(BreakableItemType.Crate)},
+            { new Point(10, 18), BreakableItemFactory.Create(BreakableItemType.Barrel)},
+            { new Point(18, 22), BreakableItemFactory.Create(BreakableItemType.LongVase)},
+            { new Point(32, 26), BreakableItemFactory.Create(BreakableItemType.FatVaseBlue)},
+            { new Point(29, 14), BreakableItemFactory.Create(BreakableItemType.Crate)},
+        };
     }
+
+
 
 }
